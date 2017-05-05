@@ -2,9 +2,20 @@
 
 // EXTERNAL DEPENDENCIES
 // =============================================================================
-#include "tasty_int/tasty_int.hpp"          // TastyInt interface
-#include "tasty_int/detail/from_number.ipp" // from_number
-#include <type_traits>                      // std::[is_arithmetic|is_integral]
+#include "tasty_int/tasty_int.hpp"                // TastyInt interface
+#include "tasty_int/detail/assert_arithmetic.hpp" // tasty_int_detail::assert_arithmetic
+#include "tasty_int/detail/get_digit.hpp"         // get_digit
+#include "tasty_int/detail/from_number.hpp"       // from_number
+#include <limits>                                 // std::numeric_limits
+#include <type_traits>                            // std::is_integral
+
+
+// CONSTANTS
+// =============================================================================
+static const unsigned int
+TastyInt::digit_bit = std::numeric_limits<TastyInt::acc_type>::digits / 2;
+static const TastyInt::acc_type
+TastyInt::digit_type_max = (1 << TastyInt::digit_bit) - 1;
 
 
 // CONSTRUCTORS
@@ -13,14 +24,24 @@ template<typename ArithmeticType>
 inline
 TastyInt::TastyInt(ArithmeticType value)
 {
-    static_assert(std::is_arithmetic<ArithmeticType>::value,
-                  "'ArithmeticType' must be an integral or floating-point "
-                  "type");
+    tasty_int_detail::assert_arithmetic<ArithmeticType>();
 
-    from_number<std::is_integral<ArithmeticType>::value>(value);
+    tasty_int_detail::from_number<
+        std::is_integral<ArithmeticType>::value
+    >(value);
 }
 
 
 
 // Inline Implementation
 // =============================================================================
+template<typename ArithmeticType>
+inline ArithmeticType
+to_number() const;
+{
+    tasty_int_detail::assert_arithmetic<ArithmeticType>();
+
+    tasty_int_detail::to_number<
+        std::is_integral<ArithmeticType>::value
+    >(value);
+}
