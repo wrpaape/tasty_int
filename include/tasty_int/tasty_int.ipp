@@ -26,7 +26,7 @@ TastyInt::TastyInt(ArithmeticType value)
 {
     tasty_int_detail::assert_arithmetic<ArithmeticType>();
 
-    tasty_int_detail::from_number<
+    from_number<
         std::is_integral<ArithmeticType>::value
     >(value);
 }
@@ -41,7 +41,7 @@ to_number() const;
 {
     tasty_int_detail::assert_arithmetic<ArithmeticType>();
 
-    tasty_int_detail::to_number<
+    to_number<
         std::is_integral<ArithmeticType>::value
     >(value);
 }

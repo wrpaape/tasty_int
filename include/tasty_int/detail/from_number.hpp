@@ -14,18 +14,10 @@
 
 // initialize 'digits'
 // -----------------------------------------------------------------------------
-template <typename UnsignedIntegralType,
-          std::false_type> // value <= digit_type_max
+template <typename UnsignedIntegralType, // value may be >= digit_type_max
 inline void
-TastyInt::digits_from_unsigned_integral(const UnsignedIntegralType value)
-{
-    digits { value };
-}
-
-template <typename UnsignedIntegralType,
-          std::true_type>  // value may be >= digit_type_max
-inline void
-TastyInt::digits_from_unsigned_integral(const UnsignedIntegralType value)
+TastyInt::digits_from_unsigned_integral(const UnsignedIntegralType value,
+                                        std::true_type exceeds_digit)
 {
     digits.reserve(2);
     digits.emplace_back(get_digit(value));
@@ -34,13 +26,21 @@ TastyInt::digits_from_unsigned_integral(const UnsignedIntegralType value)
         digits.emplace_back(get_digit(value >> digit_bit));
 }
 
+template <typename UnsignedIntegralType> // value <= digit_type_max
+inline void
+TastyInt::digits_from_unsigned_integral(const UnsignedIntegralType value,
+                                        std::false_type exceeds_digit)
+{
+    digits { value };
+}
+
 
 // initialize 'sign'
 // -----------------------------------------------------------------------------
-template <typename UnsignedIntegralType,
-          std::false_type> // value is unsigned integral
+template <typename UnsignedIntegralType> // value is unsigned integral
 inline void
-TastyInt::from_integral(UnsignedIntegralType value)
+TastyInt::from_integral(UnsignedIntegralType value,
+                        std::false_type is_signed)
 {
     sign = (value > 0);
 
@@ -49,10 +49,10 @@ TastyInt::from_integral(UnsignedIntegralType value)
     >(value);
 }
 
-template <typename SignedIntegralType,
-          std::true_type> // value is signed integral
+template <typename SignedIntegralType> // value is signed integral
 inline void
-TastyInt::from_integral(SignedIntegralType value)
+TastyInt::from_integral(SignedIntegralType value,
+                        std::true_type is_signed)
 {
     if (value < 0) {
         value = -value;
@@ -89,9 +89,7 @@ template <typename FloatingPointType,
 inline void
 TastyInt::from_number(FloatingPointType value)
 {
-    from_integral<
-        static_cast<signed_acc_type>
-    >(value);
+    from_integral(static_cast<signed_acc_type>(value));
 }
 
 #endif // ifndef TASTY_INT_TASTY_INT_DETAIL_FROM_NUMBER_HPP

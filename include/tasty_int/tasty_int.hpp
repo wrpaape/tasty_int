@@ -151,6 +151,18 @@ private:
     //                     <= native max value of digit_type
     static const acc_type digit_type_max;
 
+    // alias declarations
+    // -------------------------------------------------------------------------
+    // C++17 type tag, operator() yields std::[true|false]_type
+    template <bool Expression>
+    using bool_constant = std::integral_constant<bool, Expression>;
+    // number can exceed max value held in digit_type ?
+    template <typename ArithmeticType>
+    using exceeds_digit = bool_constant<
+        std::numeric_limits<ArithmeticType>::max() > digit_type_max
+    >;
+    // number is signed?
+
     // static methods
     // -------------------------------------------------------------------------
     // get_digit
@@ -169,12 +181,17 @@ private:
     // instance methods
     // -------------------------------------------------------------------------
     // from_number
-    template <typename UnsignedIntegralType,
-              std::bool_constant ExceedsDigitType>
-    void digits_from_unsigned_integral(const UnsignedIntegralType value);
+    template <typename UnsignedIntegralType>
+    void digits_from_unsigned_integral(const UnsignedIntegralType value,
+                                       std::true_type exceeds_digit);
+    template <typename UnsignedIntegralType>
+    void digits_from_unsigned_integral(const UnsignedIntegralType value,
+                                       std::false_type exceeds_digit);
     template <typename IntegralType,
-              std::bool_constant IsSigned>
-    void from_integral(IntegralType value);
+    void from_integral(IntegralType value, std::true_type is_signed);
+    template <typename IntegralType,
+    void from_integral(IntegralType value, std::false_type is_signed);
+
     template <typename ArithmeticType,
               std::bool_constant IsIntegral>
     void from_number(ArithmeticType value);
