@@ -154,21 +154,43 @@ private:
     // alias declarations
     // -------------------------------------------------------------------------
     // C++17 type tag, operator() yields std::[true|false]_type
-    template <bool Expression>
-    using bool_constant = std::integral_constant<bool, Expression>;
-    // number can exceed max value held in digit_type ?
-    template <typename ArithmeticType>
+    template <bool E>
+    using bool_constant = std::integral_constant<bool, E>;
+    // arithmetic type 'T' can exceed max value held in digit_type ?
+    template <typename T>
     using exceeds_digit = bool_constant<
-        std::numeric_limits<ArithmeticType>::max() > digit_type_max
+        std::numeric_limits<T>::max() > digit_type_max
     >;
-    // number is signed?
+    // C++14 SFINAE mechanism for [en|dis]abling functions with return type 'R'
+    // according to constexpr bool 'E'
+    template <bool E, typename R = void>
+    using enable_if_t = typename std::enable_if<E, R>::type;
+    // arithmetic type 'T' is integral?
+    template <typename T, typename R = void>
+    using enable_if_integral = enable_if_t<std::is_integral<T>::value, R>;
+    template <typename T, typename R = void>
+    using enable_if_floating_point
+    = enable_if_t<std::is_floating_point<T>::value, R>;
+    // arithmetic type 'T' is signed?
+    template <typename T, typename R = void>
+    using enable_if_signed = enable_if_t<std::is_signed<T>::value, R>;
+    template <typename T, typename R = void>
+    using enable_if_unsigned = enable_if_t<std::is_unsigned<T>::value, R>;
+    // arithmetic type 'T' may exceed digit_type_max?
+    template <typename T, typename R = void>
+    using enable_if_exceeds_digit = enable_if_t<exceeds_digit<T>::value, R>;
+    template <typename T, typename R = void>
+    using enable_if_within_digit = enable_if_t<!exceeds_digit<T>::value, R>;
 
     // static methods
     // -------------------------------------------------------------------------
     // get_digit
-    template <typename UnsignedIntegralType,
-              std::bool_constant NeedMask>
-    static UnsignedIntegralType mask_digit(const UnsignedIntegralType value);
+    template <typename UnsignedIntegralType>
+    static UnsignedIntegralType mask_value(const UnsignedIntegralType value,
+                                           std::true_type needs_mask);
+    template <typename UnsignedIntegralType>
+    static UnsignedIntegralType mask_value(const UnsignedIntegralType value,
+                                           std::false_type needs_mask);
     template <typename UnsignedIntegralType>
     static digit_type get_digit(const UnsignedIntegralType value);
 
@@ -183,18 +205,20 @@ private:
     // from_number
     template <typename UnsignedIntegralType>
     void digits_from_unsigned_integral(const UnsignedIntegralType value,
-                                       std::true_type exceeds_digit);
+                                       std::true_type overflow);
     template <typename UnsignedIntegralType>
     void digits_from_unsigned_integral(const UnsignedIntegralType value,
-                                       std::false_type exceeds_digit);
-    template <typename IntegralType,
+                                       std::false_type overflow);
+    template <typename IntegralType>
     void from_integral(IntegralType value, std::true_type is_signed);
-    template <typename IntegralType,
+    template <typename IntegralType>
     void from_integral(IntegralType value, std::false_type is_signed);
-
     template <typename ArithmeticType,
               std::bool_constant IsIntegral>
-    void from_number(ArithmeticType value);
+    void from_number(ArithmeticType value, std::true_type is_integral);
+    template <typename ArithmeticType,
+              std::bool_constant IsIntegral>
+    void from_number(ArithmeticType value, std::false_type is_integral);
     // to_number
     template<typename ArithmeticType>
     ArithmeticType to_number() const;

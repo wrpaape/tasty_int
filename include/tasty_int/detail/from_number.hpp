@@ -14,10 +14,10 @@
 
 // initialize 'digits'
 // -----------------------------------------------------------------------------
-template <typename UnsignedIntegralType, // value may be >= digit_type_max
+template <typename UnsignedIntegralType> // value may be >= digit_type_max
 inline void
 TastyInt::digits_from_unsigned_integral(const UnsignedIntegralType value,
-                                        std::true_type exceeds_digit)
+                                        std::true_type overflow)
 {
     digits.reserve(2);
     digits.emplace_back(get_digit(value));
@@ -29,7 +29,7 @@ TastyInt::digits_from_unsigned_integral(const UnsignedIntegralType value,
 template <typename UnsignedIntegralType> // value <= digit_type_max
 inline void
 TastyInt::digits_from_unsigned_integral(const UnsignedIntegralType value,
-                                        std::false_type exceeds_digit)
+                                        std::false_type overflow)
 {
     digits { value };
 }
@@ -82,14 +82,18 @@ TastyInt::from_number(IntegralType value)
     from_integral<
         std::is_signed<IntegralType>
     >(value);
+
+    from_integral(value, std::is_signed<IntegralType>::value)
 }
 
 template <typename FloatingPointType,
-          std::false_type> // value is floating-point
+          std::false_type>
 inline void
-TastyInt::from_number(FloatingPointType value)
+TastyInt::from_number(FloatingPointType value,
+                      std::false_type) // value is floating-point
 {
-    from_integral(static_cast<signed_acc_type>(value));
+    from_integral(static_cast<signed_acc_type>(value),
+                  bool_constant<true>());
 }
 
 #endif // ifndef TASTY_INT_TASTY_INT_DETAIL_FROM_NUMBER_HPP

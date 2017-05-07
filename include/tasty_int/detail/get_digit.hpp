@@ -5,25 +5,24 @@
 // =============================================================================
 #include "tasty_int/tasty_int.hpp" // TastyInt interface
 #include <type_traits>             // std::[[true|false]_type]
-#include <limits>                  // std::numeric_limits
 
 
 // retrieve a digit_type from 
 // -----------------------------------------------------------------------------
-template <typename UnsignedIntegralType,
-          std::false_type> // don't need to mask out digit from value
+template <typename UnsignedIntegralType> // mask 'digit_bit' bits from value
 static inline UnsignedIntegralType
-TastyInt::mask_digit(const UnsignedIntegralType value)
-{
-    return value;
-}
-
-template <typename UnsignedIntegralType,
-          std::true_type> // retrieve the bottom 'digit_bit' bits from value
-static inline UnsignedIntegralType
-TastyInt::mask_digit(const UnsignedIntegralType value)
+TastyInt::mask_value(const UnsignedIntegralType value)
+                     std::true_type needs_mask)
 {
     return value & static_cast<UnsignedIntegralType>(digit_type_max);
+}
+
+template <typename UnsignedIntegralType>
+static inline UnsignedIntegralType
+TastyInt::mask_value(const UnsignedIntegralType value,
+                     std::false_type needs_mask) // don't need mask
+{
+    return value;
 }
 
 
@@ -34,9 +33,8 @@ static inline TastyInt::digit_type
 TastyInt::get_digit(const UnsignedIntegralType value)
 {
     return static_cast<digit_type>(
-        mask_digit<
-            std::numeric_limits<UnsignedIntegralType>::max() > digit_type_max
-        >(value)
+        mask_value(value,
+                   exceeds_digit<UnsignedIntegralType>())
     );
 }
 
