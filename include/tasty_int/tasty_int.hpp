@@ -6,7 +6,13 @@
 #include <vector>      // std::vector
 #include <string>      // std::string
 #include <iostream>    // std::[i|o]stream
-#include <type_traits> // std::[conditional|make_signed|bool_constant]
+#include <type_traits> // std::[enable_if
+                       //       |conditional
+                       //       |make_signed
+                       //       |is_[un]signed
+                       //       |is_integral
+                       //       |is_floating_point
+                       //       |numeric_limits]
 
 
 // Interface
@@ -136,24 +142,25 @@ private:
                 // digit_type = acc_type, and digit_type_max must be truncated
                 // from its native max value (acc_type_max)
                 acc_type
-            >::type>::type>::type digit_type;
+    >::type>::type>::type digit_type;
 
     // static data
     // -------------------------------------------------------------------------
     // digit_bit
     //      half the bit-size of acc_type
-    static const unsigned int digit_bit;
+    static const unsigned int digit_bit
+    = std::numeric_limits<acc_type>::digits / 2;
     // digit_type_max
     //      max value of digit_type where
     //      digit_type_max == (2 ^ N) - 1
     //                     == 1 << digit_bit - 1
     //                     <= floor(sqrt(native max value of acc_type))
     //                     <= native max value of digit_type
-    static const acc_type digit_type_max;
+    static const acc_type = (1 << digit_bit) - 1;
 
     // alias declarations
     // -------------------------------------------------------------------------
-    // C++17 type tag, operator() yields std::[true|false]_type
+    // C++17 type tag, {} or operator() yields std::[true|false]_type
     template <bool E>
     using bool_constant = std::integral_constant<bool, E>;
     // arithmetic type 'T' can exceed max value held in digit_type ?
@@ -185,14 +192,10 @@ private:
     // static methods
     // -------------------------------------------------------------------------
     // get_digit
-    template <typename UnsignedIntegralType>
-    static UnsignedIntegralType mask_value(const UnsignedIntegralType value,
-                                           std::true_type needs_mask);
-    template <typename UnsignedIntegralType>
-    static UnsignedIntegralType mask_value(const UnsignedIntegralType value,
-                                           std::false_type needs_mask);
-    template <typename UnsignedIntegralType>
-    static digit_type get_digit(const UnsignedIntegralType value);
+    template <typename T>
+    static enable_if_exceeds_digit<T, digit_type> get_digit(const T value);
+    template <typename T>
+    static enable_if_within_digit<T, digit_type> get_digit(const T value);
 
     // instance data
     // -------------------------------------------------------------------------
@@ -202,28 +205,32 @@ private:
 
     // instance methods
     // -------------------------------------------------------------------------
-    // from_number
-    template <typename UnsignedIntegralType>
-    void digits_from_unsigned_integral(const UnsignedIntegralType value,
-                                       std::true_type overflow);
-    template <typename UnsignedIntegralType>
-    void digits_from_unsigned_integral(const UnsignedIntegralType value,
-                                       std::false_type overflow);
-    template <typename IntegralType>
-    void from_integral(IntegralType value, std::true_type is_signed);
-    template <typename IntegralType>
-    void from_integral(IntegralType value, std::false_type is_signed);
-    template <typename ArithmeticType,
-              std::bool_constant IsIntegral>
-    void from_number(ArithmeticType value, std::true_type is_integral);
-    template <typename ArithmeticType,
-              std::bool_constant IsIntegral>
-    void from_number(ArithmeticType value, std::false_type is_integral);
-    // to_number
-    template<typename ArithmeticType>
-    ArithmeticType to_number() const;
-    template<typename ArithmeticType>
-    ArithmeticType to_number() const;
+    // init from number
+    template <typename T>
+    enable_if_exceeds_digit<T> digits_from_unsigned_integral(const T value);
+    template <typename T>
+    enable_if_within_digit<T> digits_from_unsigned_integral(const T value);
+    template <typename T>
+    enable_if_signed<T> from_integral(T value);
+    template <typename T>
+    enable_if_unsigned<T> from_integral(T value);
+    template <typename T>
+    enable_if_integral<T> from_arithmetic(T value);
+    template <typename T>
+    enable_if_floating_point<T> from_arithmetic(T value);
+    // cast to number
+    template <typename T>
+    enable_if_exceeds_digit<T, T> digits_to_unsigned_integral();
+    template <typename T>
+    enable_if_within_digit<T, T> digits_to_unsigned_integral();
+    template <typename T>
+    enable_if_signed<T, T> to_integral();
+    template <typename T, T>
+    enable_if_unsigned<T> to_integral();
+    template <typename T>
+    enable_if_integral<T, T> to_arithmetic();
+    template <typename T>
+    enable_if_floating_point<T, T> to_arithmetic();
 };
 
 
