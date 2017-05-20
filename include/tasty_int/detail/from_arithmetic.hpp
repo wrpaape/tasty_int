@@ -14,7 +14,7 @@
 // initialize 'digits'
 // -----------------------------------------------------------------------------
 template <typename T>
-inline TastyInt::enable_if_exceeds_digit<T> // value may be >= digit_type_max
+inline TastyInt::enable_if_exceeds_digit<T> // value may be > digit_type_max
 TastyInt::digits_from_unsigned_integral(const T value)
 {
     digits.reserve(2);
