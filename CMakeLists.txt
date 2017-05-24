@@ -20,17 +20,11 @@ set(PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set(PROJECT_TEST_DIR    ${PROJECT_SOURCE_DIR}/test)
 set(PROJECT_BIN_DIR     ${PROJECT_SOURCE_DIR}/bin)
 set(PROJECT_LIB_DIR     ${PROJECT_SOURCE_DIR}/lib)
+set(PROJECT_CMAKE_DIR   ${PROJECT_SOURCE_DIR}/cmake)
 
+# Add cmake dir to CMAKE_MODULE_PATH
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_CMAKE_DIR})
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BIN_DIR})
-
-# misc global variables
-
-
-# update include path
-include_directories(
-    ${PROJECT_INCLUDE_DIR}
-)
-
-# subdirectories
+# enter subdirectories
+add_subdirectory(test) # configure testing first
 add_subdirectory(src)
