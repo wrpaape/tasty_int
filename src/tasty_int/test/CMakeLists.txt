@@ -1,20 +1,8 @@
-set(TARGET                         test_tasty_int)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_TEST_DIR})
+include(add_catch_test)
 
-set(
-    SOURCES
-    test_tasty_int.cpp
+add_catch_test(
+    NAME      tasty_int
+    SOURCES   test_tasty_int.cpp
+              ${TASTY_INT_INCLUDE_DIR}/cmake_tutorial.hpp
+    LIBRARIES ${TASTY_INT_SHARED_LIBRARY}
 )
-
-set(
-    HEADERS
-    ${TASTY_INT_INCLUDE_DIR}/tasty_int.hpp
-)
-
-set(
-    LIBRARIES
-    ${TASTY_INT_SHARED_LIBRARY}
-)
-
-add_executable(${TARGET} ${SOURCES} ${HEADERS})
-target_link_libraries(${TARGET} ${LIBRARIES})
