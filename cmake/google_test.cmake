@@ -24,8 +24,9 @@ if(NOT GTEST_FOUND)
     add_dependencies(libgtest gtest)
 
     # Set libgtest properties
+    file(GLOB LIBGTEST_LOCATION ${BINARY_DIR}/googlemock/gtest/libgtest*)
     set_target_properties(libgtest PROPERTIES
-        IMPORTED_LOCATION                 ${BINARY_DIR}/googlemock/gtest/libgtest.a
+        IMPORTED_LOCATION                 ${LIBGTEST_LOCATION}
         IMPORTED_LINK_INTERFACE_LIBRARIES "${CMAKE_THREAD_LIBS_INIT}"
     )
 
@@ -34,8 +35,9 @@ if(NOT GTEST_FOUND)
     add_dependencies(libgmock gtest)
 
     # Set libgmock properties
+    file(GLOB LIBGMOCK_LOCATION ${BINARY_DIR}/googlemock/libgmock*)
     set_target_properties(libgmock PROPERTIES
-        IMPORTED_LOCATION                 ${BINARY_DIR}/googlemock/libgmock.a
+        IMPORTED_LOCATION                 ${LIBGMOCK_LOCATION}
         IMPORTED_LINK_INTERFACE_LIBRARIES "${CMAKE_THREAD_LIBS_INIT}"
     )
 
@@ -43,3 +45,7 @@ if(NOT GTEST_FOUND)
     set(GTEST_INCLUDE_DIRS ${SOURCE_DIR}/googletest/include)
     set(GMOCK_INCLUDE_DIRS ${SOURCE_DIR}/googlemock/include)
 endif()
+
+
+function(add_gtest)
+endfunction(add_gtest)
