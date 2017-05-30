@@ -251,6 +251,7 @@ TEST(IsPrimeTest, Negative) {
   EXPECT_FALSE(IsPrime(INT_MIN));
 }
 
+>>>>>>> 48dae6d81e7180d0378efc2eda25961e09bccd1c
 // Tests some trivial cases.
 TEST(IsPrimeTest, Trivial) {
   EXPECT_FALSE(IsPrime(0));
