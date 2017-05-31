@@ -28,7 +28,7 @@ TastyInt::TastyInt(ArithmeticType value)
 // =============================================================================
 template<typename ArithmeticType>
 inline ArithmeticType
-to_number() const;
+TastyInt::to_number() const
 {
     static_assert(std::is_arithmetic<ArithmeticType>::value,
                   "'ArithmeticType' must be an integral or floating-point "

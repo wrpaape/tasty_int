@@ -5,7 +5,7 @@
 int
 main()
 {
-    std::cout << "HELLO WORLD from " << __file__ << std::endl;
+    std::cout << "HELLO WORLD from " << __FILE__ << std::endl;
     
     return 0;
 }

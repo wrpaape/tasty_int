@@ -9,7 +9,7 @@
 // EXTERNAL API
 // =============================================================================
 template <typename T>
-static inline TastyInt::enable_if_exceeds_digit<T, TastyInt::digit_type>
+inline TastyInt::enable_if_exceeds_digit<T, TastyInt::digit_type>
 TastyInt::get_digit(const T value)
 {
     return static_cast<digit_type>(
@@ -18,7 +18,7 @@ TastyInt::get_digit(const T value)
 }
 
 template <typename T>
-static inline TastyInt::enable_if_within_digit<T, TastyInt::digit_type>
+inline TastyInt::enable_if_within_digit<T, TastyInt::digit_type>
 TastyInt::get_digit(const T value)
 {
     return static_cast<digit_type>(value);

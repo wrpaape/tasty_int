@@ -5,5 +5,5 @@
 
 // Static Constants
 // -----------------------------------------------------------------------------
-const TastyInt::acc_type
-TastyInt::digit_type_max((1ULL << (sizeof(TastyInt::acc_type) / 2)) - 1ULL);
+unsigned int TastyInt::global_default_base = 10;
+// TastyInt::digit_type_max((1ULL << (sizeof(TastyInt::acc_type) / 2)) - 1ULL);

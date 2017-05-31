@@ -28,7 +28,7 @@ template <typename T>
 inline TastyInt::enable_if_within_digit<T> // value <= digit_type_max
 TastyInt::digits_from_unsigned_integral(const T value)
 {
-    digits { value };
+    digits.emplace_back(value);
 }
 
 
@@ -47,7 +47,7 @@ TastyInt::from_integral(T value)
     }
 
     digits_from_unsigned_integral(
-        static_cast<std::make_unsigned<T>::type>(value)
+        static_cast<typename std::make_unsigned<T>::type>(value)
     );
 }
 

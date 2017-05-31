@@ -6,13 +6,13 @@
 #include <vector>      // std::vector
 #include <string>      // std::string
 #include <iostream>    // std::[i|o]stream
+#include <limits>      // std::numeric_limits
 #include <type_traits> // std::[enable_if
                        //       |conditional
                        //       |make_signed
                        //       |is_[un]signed
                        //       |is_integral
-                       //       |is_floating_point
-                       //       |numeric_limits]
+                       //       |is_floating_point]
 
 
 // Interface
@@ -22,17 +22,17 @@ class TastyInt
 // Friends
 // -----------------------------------------------------------------------------
     // arithmetic
-    friend TastyInt &operator+(const TastyInt &lhs, const TastyInt &rhs);
-    friend TastyInt &operator-(const TastyInt &lhs, const TastyInt &rhs);
-    friend TastyInt &operator*(const TastyInt &lhs, const TastyInt &rhs);
-    friend TastyInt &operator/(const TastyInt &lhs, const TastyInt &rhs);
-    friend TastyInt &operator%(const TastyInt &lhs, const TastyInt &rhs);
-    friend TastyInt &operator<<(const TastyInt &lhs, const TastyInt &rhs);
-    friend TastyInt &operator>>(const TastyInt &lhs, const TastyInt &rhs);
+    friend TastyInt operator+(const TastyInt &lhs, const TastyInt &rhs);
+    friend TastyInt operator-(const TastyInt &lhs, const TastyInt &rhs);
+    friend TastyInt operator*(const TastyInt &lhs, const TastyInt &rhs);
+    friend TastyInt operator/(const TastyInt &lhs, const TastyInt &rhs);
+    friend TastyInt operator%(const TastyInt &lhs, const TastyInt &rhs);
+    friend TastyInt operator<<(const TastyInt &lhs, const TastyInt &rhs);
+    friend TastyInt operator>>(const TastyInt &lhs, const TastyInt &rhs);
     // bitwise
-    friend TastyInt &operator&(const TastyInt &lhs, const TastyInt &rhs);
-    friend TastyInt &operator|(const TastyInt &lhs, const TastyInt &rhs);
-    friend TastyInt &operator^(const TastyInt &lhs, const TastyInt &rhs);
+    friend TastyInt operator&(const TastyInt &lhs, const TastyInt &rhs);
+    friend TastyInt operator|(const TastyInt &lhs, const TastyInt &rhs);
+    friend TastyInt operator^(const TastyInt &lhs, const TastyInt &rhs);
     // comparison
     friend int compare(const TastyInt &lhs, const TastyInt &rhs);
     // IO
@@ -44,7 +44,7 @@ class TastyInt
 public:
     // data
     // -------------------------------------------------------------------------
-    static unsigned int global_default_base = 10;
+    static unsigned int global_default_base; // mutable, initialized to 10
 
     // constructors
     // -------------------------------------------------------------------------
@@ -98,7 +98,7 @@ public:
     // conditional
     // -------------------------------------------------------------------------
     explicit operator bool() const;
-    explicit operator!() const;
+    bool operator!() const;
 
     // comparison
     // -------------------------------------------------------------------------
@@ -148,15 +148,15 @@ private:
     // -------------------------------------------------------------------------
     // digit_bit
     //      half the bit-size of acc_type
-    static const unsigned int digit_bit
-    = std::numeric_limits<acc_type>::digits / 2;
+    static const unsigned int
+    digit_bit = std::numeric_limits<acc_type>::digits / 2;
     // digit_type_max
     //      max value of digit_type where
     //      digit_type_max == (2 ^ N) - 1
     //                     == 1 << digit_bit - 1
     //                     <= floor(sqrt(native max value of acc_type))
     //                     <= native max value of digit_type
-    static const acc_type = (1 << digit_bit) - 1;
+    static const acc_type digit_type_max = (1UL << digit_bit) - 1;
 
     // alias declarations
     // -------------------------------------------------------------------------
@@ -166,7 +166,7 @@ private:
     // arithmetic type 'T' can exceed max value held in digit_type ?
     template <typename T>
     using exceeds_digit = bool_constant<
-        std::numeric_limits<T>::max() > digit_type_max
+        (std::numeric_limits<T>::max() > digit_type_max)
     >;
     // C++14 SFINAE mechanism for [en|dis]abling functions with return type 'R'
     // according to constexpr bool 'E'
@@ -225,12 +225,12 @@ private:
     enable_if_within_digit<T, T> digits_to_unsigned_integral();
     template <typename T>
     enable_if_signed<T, T> to_integral();
-    template <typename T, T>
-    enable_if_unsigned<T> to_integral();
     template <typename T>
-    enable_if_integral<T, T> to_arithmetic();
+    enable_if_unsigned<T, T> to_integral();
     template <typename T>
-    enable_if_floating_point<T, T> to_arithmetic();
+    enable_if_integral<T, T> to_arithmetic(T value);
+    template <typename T>
+    enable_if_floating_point<T, T> to_arithmetic(T value);
 };
 
 

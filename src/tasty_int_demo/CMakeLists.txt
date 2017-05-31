@@ -1,3 +1,6 @@
+# executable binaries are output to root 'bin' directory
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BIN_DIR})
+
 set(TARGET tasty_int_demo)
 
 set(

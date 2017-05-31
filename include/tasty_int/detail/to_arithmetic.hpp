@@ -35,7 +35,7 @@ TastyInt::digits_to_unsigned_integral()
 // process 'sign'
 // -----------------------------------------------------------------------------
 template <typename T>
-inline TastyInt::enable_if_signed<T> // return signed integral
+inline TastyInt::enable_if_signed<T, T> // return signed integral
 TastyInt::to_integral()
 {
     T value = static_cast<T> (
