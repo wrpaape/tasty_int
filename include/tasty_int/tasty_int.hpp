@@ -48,7 +48,7 @@ public:
 
     // constructors
     // -------------------------------------------------------------------------
-    TastyInt();                                              // default
+    TastyInt() = default;                                    // default
     TastyInt(const TastyInt &other);                         // copy
     TastyInt(const TastyInt &&other) noexcept;               // move
     TastyInt(const std::string &string,
@@ -58,7 +58,7 @@ public:
 
     // destructor
     // -------------------------------------------------------------------------
-    ~TastyInt() noexcept;
+    ~TastyInt() noexcept = default;
 
     // assignment
     // -------------------------------------------------------------------------
@@ -220,17 +220,17 @@ private:
     enable_if_floating_point<T> from_arithmetic(T value);
     // cast to number
     template <typename T>
-    enable_if_exceeds_digit<T, T> digits_to_unsigned_integral();
+    enable_if_exceeds_digit<T, T> digits_to_unsigned_integral() const;
     template <typename T>
-    enable_if_within_digit<T, T> digits_to_unsigned_integral();
+    enable_if_within_digit<T, T> digits_to_unsigned_integral() const;
     template <typename T>
-    enable_if_signed<T, T> to_integral();
+    enable_if_signed<T, T> to_integral() const;
     template <typename T>
-    enable_if_unsigned<T, T> to_integral();
+    enable_if_unsigned<T, T> to_integral() const;
     template <typename T>
-    enable_if_integral<T, T> to_arithmetic(T value);
+    enable_if_integral<T, T> to_arithmetic() const;
     template <typename T>
-    enable_if_floating_point<T, T> to_arithmetic(T value);
+    enable_if_floating_point<T, T> to_arithmetic() const;
 };
 
 

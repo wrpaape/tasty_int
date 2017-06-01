@@ -33,6 +33,7 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_CMAKE_DIR})
 # command line or set BUILD_TESTING to OFF in the interactive GUI (if supported)
 if(BUILD_TESTING)
     include(testing)
+    add_subdirectory(test)
 endif()
 
 # enter
