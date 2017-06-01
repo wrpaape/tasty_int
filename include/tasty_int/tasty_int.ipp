@@ -5,12 +5,34 @@
 #include "tasty_int/tasty_int.hpp"              // TastyInt interface
 #include "tasty_int/detail/from_arithmetic.hpp" // from_arithmetic
 #include "tasty_int/detail/to_arithmetic.hpp"   // to_arithmetic
-#include <limits>                               // std::numeric_limits
 #include <type_traits>                          // std::is_arithmetic
+#include <stdexcept>                            // std::invalid_argument
 
 
 // CONSTRUCTORS
 // =============================================================================
+inline
+TastyInt::TastyInt(const std::string &string,
+                   const unsigned int base)
+{
+    const unsigned char *token_values;
+
+    if (base <= 36) {
+        token_values = &base_36_token_values[0];
+    else if (base <= max_base)
+        token_values = &base_64_token_values[0];
+    else
+        throw std::invalid_argument(
+            "TastyInt::TastyInt(string, base) -- "
+            "input 'base' exceeds TastyInt::max_base (64)"
+        );
+
+    // const unsigned char *const
+    // tokens = reinterpret_cast<const unsigned char *>(string.data());
+
+    // from_string()
+}
+
 template<typename ArithmeticType>
 inline
 TastyInt::TastyInt(ArithmeticType value)

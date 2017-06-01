@@ -44,7 +44,8 @@ class TastyInt
 public:
     // data
     // -------------------------------------------------------------------------
-    static unsigned int global_default_base; // mutable, initialized to 10
+    static unsigned int global_default_base;  // mutable, initialized to 10
+    static const unsigned int max_base = 64u; // max base string representation
 
     // constructors
     // -------------------------------------------------------------------------
@@ -157,6 +158,18 @@ private:
     //                     <= floor(sqrt(native max value of acc_type))
     //                     <= native max value of digit_type
     static const acc_type digit_type_max = (1UL << digit_bit) - 1;
+    // base_36_token_values
+    //      lookup table for converting character tokens
+    //          '0', ... '9', 'a|A', ... 'z|Z'
+    //      to values
+    //          0, ... 9 , 10, ... 35
+    static const unsigned char
+    base_36_token_values[std::numeric_limits<unsigned char>::max() + 1];
+    // base_64_token_values
+    //      lookup table for converting Base64 character tokens to values
+    //          0 ... 63
+    static const unsigned char
+    base_64_token_values[std::numeric_limits<unsigned char>::max() + 1];
 
     // alias declarations
     // -------------------------------------------------------------------------

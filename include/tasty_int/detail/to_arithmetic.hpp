@@ -69,7 +69,7 @@ template <typename T>
 inline TastyInt::enable_if_floating_point<T, T> // return floating-point
 TastyInt::to_arithmetic() const
 {
-    static_cast<T>(
+    return static_cast<T>(
         to_integral<signed_acc_type>()
     );
 }
