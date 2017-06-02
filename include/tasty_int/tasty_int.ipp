@@ -17,7 +17,7 @@ TastyInt::TastyInt(const std::string &string,
 {
     const unsigned char *token_values;
 
-    if (base <= 36) {
+    if (base <= 36)
         token_values = &base_36_token_values[0];
     else if (base <= max_base)
         token_values = &base_64_token_values[0];
