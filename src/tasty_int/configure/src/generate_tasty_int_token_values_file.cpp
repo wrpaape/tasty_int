@@ -14,12 +14,12 @@ class TokenMap : public std::unordered_map<unsigned char, unsigned int>
 public:
     using std::unordered_map<unsigned char, unsigned int>::unordered_map;
 
-    const TokenMap::mapped_type &
-    get(const TokenMap::key_type &token)
+    TokenMap::mapped_type
+    get(const TokenMap::key_type &token) const
     {
-        TokenMap::const_iterator found = map.find(token)
+        TokenMap::const_iterator found = find(token);
 
-        return (found == map.end()) ? default_value : found->second;
+        return (found == end()) ? default_value : found->second;
     }
 
 private:
@@ -31,10 +31,11 @@ class Generator
 {
 public:
     Generator(const char *const path)
-        file(path,
-             std::ofstream::out | std::ofstream::trunc)
+        : file(path,
+               std::ofstream::out | std::ofstream::trunc)
     {
         file << std::setfill(' ');
+    }
 
     void
     put_head()
@@ -47,11 +48,14 @@ public:
 
         file << "// token -> value lookup tables for TastyInt (DO NOT MODIFY)\n"
                 "//\n"
-                "// generated on " << std::ctime(&timestamp) << "\n";
+                "// generated on: " << std::ctime(&timestamp) << // terminated with \n
+                "// =============================================================================\n"
+                "#include \"tasty_int/tasty_int.hpp\" // TastyInt::*\n";
     }
 
     template<typename T>
-    put(const T thing)
+    void
+    put(const T &thing)
     {
         file << thing;
     }
@@ -61,43 +65,29 @@ public:
             const TokenMap &map)
     {
         unsigned int token;
-        unsigned int row_begin;
         unsigned int row_end;
 
         file << "const unsigned char TastyInt::"
              << label << "_token_values[" << token_count << "] = {\n";
 
-        row_begin = 0;
+        token = 0;
          do {
-            row_end = row_begin + row_count;
+            row_end = token + row_count;
             if (row_end > token_count)
                 row_end = token_count;
 
-            // put tokens
-            token = row_begin;
-
-            file << "//  '" << token;
-
-            while (++token < row_end)
-                file << "', '" << token;
-
-            file << "'\n";
-
-
             // put values
-            token = row_begin;
-
-            file << "    " << put_value(map, token);
+            file << "    ", put_value(map, token);
 
             while (++token < row_end)
-                file << ", " << put_value(map, token);
+                file << ", ", put_value(map, token);
 
-            file << "'\n";
+            file << ",\n";
 
-            row_begin = row_end;
-        } while (row_begin < token_count);
+            token = row_end;
+        } while (token < token_count);
 
-        file << "}\n";
+        file << "};\n";
     }
 
 
@@ -107,21 +97,21 @@ private:
     static const unsigned int
     token_max = std::numeric_limits<TokenMap::key_type>::max();
     static const unsigned int token_count = token_max + 1;
-    static const unsigned int row_count   = 8;
+    static const unsigned int row_count   = 19;
 
-
-    std::ofstream &
+    void
     put_value(const TokenMap &map,
               const TokenMap::key_type &token)
     {
-        return file << std::setw(3) << map.get(token);
+        file << std::setw(2) << map.get(token);
     }
 }; // class Generator
 
 
+
 int
 main(int argc,
-     char argv[])
+     char *argv[])
 {
     if (argc < 2) {
         std::cerr << "expected 'path' as single argument" << std::endl;
