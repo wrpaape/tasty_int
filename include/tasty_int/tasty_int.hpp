@@ -54,14 +54,14 @@ public:
     TastyInt(const TastyInt &&other) noexcept;               // move
     TastyInt(const std::string &string,
              const unsigned int base = global_default_base); // from string
-    TastyInt::TastyInt(const char *string,
-                       const unsigned int base = global_default_base);
+    TastyInt(const char *string,
+             const unsigned int base = global_default_base);
     template<std::size_t size>
-    TastyInt::TastyInt(const char (&string)[size],
-                       const unsigned int base = global_default_base);
-    TastyInt::TastyInt(const char *string,
-                       const std::size_t length,
-                       const unsigned int base); // no default base
+    TastyInt(const char (&string)[size],
+             const unsigned int base = global_default_base);
+    TastyInt(const char *string,
+             const std::size_t length,
+             const unsigned int base); // no default base
     template<typename ArithmeticType>
     TastyInt(ArithmeticType value);                          // from number
 
