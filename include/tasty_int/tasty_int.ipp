@@ -3,6 +3,7 @@
 // EXTERNAL DEPENDENCIES
 // =============================================================================
 #include "tasty_int/tasty_int.hpp"              // TastyInt interface
+#include "tasty_int/detail/from_string.hpp"     // from_string
 #include "tasty_int/detail/from_arithmetic.hpp" // from_arithmetic
 #include "tasty_int/detail/to_arithmetic.hpp"   // to_arithmetic
 #include <type_traits>                          // std::is_arithmetic
@@ -36,8 +37,12 @@ inline
 TastyInt::TastyInt(const char (&string)[size],
                    const unsigned int base)
 {
-    TastyInt(string,
-             size - (size > 0),
+    static_assert(size > 0,
+                  "TastyInt::TastyInt(const char(&string)[0]) -- "
+                  "zero-size character array provided, expected "
+                  "c-style ('\0'-terminated) string");
+    TastyInt(&string[0],
+             size - 1,
              base);
 }
 
@@ -48,20 +53,20 @@ TastyInt::TastyInt(const char *string,
 {
     const unsigned char *token_values;
 
-    if (base <= 36)
+    if (base <= 36u)
         token_values = &base_36_token_values[0];
     else if (base <= max_base)
         token_values = &base_64_token_values[0];
     else
         throw std::invalid_argument(
-            "TastyInt::TastyInt(string, base) -- "
+            "TastyInt::TastyInt(string) -- "
             "input 'base' exceeds TastyInt::max_base (64)"
         );
 
-    // const unsigned char *const
-    // tokens = reinterpret_cast<const unsigned char *>(string.data());
-
-    // from_string()
+    from_string(reinterpret_cast<const unsigned char *>(string),
+                length,
+                base,
+                token_values);
 }
 
 

@@ -44,8 +44,8 @@ class TastyInt
 public:
     // data
     // -------------------------------------------------------------------------
-    static unsigned int global_default_base;  // mutable, initialized to 10
-    static const unsigned int max_base = 64u; // max base string representation
+    static unsigned int global_default_base; // mutable, initialized to 10
+    static const unsigned int max_base = 64; // max base string representation
 
     // constructors
     // -------------------------------------------------------------------------
@@ -217,6 +217,7 @@ private:
     static enable_if_exceeds_digit<T, digit_type> get_digit(const T value);
     template <typename T>
     static enable_if_within_digit<T, digit_type> get_digit(const T value);
+    [[ noreturn ]] void throw_from_string_no_valid_digits();
 
     // instance data
     // -------------------------------------------------------------------------
@@ -226,6 +227,17 @@ private:
 
     // instance methods
     // -------------------------------------------------------------------------
+    // init from string
+    void
+    from_string(const unsigned char *string,
+                std::size_t length,
+                const unsigned int base,
+                const unsigned char *token_values);
+    void
+    digits_from_tokens(const unsigned char *begin,
+                       const unsigned char *end,
+                       const unsigned int base,
+                       const unsigned char *token_values);
     // init from number
     template <typename T>
     enable_if_exceeds_digit<T> digits_from_unsigned_integral(const T value);
