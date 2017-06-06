@@ -3,8 +3,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_LIB_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_LIB_DIR})
 
 # base_XX_token_values lookup tables
-file(STRINGS .gitignore token_values_filename)
-set(token_values_path ${CMAKE_CURRENT_LIST_DIR}/${token_values_filename})
+set(token_values_path
+    ${CMAKE_CURRENT_LIST_DIR}/codegen/tasty_int_token_values.cpp)
 set(
     sources
     tasty_int.cpp

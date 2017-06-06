@@ -60,7 +60,7 @@ public:
     TastyInt(const char (&string)[size],
              const unsigned int base = global_default_base);
     TastyInt(const char *string,
-             const std::size_t length,
+             std::size_t length,
              const unsigned int base); // no default base
     template<typename ArithmeticType>
     TastyInt(ArithmeticType value);                          // from number
@@ -171,12 +171,12 @@ private:
     //          '0', ... '9', 'a|A', ... 'z|Z'
     //      to values
     //          0, ... 9 , 10, ... 35
-    static const unsigned char
+    static const char
     base_36_token_values[std::numeric_limits<unsigned char>::max() + 1];
     // base_64_token_values
     //      lookup table for converting Base64 character tokens to values
     //          0 ... 63
-    static const unsigned char
+    static const char
     base_64_token_values[std::numeric_limits<unsigned char>::max() + 1];
 
     // alias declarations
@@ -217,7 +217,10 @@ private:
     static enable_if_exceeds_digit<T, digit_type> get_digit(const T value);
     template <typename T>
     static enable_if_within_digit<T, digit_type> get_digit(const T value);
+    // throwing methods
     [[ noreturn ]] void throw_from_string_no_valid_digits();
+    [[ noreturn ]] void throw_from_string_invalid_digits();
+    [[ noreturn ]] void throw_from_string_max_base_exceeded();
 
     // instance data
     // -------------------------------------------------------------------------
@@ -228,16 +231,10 @@ private:
     // instance methods
     // -------------------------------------------------------------------------
     // init from string
-    void
-    from_string(const unsigned char *string,
-                std::size_t length,
-                const unsigned int base,
-                const unsigned char *token_values);
-    void
-    digits_from_tokens(const unsigned char *begin,
-                       const unsigned char *end,
-                       const unsigned int base,
-                       const unsigned char *token_values);
+    void digits_from_tokens(const unsigned char *begin,
+                            const std::size_t length,
+                            const unsigned int base,
+                            const char *token_values);
     // init from number
     template <typename T>
     enable_if_exceeds_digit<T> digits_from_unsigned_integral(const T value);
