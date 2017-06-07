@@ -1,42 +1,40 @@
-if(PROJECT_CMAKE_ADD_GOOGLE_TEST_CMAKE_INCLUDED)
+if(PROJECT_CMAKE_ADD_UNITY_TEST_CMAKE_INCLUDED)
     return()
 endif()
-set(PROJECT_CMAKE_ADD_GOOGLE_TEST_CMAKE_INCLUDED TRUE)
+set(PROJECT_CMAKE_ADD_UNITY_TEST_CMAKE_INCLUDED TRUE)
 # ==============================================================================
-# add a 'test_${NAME}' executable and CTest from sources compiled with the
-# Google Test/Mock framework
+# add a 'test_${NAME}' executable and CTest from sources compiled with
+# ThrowTheSwitch's Unity Test framework
 # ==============================================================================
 # External Dependencies
 # ------------------------------------------------------------------------------
 cmake_minimum_required(VERSION 2.8.2 FATAL_ERROR) # ExternalProject
-find_package(Threads REQUIRED)                    # We need thread support
 include(ExternalProject)
 include(add_custom_test)
 
 
 # Exported Variables
 # ------------------------------------------------------------------------------
-set(GOOGLE_TEST_SRC_DIR   ${PROJECT_TEST_SRC_DIR}/googletest)
-set(GOOGLE_TEST_BUILD_DIR ${PROJECT_BUILD_TEST_SRC_DIR}/googletest)
+set(UNITY_TEST_SRC_DIR           ${PROJECT_TEST_SRC_DIR}/Unity)
+set(UNITY_TEST_BUILD_DIR         ${PROJECT_BUILD_TEST_SRC_DIR}/Unity)
+set(PROJECT_CMAKE_UNITY_TEST_DIR ${PROJECT_CMAKE_DIR}/Unity)
 set(
-    GOOGLE_TEST_LIBRARIES
-    gtest
-    gtest_main
-    gmock
-    gmock_main
-    ${CMAKE_THREAD_LIBS_INIT}
+    UNITY_TEST_LIBRARIES
+    unity_test
 )
- 
 
-# Set Up Framework
+
+#Set Up Framework
 # ------------------------------------------------------------------------------
 ExternalProject_Add(
-    googletest
-    GIT_REPOSITORY https://github.com/google/googletest.git
+    Unity
+    GIT_REPOSITORY https://github.com/ThrowTheSwitch/Unity.git
     GIT_TAG        master
-    SOURCE_DIR     ${GOOGLE_TEST_SRC_DIR}
-    BINARY_DIR     ${GOOGLE_TEST_BUILD_DIR}
-    INSTALL_DIR    ${PROJECT_TEST_DIR}
+    SOURCE_DIR     ${UNITY_TEST_SRC_DIR}
+    BINARY_DIR     ${UNITY_TEST_BUILD_DIR}
+    PATCH_COMMAND  ${CMAKE_COMMAND} -E copy
+                   ${PROJECT_CMAKE_UNITY_TEST_DIR}/CMakeLists.txt
+                   ${UNITY_TEST_SRC_DIR}/CMakeLists.txt
     CMAKE_ARGS     -DCMAKE_INSTALL_PREFIX=${PROJECT_TEST_DIR}
 )
 
@@ -45,13 +43,13 @@ ExternalProject_Add(
 # when building with Visual Studio
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-
+ 
 # External API
 # ------------------------------------------------------------------------------
 function(add_google_test)
     add_custom_test(
         ${ARGN}
         FRAMEWORK_NAME      googletest
-        FRAMEWORK_LIBRARIES ${GOOGLE_TEST_LIBRARIES}
+        FRAMEWORK_LIBRARIES ${UNITY_TEST_LIBRARIES}
     )
 endfunction()
