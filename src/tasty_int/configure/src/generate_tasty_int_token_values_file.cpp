@@ -9,10 +9,10 @@
 
 
 
-class TokenMap : public std::unordered_map<unsigned char, unsigned int>
+class TokenMap : public std::unordered_map<unsigned char, int>
 {
 public:
-    using std::unordered_map<unsigned char, unsigned int>::unordered_map;
+    using std::unordered_map<unsigned char, int>::unordered_map;
 
     TokenMap::mapped_type
     get(const TokenMap::key_type &token) const
@@ -23,7 +23,7 @@ public:
     }
 
 private:
-    static const TokenMap::mapped_type default_value = 0;
+    static const TokenMap::mapped_type default_value = -1;
 };
 
 
@@ -67,7 +67,7 @@ public:
         unsigned int token;
         unsigned int row_end;
 
-        file << "const unsigned char TastyInt::"
+        file << "const char TastyInt::"
              << label << "_token_values[" << token_count << "] = {\n";
 
         token = 0;
