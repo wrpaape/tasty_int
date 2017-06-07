@@ -38,18 +38,14 @@ ExternalProject_Add(
     CMAKE_ARGS     -DCMAKE_INSTALL_PREFIX=${PROJECT_TEST_DIR}
 )
 
-
-# Prevent GoogleTest from overriding our compiler/linker options
-# when building with Visual Studio
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-
  
 # External API
 # ------------------------------------------------------------------------------
-function(add_google_test)
+function(add_unity_test)
+    # TODO: test_runners
     add_custom_test(
         ${ARGN}
-        FRAMEWORK_NAME      googletest
+        FRAMEWORK_NAME      Unity
         FRAMEWORK_LIBRARIES ${UNITY_TEST_LIBRARIES}
     )
 endfunction()
