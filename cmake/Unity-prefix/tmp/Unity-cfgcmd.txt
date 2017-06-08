@@ -1,1 +1,0 @@
-cmd='/usr/local/Cellar/cmake/3.4.3/bin/cmake;-DCMAKE_INSTALL_PREFIX=/Users/Reid/my_projects/cpp/tasty_int/test;-GUnix Makefiles;/Users/Reid/my_projects/cpp/tasty_int/test/src/Unity'
