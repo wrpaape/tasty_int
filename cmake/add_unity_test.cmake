@@ -9,6 +9,7 @@ set(PROJECT_CMAKE_ADD_UNITY_TEST_CMAKE_INCLUDED TRUE)
 # External Dependencies
 # ------------------------------------------------------------------------------
 cmake_minimum_required(VERSION 2.8.2 FATAL_ERROR) # ExternalProject
+find_package(Ruby 1.9 REQUIRED)                   # test runner generators
 include(ExternalProject)
 include(add_custom_test)
 
@@ -17,7 +18,7 @@ include(add_custom_test)
 # ------------------------------------------------------------------------------
 set(UNITY_TEST_SRC_DIR           ${PROJECT_TEST_SRC_DIR}/Unity)
 set(UNITY_TEST_BUILD_DIR         ${PROJECT_BUILD_TEST_SRC_DIR}/Unity)
-set(PROJECT_CMAKE_UNITY_TEST_DIR ${PROJECT_CMAKE_DIR}/Unity)
+set(PROJECT_CMAKE_UNITY_TEST_DIR ${CMAKE_CURRENT_LIST_DIR}/unity_test)
 set(
     UNITY_TEST_LIBRARIES
     unity_test
@@ -31,12 +32,16 @@ ExternalProject_Add(
     GIT_REPOSITORY      https://github.com/ThrowTheSwitch/Unity.git
     GIT_TAG             master
     PATCH_COMMAND       ${CMAKE_COMMAND} -E copy
-                        ${PROJECT_CMAKE_UNITY_TEST_DIR}/gitignore_cmakelists_txt
+                        ${PROJECT_CMAKE_UNITY_TEST_DIR}/gitignore_patches
                         ${UNITY_TEST_SRC_DIR}/.gitignore
                         COMMAND
                         ${CMAKE_COMMAND} -E copy
                         ${PROJECT_CMAKE_UNITY_TEST_DIR}/CMakeLists.txt
                         ${UNITY_TEST_SRC_DIR}/CMakeLists.txt
+                        COMMAND
+                        ${CMAKE_COMMAND} -E copy
+                        ${PROJECT_CMAKE_UNITY_TEST_DIR}/unity_config.h
+                        ${UNITY_TEST_SRC_DIR}/src/unity_config.h
     SOURCE_DIR          ${UNITY_TEST_SRC_DIR}
     BINARY_DIR          ${UNITY_TEST_BUILD_DIR}
     TEST_BEFORE_INSTALL ON

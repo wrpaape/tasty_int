@@ -13,7 +13,7 @@ include(add_custom_test)
 
 # Exported Variables
 # ------------------------------------------------------------------------------
-set(CATCH_TEST_DIR    ${PROJECT_TEST_INCLUDE_DIR}/catch)
+set(CATCH_TEST_DIR    ${PROJECT_TEST_INCLUDE_DIR}/catch_test)
 set(CATCH_TEST_HEADER ${CATCH_TEST_DIR}/catch.hpp)
 
 
