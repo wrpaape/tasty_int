@@ -28,14 +28,16 @@ set(
 # ------------------------------------------------------------------------------
 ExternalProject_Add(
     Unity
-    GIT_REPOSITORY https://github.com/ThrowTheSwitch/Unity.git
-    GIT_TAG        master
-    SOURCE_DIR     ${UNITY_TEST_SRC_DIR}
-    BINARY_DIR     ${UNITY_TEST_BUILD_DIR}
-    PATCH_COMMAND  ${CMAKE_COMMAND} -E copy
-                   ${PROJECT_CMAKE_UNITY_TEST_DIR}/CMakeLists.txt
-                   ${UNITY_TEST_SRC_DIR}/CMakeLists.txt
-    CMAKE_ARGS     -DCMAKE_INSTALL_PREFIX=${PROJECT_TEST_DIR}
+    GIT_REPOSITORY      https://github.com/ThrowTheSwitch/Unity.git
+    GIT_TAG             master
+    PATCH_COMMAND       ${CMAKE_COMMAND} -E copy
+                        ${PROJECT_CMAKE_UNITY_TEST_DIR}/CMakeLists.txt
+                        ${UNITY_TEST_SRC_DIR}/CMakeLists.txt
+    SOURCE_DIR          ${UNITY_TEST_SRC_DIR}
+    BINARY_DIR          ${UNITY_TEST_BUILD_DIR}
+    BUILD_IN_SOURCE     OFF
+    TEST_BEFORE_INSTALL ON
+    CMAKE_ARGS          -DCMAKE_INSTALL_PREFIX=${PROJECT_TEST_DIR}
 )
 
  

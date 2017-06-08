@@ -1,0 +1,1 @@
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/tasty_int_demo.dir/tasty_int_demo.cpp.o  -o ../../../bin/tasty_int_demo  ../../../lib/libtasty_int_static.a 

@@ -9,7 +9,6 @@ project(
 # cmake options
 set(CMAKE_VERBOSE_MAKEFILE on)
 set(CMAKE_CXX_STANDARD     14)
-
 option(BUILD_TESTING "Enable unit testing." ON)
 
 # config defines
@@ -33,6 +32,7 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_CMAKE_DIR})
 # command line or set BUILD_TESTING to OFF in the interactive GUI (if supported)
 if(BUILD_TESTING)
     include(testing)
+    include(add_unity_test)
     add_subdirectory(test)
 endif()
 

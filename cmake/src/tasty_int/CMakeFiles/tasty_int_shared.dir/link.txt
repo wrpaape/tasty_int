@@ -1,0 +1,1 @@
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -dynamiclib -Wl,-headerpad_max_install_names  -o ../../../lib/libtasty_int_shared.dylib -install_name @rpath/libtasty_int_shared.dylib CMakeFiles/tasty_int_shared.dir/tasty_int.cpp.o CMakeFiles/tasty_int_shared.dir/codegen/tasty_int_token_values.cpp.o 

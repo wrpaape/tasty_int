@@ -1,0 +1,2 @@
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc ../../../lib/libtasty_int_static.a  CMakeFiles/tasty_int_static.dir/tasty_int.cpp.o CMakeFiles/tasty_int_static.dir/codegen/tasty_int_token_values.cpp.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib ../../../lib/libtasty_int_static.a
