@@ -25,12 +25,12 @@ add_library(unity_test SHARED ${sources} ${headers})
 
 add_test(
     NAME              test_unity_test_framework
-    COMMAND           make test
+    COMMAND           $(MAKE) test
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/test
 )
 
-install(DIRECTORY DESTINATION ${headers_install_dir})
-install(DIRECTORY DESTINATION ${scripts_install_dir})
+# install(DIRECTORY DESTINATION ${headers_install_dir})
+# install(DIRECTORY DESTINATION ${scripts_install_dir})
 
 install(TARGETS ${headers} DESTINATION ${headers_install_dir})
 install(TARGETS ${scripts} DESTINATION ${scripts_install_dir})
