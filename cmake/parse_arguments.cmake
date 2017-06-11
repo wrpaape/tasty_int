@@ -29,7 +29,7 @@ macro(parse_arguments _prefix
 
     # check for required end user parameters
     foreach(_required ${_required_keywords})
-        if("${${_prefix}_${_required}}" STREQUAL "")
+        if(NOT DEFINED ${_prefix}_${_required})
             list(APPEND ${_prefix}_MISSING_REQUIRED_ARGUMENTS ${_required})
         endif()
     endforeach()

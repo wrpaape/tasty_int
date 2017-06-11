@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(
     tasty_int
     VERSION 0.1.0
-    LANGUAGES CXX
+    LANGUAGES CXX C
 )
 
 # cmake options

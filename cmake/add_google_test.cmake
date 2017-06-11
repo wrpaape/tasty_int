@@ -24,7 +24,6 @@ set(
     gtest_main
     gmock
     gmock_main
-    ${CMAKE_THREAD_LIBS_INIT}
 )
  
 
@@ -44,12 +43,28 @@ ExternalProject_Add(
 # when building with Visual Studio
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
+# import libraries from installed location
+foreach(library ${GOOGLE_TEST_LIBRARIES})
+    add_library(${library} STATIC IMPORTED GLOBAL)
+    add_dependencies(${library} googletest)
+    set(filename
+        ${CMAKE_STATIC_LIBRARY_PREFIX}${library}${CMAKE_STATIC_LIBRARY_SUFFIX})
+    set_target_properties(
+        ${library}
+        PROPERTIES
+        IMPORTED_LOCATION                 ${PROJECT_TEST_LIB_DIR}/${filename}
+        INTERFACE_INCLUDE_DIRECTORIES     ${PROJECT_TEST_INCLUDE_DIR}
+        IMPORTED_LINK_INTERFACE_LIBRARIES "${CMAKE_THREAD_LIBS_INIT}"
+    )
+endforeach()
+
+
 
 # External API
 # ------------------------------------------------------------------------------
 function(add_google_test)
     add_custom_test(
-        ${ARGN}
+        ${ARGV}
         FRAMEWORK_NAME      googletest
         FRAMEWORK_LIBRARIES ${GOOGLE_TEST_LIBRARIES}
     )

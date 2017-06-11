@@ -17,15 +17,18 @@ function(add_custom_test)
         boolean_keywords  ""
     )
     set(
-        value_keywords    FRAMEWORK_NAME
-                          NAME
+        value_keywords    NAME
+                          FRAMEWORK_NAME
     )
     set(
-        list_keywords     FRAMEWORK_INCLUDE_DIRECTORIES
+        list_keywords     SOURCES
+                          LIBRARIES
+                          DEPENDENCIES
+                          INCLUDE_DIRECTORIES
                           FRAMEWORK_SOURCES
                           FRAMEWORK_LIBRARIES
-                          SOURCES
-                          LIBRARIES
+                          FRAMEWORK_DEPENDENCIES
+                          FRAMEWORK_INCLUDE_DIRECTORIES
     )
     set(
         required_keywords NAME
@@ -53,28 +56,31 @@ function(add_custom_test)
         )
     endif()
 
-    include_directories(
-        ${CUSTOM_TEST_NAME}
-        PUBLIC
-        ${PROJECT_INCLUDE_DIR}
-        ${PROJECT_TEST_INCLUDE_DIR}
-        ${CUSTOM_TEST_FRAMEWORK_INCLUDE_DIRECTORIES}
-    )
-
-    link_directories(${PROJECT_TEST_LIB_DIR})
-
     add_executable(
         ${CUSTOM_TEST_NAME}
         ${CUSTOM_TEST_SOURCES}
         ${CUSTOM_TEST_FRAMEWORK_SOURCES}
     )
 
-    if(CUSTOM_TEST_LIBRARIES OR CUSTOM_TEST_FRAMEWORK_LIBRARIES)
-        target_link_libraries(
-            ${CUSTOM_TEST_NAME}
-            ${CUSTOM_TEST_LIBRARIES}
-            ${CUSTOM_TEST_FRAMEWORK_LIBRARIES}
-        )
+    target_include_directories(
+        ${CUSTOM_TEST_NAME}
+        PUBLIC
+        ${CUSTOM_TEST_INCLUDE_DIRECTORIES}
+        ${CUSTOM_TEST_FRAMEWORK_INCLUDE_DIRECTORIES}
+        ${PROJECT_TEST_INCLUDE_DIR}
+        ${PROJECT_INCLUDE_DIR}
+    )
+
+    list(APPEND CUSTOM_TEST_LIBRARIES ${CUSTOM_TEST_FRAMEWORK_LIBRARIES})
+    if (CUSTOM_TEST_LIBRARIES)
+        target_link_libraries(${CUSTOM_TEST_NAME} ${CUSTOM_TEST_LIBRARIES})
+    endif()
+
+
+    list(APPEND CUSTOM_TEST_DEPENDENCIES ${CUSTOM_TEST_FRAMEWORK_NAME}
+                                         ${CUSTOM_TEST_FRAMEWORK_DEPENDENCIES})
+    if (CUSTOM_TEST_DEPENDENCIES)
+        add_dependencies(${CUSTOM_TEST_NAME} ${CUSTOM_TEST_DEPENDENCIES})
     endif()
 
     set_target_properties(
@@ -90,5 +96,5 @@ function(add_custom_test)
     )
 
     # append to dependencies of 'make run_tests'
-    add_dependencies(${PROJECT_RUN_TESTS_TARGET} ${CUSTOM_TEST_NAME})
+    add_dependencies(run_tests ${CUSTOM_TEST_NAME})
 endfunction()

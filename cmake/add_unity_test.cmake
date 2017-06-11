@@ -16,15 +16,17 @@ include(add_custom_test)
 
 # Exported Variables
 # ------------------------------------------------------------------------------
-set(UNITY_TEST_SRC_DIR    ${PROJECT_TEST_SRC_DIR}/Unity)
-set(UNITY_TEST_BUILD_DIR  ${PROJECT_BUILD_TEST_SRC_DIR}/Unity)
-set(UNITY_TEST_SCRIPT_DIR ${PROJECT_TEST_SCRIPT_DIR}/unity_test)
-set(UNITY_TEST_RUNNER_DIR ${PROJECT_TEST_RUNNER_DIR}/unity_test)
-set(UNITY_TEST_PATCH_DIR  ${CMAKE_CURRENT_LIST_DIR}/unity_test)
+set(UNITY_TEST_SRC_DIR     ${PROJECT_TEST_SRC_DIR}/Unity)
+set(UNITY_TEST_BUILD_DIR   ${PROJECT_BUILD_TEST_SRC_DIR}/Unity)
+set(UNITY_TEST_INCLUDE_DIR ${PROJECT_TEST_SRC_DIR}/unity)
+set(UNITY_TEST_SCRIPT_DIR  ${PROJECT_TEST_SCRIPT_DIR}/Unity)
+set(UNITY_TEST_RUNNER_DIR  ${PROJECT_TEST_RUNNER_DIR}/Unity)
+set(UNITY_TEST_PATCH_DIR   ${CMAKE_CURRENT_LIST_DIR}/Unity)
 set(
     UNITY_TEST_LIBRARIES
-    unity_test
+    unity
 )
+set(UNITY_TEST_CONFIG_HEADER ${UNITY_TEST_INCLUDE_DIR}/unity_config.h)
 
 
 #Set Up Framework
@@ -50,6 +52,12 @@ ExternalProject_Add(
     CMAKE_ARGS          -DCMAKE_INSTALL_PREFIX=${PROJECT_TEST_DIR}
 )
 
+add_custom_target(
+    unity_test_config_header
+    DEPENDS Unity
+            ${UNITY_TEST_CONFIG_HEADER}
+)
+
  
 # External API
 # ------------------------------------------------------------------------------
@@ -66,12 +74,9 @@ function(add_unity_test)
     endif()
     list(GET ARGV ${i_first_source} unity_test_source)
 
-    # name test runner source file, insert into 'SOURCES'
+    # generate test runner source file
     set(unity_test_runner_source
         "${UNITY_TEST_RUNNER_DIR}/codegen/runner__${unity_test_source}")
-    list(INSERT ARGV ${i_first_source} ${unity_test_runner_source})
-
-    # generate test runner
     add_custom_command(
         OUTPUT            ${unity_test_runner_source}
         COMMAND           ${RUBY_EXECUTABLE}
@@ -83,8 +88,10 @@ function(add_unity_test)
     )
 
     add_custom_test(
-        ${ARGN}
-        FRAMEWORK_NAME      Unity
-        FRAMEWORK_LIBRARIES ${UNITY_TEST_LIBRARIES}
+        ${ARGV}
+        FRAMEWORK_NAME          Unity
+        FRAMEWORK_SOURCES       ${unity_test_runner_source}
+        FRAMEWORK_LIBRARIES     ${UNITY_TEST_LIBRARIES}
+        FRAMEWORK_DEPENDENCIES  unity_test_config_header
     )
 endfunction()

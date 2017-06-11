@@ -21,9 +21,6 @@ set(PROJECT_TEST_BIN_DIR          ${PROJECT_TEST_DIR}/bin)
 set(PROJECT_TEST_SCRIPT_DIR       ${PROJECT_TEST_DIR}/script)
 set(PROJECT_BUILD_TEST_SRC_DIR    ${PROJECT_BUILD_DIR}/test/src)
 
-# build and run all custom tests with verbose output
-set(PROJECT_RUN_TESTS_TARGET run_tests)
-
 
 # Targets
 # ------------------------------------------------------------------------------
@@ -32,6 +29,6 @@ enable_testing()
 
 # add 'make run_tests' to build and run tests
 add_custom_target(
-    ${PROJECT_RUN_TESTS_TARGET}
+    run_tests
     COMMAND ${CMAKE_CTEST_COMMAND} --extra-verbose --output-on-failure
 )
