@@ -53,17 +53,25 @@ ExternalProject_Add(
  
 # External API
 # ------------------------------------------------------------------------------
-function(add_unity_test unity_test_source)
+function(add_unity_test)
+    # first source file is the unity test file
+    list(FIND ARGV SOURCES i_sources)
+    math(EXPR i_first_source "1+0${i_sources}") # bug: -1 + 1, 1 + -1
+                                                # not supported
+    if(i_first_source EQUAL 0) # -1 (not found) + 1 or last element
+        message(
+            FATAL_ERROR
+            "add_unity_test -- required 'SOURCES' list not provided"
+        )
+    endif()
+    list(GET ARGV ${i_first_source} unity_test_source)
+
+    # name test runner source file, insert into 'SOURCES'
     set(unity_test_runner_source
         "${UNITY_TEST_RUNNER_DIR}/codegen/runner__${unity_test_source}")
+    list(INSERT ARGV ${i_first_source} ${unity_test_runner_source})
 
-    # TODO: test_runners
-    add_custom_test(
-        ${ARGN}
-        FRAMEWORK_NAME      Unity
-        FRAMEWORK_LIBRARIES ${UNITY_TEST_LIBRARIES}
-    )
-
+    # generate test runner
     add_custom_command(
         OUTPUT            ${unity_test_runner_source}
         COMMAND           ${RUBY_EXECUTABLE}
@@ -72,5 +80,11 @@ function(add_unity_test unity_test_source)
                           ${unity_test_runner_source}
         WORKING_DIRECTORY ${UNITY_TEST_SCRIPT_DIR}
         COMMENT           "generate unity test runner for '${unity_test_source}'"
+    )
+
+    add_custom_test(
+        ${ARGN}
+        FRAMEWORK_NAME      Unity
+        FRAMEWORK_LIBRARIES ${UNITY_TEST_LIBRARIES}
     )
 endfunction()
