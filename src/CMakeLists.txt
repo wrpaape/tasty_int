@@ -5,10 +5,14 @@ include_directories(${PROJECT_INCLUDE_DIR})
 set(TASTY_INT_STATIC_LIBRARY tasty_int_static)
 set(TASTY_INT_SHARED_LIBRARY tasty_int_shared)
 set(TASTY_INT_INCLUDE_DIR    ${PROJECT_INCLUDE_DIR}/tasty_int)
-file(
-    GLOB_RECURSE
+set(
     TASTY_INT_HEADERS
-    ${TASTY_INT_INCLUDE_DIR}/*.[h|i]pp
+    ${TASTY_INT_INCLUDE_DIR}/tasty_int.hpp
+    ${TASTY_INT_INCLUDE_DIR}/tasty_int.ipp
+    ${TASTY_INT_INCLUDE_DIR}/detail/get_digit.hpp
+    ${TASTY_INT_INCLUDE_DIR}/detail/throw_from_string.hpp
+    ${TASTY_INT_INCLUDE_DIR}/detail/from_arithmetic.hpp
+    ${TASTY_INT_INCLUDE_DIR}/detail/to_arithmetic.hpp
 )
 
 

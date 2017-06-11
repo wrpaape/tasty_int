@@ -9,11 +9,12 @@ project(
 # cmake options
 set(CMAKE_VERBOSE_MAKEFILE on)
 set(CMAKE_CXX_STANDARD     14)
+set(CMAKE_C_STANDARD       11)
 option(BUILD_TESTING "Enable unit testing." ON)
 
 # config defines
-set(CMAKE_TUTORIAL_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR})
-set(CMAKE_TUTORIAL_AUTHOR  "\"wrpaape\"")
+set(TASTY_INT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR})
+set(TASTY_INT_AUTHOR  "\"wrpaape\"")
 
 # global directories
 set(PROJECT_SRC_DIR     ${PROJECT_SOURCE_DIR}/src)
