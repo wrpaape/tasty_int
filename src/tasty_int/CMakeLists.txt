@@ -13,8 +13,15 @@ set(
 )
 
 # build tasty_int libraries
-add_library(${TASTY_INT_STATIC_LIBRARY} STATIC ${sources})
-add_library(${TASTY_INT_SHARED_LIBRARY} SHARED ${sources})
+foreach(type STATIC SHARED)
+    add_library(${TASTY_INT_${type}_LIBRARY} ${type} ${sources})
+    target_include_directories(
+        ${TASTY_INT_${type}_LIBRARY}
+        INTERFACE
+        ${PROJECT_INCLUDE_DIR}
+    )
+endforeach()
+# add_library(${TASTY_INT_SHARED_LIBRARY} SHARED ${sources})
 
 
 # configuration 

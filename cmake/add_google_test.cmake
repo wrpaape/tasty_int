@@ -16,8 +16,9 @@ include(add_custom_test)
 
 # Exported Variables
 # ------------------------------------------------------------------------------
-set(GOOGLE_TEST_SRC_DIR   ${PROJECT_TEST_SRC_DIR}/googletest)
-set(GOOGLE_TEST_BUILD_DIR ${PROJECT_BUILD_TEST_SRC_DIR}/googletest)
+set(GOOGLE_TEST_SRC_DIR     ${PROJECT_TEST_SRC_DIR}/googletest)
+set(GOOGLE_TEST_INCLUDE_DIR ${PROJECT_TEST_INCLUDE_DIR}/googletest)
+set(GOOGLE_TEST_BUILD_DIR   ${PROJECT_BUILD_TEST_SRC_DIR}/googletest)
 set(
     GOOGLE_TEST_LIBRARIES
     gtest
@@ -46,7 +47,6 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 # import libraries from installed location
 foreach(library ${GOOGLE_TEST_LIBRARIES})
     add_library(${library} STATIC IMPORTED GLOBAL)
-    add_dependencies(${library} googletest)
     set(filename
         ${CMAKE_STATIC_LIBRARY_PREFIX}${library}${CMAKE_STATIC_LIBRARY_SUFFIX})
     set_target_properties(
@@ -56,6 +56,7 @@ foreach(library ${GOOGLE_TEST_LIBRARIES})
         INTERFACE_INCLUDE_DIRECTORIES     ${PROJECT_TEST_INCLUDE_DIR}
         IMPORTED_LINK_INTERFACE_LIBRARIES "${CMAKE_THREAD_LIBS_INIT}"
     )
+    add_dependencies(${library} googletest)
 endforeach()
 
 
