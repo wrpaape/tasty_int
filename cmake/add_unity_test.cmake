@@ -9,7 +9,12 @@ set(PROJECT_CMAKE_ADD_UNITY_TEST_CMAKE_INCLUDED TRUE)
 # External Dependencies
 # ------------------------------------------------------------------------------
 cmake_minimum_required(VERSION 2.8.2 FATAL_ERROR) # ExternalProject
-find_package(Ruby 1.9 REQUIRED)                   # test runner generators
+find_package(
+    Ruby 1.9
+    REQUIRED COMPONENTS EXECUTABLE
+    OPTIONAL_COMPONENTS INCLUDE_DIRS
+                        LIBRARY
+) # test runner generators
 include(ExternalProject)
 include(add_custom_test)
 
