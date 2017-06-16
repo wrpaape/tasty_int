@@ -75,12 +75,12 @@ TastyInt::TastyInt(const char *string,
         sign = 1;
     }
 
-    digits_from_tokens(reinterpret_cast<const unsigned char *>(string),
+    digits_from_string(reinterpret_cast<const unsigned char *>(string),
                        length,
                        base,
                        token_values);
 
-    this->sign = ((digits.size() == 0) && (digits[0] == 0)) ? 0 : sign;
+    this->sign = ((digits.size() == 1) && (digits[0] == 0)) ? 0 : sign;
 }
 
 

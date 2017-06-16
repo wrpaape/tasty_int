@@ -18,7 +18,7 @@ include(add_custom_test)
 # ------------------------------------------------------------------------------
 set(GOOGLE_TEST_SRC_DIR     ${PROJECT_TEST_SRC_DIR}/googletest)
 set(GOOGLE_TEST_INCLUDE_DIR ${PROJECT_TEST_INCLUDE_DIR}/googletest)
-set(GOOGLE_TEST_BUILD_DIR   ${PROJECT_BUILD_TEST_SRC_DIR}/googletest)
+set(GOOGLE_TEST_BUILD_DIR   ${PROJECT_TEST_BUILD_DIR}/googletest)
 set(
     GOOGLE_TEST_LIBRARIES
     gtest

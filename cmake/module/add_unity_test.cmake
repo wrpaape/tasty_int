@@ -22,10 +22,10 @@ include(add_custom_test)
 # Exported Variables
 # ------------------------------------------------------------------------------
 set(UNITY_TEST_SRC_DIR     ${PROJECT_TEST_SRC_DIR}/Unity)
-set(UNITY_TEST_BUILD_DIR   ${PROJECT_BUILD_TEST_SRC_DIR}/Unity)
+set(UNITY_TEST_BUILD_DIR   ${PROJECT_TEST_BUILD_DIR}/Unity)
 set(UNITY_TEST_SCRIPT_DIR  ${PROJECT_TEST_SCRIPT_DIR}/Unity)
 set(UNITY_TEST_RUNNER_DIR  ${PROJECT_TEST_RUNNER_DIR}/Unity)
-set(UNITY_TEST_PATCH_DIR   ${CMAKE_CURRENT_LIST_DIR}/Unity)
+set(UNITY_TEST_PATCH_DIR   ${PROJECT_CMAKE_RESOURCE_DIR}/Unity)
 set(UNITY_TEST_INCLUDE_DIR ${PROJECT_TEST_INCLUDE_DIR}/unity)
 set(
     UNITY_TEST_LIBRARIES

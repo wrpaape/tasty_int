@@ -13,10 +13,10 @@ include(add_custom_test)
 
 # Exported Variables
 # ------------------------------------------------------------------------------
-set(CATCH_TEST_SRC_DIR      ${PROJECT_TEST_SRC_DIR}/Catch)
-set(CATCH_TEST_BUILD_DIR    ${PROJECT_BUILD_TEST_SRC_DIR}/Catch)
-set(CATCH_TEST_INCLUDE_DIR  ${PROJECT_TEST_INCLUDE_DIR}/catch)
-set(CATCH_TEST_HEADER       ${CATCH_TEST_INCLUDE_DIR}/catch.hpp)
+set(CATCH_TEST_SRC_DIR     ${PROJECT_TEST_SRC_DIR}/Catch)
+set(CATCH_TEST_BUILD_DIR   ${PROJECT_TEST_BUILD_DIR}/Catch)
+set(CATCH_TEST_INCLUDE_DIR ${PROJECT_TEST_INCLUDE_DIR}/catch)
+set(CATCH_TEST_HEADER      ${CATCH_TEST_INCLUDE_DIR}/catch.hpp)
 
 
 # Set Up Framework
