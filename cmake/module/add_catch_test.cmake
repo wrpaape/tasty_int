@@ -56,8 +56,6 @@ ExternalProject_Add(
 function(add_catch_test)
     add_custom_test(
         ${ARGV}
-        FRAMEWORK_NAME     Catch
-        FRAMEWORK_SOURCES  ${CATCH_TEST_HEADER}
-
+        FRAMEWORK_NAME Catch
     )
 endfunction()

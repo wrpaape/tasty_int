@@ -9,12 +9,17 @@ set(PROJECT_CMAKE_ADD_UNITY_TEST_CMAKE_INCLUDED TRUE)
 # External Dependencies
 # ------------------------------------------------------------------------------
 cmake_minimum_required(VERSION 2.8.2 FATAL_ERROR) # ExternalProject
-find_package(
-    Ruby 1.9
-    REQUIRED COMPONENTS EXECUTABLE
-    OPTIONAL_COMPONENTS INCLUDE_DIRS
-                        LIBRARY
-) # test runner generators
+find_program(
+    RUBY_EXECUTABLE ruby
+    DOC "ruby interpreter for Unity test runner generator scripts"
+)
+if (NOT RUBY_EXECUTABLE)
+    message(
+        FATAL_ERROR
+        "failed to find ruby interpreter 'ruby' for Unity test runner "
+        "generator scripts"
+    )
+endif()
 include(ExternalProject)
 include(add_custom_test)
 
