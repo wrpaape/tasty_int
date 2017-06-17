@@ -4,7 +4,6 @@
 // EXTERNAL DEPENDENCIES
 // =============================================================================
 #include <vector>      // std::vector
-#include <string>      // std::string
 #include <iostream>    // std::[i|o]stream
 #include <limits>      // std::numeric_limits
 #include <type_traits> // std::[enable_if
@@ -217,10 +216,6 @@ private:
     static enable_if_exceeds_digit<T, digit_type> get_digit(const T value);
     template <typename T>
     static enable_if_within_digit<T, digit_type> get_digit(const T value);
-    // throwing methods
-    [[ noreturn ]] void throw_from_string_no_valid_digits();
-    [[ noreturn ]] void throw_from_string_invalid_digits();
-    [[ noreturn ]] void throw_from_string_max_base_exceeded();
 
     // instance data
     // -------------------------------------------------------------------------
