@@ -1,5 +1,11 @@
 #include "tasty_int/tasty_int.hpp" // TastyInt::*
 #include <stdexcept>               // std::invalid_argument
+#include <memory>                  // std::[unique_ptr|make_unique]
+
+
+#ifndef CPP_RESTRICT_QUALIFIER
+#   warn CPP_RESTRICT_QUALIFIER not defined, ignoring
+#endif // ifndef CPP_RESTRICT_QUALIFIER
 
 
 // static data
@@ -34,6 +40,14 @@ throw_from_string_max_base_exceeded()
         "input 'base' exceeds TastyInt::max_base (64)"
     );
 }
+
+std::unique_ptr<unsigned char[]> 
+bytes_from_string(const unsigned char *string,
+                  const std::size_t length,
+                  const char *token_values)
+{
+    std::unique_ptr<unsigned char[]> bytes = std::make_unique<unsigned char[]>(length);
+}
 } // namespace
 
 
@@ -66,6 +80,8 @@ TastyInt::TastyInt(const char *string,
     } else {
         sign = 1;
     }
+
+
 
     digits_from_string(reinterpret_cast<const unsigned char *>(string),
                        length,
