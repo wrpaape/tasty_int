@@ -10,7 +10,6 @@ set(
     ${TASTY_INT_INCLUDE_DIR}/tasty_int.hpp
     ${TASTY_INT_INCLUDE_DIR}/tasty_int.ipp
     ${TASTY_INT_INCLUDE_DIR}/detail/get_digit.hpp
-    ${TASTY_INT_INCLUDE_DIR}/detail/throw_from_string.hpp
     ${TASTY_INT_INCLUDE_DIR}/detail/from_arithmetic.hpp
     ${TASTY_INT_INCLUDE_DIR}/detail/to_arithmetic.hpp
 )
