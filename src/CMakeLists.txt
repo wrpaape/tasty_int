@@ -1,3 +1,8 @@
+include(cpp_restrict_qualifier) # set CPP_RESTRICT_QUALIFIER
+
+# update compile definitions
+add_definitions(CPP_RESTRICT_QUALIFIER=${CPP_RESTRICT_QUALIFIER})
+
 # update include path
 include_directories(${PROJECT_INCLUDE_DIR})
 

@@ -1,6 +1,3 @@
-include(cpp_restrict_qualifier) # set_cpp_restrict_qualifier
-set_cpp_restrict_qualifier()
-
 # static and shared libraries are output to root 'lib' directory
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_LIB_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_LIB_DIR})
@@ -21,20 +18,10 @@ set(
     ${TASTY_INT_HEADERS}
 )
 
-set(compile_definitions CPP_RESTRICT_QUALIFIER=${CPP_RESTRICT_QUALIFIER})
-
 # build tasty_int libraries
 foreach(type STATIC SHARED)
     add_library(${TASTY_INT_${type}_LIBRARY} ${type} ${sources})
-    set_target_properties(
-        ${TASTY_INT_${type}_LIBRARY}
-        PROPERTIES
-        INTERFACE_INCLUDE_DIRECTORIES ${PROJECT_INCLUDE_DIR}
-        COMPILE_DEFINITIONS           ${compile_definitions}
-    )
 endforeach()
-# add_library(${TASTY_INT_SHARED_LIBRARY} SHARED ${sources})
-
 
 # generate the 'token_values' lookup definitions source file
 set(target generate_tasty_int_token_values_file)
@@ -49,7 +36,6 @@ set_target_properties(
     ${target}
     PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${generate_bin_dir}
-    COMPILE_DEFINITIONS      ${compile_definitions}
 )
 add_custom_command(
     OUTPUT            ${token_values_path}
