@@ -46,7 +46,7 @@ TEST_FLOATING_POINT(double,      double)
 TEST_FLOATING_POINT(long double, long_double)
 
 
-TEST(String, sign)
+TEST(String, DISABLED_sign)
 {
     ASSERT_LT(TastyInt("-1").to_number<int>(), 0);
 

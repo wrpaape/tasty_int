@@ -27,8 +27,22 @@ set(PROJECT_TEST_BUILD_DIR   ${PROJECT_BUILD_DIR}/test/src)
 # add 'make test' to run unit tests
 enable_testing()
 
-# add 'make run_tests' to build and run tests
+# 'make build_test' to build and run tests
 add_custom_target(
-    run_tests
+    build_test
+    COMMAND ${CMAKE_CTEST_COMMAND}
+)
+
+# 'make build_test_verbose' to build and run tests (with verbose output)
+add_custom_target(
+    build_test_verbose
     COMMAND ${CMAKE_CTEST_COMMAND} --extra-verbose --output-on-failure
 )
+
+# 'make test_verbose' to run tests (with verbose output)
+add_custom_target(
+    test_verbose
+    COMMAND ${CMAKE_CTEST_COMMAND} --extra-verbose --output-on-failure
+)
+
+set(PROJECT_BUILD_TEST_COMMANDS build_test build_test_verbose)

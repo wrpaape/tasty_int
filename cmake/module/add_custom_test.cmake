@@ -95,6 +95,8 @@ function(add_custom_test)
         WORKING_DIRECTORY ${PROJECT_TEST_BIN_DIR}
     )
 
-    # append to dependencies of 'make run_tests'
-    add_dependencies(run_tests ${CUSTOM_TEST_NAME})
+    # append to dependencies of 'make build_test', etc..
+    foreach(target ${PROJECT_BUILD_TEST_COMMANDS})
+        add_dependencies(${target} ${CUSTOM_TEST_NAME})
+    endforeach()
 endfunction()
