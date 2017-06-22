@@ -1,10 +1,12 @@
 #include "tasty_int/tasty_int.hpp" // TastyInt::*
 #include <stdexcept>               // std::invalid_argument
 #include <memory>                  // std::[unique_ptr|make_unique]
+#include <vector>                  // std::vector
 
 
 #ifndef CPP_RESTRICT_QUALIFIER
 #   warn CPP_RESTRICT_QUALIFIER not defined, ignoring
+#   define CPP_RESTRICT_QUALIFIER
 #endif // ifndef CPP_RESTRICT_QUALIFIER
 
 
@@ -44,12 +46,32 @@ throw_from_string_max_base_exceeded()
 
 // string of ASCII tokens    (1 -> length, most sig -> least sig) to
 // byte-wise array of values (1 -> length, least sig -> most sig)
-std::unique_ptr<unsigned char[]> 
+std::vector<unsigned char> 
 bytes_from_string(const unsigned char *const CPP_RESTRICT_QUALIFIER string,
                   const std::size_t length,
                   const char *token_values)
 {
     int value;
+    const unsigned char *CPP_RESTRICT_QUALIFIER token = string;
+    const unsigned char *const CPP_RESTRICT_QUALIFIER
+    string_end = &string[length];
+
+    // skip leading zeros
+    while (true) {
+        value = (int) token_values[*token];
+
+        if (value > 0)
+            break;
+
+        if (value < 0)
+            throw_from_string_invalid_digits();
+
+        if (++token == string_end)
+            throw_from_string_no_valid_digits();
+    }
+
+    const unsigned char *const CPP_RESTRICT_QUALIFIER values_begin = token;
+
 
     std::unique_ptr<unsigned char[]>
     bytes = std::make_unique<unsigned char[]>(length);
