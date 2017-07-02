@@ -225,11 +225,6 @@ private:
 
     // instance methods
     // -------------------------------------------------------------------------
-    // init from string
-    void bytes_from_string(const unsigned char *string_begin,
-                           const std::size_t length,
-                           const unsigned int base,
-                           const char *token_values);
     // init from number
     template <typename T>
     enable_if_exceeds_digit<T> digits_from_unsigned_integral(const T value);

@@ -46,10 +46,25 @@ throw_from_string_max_base_exceeded()
 
 // string of ASCII tokens    (1 -> length, most sig -> least sig) to
 // byte-wise array of values (1 -> length, least sig -> most sig)
-std::vector<unsigned char> 
-bytes_from_string(const unsigned char *const CPP_RESTRICT_QUALIFIER string,
-                  const std::size_t length,
-                  const char *token_values)
+
+namespace base_power_of_two {
+
+std::size_t
+write_bytes(unsigned char *CPP_RESTRICT_QUALIFIER digit,
+            const unsigned char *const CPP_RESTRICT_QUALIFIER string_begin,
+            const unsigned char *const CPP_RESTRICT_QUALIFIER string_end,
+            const char *token_values,
+            const unsigned int base_bit)
+{
+
+}
+
+} // namespace base_power_of_two
+
+void digits_from_string(const unsigned char *string_begin,
+                        const std::size_t length,
+                        const unsigned int base,
+                        const char *token_values);
 {
     int value;
     const unsigned char *CPP_RESTRICT_QUALIFIER token = string;
@@ -124,12 +139,6 @@ TastyInt::TastyInt(const char *string,
         sign = 1;
     }
 
-
-    std::unique_ptr<unsigned char[]> bytes = ::bytes_from_string(
-        reinterpret_cast<const unsigned char *>(string),
-        length,
-        token_values
-    );
 
     // digits_from_string(
     //                    length,
