@@ -3,7 +3,7 @@ int
 set_and_add(int *CPP_RESTRICT_QUALIFIER ptr1,
             int *CPP_RESTRICT_QUALIFIER ptr2)
 {
-    *ptr1 = *ptr2;
+    *ptr1 += *ptr2;
     return *ptr1 + *ptr2;
 }
 
@@ -11,7 +11,7 @@ int
 main(int argc,
      char *argv[])
 {
-    static int zero;
+    static int zero = 0;
 
     return set_and_add(&argc,
                        &zero);

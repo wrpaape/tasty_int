@@ -12,18 +12,18 @@
 // initialize 'digits'
 // -----------------------------------------------------------------------------
 template <typename T>
-inline TastyInt::enable_if_exceeds_digit<T> // value may be > digit_type_max
+inline TastyInt::enable_if_exceeds_digit<T> // value may be > DIGIT_TYPE_MAX
 TastyInt::digits_from_unsigned_integral(const T value)
 {
     digits.reserve(2);
     digits.emplace_back(get_digit(value));
 
-    if (value > digit_type_max)
-        digits.emplace_back(get_digit(value >> digit_bit));
+    if (value > DIGIT_TYPE_MAX)
+        digits.emplace_back(get_digit(value >> DIGIT_BIT));
 }
 
 template <typename T>
-inline TastyInt::enable_if_within_digit<T> // value <= digit_type_max
+inline TastyInt::enable_if_within_digit<T> // value <= DIGIT_TYPE_MAX
 TastyInt::digits_from_unsigned_integral(const T value)
 {
     digits.emplace_back(value);

@@ -1,15 +1,14 @@
-cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.12 FATAL_ERROR) # CMAKE_CXX_STANDARD 20
 
 project(
     tasty_int
     VERSION 0.1.0
-    LANGUAGES CXX C
+    LANGUAGES CXX
 )
 
 # cmake options
-set(CMAKE_VERBOSE_MAKEFILE on)
-set(CMAKE_CXX_STANDARD     14)
-set(CMAKE_C_STANDARD       11)
+set(CMAKE_VERBOSE_MAKEFILE OFF)
+set(CMAKE_CXX_STANDARD     20)
 option(BUILD_TESTING "Enable unit testing." ON)
 
 # config defines
@@ -25,7 +24,6 @@ set(PROJECT_LIB_DIR          ${PROJECT_SOURCE_DIR}/lib)
 set(PROJECT_TEST_DIR         ${PROJECT_SOURCE_DIR}/test)
 set(PROJECT_CMAKE_DIR        ${PROJECT_SOURCE_DIR}/cmake)
 set(PROJECT_CMAKE_MODULE_DIR ${PROJECT_CMAKE_DIR}/module)
-
 
 # make cmake modules available to CMAKE_MODULE_PATH
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_CMAKE_MODULE_DIR})

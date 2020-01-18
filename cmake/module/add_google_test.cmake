@@ -60,7 +60,6 @@ foreach(library ${GOOGLE_TEST_LIBRARIES})
 endforeach()
 
 
-
 # External API
 # ------------------------------------------------------------------------------
 function(add_google_test)

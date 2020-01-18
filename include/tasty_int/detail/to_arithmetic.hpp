@@ -18,7 +18,7 @@ TastyInt::digits_to_unsigned_integral() const
     if (digits.size() > 1) {
         const T upper = static_cast<T>(digits[1]);
 
-        value += (upper << digit_bit);
+        value += (upper << DIGIT_BIT);
     }
 
     return value;

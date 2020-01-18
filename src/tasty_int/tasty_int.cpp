@@ -2,17 +2,13 @@
 #include <stdexcept>               // std::invalid_argument
 #include <memory>                  // std::[unique_ptr|make_unique]
 #include <vector>                  // std::vector
+#include <string>                  // std::to_string
 
 
 #ifndef CPP_RESTRICT_QUALIFIER
 #   warn CPP_RESTRICT_QUALIFIER not defined, ignoring
 #   define CPP_RESTRICT_QUALIFIER
 #endif // ifndef CPP_RESTRICT_QUALIFIER
-
-
-// static data
-// -----------------------------------------------------------------------------
-unsigned int TastyInt::global_default_base = 10;
 
 
 // helper functions
@@ -40,7 +36,8 @@ throw_from_string_max_base_exceeded()
 {
     throw std::invalid_argument(
         "TastyInt::TastyInt(string) -- "
-        "input 'base' exceeds TastyInt::max_base (64)"
+        "input 'base' exceeds TastyInt::MAX_BASE "
+        "(" + std::to_string(TastyInt::MAX_BASE) + ')'
     );
 }
 
@@ -56,7 +53,7 @@ write_bytes(unsigned char *CPP_RESTRICT_QUALIFIER digit,
             const char *token_values,
             const unsigned int base_bit)
 {
-
+    return 0; // TODO: get compiling
 }
 
 } // namespace base_power_of_two
@@ -64,12 +61,13 @@ write_bytes(unsigned char *CPP_RESTRICT_QUALIFIER digit,
 void digits_from_string(const unsigned char *string_begin,
                         const std::size_t length,
                         const unsigned int base,
-                        const char *token_values);
+                        const char *token_values)
 {
+#if 0 // TODO
     int value;
-    const unsigned char *CPP_RESTRICT_QUALIFIER token = string;
+    const unsigned char *CPP_RESTRICT_QUALIFIER token = string_begin;
     const unsigned char *const CPP_RESTRICT_QUALIFIER
-    string_end = &string[length];
+    string_end = &string_begin[length];
 
     // skip leading zeros
     while (true) {
@@ -92,7 +90,7 @@ void digits_from_string(const unsigned char *string_begin,
     bytes = std::make_unique<unsigned char[]>(length);
 
     unsigned char *CPP_RESTRICT_QUALIFIER byte        = bytes.get();
-    const unsigned char *CPP_RESTRICT_QUALIFIER token = &string[length];
+    const unsigned char *CPP_RESTRICT_QUALIFIER token = &string_begin[length];
 
     do {
         value = (int) token_values[*--token];
@@ -101,9 +99,10 @@ void digits_from_string(const unsigned char *string_begin,
             throw_from_string_invalid_digits();
 
         *byte++ = (unsigned char) value;
-    } while (token != string);
+    } while (token != string_begin);
 
     return bytes;
+#endif
 }
 
 } // namespace
@@ -119,9 +118,9 @@ TastyInt::TastyInt(const char *string,
     int sign;
 
     if (base <= 36u)
-        token_values = &base_36_token_values[0];
-    else if (base <= max_base)
-        token_values = &base_64_token_values[0];
+        token_values = &BASE_36_TOKEN_VALUES[0];
+    else if (base <= MAX_BASE)
+        token_values = &BASE_64_TOKEN_VALUES[0];
     else
         throw_from_string_max_base_exceeded();
 

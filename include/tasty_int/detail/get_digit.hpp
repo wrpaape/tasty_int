@@ -13,7 +13,7 @@ inline TastyInt::enable_if_exceeds_digit<T, TastyInt::digit_type>
 TastyInt::get_digit(const T value)
 {
     return static_cast<digit_type>(
-        value & static_cast<T>(digit_type_max) // mask 'digit_bit' bits
+        value & static_cast<T>(DIGIT_TYPE_MAX) // mask 'digit_bit' bits
     );
 }
 

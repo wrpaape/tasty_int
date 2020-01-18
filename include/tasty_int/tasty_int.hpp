@@ -4,6 +4,7 @@
 // EXTERNAL DEPENDENCIES
 // =============================================================================
 #include <vector>      // std::vector
+#include <array>       // std::array
 #include <iostream>    // std::[i|o]stream
 #include <limits>      // std::numeric_limits
 #include <type_traits> // std::[enable_if
@@ -43,8 +44,8 @@ class TastyInt
 public:
     // data
     // -------------------------------------------------------------------------
-    static unsigned int global_default_base; // mutable, initialized to 10
-    static const unsigned int max_base = 64; // max base string representation
+    static constexpr unsigned int DEFAULT_BASE = 10;
+    static constexpr unsigned int MAX_BASE     = 64; // max base string representation
 
     // constructors
     // -------------------------------------------------------------------------
@@ -52,12 +53,12 @@ public:
     TastyInt(const TastyInt &other);                         // copy
     TastyInt(const TastyInt &&other) noexcept;               // move
     TastyInt(const std::string &string,
-             const unsigned int base = global_default_base); // from string
+             const unsigned int base = DEFAULT_BASE); // from string
     TastyInt(const char *string,
-             const unsigned int base = global_default_base);
+             const unsigned int base = DEFAULT_BASE);
     template<std::size_t size>
     TastyInt(const char (&string)[size],
-             const unsigned int base = global_default_base);
+             const unsigned int base = DEFAULT_BASE);
     TastyInt(const char *string,
              std::size_t length,
              const unsigned int base); // no default base
@@ -119,7 +120,7 @@ public:
 
     // conversion
     // -------------------------------------------------------------------------
-    std::string to_string(const unsigned int base = global_default_base) const;
+    std::string to_string(const unsigned int base = DEFAULT_BASE) const;
     template<typename ArithmeticType>
     ArithmeticType to_number() const;
 
@@ -129,7 +130,7 @@ private:
     // -------------------------------------------------------------------------
     // acc_type
     //      unsigned integer large enough to hold the result of
-    //      digit_type_max * digit_type_max
+    //      DIGIT_TYPE_MAX * DIGIT_TYPE_MAX
     //      also
     //      sizeof(digit_type) * 2 >= sizeof(acc_type)
     //      -> 2 digits guaranteed to hold 1 acc
@@ -147,36 +148,43 @@ private:
                 unsigned int,
                 // no integer type smaller than acc_type that can express an
                 // acc in 2 instances
-                // digit_type = acc_type, and digit_type_max must be truncated
+                // digit_type = acc_type, and DIGIT_TYPE_MAX must be truncated
                 // from its native max value (acc_type_max)
                 acc_type
     >::type>::type>::type digit_type;
 
     // static data
     // -------------------------------------------------------------------------
-    // digit_bit
+    // DIGIT_BIT
     //      half the bit-size of acc_type
-    static const unsigned int
-    digit_bit = std::numeric_limits<acc_type>::digits / 2;
-    // digit_type_max
+    static constexpr unsigned int DIGIT_BIT =
+        std::numeric_limits<acc_type>::digits / 2;
+    // DIGIT_TYPE_MAX
     //      max value of digit_type where
     //      digit_type_max == (2 ^ N) - 1
-    //                     == 1 << digit_bit - 1
+    //                     == 1 << DIGIT_BIT - 1
     //                     <= floor(sqrt(native max value of acc_type))
     //                     <= native max value of digit_type
-    static const acc_type digit_type_max = (1UL << digit_bit) - 1;
-    // base_36_token_values
+    static constexpr acc_type DIGIT_TYPE_MAX = (1UL << DIGIT_BIT) - 1;
+    /**
+     * TODO
+     */
+    static constexpr std::size_t TOKEN_MAP_SIZE =
+        std::numeric_limits<unsigned char>::max() + 1;
+    /**
+     * TODO
+     */
+    using TokenMap = std::array<char, TOKEN_MAP_SIZE>;
+    // BASE_36_TOKEN_VALUES
     //      lookup table for converting character tokens
     //          '0', ... '9', 'a|A', ... 'z|Z'
     //      to values
     //          0, ... 9 , 10, ... 35
-    static const char
-    base_36_token_values[std::numeric_limits<unsigned char>::max() + 1];
-    // base_64_token_values
+    static const TokenMap BASE_36_TOKEN_VALUES;
+    // BASE_64_TOKEN_VALUES
     //      lookup table for converting Base64 character tokens to values
     //          0 ... 63
-    static const char
-    base_64_token_values[std::numeric_limits<unsigned char>::max() + 1];
+    static const TokenMap BASE_64_TOKEN_VALUES;
 
     // alias declarations
     // -------------------------------------------------------------------------
@@ -186,7 +194,7 @@ private:
     // arithmetic type 'T' can exceed max value held in digit_type ?
     template <typename T>
     using exceeds_digit = bool_constant<
-        (std::numeric_limits<T>::max() > digit_type_max)
+        (std::numeric_limits<T>::max() > DIGIT_TYPE_MAX)
     >;
     // C++14 SFINAE mechanism for [en|dis]abling functions with return type 'R'
     // according to constexpr bool 'E'
@@ -203,7 +211,7 @@ private:
     using enable_if_signed = enable_if_t<std::is_signed<T>::value, R>;
     template <typename T, typename R = void>
     using enable_if_unsigned = enable_if_t<std::is_unsigned<T>::value, R>;
-    // arithmetic type 'T' may exceed digit_type_max?
+    // arithmetic type 'T' may exceed DIGIT_TYPE_MAX?
     template <typename T, typename R = void>
     using enable_if_exceeds_digit = enable_if_t<exceeds_digit<T>::value, R>;
     template <typename T, typename R = void>
@@ -219,7 +227,7 @@ private:
 
     // instance data
     // -------------------------------------------------------------------------
-    int sign;                       // -1, 0, 1
+    int                     sign;   // -1, 0, 1
     std::vector<digit_type> digits; // ordered least -> most significant
                                     // (digits.front() -> digits.back())
 

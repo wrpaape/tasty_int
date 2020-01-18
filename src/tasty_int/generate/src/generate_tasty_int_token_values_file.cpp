@@ -8,6 +8,7 @@
 #include <unordered_map>
 
 
+namespace {
 
 class TokenMap : public std::unordered_map<unsigned char, int>
 {
@@ -15,109 +16,131 @@ public:
     using std::unordered_map<unsigned char, int>::unordered_map;
 
     TokenMap::mapped_type
-    get(const TokenMap::key_type &token) const
-    {
-        TokenMap::const_iterator found = find(token);
-
-        return (found == end()) ? default_value : found->second;
-    }
+    get(const TokenMap::key_type &token) const;
 
 private:
     static const TokenMap::mapped_type default_value = -1;
 };
 
+TokenMap::mapped_type
+TokenMap::get(const TokenMap::key_type &token) const
+{
+    TokenMap::const_iterator found = find(token);
+
+    return (found == end()) ? default_value : found->second;
+}
+
 
 class Generator
 {
 public:
-    Generator(const char *const path)
-        : file(path,
-               std::ofstream::out | std::ofstream::trunc)
-    {
-        file << std::setfill(' ');
-    }
+    Generator(const char *const output_file_path);
 
     void
-    put_head()
-    {
-        std::chrono::time_point<std::chrono::system_clock> time_now;
-        std::time_t timestamp;
-
-        time_now  = std::chrono::system_clock::now();
-        timestamp = std::chrono::system_clock::to_time_t(time_now);
-
-        file << "// token -> value lookup tables for TastyInt (DO NOT MODIFY)\n"
-                "//\n"
-                "// generated on: " << std::ctime(&timestamp) << // terminated with \n
-                "// =============================================================================\n"
-                "#include \"tasty_int/tasty_int.hpp\" // TastyInt::*\n";
-    }
+    put_head();
 
     template<typename T>
     void
-    put(const T &thing)
-    {
-        file << thing;
-    }
+    put(const T &thing);
 
     void
-    put_map(const char *label,
-            const TokenMap &map)
-    {
-        unsigned int token;
-        unsigned int row_end;
-
-        file << "const char TastyInt::"
-             << label << "_token_values[" << token_count << "] = {\n";
-
-        token = 0;
-         do {
-            row_end = token + row_count;
-            if (row_end > token_count)
-                row_end = token_count;
-
-            // put values
-            file << "    ", put_value(map, token);
-
-            while (++token < row_end)
-                file << ", ", put_value(map, token);
-
-            file << ",\n";
-
-            token = row_end;
-        } while (token < token_count);
-
-        file << "};\n";
-    }
+    put_map(const char     *label,
+            const TokenMap &map);
 
 
 private:
-    std::ofstream file;
+    std::ofstream output_file;
 
-    static const unsigned int
-    token_max = std::numeric_limits<TokenMap::key_type>::max();
-    static const unsigned int token_count = token_max + 1;
-    static const unsigned int row_count   = 19;
+    static constexpr unsigned int TOKEN_MAX   =
+        std::numeric_limits<TokenMap::key_type>::max();
+    static constexpr unsigned int TOKEN_COUNT = TOKEN_MAX + 1;
+    static constexpr unsigned int ROW_COUNT   = 19;
 
     void
-    put_value(const TokenMap &map,
+    put_value(const TokenMap           &map,
               const TokenMap::key_type &token)
     {
-        file << std::setw(2) << map.get(token);
+        output_file << std::setw(2) << map.get(token);
     }
 }; // class Generator
 
+Generator::Generator(const char *const output_file_path)
+    : output_file(output_file_path,
+           std::ofstream::out | std::ofstream::trunc)
+{
+    output_file << std::setfill(' ');
+}
 
+void
+Generator::put_head()
+{
+    auto time_now  = std::chrono::system_clock::now();
+    auto timestamp = std::chrono::system_clock::to_time_t(time_now);
+
+    output_file
+        << "// token -> value lookup tables for TastyInt (DO NOT MODIFY)\n"
+           "//\n"
+           "// generated on: " << std::ctime(&timestamp) // terminated with \n
+        << "// =============================================================================\n"
+           "#include \"tasty_int/tasty_int.hpp\" // TastyInt::*\n";
+}
+
+template<typename T>
+void
+Generator::put(const T &thing)
+{
+    output_file << thing;
+}
+
+void
+Generator::put_map(const char     *label,
+                   const TokenMap &map)
+{
+    output_file << "const TastyInt::TokenMap TastyInt::"
+         << label << "_TOKEN_VALUES = {\n";
+
+    unsigned int token = 0;
+     do {
+        unsigned int row_end = token + ROW_COUNT;
+        if (row_end > TOKEN_COUNT)
+            row_end = TOKEN_COUNT;
+
+        // put values
+        output_file << "    ", put_value(map, token);
+
+        while (++token < row_end)
+            output_file << ", ", put_value(map, token);
+
+        output_file << ",\n";
+
+        token = row_end;
+    } while (token < TOKEN_COUNT);
+
+    output_file << "};\n";
+}
+
+
+void
+print_usage(const char   *program,
+            std::ostream &output)
+{
+    if (!program)
+        program = "./generate_tasty_int_token_values_file";
+
+    output << program << " <path to output file>" << std::endl;
+}
+
+} // namespace
 
 int
-main(int argc,
+main(int   argc,
      char *argv[])
 {
     if (argc < 2) {
-        std::cerr << "expected 'path' as single argument" << std::endl;
+        const char *program = argv[0];
+        print_usage(program, std::cerr);
         return 1;
     }
-
 
     const TokenMap base_36 = {
         { '0',  0 }, { '1',  1 }, { '2',  2 }, { '3',  3 }, { '4',  4 },
@@ -157,13 +180,14 @@ main(int argc,
         { 'P', 15 }, { 'f', 31 }, { 'v', 47 }, { '/', 63 },
     };
 
+    const char *output_file_path = argv[1];
     Generator generator(argv[1]);
 
     generator.put_head();
     generator.put("\n\n\n");
-    generator.put_map("base_36", base_36);
+    generator.put_map("BASE_36", base_36);
     generator.put("\n\n");
-    generator.put_map("base_64", base_64);
+    generator.put_map("BASE_64", base_64);
 
     return 0;
 }

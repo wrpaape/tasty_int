@@ -28,7 +28,6 @@ set(target generate_tasty_int_token_values_file)
 set(
     sources
     ${generate_src_dir}/${target}.cpp
-    ${TASTY_INT_HEADERS}
 )
 
 add_executable(${target} ${sources})
@@ -41,7 +40,9 @@ add_custom_command(
     OUTPUT            ${token_values_path}
     COMMAND           ${target} ${token_values_path}
     WORKING_DIRECTORY ${generate_bin_dir}
-    COMMENT           "generate TastyInt 'token_values' lookup tables"
+    DEPENDS           ${sources}
+    COMMENT           "generate TastyInt 'BASE_<base>_TOKEN_VALUES' lookup "
+                      "tables"
 )
 
 
