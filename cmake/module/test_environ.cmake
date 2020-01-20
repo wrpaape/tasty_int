@@ -44,3 +44,8 @@ add_custom_target(
 )
 
 set(PROJECT_BUILD_TEST_COMMANDS build_test build_test_verbose)
+
+
+# Included Modules
+# ------------------------------------------------------------------------------
+include(add_google_test)

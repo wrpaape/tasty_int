@@ -22,13 +22,15 @@ function(add_custom_test)
     )
     set(
         list_keywords     SOURCES
+                          INCLUDE_DIRECTORIES
+                          COMPILE_DEFINITIONS
                           LIBRARIES
                           DEPENDENCIES
-                          INCLUDE_DIRECTORIES
                           FRAMEWORK_SOURCES
+                          FRAMEWORK_COMPILE_DEFINITIONS
+                          FRAMEWORK_INCLUDE_DIRECTORIES
                           FRAMEWORK_LIBRARIES
                           FRAMEWORK_DEPENDENCIES
-                          FRAMEWORK_INCLUDE_DIRECTORIES
     )
     set(
         required_keywords NAME
@@ -45,7 +47,7 @@ function(add_custom_test)
 
     # check for required end user parameters
     if(CUSTOM_TEST_MISSING_REQUIRED_ARGUMENTS)
-        if (CUSTOM_TEST_FRAMEWORK_NAME)
+        if(CUSTOM_TEST_FRAMEWORK_NAME)
             set(CUSTOM_TEST_TYPE "\"${CUSTOM_TEST_FRAMEWORK_NAME}\"")
         else()
             set(CUSTOM_TEST_TYPE "custom")
@@ -64,22 +66,34 @@ function(add_custom_test)
 
     target_include_directories(
         ${CUSTOM_TEST_NAME}
-        PUBLIC
+        PRIVATE
         ${CUSTOM_TEST_INCLUDE_DIRECTORIES}
         ${CUSTOM_TEST_FRAMEWORK_INCLUDE_DIRECTORIES}
         ${PROJECT_TEST_INCLUDE_DIR}
         ${PROJECT_INCLUDE_DIR}
     )
 
+    list(
+        APPEND CUSTOM_TEST_COMPILE_DEFINITIONS
+        ${CUSTOM_TEST_FRAMEWORK_COMPILE_DEFINITIONS}
+    )
+    if(CUSTOM_TEST_COMPILE_DEFINITIONS)
+        target_compile_definitions(
+            ${CUSTOM_TEST_NAME}
+            PRIVATE
+            ${CUSTOM_TEST_COMPILE_DEFINITIONS}
+        )
+    endif()
+
     list(APPEND CUSTOM_TEST_LIBRARIES ${CUSTOM_TEST_FRAMEWORK_LIBRARIES})
-    if (CUSTOM_TEST_LIBRARIES)
+    if(CUSTOM_TEST_LIBRARIES)
         target_link_libraries(${CUSTOM_TEST_NAME} ${CUSTOM_TEST_LIBRARIES})
     endif()
 
 
     list(APPEND CUSTOM_TEST_DEPENDENCIES ${CUSTOM_TEST_FRAMEWORK_NAME}
                                          ${CUSTOM_TEST_FRAMEWORK_DEPENDENCIES})
-    if (CUSTOM_TEST_DEPENDENCIES)
+    if(CUSTOM_TEST_DEPENDENCIES)
         add_dependencies(${CUSTOM_TEST_NAME} ${CUSTOM_TEST_DEPENDENCIES})
     endif()
 

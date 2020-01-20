@@ -2,6 +2,9 @@
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_LIB_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_LIB_DIR})
 
+# build internal implementation
+add_subdirectory(detail)
+
 # code generation 
 set(generate_dir         ${CMAKE_CURRENT_LIST_DIR}/generate)
 set(generate_src_dir     ${generate_dir}/src)

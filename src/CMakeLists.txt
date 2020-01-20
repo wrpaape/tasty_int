@@ -4,7 +4,10 @@ include(cpp_restrict_qualifier) # set CPP_RESTRICT_QUALIFIER
 add_definitions(-DCPP_RESTRICT_QUALIFIER=${CPP_RESTRICT_QUALIFIER})
 
 # update include path
-include_directories(${PROJECT_INCLUDE_DIR})
+include_directories(
+    ${PROJECT_INCLUDE_DIR}
+    ${CMAKE_CURRENT_LIST_DIR}
+)
 
 # set vars common to subdirectories
 set(TASTY_INT_STATIC_LIBRARY tasty_int_static)
