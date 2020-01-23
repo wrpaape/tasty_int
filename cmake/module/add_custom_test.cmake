@@ -27,8 +27,8 @@ function(add_custom_test)
                           LIBRARIES
                           DEPENDENCIES
                           FRAMEWORK_SOURCES
-                          FRAMEWORK_COMPILE_DEFINITIONS
                           FRAMEWORK_INCLUDE_DIRECTORIES
+                          FRAMEWORK_COMPILE_DEFINITIONS
                           FRAMEWORK_LIBRARIES
                           FRAMEWORK_DEPENDENCIES
     )
@@ -90,9 +90,7 @@ function(add_custom_test)
         target_link_libraries(${CUSTOM_TEST_NAME} ${CUSTOM_TEST_LIBRARIES})
     endif()
 
-
-    list(APPEND CUSTOM_TEST_DEPENDENCIES ${CUSTOM_TEST_FRAMEWORK_NAME}
-                                         ${CUSTOM_TEST_FRAMEWORK_DEPENDENCIES})
+    list(APPEND CUSTOM_TEST_DEPENDENCIES ${CUSTOM_TEST_FRAMEWORK_DEPENDENCIES})
     if(CUSTOM_TEST_DEPENDENCIES)
         add_dependencies(${CUSTOM_TEST_NAME} ${CUSTOM_TEST_DEPENDENCIES})
     endif()
