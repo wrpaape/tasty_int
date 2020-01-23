@@ -3,11 +3,14 @@ if(PROJECT_CMAKE_SET_HAVE_TYPE_INCLUDED)
 endif()
 set(PROJECT_CMAKE_SET_HAVE_TYPE_INCLUDED TRUE)
 # ==============================================================================
-# TODO
+# Check C++ compiler's support for a given builtin type.  If the provided type
+# is available, the output variable HAVE_<uppercase type> will be set to 1.  If
+# the provided type is unavailable, HAVE_<uppercase type> will be set to 0.
 # ==============================================================================
 # External Dependencies
 # ------------------------------------------------------------------------------
 include(CheckTypeSize)
+
 
 # External API
 # ------------------------------------------------------------------------------

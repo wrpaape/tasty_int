@@ -3,6 +3,7 @@
 
 #include <iosfwd>
 #include <limits>
+#include <string>
 #include <string_view>
 #include <unordered_map>
 #include <utility>
@@ -23,36 +24,36 @@ class TokenTableGenerator
 public:
     /**
      * This class is used to configure the lookup table mapping.  Mapped tokens
-     * correspond to
+     * correspond to ASCII characters that have an associated digit value.
      */
     class TokenMap
     {
     public:
-        static constexpr signed char   INVALID_DIGIT = -1;
-        static constexpr unsigned char MAX_DIGIT =
+        static constexpr signed char   INVALID_VALUE = -1;
+        static constexpr unsigned char MAX_VALUE =
             std::numeric_limits<signed char>::max();
 
         /**
-         * @brief Map @p token to @p digit.
+         * @brief Map @p token to @p value.
          *
-         * @param[in] token a token of an ASCII string of digits
-         * @param[in] digit the value @p token represents
+         * @param[in] token an element of an ASCII string of digits
+         * @param[in] value the value @p token represents
          *
-         * @pre `digit <= MAX_DIGIT`
-         * @throws std::invalid_argument if @p digit exceeds MAX_DIGIT
+         * @pre `value <= MAX_VALUE`
+         * @throws std::invalid_argument if @p value exceeds MAX_VALUE
          */
         void
-        map_token(char token, unsigned char digit);
+        map_token(char token, unsigned char value);
 
         /**
          * @brief Retrieve the digit value associated with @p token.
          *
-         * @param[in] token a token of an ASCII string of digits
-         * @return the associated digit or INVALID_DIGIT if @p token has no
-         *     associated digit
+         * @param[in] token an element of an ASCII string of digits
+         * @return the associated value or INVALID_VALUE if @p token has no
+         *     associated value
          */
         signed char
-        digit_from_token(char token) const;
+        value_from_token(char token) const;
 
         std::unordered_map<char, signed char> map;
     }; // class TokenMap
@@ -71,7 +72,7 @@ public:
      * @param[out] output destination where the file contents will be written
      */
     void
-    generate_header(std::ostream &output);
+    generate_header(std::ostream &output) const;
 
     /**
      * @brief Generates the source file contents defining the named
@@ -81,7 +82,7 @@ public:
      */
     void
     generate_source(const TokenMap &token_map,
-                    std::ostream   &output);
+                    std::ostream   &output) const;
 
 private:
     void
@@ -95,25 +96,26 @@ private:
 
     void
     put_token_table_definition(const TokenMap &token_map,
-                               std::ostream   &output);
+                               std::ostream   &output) const;
 
     void
     put_token_table_entries(const TokenMap &token_map,
-                            std::ostream   &output);
+                            std::ostream   &output) const;
 
     void
     put_token_table_entry_row(
         const TokenMap                        &token_map,
         std::pair<unsigned int, unsigned int>  token_range,
         std::ostream                          &output
-    );
+    ) const;
 
     void
     put_token_table_entry(const TokenMap &token_map,
                           unsigned int    token,
-                          std::ostream   &output);
+                          std::ostream   &output) const;
 
     std::string_view token_table_name;
+    std::string      uppercase_token_table_name;
 }; // class TokenTableGenerator
 
 } // namespace token_table_codegen

@@ -12,46 +12,56 @@ namespace {
 
 using tasty_int::detail::token_table_codegen::TokenTableGenerator;
 
+std::string
+to_uppercase(std::string_view string)
+{
+    std::string uppercase;
+    uppercase.reserve(string.size());
+    for (char c : string)
+        uppercase.push_back(std::toupper(c));
+
+    return uppercase;
+}
+
 TEST(TokenTableGeneratorTest,
-     TokenMapMapTokenDoesNotAllowDigitsGreaterThanMaxDigit)
+     TokenMapMapTokenDoesNotAllowValuesGreaterThanMaxValue)
 {
     char token                  = '5';
-    unsigned char INVALID_DIGIT = TokenTableGenerator::TokenMap::MAX_DIGIT + 1;
+    unsigned char INVALID_VALUE = TokenTableGenerator::TokenMap::MAX_VALUE + 1;
 
     TokenTableGenerator::TokenMap token_map;
     try {
-        token_map.map_token(token, INVALID_DIGIT);
+        token_map.map_token(token, INVALID_VALUE);
         FAIL() << "did not throw expected std::invalid_argument";
 
     } catch (const std::invalid_argument& exception) {
-        // replace with std::format when available
         std::ostringstream expected_message;
         expected_message <<
             "TokenTableGenerator::TokenMap - invalid mapping (" << token
-         << "->" << static_cast<unsigned int>(INVALID_DIGIT) << "): Digit "
-            "exceeds TokenTableGenerator::TokenMap::MAX_DIGIT ("
-         << static_cast<unsigned int>(TokenTableGenerator::TokenMap::MAX_DIGIT)
+         << "->" << static_cast<unsigned int>(INVALID_VALUE) << "): Digit value "
+            "exceeds TokenTableGenerator::TokenMap::MAX_VALUE ("
+         << static_cast<unsigned int>(TokenTableGenerator::TokenMap::MAX_VALUE)
          << ").";
         EXPECT_EQ(expected_message.str(), exception.what());
     }
 }
 
 TEST(TokenTableGeneratorTest,
-     TokenMapDigitFromTokenReturnsMappedDigitForMappedTokens)
+     TokenMapValueFromTokenReturnsMappedValueForMappedTokens)
 {
     TokenTableGenerator::TokenMap token_map;
     token_map.map_token('7', 7);
 
-    EXPECT_EQ(7, token_map.digit_from_token('7'));
+    EXPECT_EQ(7, token_map.value_from_token('7'));
 }
 
 TEST(TokenTableGeneratorTest,
-     TokenMapDigitFromTokenReturnsInvalidDigitForUnmappedTokens)
+     TokenMapValueFromTokenReturnsInvalidValueForUnmappedTokens)
 {
     TokenTableGenerator::TokenMap token_map;
 
-    EXPECT_EQ(TokenTableGenerator::TokenMap::INVALID_DIGIT,
-              token_map.digit_from_token('7'));
+    EXPECT_EQ(TokenTableGenerator::TokenMap::INVALID_VALUE,
+              token_map.value_from_token('7'));
 }
 
 void
@@ -72,7 +82,7 @@ check_token_table_declaration(std::string_view header,
                               std::string_view token_table_name)
 {
     std::string pattern("\\bextern\\s+const\\s+\\TokenTable\\s+");
-    pattern += token_table_name;
+    pattern += to_uppercase(token_table_name);
     pattern += "\\s*;";
     std::regex token_table_declaration(pattern);
 
@@ -105,7 +115,7 @@ check_token_table_definition_declarator(std::string_view source,
                                         std::string_view token_table_name)
 {
     std::string pattern("\\bconst\\s+\\TokenTable\\s+");
-    pattern += token_table_name;
+    pattern += to_uppercase(token_table_name);
     pattern += "\\b";
     std::regex token_table_declaration(pattern);
     EXPECT_TRUE(std::regex_search(source.begin(), source.end(),
@@ -150,7 +160,7 @@ check_token_table_entries(const char                          *entries_begin,
         ASSERT_TRUE(match != matches_end)
             << "token = " << token;
 
-        ASSERT_EQ(token_map.digit_from_token(token), std::stoi(match->str()))
+        ASSERT_EQ(token_map.value_from_token(token), std::stoi(match->str()))
             << "token = " << token;
     }
     EXPECT_TRUE(match == matches_end) << "extra entries";

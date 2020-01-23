@@ -3,8 +3,8 @@ if(PROJECT_CMAKE_CPP_RESTRICT_QUALIFIER_INCLUDED)
 endif()
 set(PROJECT_CMAKE_CPP_RESTRICT_QUALIFIER_INCLUDED TRUE)
 # ==============================================================================
-# check C++ compiler's support for a 'restrict' extension keyword
-# set CPP_RESTRICT_QUALIFIER to that keyword or empty string if not supported
+# Check C++ compiler's support for a 'restrict' extension keyword
+# set CPP_RESTRICT_QUALIFIER to that keyword or empty string if not supported.
 # ==============================================================================
 # External API
 # ------------------------------------------------------------------------------

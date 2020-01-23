@@ -10,6 +10,13 @@ project(
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(CMAKE_CXX_STANDARD     20)
 option(BUILD_TESTING "Enable unit testing." ON)
+if(NOT CMAKE_BUILD_TYPE)
+  set(
+      CMAKE_BUILD_TYPE "Debug" CACHE STRING
+      "Build Type, options are: Debug (default) Release RelWithDebInfo MinSizeRel."
+      FORCE
+  )
+endif()
 
 # config defines
 set(TASTY_INT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR})

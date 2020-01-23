@@ -3,7 +3,7 @@ if(PROJECT_CMAKE_CMAKE_ENVIRON_CMAKE_INCLUDED)
 endif()
 set(PROJECT_CMAKE_CMAKE_ENVIRON_CMAKE_INCLUDED TRUE)
 # ==============================================================================
-# set up common cmake environment
+# Set up common cmake environment.
 # ==============================================================================
 # Exported Variables
 # ------------------------------------------------------------------------------

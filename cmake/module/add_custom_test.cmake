@@ -3,7 +3,7 @@ if(PROJECT_CMAKE_ADD_CUSTOM_TEST_CMAKE_INCLUDED)
 endif()
 set(PROJECT_CMAKE_ADD_CUSTOM_TEST_CMAKE_INCLUDED TRUE)
 # ==============================================================================
-# add a ${NAME} executable and CTest
+# Add a ${NAME} executable and CTest.
 # ==============================================================================
 # External Dependencies
 # ------------------------------------------------------------------------------

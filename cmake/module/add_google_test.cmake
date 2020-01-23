@@ -3,8 +3,8 @@ if(PROJECT_CMAKE_ADD_GOOGLE_TEST_CMAKE_INCLUDED)
 endif()
 set(PROJECT_CMAKE_ADD_GOOGLE_TEST_CMAKE_INCLUDED TRUE)
 # ==============================================================================
-# add a 'test_${NAME}' executable and CTest from sources compiled with the
-# Google Test/Mock framework
+# Add a 'test_${NAME}' executable and CTest from sources compiled with the
+# Google Test/Mock framework.
 # ==============================================================================
 # External Dependencies
 # ------------------------------------------------------------------------------

@@ -61,22 +61,22 @@ TEST(ValueFromBase64TokenTest, TokensFromCapitalAToZMapToValues0To25)
     EXPECT_EQ( 7, value_from_base_64_token('H'));
     EXPECT_EQ( 8, value_from_base_64_token('I'));
     EXPECT_EQ( 9, value_from_base_64_token('J'));
-    EXPECT_EQ(20, value_from_base_64_token('K'));
-    EXPECT_EQ(21, value_from_base_64_token('L'));
-    EXPECT_EQ(22, value_from_base_64_token('M'));
-    EXPECT_EQ(23, value_from_base_64_token('N'));
-    EXPECT_EQ(24, value_from_base_64_token('O'));
-    EXPECT_EQ(25, value_from_base_64_token('P'));
-    EXPECT_EQ(26, value_from_base_64_token('Q'));
-    EXPECT_EQ(27, value_from_base_64_token('R'));
-    EXPECT_EQ(28, value_from_base_64_token('S'));
-    EXPECT_EQ(29, value_from_base_64_token('T'));
-    EXPECT_EQ(30, value_from_base_64_token('U'));
-    EXPECT_EQ(31, value_from_base_64_token('V'));
-    EXPECT_EQ(32, value_from_base_64_token('W'));
-    EXPECT_EQ(33, value_from_base_64_token('X'));
-    EXPECT_EQ(34, value_from_base_64_token('Y'));
-    EXPECT_EQ(35, value_from_base_64_token('Z'));
+    EXPECT_EQ(10, value_from_base_64_token('K'));
+    EXPECT_EQ(11, value_from_base_64_token('L'));
+    EXPECT_EQ(12, value_from_base_64_token('M'));
+    EXPECT_EQ(13, value_from_base_64_token('N'));
+    EXPECT_EQ(14, value_from_base_64_token('O'));
+    EXPECT_EQ(15, value_from_base_64_token('P'));
+    EXPECT_EQ(16, value_from_base_64_token('Q'));
+    EXPECT_EQ(17, value_from_base_64_token('R'));
+    EXPECT_EQ(18, value_from_base_64_token('S'));
+    EXPECT_EQ(19, value_from_base_64_token('T'));
+    EXPECT_EQ(20, value_from_base_64_token('U'));
+    EXPECT_EQ(21, value_from_base_64_token('V'));
+    EXPECT_EQ(22, value_from_base_64_token('W'));
+    EXPECT_EQ(23, value_from_base_64_token('X'));
+    EXPECT_EQ(24, value_from_base_64_token('Y'));
+    EXPECT_EQ(25, value_from_base_64_token('Z'));
 }
 
 TEST(ValueFromBase64TokenTest, TokensBetweenCapitalZAndLowercaseAAreInvalid)
