@@ -32,8 +32,13 @@ set(PROJECT_TEST_DIR         ${PROJECT_SOURCE_DIR}/test)
 set(PROJECT_CMAKE_DIR        ${PROJECT_SOURCE_DIR}/cmake)
 set(PROJECT_CMAKE_MODULE_DIR ${PROJECT_CMAKE_DIR}/module)
 
-# make cmake modules available to CMAKE_MODULE_PATH
+# make cmake modules available to include(), find_package()
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_CMAKE_MODULE_DIR})
+
+# set output directories
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BIN_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_LIB_DIR})
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_LIB_DIR})
 
 # set up common cmake module environment
 include(cmake_environ)
@@ -46,5 +51,9 @@ if(BUILD_TESTING)
     add_subdirectory(test)
 endif()
 
+# set include directory
+include_directories(${PROJECT_INCLUDE_DIR})
+
 # enter
 add_subdirectory(src)
+add_subdirectory(docs)

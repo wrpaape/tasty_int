@@ -46,8 +46,9 @@ throw_from_string_max_base_exceeded()
 
 namespace base_power_of_two {
 
+#if 0 // TODO
 std::size_t
-write_bytes(unsigned char *CPP_RESTRICT_QUALIFIER digit,
+write_bytes(unsigned char *CPP_RESTRICT_QUALIFIER *digit*,
             const unsigned char *const CPP_RESTRICT_QUALIFIER string_begin,
             const unsigned char *const CPP_RESTRICT_QUALIFIER string_end,
             const char *token_values,
@@ -63,7 +64,6 @@ void digits_from_string(const unsigned char *string_begin,
                         const unsigned int base,
                         const char *token_values)
 {
-#if 0 // TODO
     int value;
     const unsigned char *CPP_RESTRICT_QUALIFIER token = string_begin;
     const unsigned char *const CPP_RESTRICT_QUALIFIER
@@ -137,6 +137,7 @@ TastyInt::TastyInt(const char *string,
     } else {
         sign = 1;
     }
+    (void) token_values; // TODO
 
 
     // digits_from_string(

@@ -3,11 +3,15 @@ include(cpp_restrict_qualifier) # set CPP_RESTRICT_QUALIFIER
 # update compile definitions
 add_definitions(-DCPP_RESTRICT_QUALIFIER=${CPP_RESTRICT_QUALIFIER})
 
+# update compiler warnings
+if(MSVC)
+    add_compile_options(/W4 /WX)
+else()
+    add_compile_options(-Wall -Wextra -pedantic -Werror)
+endif()
+
 # update include path
-include_directories(
-    ${PROJECT_INCLUDE_DIR}
-    ${CMAKE_CURRENT_LIST_DIR}
-)
+include_directories(${CMAKE_CURRENT_LIST_DIR})
 
 # set vars common to subdirectories
 set(TASTY_INT_STATIC_LIBRARY tasty_int_static)

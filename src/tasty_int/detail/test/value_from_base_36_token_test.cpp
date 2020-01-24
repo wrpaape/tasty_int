@@ -7,6 +7,8 @@
 
 using tasty_int::detail::value_from_base_36_token;
 
+namespace {
+
 TEST(ValueFromBase36TokenTest, TokensLessThan0AreInvalid)
 {
     for (char token = std::numeric_limits<char>::min(); token < '0'; ++token)
@@ -108,3 +110,4 @@ TEST(ValueFromBase36TokenTest, TokensGreaterThanLowercaseZAreInvalid)
     }
 }
 
+} // namespace

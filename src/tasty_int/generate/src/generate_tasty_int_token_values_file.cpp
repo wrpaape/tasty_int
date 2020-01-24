@@ -181,7 +181,7 @@ main(int   argc,
     };
 
     const char *output_file_path = argv[1];
-    Generator generator(argv[1]);
+    Generator generator(output_file_path);
 
     generator.put_head();
     generator.put("\n\n\n");

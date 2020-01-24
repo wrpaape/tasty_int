@@ -10,3 +10,9 @@ add_google_test(
     NAME    tasty_int-detail-digit_type_test
     SOURCES digit_type_test.cpp
 )
+
+add_google_test(
+    NAME    tasty_int-detail-digits_from_integral_test
+    SOURCES digits_from_integral_test.cpp
+            $<TARGET_OBJECTS:tasty_int-detail-digits_from_integral>
+)

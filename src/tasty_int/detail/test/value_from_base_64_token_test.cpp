@@ -7,6 +7,8 @@
 
 using tasty_int::detail::value_from_base_64_token;
 
+namespace {
+
 TEST(ValueFromBase64TokenTest, TokensLessThanPlusAreInvalid)
 {
     for (char token = std::numeric_limits<char>::min(); token < '+'; ++token)
@@ -124,3 +126,4 @@ TEST(ValueFromBase64TokenTest, TokensGreaterThanLowercaseZAreInvalid)
     }
 }
 
+} // namespace

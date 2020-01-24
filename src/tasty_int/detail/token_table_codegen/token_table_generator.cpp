@@ -135,7 +135,7 @@ TokenTableGenerator::put_source_head(std::ostream &output) const
         "//\n"
         "// generated on: " << std::ctime(&timestamp) // terminated with \n
      << "// =============================================================================\n"
-        "#include \"tasty_int/detail/codegen/" << token_table_name << ".hpp\"";
+        "#include \"tasty_int/detail/codegen/" << token_table_name << ".hpp\"\n";
 }
 
 void
