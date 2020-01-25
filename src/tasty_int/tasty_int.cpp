@@ -115,7 +115,7 @@ TastyInt::TastyInt(const char *string,
                    const unsigned int base)
 {
     const char *token_values;
-    int sign;
+    int input_sign;
 
     if (base <= 36u)
         token_values = &BASE_36_TOKEN_VALUES[0];
@@ -132,10 +132,10 @@ TastyInt::TastyInt(const char *string,
             throw_from_string_no_valid_digits();
 
         ++string;
-        sign = -1;
+        input_sign = -1;
 
     } else {
-        sign = 1;
+        input_sign = 1;
     }
     (void) token_values; // TODO
 
@@ -145,7 +145,7 @@ TastyInt::TastyInt(const char *string,
     //                    base,
     //                    token_values);
 
-    this->sign = ((digits.size() == 1) && (digits[0] == 0)) ? 0 : sign;
+    this->sign = ((digits.size() == 1) && (digits[0] == 0)) ? 0 : input_sign;
 }
 
 // void

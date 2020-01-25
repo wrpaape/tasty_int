@@ -65,8 +65,8 @@ TokenTableGenerator::TokenMap::value_from_token(char token) const
 }
 
 TokenTableGenerator::TokenTableGenerator(std::string_view token_table_name)
-    : token_table_name(token_table_name)
-    , uppercase_token_table_name(to_uppercase(token_table_name))
+    : name(token_table_name)
+    , uppercase_name(to_uppercase(token_table_name))
 {}
 
 void
@@ -74,9 +74,9 @@ TokenTableGenerator::generate_header(std::ostream &output) const
 {
     output <<
         "#ifndef TASTY_INT_TASTY_INT_DETAIL_CODEGEN_"
-            << uppercase_token_table_name << "_HPP\n"
+            << uppercase_name << "_HPP\n"
         "#define TASTY_INT_TASTY_INT_DETAIL_CODEGEN_"
-            << uppercase_token_table_name << "_HPP\n"
+            << uppercase_name << "_HPP\n"
         "\n"
         "#include \"tasty_int/detail/token_table.hpp\"\n"
         "\n"
@@ -84,13 +84,13 @@ TokenTableGenerator::generate_header(std::ostream &output) const
     put_open_namespaces(output);
     output <<
         "\n"
-        "extern const TokenTable " << uppercase_token_table_name << ";\n"
+        "extern const TokenTable " << uppercase_name << ";\n"
         "\n";
     put_close_namespaces(output);
     output <<
         "\n"
         "#endif // ifndef TASTY_INT_TASTY_INT_DETAIL_CODEGEN_"
-            << uppercase_token_table_name << "_HPP\n";
+            << uppercase_name << "_HPP\n";
 }
 
 void
@@ -135,14 +135,14 @@ TokenTableGenerator::put_source_head(std::ostream &output) const
         "//\n"
         "// generated on: " << std::ctime(&timestamp) // terminated with \n
      << "// =============================================================================\n"
-        "#include \"tasty_int/detail/codegen/" << token_table_name << ".hpp\"\n";
+        "#include \"tasty_int/detail/codegen/" << name << ".hpp\"\n";
 }
 
 void
 TokenTableGenerator::put_token_table_definition(const TokenMap &token_map,
                                                 std::ostream   &output) const
 {
-    output << "const TokenTable " << uppercase_token_table_name << " = {\n";
+    output << "const TokenTable " << uppercase_name << " = {\n";
     put_token_table_entries(token_map, output);
     output << "};\n";
 }

@@ -12,8 +12,10 @@ set(CMAKE_CXX_STANDARD     20)
 option(BUILD_TESTING "Enable unit testing." ON)
 if(NOT CMAKE_BUILD_TYPE)
   set(
-      CMAKE_BUILD_TYPE "Debug" CACHE STRING
-      "Build Type, options are: Debug (default) Release RelWithDebInfo MinSizeRel."
+      CMAKE_BUILD_TYPE "Debug"
+      CACHE STRING
+      "Build Type, options are: Debug (default) Release RelWithDebInfo "
+      "MinSizeRel."
       FORCE
   )
 endif()
@@ -35,12 +37,7 @@ set(PROJECT_CMAKE_MODULE_DIR ${PROJECT_CMAKE_DIR}/module)
 # make cmake modules available to include(), find_package()
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_CMAKE_MODULE_DIR})
 
-# set output directories
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BIN_DIR})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_LIB_DIR})
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_LIB_DIR})
-
-# set up common cmake module environment
+# set up common cmake environment
 include(cmake_environ)
 
 # set up project testing environment
@@ -50,9 +47,6 @@ if(BUILD_TESTING)
     include(test_environ)
     add_subdirectory(test)
 endif()
-
-# set include directory
-include_directories(${PROJECT_INCLUDE_DIR})
 
 # enter
 add_subdirectory(src)

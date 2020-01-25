@@ -1,3 +1,5 @@
+include(add_google_test)
+
 add_google_test(
     NAME
     tasty_int-detail-token_table_codegen-token_table_generator_test

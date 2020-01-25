@@ -1,3 +1,4 @@
+include(add_google_test)
 include(set_have_type)
 
 set_have_type(char8_t)

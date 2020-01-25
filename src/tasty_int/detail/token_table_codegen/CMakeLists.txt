@@ -1,3 +1,5 @@
+include(std_filesystem_library)
+
 add_library(
     tasty_int-detail-token_table_codegen-token_table_generator
     OBJECT
@@ -11,6 +13,12 @@ add_library(
     generate_token_table.cpp
     generate_token_table.hpp
 )
+if(STD_FILESYSTEM_LIBRARY)
+    target_link_libraries(
+        tasty_int-detail-token_table_codegen-generate_token_table
+        ${STD_FILESYSTEM_LIBRARY}
+    )
+endif()
 
 set(codegen_dir ${CMAKE_CURRENT_LIST_DIR}/../codegen)
 foreach(base 36 64)
@@ -22,6 +30,7 @@ foreach(base 36 64)
         $<TARGET_OBJECTS:tasty_int-detail-token_table_codegen-generate_token_table>
         $<TARGET_OBJECTS:tasty_int-detail-token_table_codegen-token_table_generator>
     )
+    
     set(token_table_name   base_${base}_token_values)
     set(token_table_header ${token_table_name}.hpp)
     set(token_table_source ${token_table_name}.cpp)

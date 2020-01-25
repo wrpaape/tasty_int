@@ -1,3 +1,5 @@
+include(add_google_test)
+
 foreach(base 36 64)
     add_google_test(
         NAME      tasty_int-detail-value_from_base_${base}_token_test
@@ -12,7 +14,8 @@ add_google_test(
 )
 
 add_google_test(
-    NAME    tasty_int-detail-digits_from_integral_test
-    SOURCES digits_from_integral_test.cpp
-            $<TARGET_OBJECTS:tasty_int-detail-digits_from_integral>
+    NAME      tasty_int-detail-digits_from_integral_test
+    SOURCES   digits_from_integral_test.cpp
+              $<TARGET_OBJECTS:tasty_int-detail-digits_from_integral>
+    LIBRARIES tasty_int_test
 )

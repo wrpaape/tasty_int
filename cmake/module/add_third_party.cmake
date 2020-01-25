@@ -2,10 +2,23 @@ if(PROJECT_CMAKE_ADD_THIRD_PARTY_CMAKE_INCLUDED)
     return()
 endif()
 set(PROJECT_CMAKE_ADD_THIRD_PARTY_CMAKE_INCLUDED TRUE)
-# ==============================================================================
-# Calls ${CMAKE_COMMAND} to build a subdirectory 'third_party' containing
-# external projects and install to 'INSTALL_PREFIX' during the configure step.
-# ==============================================================================
+#[=======================================================================[.rst:
+add_third_party
+---------------
+
+This Module defines add_third_party():
+
+::
+    add_third_party(
+        <INSTALL_PREFIX <dir> >
+        [NAME           <name>]
+    )
+
+which configures, builds, and installs third_party packages during project
+configuration time.  This expects to execute a CMakeLists.txt found at
+the root of the ``${CMAKE_CURRENT_SOURCE_DIR}/third_party`` directory.  Build
+artifacts may be found under ``INSTALL_PREFIX`` upon successful completion, 
+#]=======================================================================]
 # External Dependencies
 # ------------------------------------------------------------------------------
 include(parse_arguments)
@@ -14,11 +27,11 @@ include(parse_arguments)
 # ------------------------------------------------------------------------------
 function(add_third_party)
     set(boolean_keywords  "")
-    set(value_keywords    NAME INSTALL_PREFIX)
+    set(value_keywords    INSTALL_PREFIX NAME)
     set(list_keywords     "")
     set(required_keywords INSTALL_PREFIX)
     parse_arguments(
-        THIRD_PARTY            # prefix
+        THIRD_PARTY # prefix
         "${boolean_keywords}"
         "${value_keywords}"
         "${list_keywords}"
@@ -41,37 +54,33 @@ function(add_third_party)
     file(RELATIVE_PATH relative_root
         ${PROJECT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
     set(binary_dir ${CMAKE_BINARY_DIR}/${relative_root}/third_party)
-
-    # configure
-    message(STATUS "Configuring ${THIRD_PARTY_NAME}...")
     make_directory(${binary_dir})
-    execute_process(
-        COMMAND           ${CMAKE_COMMAND} ${CMAKE_CURRENT_SOURCE_DIR}/third_party
-                                           -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-                                           -DCMAKE_INSTALL_PREFIX=${THIRD_PARTY_INSTALL_PREFIX}
-        WORKING_DIRECTORY ${binary_dir}
-        RESULT_VARIABLE   result
-        OUTPUT_VARIABLE   output
-        ERROR_VARIABLE    output
-    )
-    if(result)
-        message(SEND_ERROR  "Failed to configure ${THIRD_PARTY_NAME}.")
-        message(FATAL_ERROR ${output})
-    endif()
-    message(STATUS "Success.")
 
-    # build
-    message(STATUS "Building ${THIRD_PARTY_NAME}...")
-    execute_process(
-        COMMAND           ${CMAKE_COMMAND} --build .
-        WORKING_DIRECTORY ${binary_dir}
-        RESULT_VARIABLE   result
-        OUTPUT_VARIABLE   output
-        ERROR_VARIABLE    output
-    )
-    if(result)
-        message(SEND_ERROR  "Failed to build ${THIRD_PARTY_NAME}.")
-        message(FATAL_ERROR ${output})
-    endif()
-    message(STATUS "Success.")
+    set(configure_prompt "Configuring")
+    set(configure_cmake_args 
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party
+        -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+        -DCMAKE_INSTALL_PREFIX:PATH=${THIRD_PARTY_INSTALL_PREFIX})
+
+    set(build_prompt     "Building")
+    set(build_cmake_args --build .)
+
+    set(install_prompt     "Installing")
+    set(install_cmake_args --install .)
+
+    foreach(action configure build install)
+        message(STATUS "${${action}_prompt} ${THIRD_PARTY_NAME}...")
+        execute_process(
+            COMMAND ${CMAKE_COMMAND} ${${action}_cmake_args}
+            WORKING_DIRECTORY        ${binary_dir}
+            RESULT_VARIABLE          result
+            OUTPUT_VARIABLE          output
+            ERROR_VARIABLE           output
+        )
+        if(result)
+            message(SEND_ERROR  "Failed to ${action} ${THIRD_PARTY_NAME}.")
+            message(FATAL_ERROR ${output})
+        endif()
+        message(STATUS "Success.")
+    endforeach()
 endfunction()

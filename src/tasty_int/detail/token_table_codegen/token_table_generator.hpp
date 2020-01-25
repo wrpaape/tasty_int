@@ -114,8 +114,8 @@ private:
                           unsigned int    token,
                           std::ostream   &output) const;
 
-    std::string_view token_table_name;
-    std::string      uppercase_token_table_name;
+    std::string_view name;
+    std::string      uppercase_name;
 }; // class TokenTableGenerator
 
 } // namespace token_table_codegen

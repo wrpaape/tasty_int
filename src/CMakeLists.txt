@@ -1,16 +1,15 @@
 include(cpp_restrict_qualifier) # set CPP_RESTRICT_QUALIFIER
 
+# set output directories
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BIN_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_LIB_DIR})
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_LIB_DIR})
+
 # update compile definitions
 add_definitions(-DCPP_RESTRICT_QUALIFIER=${CPP_RESTRICT_QUALIFIER})
 
-# update compiler warnings
-if(MSVC)
-    add_compile_options(/W4 /WX)
-else()
-    add_compile_options(-Wall -Wextra -pedantic -Werror)
-endif()
-
 # update include path
+include_directories(${PROJECT_INCLUDE_DIR})
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 
 # set vars common to subdirectories

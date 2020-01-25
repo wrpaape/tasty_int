@@ -34,7 +34,7 @@ TEST(TokenTableGeneratorTest,
         token_map.map_token(token, INVALID_VALUE);
         FAIL() << "did not throw expected std::invalid_argument";
 
-    } catch (const std::invalid_argument& exception) {
+    } catch (const std::invalid_argument &exception) {
         std::ostringstream expected_message;
         expected_message <<
             "TokenTableGenerator::TokenMap - invalid mapping (" << token

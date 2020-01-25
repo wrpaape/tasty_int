@@ -6,6 +6,8 @@
 
 #include "gtest/gtest.h"
 
+#include "tasty_int_test/logarithmic_range.hpp"
+
 
 using namespace tasty_int::detail;
 
@@ -26,10 +28,7 @@ TEST_P(SmallValuesTest, SingleDigitForValuesLessThanOrEqualToDigitTypeMax)
 INSTANTIATE_TEST_SUITE_P(
     DigitsFromIntegralTest,
     SmallValuesTest,
-    ::testing::Values(0,
-                      DIGIT_TYPE_MAX / 4,
-                      DIGIT_TYPE_MAX / 2,
-                      DIGIT_TYPE_MAX)
+    tasty_int_test::logarithmic_range<std::uintmax_t>(0, DIGIT_TYPE_MAX, 2)
 );
 
 
@@ -49,10 +48,11 @@ TEST_P(LargeValuesTest, TwoDigitsForValuesGreaterThanDigitTypeMax)
 INSTANTIATE_TEST_SUITE_P(
     DigitsFromIntegralTest,
     LargeValuesTest,
-    ::testing::Values(DIGIT_TYPE_MAX + 1,
-                      std::numeric_limits<std::uintmax_t>::max() / 4,
-                      std::numeric_limits<std::uintmax_t>::max() / 2,
-                      std::numeric_limits<std::uintmax_t>::max())
+    tasty_int_test::logarithmic_range<std::uintmax_t>(
+        DIGIT_TYPE_MAX + 1,
+        std::numeric_limits<std::uintmax_t>::max(),
+        2
+    )
 );
 
 } // namespace

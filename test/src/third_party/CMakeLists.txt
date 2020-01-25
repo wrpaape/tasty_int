@@ -15,6 +15,7 @@ ExternalProject_Add(
     GIT_TAG        master
     SOURCE_DIR     ${CMAKE_CURRENT_LIST_DIR}/googletest
     INSTALL_DIR    ${CMAKE_INSTALL_PREFIX}
-    CMAKE_ARGS     -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-                   -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+    CMAKE_ARGS     -DCMAKE_INSTALL_PREFIX:STRING=${CMAKE_INSTALL_PREFIX}
+                   # FindGTest will choke if release version not available
+                   -DCMAKE_BUILD_TYPE:STRING=Release
 )
