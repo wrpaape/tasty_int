@@ -11,25 +11,28 @@
 namespace tasty_int_test {
 
 /**
- * @brief Yields a googletest parameter generator which provides an ascending
- *     sequence of unique values:
+ * @brief Yields the following sequence of unique values:
  *
- *     { min [, min + step [, min + step^2] ...] [, max] }
+ *     { first [, first +/- scale [, first +/- scale^2] ...] [, last] }
  *
- * @param min  the minimum value of the range (inclusive)
- * @param max  the maximum value of the range (inclusive)
- * @param step the logarithmic scale of the range
+ * @detail If `first < last`, the sequence is ascending.  If `first > last`,
+ *     the sequence is descending.  Otherwise, if `first == last`, the single
+ *     value @p first is returned.
  *
- * @pre `min <= max && step > 1`
+ * @param first the first value of the range (inclusive)
+ * @param last  the last value of the range (inclusive)
+ * @param scale the logarithmic scale of the range
  *
- * @throws std::invalid_argument if preconditions aren't satisfied
+ * @pre `scale > 1`
+ *
+ * @throw std::invalid_argument if `scale <= 1`
  */
 template<typename T>
 auto
-logarithmic_range(T min, T max, T step)
+logarithmic_range(T first, T last, T scale)
     requires std::is_arithmetic_v<T>
 {
-    return ::testing::ValuesIn(logarithmic_range_values(min, max, step));
+    return ::testing::ValuesIn(logarithmic_range_values(first, last, scale));
 }
 
 } //  namespace tasty_int_test

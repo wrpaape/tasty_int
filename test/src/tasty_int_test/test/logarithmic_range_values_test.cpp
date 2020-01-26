@@ -22,154 +22,191 @@ class LogarithmicRangeValuesTest : public ::testing::Test
 
 TYPED_TEST_SUITE_P(LogarithmicRangeValuesTest);
 
-TYPED_TEST_P(LogarithmicRangeValuesTest, ThrowsIfMinIsGreaterThanMax)
+TYPED_TEST_P(LogarithmicRangeValuesTest, ThrowsIfScaleIsLessThanOne)
 {
-    TypeParam min(1);
-    TypeParam max(0);
-    TypeParam step(2);
+    TypeParam first(0);
+    TypeParam last(1);
+    TypeParam scale(0);
 
     try {
         (void) tasty_int_test::logarithmic_range_values<TypeParam>(
-            min, max, step
+            first, last, scale
         );
         FAIL() << "did not throw expected std::invalid_argument";
 
     } catch (const std::invalid_argument &exception) {
         std::ostringstream expected_message;
         expected_message <<
-                "tasty_int_test::logarithmic_range_values - min ("
-             << make_printable(min) << ") > max (" << make_printable(max)
-             << ").";
+            "tasty_int_test::logarithmic_range_values - scale ("
+            << make_printable(scale) << ") <= 1.";
         EXPECT_EQ(expected_message.str(), exception.what());
     }
 }
 
-TYPED_TEST_P(LogarithmicRangeValuesTest, ThrowsIfStepIsLessThanOne)
+TYPED_TEST_P(LogarithmicRangeValuesTest, ThrowsIfScaleIsEqualToOne)
 {
-    TypeParam min(0);
-    TypeParam max(1);
-    TypeParam step(0);
+    TypeParam first(0);
+    TypeParam last(1);
+    TypeParam scale(1);
 
     try {
         (void) tasty_int_test::logarithmic_range_values<TypeParam>(
-            min, max, step
+            first, last, scale
         );
         FAIL() << "did not throw expected std::invalid_argument";
 
     } catch (const std::invalid_argument &exception) {
         std::ostringstream expected_message;
         expected_message <<
-            "tasty_int_test::logarithmic_range_values - step ("
-            << make_printable(step) << ") <= 1.";
+            "tasty_int_test::logarithmic_range_values - scale ("
+            << make_printable(scale) << ") <= 1.";
         EXPECT_EQ(expected_message.str(), exception.what());
     }
 }
 
-TYPED_TEST_P(LogarithmicRangeValuesTest, ThrowsIfStepIsEqualToOne)
+TYPED_TEST_P(LogarithmicRangeValuesTest, SingleValueIfFirstEqualsLast)
 {
-    TypeParam min(0);
-    TypeParam max(1);
-    TypeParam step(1);
+    TypeParam first(0);
+    TypeParam last(first);
+    TypeParam scale(2);
 
-    try {
-        (void) tasty_int_test::logarithmic_range_values<TypeParam>(
-            min, max, step
-        );
-        FAIL() << "did not throw expected std::invalid_argument";
-
-    } catch (const std::invalid_argument &exception) {
-        std::ostringstream expected_message;
-        expected_message <<
-            "tasty_int_test::logarithmic_range_values - step ("
-            << make_printable(step) << ") <= 1.";
-        EXPECT_EQ(expected_message.str(), exception.what());
-    }
-}
-
-TYPED_TEST_P(LogarithmicRangeValuesTest, SingleValueIfMinEqualsMax)
-{
-    TypeParam min(0);
-    TypeParam max(min);
-    TypeParam step(2);
-
-    std::vector<TypeParam> expected_values = { min };
+    std::vector<TypeParam> expected_values = { first };
     EXPECT_EQ(
         expected_values,
         tasty_int_test::logarithmic_range_values<TypeParam>(
-            min, max, step
-        )
-    );
-}
-
-TYPED_TEST_P(LogarithmicRangeValuesTest, NoIntermediateValuesIfStepEqualToRange)
-{
-    TypeParam min(0);
-    TypeParam max(10);
-    TypeParam step(max - min);
-
-    std::vector<TypeParam> expected_values = { min, max };
-    EXPECT_EQ(
-        expected_values,
-        tasty_int_test::logarithmic_range_values<TypeParam>(
-            min, max, step
+            first, last, scale
         )
     );
 }
 
 TYPED_TEST_P(LogarithmicRangeValuesTest,
-             NoIntermediateValuesIfStepGreaterThanRange)
+             NoAscendingIntermediateValuesIfScaleEqualToAbsDelta)
 {
-    TypeParam min(0);
-    TypeParam max(10);
-    TypeParam step(max + 1 - min);
+    TypeParam first(0);
+    TypeParam last(10);
+    TypeParam scale(last - first);
 
-    std::vector<TypeParam> expected_values = { min, max };
+    std::vector<TypeParam> expected_values = { first, last };
     EXPECT_EQ(
         expected_values,
         tasty_int_test::logarithmic_range_values<TypeParam>(
-            min, max, step
+            first, last, scale
         )
     );
 }
 
 TYPED_TEST_P(LogarithmicRangeValuesTest,
-             IntermediateValuesIfStepLessThanRange)
+             NoDescendingIntermediateValuesIfScaleEqualToAbsDelta)
 {
-    TypeParam min(-10);
-    TypeParam max(100);
-    TypeParam step(2);
+    TypeParam first(0);
+    TypeParam last(-10);
+    TypeParam scale(first - last);
+
+    std::vector<TypeParam> expected_values = { first, last };
+    EXPECT_EQ(
+        expected_values,
+        tasty_int_test::logarithmic_range_values<TypeParam>(
+            first, last, scale
+        )
+    );
+}
+
+TYPED_TEST_P(LogarithmicRangeValuesTest,
+             NoAscendingIntermediateValuesIfScaleGreaterThanAbsDelta)
+{
+    TypeParam first(0);
+    TypeParam last(10);
+    TypeParam scale(last + 1 - first);
+
+    std::vector<TypeParam> expected_values = { first, last };
+    EXPECT_EQ(
+        expected_values,
+        tasty_int_test::logarithmic_range_values<TypeParam>(
+            first, last, scale
+        )
+    );
+}
+
+TYPED_TEST_P(LogarithmicRangeValuesTest,
+             NoDescendingIntermediateValuesIfScaleGreaterThanAbsDelta)
+{
+    TypeParam first(0);
+    TypeParam last(-10);
+    TypeParam scale(first + 1 - last);
+
+    std::vector<TypeParam> expected_values = { first, last };
+    EXPECT_EQ(
+        expected_values,
+        tasty_int_test::logarithmic_range_values<TypeParam>(
+            first, last, scale
+        )
+    );
+}
+
+TYPED_TEST_P(LogarithmicRangeValuesTest,
+             AscendingIntermediateValuesIfScaleLessThanAbsDelta)
+{
+    TypeParam first(-10);
+    TypeParam last(100);
+    TypeParam scale(2);
 
     std::vector<TypeParam> expected_values = {
-        min,
-        static_cast<TypeParam>(min + step),
-        static_cast<TypeParam>(min + step * step),
-        static_cast<TypeParam>(min + step * step * step),
-        static_cast<TypeParam>(min + step * step * step * step),
-        static_cast<TypeParam>(min + step * step * step * step * step),
-        max
+        first,
+        static_cast<TypeParam>(first + scale),
+        static_cast<TypeParam>(first + scale * scale),
+        static_cast<TypeParam>(first + scale * scale * scale),
+        static_cast<TypeParam>(first + scale * scale * scale * scale),
+        static_cast<TypeParam>(first + scale * scale * scale * scale * scale),
+        last
     };
     EXPECT_EQ(
         expected_values,
         tasty_int_test::logarithmic_range_values<TypeParam>(
-            min, max, step
+            first, last, scale
+        )
+    );
+}
+
+TYPED_TEST_P(LogarithmicRangeValuesTest,
+             DescendingIntermediateValuesIfScaleLessThanAbsDelta)
+{
+    TypeParam first(+10);
+    TypeParam last(-100);
+    TypeParam scale(2);
+
+    std::vector<TypeParam> expected_values = {
+        first,
+        static_cast<TypeParam>(first - scale),
+        static_cast<TypeParam>(first - scale * scale),
+        static_cast<TypeParam>(first - scale * scale * scale),
+        static_cast<TypeParam>(first - scale * scale * scale * scale),
+        static_cast<TypeParam>(first - scale * scale * scale * scale * scale),
+        last
+    };
+    EXPECT_EQ(
+        expected_values,
+        tasty_int_test::logarithmic_range_values<TypeParam>(
+            first, last, scale
         )
     );
 }
 
 REGISTER_TYPED_TEST_SUITE_P(
     LogarithmicRangeValuesTest,
-    ThrowsIfMinIsGreaterThanMax,
-    ThrowsIfStepIsLessThanOne,
-    ThrowsIfStepIsEqualToOne,
-    SingleValueIfMinEqualsMax,
-    NoIntermediateValuesIfStepEqualToRange,
-    NoIntermediateValuesIfStepGreaterThanRange,
-    IntermediateValuesIfStepLessThanRange
+    ThrowsIfScaleIsLessThanOne,
+    ThrowsIfScaleIsEqualToOne,
+    SingleValueIfFirstEqualsLast,
+    NoAscendingIntermediateValuesIfScaleEqualToAbsDelta,
+    NoDescendingIntermediateValuesIfScaleEqualToAbsDelta,
+    NoAscendingIntermediateValuesIfScaleGreaterThanAbsDelta,
+    NoDescendingIntermediateValuesIfScaleGreaterThanAbsDelta,
+    AscendingIntermediateValuesIfScaleLessThanAbsDelta,
+    DescendingIntermediateValuesIfScaleLessThanAbsDelta
 );
 
 using LogarithmicRangeValuesTestTypes = ::testing::Types<
     float, double, long double,
-    char, short, int, long, long long
+    signed char, signed short, signed int, signed long, signed long long
 >;
 
 INSTANTIATE_TYPED_TEST_SUITE_P(LogarithmicRangeValuesTest,

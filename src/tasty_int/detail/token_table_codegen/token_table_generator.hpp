@@ -40,7 +40,7 @@ public:
          * @param[in] value the value @p token represents
          *
          * @pre `value <= MAX_VALUE`
-         * @throws std::invalid_argument if @p value exceeds MAX_VALUE
+         * @throw std::invalid_argument if @p value exceeds MAX_VALUE
          */
         void
         map_token(char token, unsigned char value);

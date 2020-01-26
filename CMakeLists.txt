@@ -14,8 +14,7 @@ if(NOT CMAKE_BUILD_TYPE)
   set(
       CMAKE_BUILD_TYPE "Debug"
       CACHE STRING
-      "Build Type, options are: Debug (default) Release RelWithDebInfo "
-      "MinSizeRel."
+      "Build Type, options are: Debug (default) Release RelWithDebInfo MinSizeRel."
       FORCE
   )
 endif()

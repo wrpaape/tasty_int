@@ -25,9 +25,9 @@ framework.
 # ------------------------------------------------------------------------------
 include(add_custom_test)
 
-set(GTEST_ROOT ${PROJECT_TEST_DIR})
-find_package(GTest)
-if(NOT GTEST_FOUND)
+# can't find GTest::* targets in CONFIG mode, fall back on MODULE mode
+find_package(GTest REQUIRED)
+if(NOT GTest_FOUND)
     message(
         FATAL_ERROR
         "GTest should have been installed at the ${PROJECT_TEST_DIR} at this "

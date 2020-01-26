@@ -6,6 +6,11 @@ add_library(
     token_table_generator.cpp
     token_table_generator.hpp
 )
+target_sources(
+    tasty_int-detail-token_table_codegen-token_table_generator
+    PRIVATE
+    ${TASTY_INT_DETAIL_DIR}/token_table.hpp
+)
 
 add_library(
     tasty_int-detail-token_table_codegen-generate_token_table
@@ -47,6 +52,7 @@ foreach(base 36 64)
         tasty_int-detail-codegen-${token_table_name}
         OBJECT
         ${token_table_files}
+        ${TASTY_INT_DETAIL_DIR}/token_table.hpp
     )
 endforeach()
 

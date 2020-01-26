@@ -12,7 +12,10 @@ namespace tasty_int {
 namespace detail {
 
 /**
- * TODO
+ * @brief Converts @p value to a little-endian sequence of digits.
+ *
+ * @param[in] value an unsigned integer value
+ * @return little-endian representation of @p value in `digit_type`s
  */
 std::vector<digit_type>
 digits_from_integral(std::uintmax_t value);

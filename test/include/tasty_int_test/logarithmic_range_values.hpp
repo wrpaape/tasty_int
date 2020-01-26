@@ -1,6 +1,8 @@
 #ifndef TASTY_INT_TASTY_INT_TEST_LOGARITHMIC_RANGE_VALUES_HPP
 #define TASTY_INT_TASTY_INT_TEST_LOGARITHMIC_RANGE_VALUES_HPP
 
+#include <cmath>
+
 #include <vector>
 #include <type_traits>
 #include <stdexcept>
@@ -20,14 +22,14 @@ make_printable(T value)
 
 template<typename T>
 void
-check_logarithmic_range_values_min_max(T min, T max)
+check_logarithmic_scale(T scale)
     requires std::is_arithmetic_v<T>
 {
-    if (min > max) {
+    if (scale <= 1) {
         std::ostringstream error_message;
         error_message <<
-            "tasty_int_test::logarithmic_range_values - min ("
-         << make_printable(min) << ") > max (" << make_printable(max) << ").";
+            "tasty_int_test::logarithmic_range_values - scale ("
+            << make_printable(scale) << ") <= 1.";
 
         throw std::invalid_argument(error_message.str());
     }
@@ -35,59 +37,64 @@ check_logarithmic_range_values_min_max(T min, T max)
 
 template<typename T>
 void
-check_logarithmic_range_values_step(T step)
+append_intermediate_logarithmic_values(T first, T scale, T last_mult,
+                                       std::vector<T>& values)
     requires std::is_arithmetic_v<T>
+          && std::is_signed_v<T>
 {
-    if (step <= 1) {
-        std::ostringstream error_message;
-        error_message <<
-            "tasty_int_test::logarithmic_range_values - step ("
-            << make_printable(step) << ") <= 1.";
-
-        throw std::invalid_argument(error_message.str());
-    }
+    for (T mult = std::copysign(scale, last_mult);
+         std::abs(mult) <= std::abs(last_mult); mult *= scale)
+        values.emplace_back(first + mult);
 }
 
 template<typename T>
 void
-check_logarithmic_range_values_input(T min, T max, T step)
+append_intermediate_logarithmic_values(T first, T scale, T last_mult,
+                                       std::vector<T>& values)
     requires std::is_arithmetic_v<T>
-{ 
-    check_logarithmic_range_values_min_max(min, max);
-    check_logarithmic_range_values_step(step);
+          && std::is_unsigned_v<T>
+{
+    for (T mult = scale; mult <= last_mult; mult *= scale)
+        values.emplace_back(first + mult);
 }
 
 } // namespace detail
 
+
 /**
- * @brief Yields ascending sequence of unique values:
+ * @brief Yields the following sequence of unique values:
  *
- *     { min [, min + step [, min + step^2] ...] [, max] }
+ *     { first [, first +/- scale [, first +/- scale^2] ...] [, last] }
  *
- * @param min  the minimum value of the range (inclusive)
- * @param max  the maximum value of the range (inclusive)
- * @param step the logarithmic scale of the range
+ * @detail If `first < last`, the sequence is ascending.  If `first > last`,
+ *     the sequence is descending.  Otherwise, if `first == last`, the single
+ *     value @p first is returned.
  *
- * @pre `min <= max && step > 1`
+ * @param first the first value of the range (inclusive)
+ * @param last  the last value of the range (inclusive)
+ * @param scale the logarithmic scale of the range
  *
- * @throws std::invalid_argument if preconditions aren't satisfied
+ * @pre `scale > 1`
+ *
+ * @throw std::invalid_argument if `scale <= 1`
  */
 template<typename T>
 std::vector<T>
-logarithmic_range_values(T min, T max, T step)
+logarithmic_range_values(T first, T last, T scale)
     requires std::is_arithmetic_v<T>
 {
-    detail::check_logarithmic_range_values_input(min, max, step);
+    detail::check_logarithmic_scale(scale);
 
     std::vector<T> values;
-    T max_mult = (max - min) / step;
+    T last_mult = (last - first) / scale;
 
-    values.emplace_back(min);
-    for (T mult = step; mult <= max_mult; mult *= step)
-        values.emplace_back(min + mult);
+    values.emplace_back(first);
 
-    if (max > min)
-        values.emplace_back(max);
+    detail::append_intermediate_logarithmic_values(first, scale, last_mult,
+                                                   values);
+
+    if (last != first)
+        values.emplace_back(last);
 
     return values;
 }
