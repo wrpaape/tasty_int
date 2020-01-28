@@ -1,100 +1,43 @@
-#include "tasty_int/detail/int_from_integral.hpp"
-
-#include <cmath>
-
-#include <limits>
+#include "tasty_int/detail/test/int_from_integral_test.hpp"
 
 #include "gtest/gtest.h"
-
-#include "tasty_int_test/logarithmic_range.hpp"
 
 
 using namespace tasty_int::detail;
 
-namespace {
+namespace int_from_integral_test {
 
 void
-ExpectDigitsEqualNonnegativeValue(std::uintmax_t                 expected,
-                                  const std::vector<digit_type> &digits)
+expect_digits_equal(std::uintmax_t                 expected,
+                    const std::vector<digit_type> &digits)
 {
-    ASSERT_GE(digits.size(), 1);
-
-    EXPECT_EQ(static_cast<digit_type>(expected), digits.front());
+    EXPECT_EQ(static_cast<digit_type>(expected), digits.at(0));
 
     if (expected <= DIGIT_TYPE_MAX) {
         EXPECT_EQ(1, digits.size());
 
     } else {
-        ASSERT_GE(digits.size(), 2);
-
         EXPECT_EQ(static_cast<digit_type>(expected >> DIGIT_TYPE_BITS),
-                  digits.back());
+                  digits.at(1));
         EXPECT_EQ(2, digits.size());
     }
 }
 
-
 void
-ExpectNegativeIntEquals(std::intmax_t expected, const Int &actual)
-{
-    EXPECT_EQ(Sign::NEGATIVE, actual.sign);
-
-    ExpectDigitsEqualNonnegativeValue(-expected, actual.digits);
-}
-
-class NegativeValuesTest : public ::testing::TestWithParam<std::intmax_t>
-{}; // class NegativeValuesTest
-
-TEST_P(NegativeValuesTest, NegativeValuesProduceNegativeInt)
-{
-    ExpectNegativeIntEquals(GetParam(), int_from_integral(GetParam()));
-}
-
-INSTANTIATE_TEST_SUITE_P(
-    IntFromIntegralTest,
-    NegativeValuesTest,
-    tasty_int_test::logarithmic_range<std::intmax_t>(
-        -1, std::numeric_limits<std::intmax_t>::min(), 2
-    )
-);
-
-
-void
-ExpectZeroIntEquals(const Int &actual)
+expect_int_equals_zero(const Int &actual)
 {
     EXPECT_EQ(Sign::ZERO, actual.sign);
 
-    ExpectDigitsEqualNonnegativeValue(0, actual.digits);
+    expect_digits_equal(0, actual.digits);
 }
-
-TEST(IntFromIntegralTest, ZeroValueProducesZeroInt)
-{
-    ExpectZeroIntEquals(int_from_integral(0));
-}
-
 
 void
-ExpectPositiveIntEquals(std::intmax_t expected, const Int &actual)
+expect_positive_int_equals(std::uintmax_t expected, const Int &actual)
 {
     EXPECT_EQ(Sign::POSITIVE, actual.sign);
 
-    ExpectDigitsEqualNonnegativeValue(expected, actual.digits);
+    expect_digits_equal(expected, actual.digits);
 }
 
-class PositiveValuesTest : public ::testing::TestWithParam<std::intmax_t>
-{}; // class PositiveValuesTest
 
-TEST_P(PositiveValuesTest, PositiveValuesProducePositiveInt)
-{
-    ExpectPositiveIntEquals(GetParam(), int_from_integral(GetParam()));
-}
-
-INSTANTIATE_TEST_SUITE_P(
-    IntFromIntegralTest,
-    PositiveValuesTest,
-    tasty_int_test::logarithmic_range<std::intmax_t>(
-        1, std::numeric_limits<std::intmax_t>::max(), 2
-    )
-);
-
-} // namespace
+} // namespace int_from_integral_test

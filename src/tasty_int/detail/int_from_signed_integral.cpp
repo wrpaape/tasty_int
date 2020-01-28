@@ -1,4 +1,4 @@
-#include "tasty_int/detail/int_from_integral.hpp"
+#include "tasty_int/detail/int_from_signed_integral.hpp"
 
 #include <cmath>
 
@@ -9,8 +9,11 @@
 namespace tasty_int {
 namespace detail {
 
+/**
+ * TODO
+ */
 Int
-int_from_integral(std::intmax_t value)
+int_from_signed_integral(std::intmax_t value)
 {
     Int result;
     result.sign   = sign_from_signed_arithmetic(value);

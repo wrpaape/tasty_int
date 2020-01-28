@@ -20,16 +20,17 @@ add_library(
     ${TASTY_INT_DETAIL_INCLUDE_DIR}/digit_type.hpp
 )
 
-add_library(
-    tasty_int-detail-int_from_integral
-    STATIC
-    int_from_integral.cpp
-    int_from_integral.hpp
-    ${TASTY_INT_DETAIL_INCLUDE_DIR}/int.hpp
-    ${TASTY_INT_DETAIL_DIR}/sign_from_signed_arithmetic.hpp
-    ${TASTY_INT_DETAIL_DIR}/sign_from_unsigned_arithmetic.hpp
-    $<TARGET_OBJECTS:tasty_int-detail-digits_from_integral>
-)
+foreach(kind signed unsigned)
+    add_library(
+        tasty_int-detail-int_from_${kind}_integral
+        STATIC
+        int_from_${kind}_integral.cpp
+        int_from_${kind}_integral.hpp
+        ${TASTY_INT_DETAIL_INCLUDE_DIR}/int.hpp
+        ${TASTY_INT_DETAIL_DIR}/sign_from_${kind}_arithmetic.hpp
+        $<TARGET_OBJECTS:tasty_int-detail-digits_from_integral>
+    )
+endforeach()
 
 if(BUILD_TESTING)
     add_subdirectory(test)

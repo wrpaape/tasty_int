@@ -4,6 +4,7 @@
  */
 #include "tasty_int/detail/token_table_codegen/generate_token_table.hpp"
 
+
 using namespace tasty_int::detail::token_table_codegen;
 
 int
