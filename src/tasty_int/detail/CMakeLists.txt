@@ -32,6 +32,24 @@ foreach(kind signed unsigned)
     )
 endforeach()
 
+add_library(
+    tasty_int-detail-digits_from_floating_point
+    OBJECT
+    digits_from_floating_point.cpp
+    digits_from_floating_point.hpp
+    ${TASTY_INT_DETAIL_INCLUDE_DIR}/digit_type.hpp
+)
+
+add_library(
+    tasty_int-detail-int_from_floating_point
+    STATIC
+    int_from_floating_point.cpp
+    int_from_floating_point.hpp
+    ${TASTY_INT_DETAIL_INCLUDE_DIR}/int.hpp
+    ${TASTY_INT_DETAIL_DIR}/sign_from_signed_arithmetic.hpp
+    $<TARGET_OBJECTS:tasty_int-detail-digits_from_floating_point>
+)
+
 if(BUILD_TESTING)
     add_subdirectory(test)
 endif()

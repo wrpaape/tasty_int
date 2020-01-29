@@ -1,8 +1,6 @@
 #ifndef TASTY_INT_TASTY_INT_DETAIL_DIGITS_FROM_INTEGRAL_HPP
 #define TASTY_INT_TASTY_INT_DETAIL_DIGITS_FROM_INTEGRAL_HPP
 
-#include <cstdint>
-
 #include <vector>
 
 #include "tasty_int/detail/digit_type.hpp"
@@ -14,11 +12,13 @@ namespace detail {
 /**
  * @brief Converts @p value to a little-endian sequence of digits.
  *
- * @param[in] value an unsigned integer value
+ * @param[in] value a non-negative, finite floating point value
  * @return little-endian representation of @p value in `digit_type`s
+ *
+ * @pre `std::isfinite(value) && (value >= 0.0)`
  */
 std::vector<digit_type>
-digits_from_integral(std::uintmax_t value);
+digits_from_floating_point(long double value);
 
 } // namespace detail
 } // namespace tasty_int

@@ -1,5 +1,5 @@
-#ifndef TASTY_INT_TASTY_INT_DETAIL_TEST_INT_FROM_INTEGRAL_TEST_HPP
-#define TASTY_INT_TASTY_INT_DETAIL_TEST_INT_FROM_INTEGRAL_TEST_HPP
+#ifndef TASTY_INT_TASTY_INT_DETAIL_TEST_INT_FROM_INTEGRAL_TEST_COMMON_HPP
+#define TASTY_INT_TASTY_INT_DETAIL_TEST_INT_FROM_INTEGRAL_TEST_COMMON_HPP
 
 #include <cstdint>
 
@@ -9,7 +9,7 @@
 #include "tasty_int/detail/int.hpp"
 
 
-namespace int_from_integral_test {
+namespace int_from_integral_test_common {
 
 /**
  * @brief testing utility for checking that @p digits are equivalent @p
@@ -42,6 +42,6 @@ void
 expect_positive_int_equals(std::uintmax_t                expected,
                            const tasty_int::detail::Int &actual);
 
-} // namespace int_from_integral_test
+} // namespace int_from_integral_test_common
 
-#endif // ifndef TASTY_INT_TASTY_INT_DETAIL_TEST_INT_FROM_INTEGRAL_TEST_HPP
+#endif // ifndef TASTY_INT_TASTY_INT_DETAIL_TEST_INT_FROM_INTEGRAL_TEST_COMMON_HPP

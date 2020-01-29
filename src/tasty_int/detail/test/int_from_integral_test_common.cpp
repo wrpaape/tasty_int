@@ -1,11 +1,11 @@
-#include "tasty_int/detail/test/int_from_integral_test.hpp"
+#include "tasty_int/detail/test/int_from_integral_test_common.hpp"
 
 #include "gtest/gtest.h"
 
 
 using namespace tasty_int::detail;
 
-namespace int_from_integral_test {
+namespace int_from_integral_test_common {
 
 void
 expect_digits_equal(std::uintmax_t                 expected,
@@ -39,5 +39,4 @@ expect_positive_int_equals(std::uintmax_t expected, const Int &actual)
     expect_digits_equal(expected, actual.digits);
 }
 
-
-} // namespace int_from_integral_test
+} // namespace int_from_integral_test_common

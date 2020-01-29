@@ -6,14 +6,17 @@
 
 #include "gtest/gtest.h"
 
-#include "tasty_int/detail/test/int_from_integral_test.hpp"
+#include "tasty_int/detail/test/int_from_integral_test_common.hpp"
 #include "tasty_int_test/logarithmic_range.hpp"
 
 
 using namespace tasty_int::detail;
-using namespace int_from_integral_test;
+using namespace int_from_integral_test_common;
 
 namespace {
+
+class NegativeValuesTest : public ::testing::TestWithParam<std::intmax_t>
+{}; // class NegativeValuesTest
 
 void
 expect_negative_int_equals(std::intmax_t expected, const Int &actual)
@@ -22,9 +25,6 @@ expect_negative_int_equals(std::intmax_t expected, const Int &actual)
 
     expect_digits_equal(-expected, actual.digits);
 }
-
-class NegativeValuesTest : public ::testing::TestWithParam<std::intmax_t>
-{}; // class NegativeValuesTest
 
 TEST_P(NegativeValuesTest, NegativeValuesProduceNegativeInt)
 {

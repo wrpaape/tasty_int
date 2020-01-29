@@ -4,12 +4,12 @@
 
 #include "gtest/gtest.h"
 
-#include "tasty_int/detail/test/int_from_integral_test.hpp"
+#include "tasty_int/detail/test/int_from_integral_test_common.hpp"
 #include "tasty_int_test/logarithmic_range.hpp"
 
 
 using namespace tasty_int::detail;
-using namespace int_from_integral_test;
+using namespace int_from_integral_test_common;
 
 namespace {
 
