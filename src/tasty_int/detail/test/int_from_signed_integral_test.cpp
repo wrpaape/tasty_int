@@ -10,10 +10,15 @@
 #include "tasty_int_test/logarithmic_range.hpp"
 
 
-using namespace tasty_int::detail;
-using namespace int_from_integral_test_common;
-
 namespace {
+
+using tasty_int::detail::Int;
+using tasty_int::detail::Sign;
+using tasty_int::detail::int_from_signed_integral;
+using int_from_integral_test_common::expect_digits_equal;
+using int_from_integral_test_common::expect_int_equals_zero;
+using int_from_integral_test_common::expect_positive_int_equals;
+
 
 class NegativeValuesTest : public ::testing::TestWithParam<std::intmax_t>
 {}; // class NegativeValuesTest

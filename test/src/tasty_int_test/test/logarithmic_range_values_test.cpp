@@ -1,6 +1,7 @@
 #include "tasty_int_test/logarithmic_range_values.hpp"
 
 #include <sstream>
+#include <type_traits>
 
 #include "gtest/gtest.h"
 
@@ -16,6 +17,7 @@ make_printable(T value)
 }
 
 template<typename T>
+    requires std::is_arithmetic_v<T>
 class LogarithmicRangeValuesTest : public ::testing::Test
 {
 }; // class LogarithmicRangeValuesTest

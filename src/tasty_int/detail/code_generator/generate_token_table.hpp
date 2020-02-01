@@ -1,12 +1,12 @@
-#ifndef TASTY_INT_TASTY_INT_DETAIL_TOKEN_TABLE_CODEGEN_GENERATE_TOKEN_TABLE_HPP
-#define TASTY_INT_TASTY_INT_DETAIL_TOKEN_TABLE_CODEGEN_GENERATE_TOKEN_TABLE_HPP
+#ifndef TASTY_INT_TASTY_INT_DETAIL_CODE_GENERATOR_GENERATE_TOKEN_TABLE_HPP
+#define TASTY_INT_TASTY_INT_DETAIL_CODE_GENERATOR_GENERATE_TOKEN_TABLE_HPP
 
-#include "tasty_int/detail/token_table_codegen/token_table_generator.hpp"
+#include "tasty_int/detail/code_generator/token_table_generator.hpp"
 
 
 namespace tasty_int {
 namespace detail {
-namespace token_table_codegen {
+namespace code_generator {
 
 /**
  * @brief Generates the source and header files for a particular
@@ -31,8 +31,8 @@ generate_token_table(int                                  argc,
                      char                                *argv[],
                      const TokenTableGenerator::TokenMap &token_map);
 
-} // namespace token_table_codegen
+} // namespace code_generator
 } // namespace detail
 } // namespace tasty_int
 
-#endif // ifndef TASTY_INT_TASTY_INT_DETAIL_TOKEN_TABLE_CODEGEN_GENERATE_TOKEN_TABLE_HPP
+#endif // ifndef TASTY_INT_TASTY_INT_DETAIL_CODE_GENERATOR_GENERATE_TOKEN_TABLE_HPP

@@ -8,10 +8,11 @@
 #include "tasty_int_test/logarithmic_range.hpp"
 
 
-using namespace tasty_int::detail;
-using namespace from_floating_point_test_common;
-
 namespace {
+
+using tasty_int::detail::digits_from_floating_point;
+using from_floating_point_test_common::expect_digits_equal;
+
 
 class DigitsFromFloatingPointTest : public ::testing::TestWithParam<long double>
 {}; // class DigitsFromFloatingPointTest

@@ -6,7 +6,7 @@
 namespace tasty_int {
 namespace detail {
 
-int
+unsigned int
 value_from_base_64_token(char base_64_token)
 {
     return codegen::BASE_64_TOKEN_VALUES[

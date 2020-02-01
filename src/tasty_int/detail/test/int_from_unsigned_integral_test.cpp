@@ -8,10 +8,12 @@
 #include "tasty_int_test/logarithmic_range.hpp"
 
 
-using namespace tasty_int::detail;
-using namespace int_from_integral_test_common;
-
 namespace {
+
+using tasty_int::detail::int_from_unsigned_integral;
+using int_from_integral_test_common::expect_int_equals_zero;
+using int_from_integral_test_common::expect_positive_int_equals;
+
 
 TEST(IntFromUnsignedIntegralTest, ZeroValueProducesZeroInt)
 {

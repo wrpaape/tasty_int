@@ -62,6 +62,16 @@ static constexpr unsigned int DIGIT_TYPE_BITS =
 static constexpr digit_accumulator_type DIGIT_TYPE_MAX =
     (digit_accumulator_type(1) << DIGIT_TYPE_BITS) - digit_accumulator_type(1);
 
+/**
+ * The largest base that a list of digit_types may use to represent an integer
+ * using positional notation.  Given a list of digit_types, `digits`, then the
+ * following is well-formed:
+ *
+ *     value = digits[0]*DIGIT_BASE^0 + digits[1]*DIGIT_BASE^1 + ...
+ *           + digits[N-1]*DIGIT_BASE^(N-1)
+ */
+static constexpr digit_accumulator_type DIGIT_BASE = DIGIT_TYPE_MAX + 1;
+
 } // namespace detail
 } // namespace tasty_int
 

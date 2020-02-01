@@ -3,9 +3,14 @@
 #include "gtest/gtest.h"
 
 
-using namespace tasty_int::detail;
-
 namespace int_from_integral_test_common {
+
+using tasty_int::detail::Int;
+using tasty_int::detail::Sign;
+using tasty_int::detail::digit_type;
+using tasty_int::detail::DIGIT_TYPE_BITS;
+using tasty_int::detail::DIGIT_TYPE_MAX;
+
 
 void
 expect_digits_equal(std::uintmax_t                 expected,

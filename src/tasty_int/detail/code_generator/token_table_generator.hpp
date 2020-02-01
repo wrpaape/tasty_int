@@ -1,5 +1,5 @@
-#ifndef TASTY_INT_TASTY_INT_DETAIL_TOKEN_TABLE_CODEGEN_TOKEN_TABLE_GENERATOR_HPP
-#define TASTY_INT_TASTY_INT_DETAIL_TOKEN_TABLE_CODEGEN_TOKEN_TABLE_GENERATOR_HPP
+#ifndef TASTY_INT_TASTY_INT_DETAIL_CODE_GENERATOR_TOKEN_TABLE_GENERATOR_HPP
+#define TASTY_INT_TASTY_INT_DETAIL_CODE_GENERATOR_TOKEN_TABLE_GENERATOR_HPP
 
 #include <iosfwd>
 #include <limits>
@@ -11,7 +11,7 @@
 
 namespace tasty_int {
 namespace detail {
-namespace token_table_codegen {
+namespace code_generator {
 
 /**
  * This class generates C++ source code for lookup tables which may be used to
@@ -29,9 +29,9 @@ public:
     class TokenMap
     {
     public:
-        static constexpr signed char   INVALID_VALUE = -1;
-        static constexpr unsigned char MAX_VALUE =
-            std::numeric_limits<signed char>::max();
+        static constexpr unsigned char INVALID_VALUE =
+            std::numeric_limits<unsigned char>::max();
+        static constexpr unsigned char MAX_VALUE = INVALID_VALUE - 1;
 
         /**
          * @brief Map @p token to @p value.
@@ -52,10 +52,10 @@ public:
          * @return the associated value or INVALID_VALUE if @p token has no
          *     associated value
          */
-        signed char
+        unsigned char
         value_from_token(char token) const;
 
-        std::unordered_map<char, signed char> map;
+        std::unordered_map<char, unsigned char> mapping;
     }; // class TokenMap
 
     /**
@@ -118,8 +118,8 @@ private:
     std::string      uppercase_name;
 }; // class TokenTableGenerator
 
-} // namespace token_table_codegen
+} // namespace code_generator
 } // namespace detail
 } // namespace tasty_int
 
-#endif // ifndef TASTY_INT_TASTY_INT_DETAIL_TOKEN_TABLE_CODEGEN_TOKEN_TABLE_GENERATOR_HPP
+#endif // ifndef TASTY_INT_TASTY_INT_DETAIL_CODE_GENERATOR_TOKEN_TABLE_GENERATOR_HPP

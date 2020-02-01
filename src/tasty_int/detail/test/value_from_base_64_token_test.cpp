@@ -12,7 +12,7 @@ namespace {
 TEST(ValueFromBase64TokenTest, TokensLessThanPlusAreInvalid)
 {
     for (char token = std::numeric_limits<char>::min(); token < '+'; ++token)
-        ASSERT_LT(value_from_base_64_token(token), 0); // assert to avoid flood
+        ASSERT_GE(value_from_base_64_token(token), 64); // assert to avoid flood
 }
 
 TEST(ValueFromBase64TokenTest, PlusTokenMapsTo62)
@@ -23,7 +23,7 @@ TEST(ValueFromBase64TokenTest, PlusTokenMapsTo62)
 TEST(ValueFromBase64TokenTest, TokensBetweenPlusAndForwardSlashAreInvalid)
 {
     for (char token = '+' + 1; token < '/'; ++token)
-        ASSERT_LT(value_from_base_64_token(token), 0); // assert to avoid flood
+        ASSERT_GE(value_from_base_64_token(token), 64); // assert to avoid flood
 }
 
 TEST(ValueFromBase64TokenTest, ForwardSlashTokenMapsTo63)
@@ -48,7 +48,7 @@ TEST(ValueFromBase64TokenTest, TokensFrom0ToForwardSlashMapToValues52To61)
 TEST(ValueFromBase64TokenTest, TokensBetween9AndAAreInvalid)
 {
     for (char token = '9' + 1; token < 'A'; ++token)
-        ASSERT_LT(value_from_base_64_token(token), 0); // assert to avoid flood
+        ASSERT_GE(value_from_base_64_token(token), 64); // assert to avoid flood
 }
 
 TEST(ValueFromBase64TokenTest, TokensFromCapitalAToZMapToValues0To25)
@@ -84,7 +84,7 @@ TEST(ValueFromBase64TokenTest, TokensFromCapitalAToZMapToValues0To25)
 TEST(ValueFromBase64TokenTest, TokensBetweenCapitalZAndLowercaseAAreInvalid)
 {
     for (char token = 'Z' + 1; token < 'a'; ++token)
-        ASSERT_LT(value_from_base_64_token(token), 0); // assert to avoid flood
+        ASSERT_GE(value_from_base_64_token(token), 64); // assert to avoid flood
 }
 
 TEST(ValueFromBase64TokenTest, TokensFromLowercaseAToZMapToValues26To51)
@@ -120,7 +120,7 @@ TEST(ValueFromBase64TokenTest, TokensFromLowercaseAToZMapToValues26To51)
 TEST(ValueFromBase64TokenTest, TokensGreaterThanLowercaseZAreInvalid)
 {
     for (char token = 'z' + 1;; ++token) {
-        ASSERT_LT(value_from_base_64_token(token), 0); // assert to avoid flood
+        ASSERT_GE(value_from_base_64_token(token), 64); // assert to avoid flood
         if (token == std::numeric_limits<char>::max())
             break; // avoid overflow at max value
     }

@@ -1,26 +1,22 @@
 include(std_filesystem_library)
 
 add_library(
-    tasty_int-detail-token_table_codegen-token_table_generator
+    tasty_int-detail-code_generator-token_table_generator
     OBJECT
     token_table_generator.cpp
     token_table_generator.hpp
-)
-target_sources(
-    tasty_int-detail-token_table_codegen-token_table_generator
-    PRIVATE
     ${TASTY_INT_DETAIL_DIR}/token_table.hpp
 )
 
 add_library(
-    tasty_int-detail-token_table_codegen-generate_token_table
+    tasty_int-detail-code_generator-generate_token_table
     OBJECT
     generate_token_table.cpp
     generate_token_table.hpp
 )
 if(STD_FILESYSTEM_LIBRARY)
     target_link_libraries(
-        tasty_int-detail-token_table_codegen-generate_token_table
+        tasty_int-detail-code_generator-generate_token_table
         ${STD_FILESYSTEM_LIBRARY}
     )
 endif()
@@ -28,12 +24,12 @@ endif()
 set(codegen_dir ${CMAKE_CURRENT_LIST_DIR}/../codegen)
 foreach(base 36 64)
     set(generate_token_table
-        tasty_int-detail-token_table_codegen-generate_base_${base}_token_table)
+        tasty_int-detail-code_generator-generate_base_${base}_token_table)
     add_executable(
         ${generate_token_table}
         generate_base_${base}_token_table.cpp
-        $<TARGET_OBJECTS:tasty_int-detail-token_table_codegen-generate_token_table>
-        $<TARGET_OBJECTS:tasty_int-detail-token_table_codegen-token_table_generator>
+        $<TARGET_OBJECTS:tasty_int-detail-code_generator-generate_token_table>
+        $<TARGET_OBJECTS:tasty_int-detail-code_generator-token_table_generator>
     )
     
     set(token_table_name   base_${base}_token_values)

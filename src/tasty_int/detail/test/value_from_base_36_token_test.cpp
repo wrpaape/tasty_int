@@ -12,7 +12,7 @@ namespace {
 TEST(ValueFromBase36TokenTest, TokensLessThan0AreInvalid)
 {
     for (char token = std::numeric_limits<char>::min(); token < '0'; ++token)
-        ASSERT_LT(value_from_base_36_token(token), 0); // assert to avoid flood
+        ASSERT_GE(value_from_base_36_token(token), 36); // assert to avoid flood
 }
 
 TEST(ValueFromBase36TokenTest, TokensFrom0To9MapToValues0To9)
@@ -32,7 +32,7 @@ TEST(ValueFromBase36TokenTest, TokensFrom0To9MapToValues0To9)
 TEST(ValueFromBase36TokenTest, TokensBetween9AndAAreInvalid)
 {
     for (char token = '9' + 1; token < 'A'; ++token)
-        ASSERT_LT(value_from_base_36_token(token), 0); // assert to avoid flood
+        ASSERT_GE(value_from_base_36_token(token), 36); // assert to avoid flood
 }
 
 TEST(ValueFromBase36TokenTest, TokensFromCapitalAToZMapToValues10To35)
@@ -68,7 +68,7 @@ TEST(ValueFromBase36TokenTest, TokensFromCapitalAToZMapToValues10To35)
 TEST(ValueFromBase36TokenTest, TokensBetweenCapitalZAndLowercaseAAreInvalid)
 {
     for (char token = 'Z' + 1; token < 'a'; ++token)
-        ASSERT_LT(value_from_base_36_token(token), 0); // assert to avoid flood
+        ASSERT_GE(value_from_base_36_token(token), 36); // assert to avoid flood
 }
 
 TEST(ValueFromBase36TokenTest, TokensFromLowercaseAToZMapToValues10To35)
@@ -104,7 +104,7 @@ TEST(ValueFromBase36TokenTest, TokensFromLowercaseAToZMapToValues10To35)
 TEST(ValueFromBase36TokenTest, TokensGreaterThanLowercaseZAreInvalid)
 {
     for (char token = 'z' + 1;; ++token) {
-        ASSERT_LT(value_from_base_36_token(token), 0); // assert to avoid flood
+        ASSERT_GE(value_from_base_36_token(token), 36); // assert to avoid flood
         if (token == std::numeric_limits<char>::max())
             break; // avoid overflow at max value
     }

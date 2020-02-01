@@ -1,4 +1,4 @@
-#include "tasty_int/detail/token_table_codegen/token_table_generator.hpp"
+#include "tasty_int/detail/code_generator/token_table_generator.hpp"
 
 #include "tasty_int/detail/token_table.hpp"
 
@@ -14,7 +14,7 @@
 
 namespace tasty_int {
 namespace detail {
-namespace token_table_codegen {
+namespace code_generator {
 namespace {
 
 std::string
@@ -35,17 +35,19 @@ TokenTableGenerator::TokenMap::map_token(char          token,
                                          unsigned char value)
 {
     if (value <= MAX_VALUE) {
-        map[token] = static_cast<signed char>(value);
+        mapping[token] = value;
         return;
     }
 
     static const std::string FIRST_PART_OF_INVALID_MAPPING_MESSAGE =
-        "TokenTableGenerator::TokenMap - invalid mapping (";
+        "tasty_int::detail::code_generator::TokenTableGenerator::TokenMap "
+        "- invalid mapping (";
 
     static const std::string MIDDLE_PART_OF_INVALID_MAPPING_MESSAGE = "->";
 
     static const std::string LAST_PART_OF_INVALID_MAPPING_MESSAGE =
-        "): Digit value exceeds TokenTableGenerator::TokenMap::MAX_VALUE ("
+        "): Digit value exceeds tasty_int::detail::code_generator::"
+        "TokenTableGenerator::TokenMap::MAX_VALUE ("
       + std::to_string(static_cast<unsigned int>(MAX_VALUE)) + ").";
 
     throw std::invalid_argument(
@@ -57,11 +59,11 @@ TokenTableGenerator::TokenMap::map_token(char          token,
     );
 }
 
-signed char
+unsigned char
 TokenTableGenerator::TokenMap::value_from_token(char token) const
 {
-    auto found = map.find(token);
-    return (found == map.end()) ? INVALID_VALUE : found->second;
+    auto found = mapping.find(token);
+    return (found == mapping.end()) ? INVALID_VALUE : found->second;
 }
 
 TokenTableGenerator::TokenTableGenerator(std::string_view token_table_name)
@@ -198,9 +200,9 @@ TokenTableGenerator::put_token_table_entry(const TokenMap &token_map,
                                            std::ostream   &output) const
 {
     auto value = token_map.value_from_token(static_cast<char>(token));
-    output << std::setw(3) << static_cast<int>(value);
+    output << std::setw(3) << static_cast<unsigned int>(value);
 }
 
-} // namespace token_table_codegen
+} // namespace code_generator
 } // namespace detail
 } // namespace tasty_int

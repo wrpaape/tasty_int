@@ -1,17 +1,21 @@
 #include "tasty_int/detail/sign_from_unsigned_arithmetic.hpp"
 
 #include <limits>
+#include <type_traits>
 
 #include "gtest/gtest.h"
 
 #include "tasty_int_test/unsigned_arithmetic_types.hpp"
 
 
-using namespace tasty_int::detail;
-
 namespace {
 
+using tasty_int::detail::Sign;
+using tasty_int::detail::sign_from_unsigned_arithmetic;
+
+
 template<typename UnsignedArithmeticType>
+    requires std::is_unsigned_v<UnsignedArithmeticType>
 class SignFromUnsignedArithmeticTest : public ::testing::Test
 {
 protected:

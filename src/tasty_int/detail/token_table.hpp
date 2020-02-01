@@ -9,7 +9,7 @@ namespace tasty_int {
 namespace detail {
 
 using TokenTable = std::array<
-    signed char,
+    unsigned char,
     std::numeric_limits<unsigned char>::max() + 1
 >;
 

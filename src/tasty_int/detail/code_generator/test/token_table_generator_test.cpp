@@ -1,4 +1,4 @@
-#include "tasty_int/detail/token_table_codegen/token_table_generator.hpp"
+#include "tasty_int/detail/code_generator/token_table_generator.hpp"
 
 #include <limits>
 #include <regex>
@@ -10,7 +10,7 @@
 
 namespace {
 
-using tasty_int::detail::token_table_codegen::TokenTableGenerator;
+using tasty_int::detail::code_generator::TokenTableGenerator;
 
 std::string
 to_uppercase(std::string_view string)
@@ -37,11 +37,13 @@ TEST(TokenTableGeneratorTest,
     } catch (const std::invalid_argument &exception) {
         std::ostringstream expected_message;
         expected_message <<
-            "TokenTableGenerator::TokenMap - invalid mapping (" << token
-         << "->" << static_cast<unsigned int>(INVALID_VALUE) << "): Digit value "
-            "exceeds TokenTableGenerator::TokenMap::MAX_VALUE ("
+            "tasty_int::detail::code_generator::TokenTableGenerator::"
+            "TokenMap - invalid mapping (" << token << "->"
+         << static_cast<unsigned int>(INVALID_VALUE) << "): Digit value exceeds"
+            " tasty_int::detail::code_generator::TokenTableGenerator::TokenMap::MAX_VALUE ("
          << static_cast<unsigned int>(TokenTableGenerator::TokenMap::MAX_VALUE)
          << ").";
+
         EXPECT_EQ(expected_message.str(), exception.what());
     }
 }
@@ -160,7 +162,7 @@ check_token_table_entries(const char                          *entries_begin,
         ASSERT_TRUE(match != matches_end)
             << "token = " << token;
 
-        ASSERT_EQ(token_map.value_from_token(token), std::stoi(match->str()))
+        EXPECT_EQ(token_map.value_from_token(token), std::stoi(match->str()))
             << "token = " << token;
     }
     EXPECT_TRUE(match == matches_end) << "extra entries";
@@ -208,10 +210,10 @@ TEST(TokenTableGeneratorTest, GenerateSource)
     std::string_view token_table_name("TEST_GENERATE_SOURCE_TOKEN_TABLE");
     TokenTableGenerator token_table_generator(token_table_name);
     TokenTableGenerator::TokenMap token_map;
-    token_map.map_token( '0', 2 );
-    token_map.map_token( 'A', 4 );
-    token_map.map_token( 'c', 9 );
-    token_map.map_token( '?', 7 );
+    token_map.map_token('0', 2);
+    token_map.map_token('A', 4);
+    token_map.map_token('c', 9);
+    token_map.map_token('?', 7);
 
     std::ostringstream output;
     token_table_generator.generate_source(token_map,

@@ -9,10 +9,14 @@
 #include "tasty_int_test/logarithmic_range.hpp"
 
 
-using namespace tasty_int::detail;
-using namespace from_floating_point_test_common;
 
 namespace {
+
+using tasty_int::detail::Int;
+using tasty_int::detail::Sign;
+using tasty_int::detail::int_from_floating_point;
+using from_floating_point_test_common::expect_digits_equal;
+
 
 class NegativeValuesTest : public ::testing::TestWithParam<long double>
 {}; // class NegativeValuesTest

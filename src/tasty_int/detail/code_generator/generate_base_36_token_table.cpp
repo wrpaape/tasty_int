@@ -2,15 +2,16 @@
  * @file generate_base_36_token_table.cpp
  * This program generates the source code for a base-36 tasty_int::detail::TokenTable.
  */
-#include "tasty_int/detail/token_table_codegen/generate_token_table.hpp"
+#include "tasty_int/detail/code_generator/generate_token_table.hpp"
 
-
-using namespace tasty_int::detail::token_table_codegen;
 
 int
 main(int   argc,
      char *argv[])
 {
+    using tasty_int::detail::code_generator::TokenTableGenerator;
+    using tasty_int::detail::code_generator::generate_token_table;
+
     TokenTableGenerator::TokenMap base_36_token_map;
 
     for (char token = '0'; token <= '9'; ++token)

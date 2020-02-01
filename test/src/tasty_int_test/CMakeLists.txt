@@ -13,6 +13,8 @@ target_sources(
     ${TASTY_INT_TEST_INCLUDE_DIR}/arithmetic_types.hpp
     ${TASTY_INT_TEST_INCLUDE_DIR}/signed_arithmetic_types.hpp
     ${TASTY_INT_TEST_INCLUDE_DIR}/unsigned_arithmetic_types.hpp
+    ${TASTY_INT_TEST_INCLUDE_DIR}/integral_types.hpp
+    ${TASTY_INT_TEST_INCLUDE_DIR}/floating_point_types.hpp
     ${TASTY_INT_TEST_INCLUDE_DIR}/detail/filter_types.hpp
 )
 target_include_directories(

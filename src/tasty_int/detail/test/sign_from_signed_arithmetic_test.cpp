@@ -1,17 +1,21 @@
 #include "tasty_int/detail/sign_from_signed_arithmetic.hpp"
 
 #include <limits>
+#include <type_traits>
 
 #include "gtest/gtest.h"
 
 #include "tasty_int_test/signed_arithmetic_types.hpp"
 
 
-using namespace tasty_int::detail;
-
 namespace {
 
+using tasty_int::detail::Sign;
+using tasty_int::detail::sign_from_signed_arithmetic;
+
+
 template<typename SignedArithmeticType>
+    requires std::is_signed_v<SignedArithmeticType>
 class SignFromSignedArithmeticTest : public ::testing::Test
 {
 protected:

@@ -2,12 +2,12 @@
 #include <filesystem>
 #include <iostream>
 
-#include "tasty_int/detail/token_table_codegen/generate_token_table.hpp"
+#include "tasty_int/detail/code_generator/generate_token_table.hpp"
 
 
 namespace tasty_int {
 namespace detail {
-namespace token_table_codegen {
+namespace code_generator {
 namespace {
 
 void
@@ -74,7 +74,7 @@ generate_token_table(int                                  argc,
 }
 
 
-} // namespace token_table_codegen
+} // namespace code_generator
 } // namespace detail
 } // namespace tasty_int
 

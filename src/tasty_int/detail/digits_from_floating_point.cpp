@@ -3,30 +3,43 @@
 #include <cassert>
 #include <cmath>
 
+#include "tasty_int/detail/digit_from_nonnegative_value.hpp"
+
 
 namespace tasty_int {
 namespace detail {
 namespace {
 
-constexpr long double LONG_DOUBLE_DIGIT_TYPE_MAX = DIGIT_TYPE_MAX;
-
 long double
-log_base_digit_type_max(long double value)
+log_digit_base(long double value)
 {
-    static const long double LOG_OF_DIGIT_TYPE_MAX =
-        std::log(LONG_DOUBLE_DIGIT_TYPE_MAX);
+    constexpr long double LOG2_DIGIT_BASE = DIGIT_TYPE_BITS;
 
-    return std::log(value) / LOG_OF_DIGIT_TYPE_MAX;
+    return std::log2(value) / LOG2_DIGIT_BASE;
 }
 
 std::vector<digit_type>::size_type
 size_digits(long double value)
 {
-    return (value != 0.0L)
+    return (value > 1.0L)
         ? static_cast<std::vector<digit_type>::size_type>(
-              std::ceil(log_base_digit_type_max(value))
+              std::ceil(log_digit_base(value))
           )
         : 1;
+}
+
+void
+fill_digits(long double              value,
+            std::vector<digit_type> &result)
+{
+    constexpr long double LONG_DOUBLE_DIGIT_BASE = DIGIT_BASE;
+
+    auto cursor = result.begin();
+    auto end    = result.end();
+    do {
+        *cursor = digit_from_nonnegative_value(value);
+        value /= LONG_DOUBLE_DIGIT_BASE;
+    } while (++cursor != end);
 }
 
 } // namespace
@@ -40,12 +53,7 @@ digits_from_floating_point(long double value)
 
     std::vector<digit_type> result(size_digits(value));
 
-    auto cursor = result.begin();
-    auto end    = result.end();
-    do {
-        *cursor = static_cast<digit_type>(value);
-        value /= LONG_DOUBLE_DIGIT_TYPE_MAX;
-    } while (++cursor != end);
+    fill_digits(value, result);
 
     return result;
 }

@@ -5,9 +5,11 @@
 #include "gtest/gtest.h"
 
 
-using namespace tasty_int::detail;
-
 namespace from_floating_point_test_common {
+
+using tasty_int::detail::digit_type;
+using tasty_int::detail::DIGIT_BASE;
+
 
 void
 expect_digits_equal(long double                    expected,
@@ -18,7 +20,7 @@ expect_digits_equal(long double                    expected,
     do {
         digit_type next_digit = static_cast<digit_type>(expected);
         EXPECT_EQ(next_digit, digits.at(index++));
-        expected /= DIGIT_TYPE_MAX;
+        expected /= DIGIT_BASE;
     } while (expected >= 1.0L);
 
     EXPECT_EQ(index, digits.size());
