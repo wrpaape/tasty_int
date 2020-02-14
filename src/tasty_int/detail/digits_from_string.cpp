@@ -184,8 +184,8 @@ DigitsParser::size_digits(
 ) const
 {
     return static_cast<std::vector<digit_type>::size_type>(
-        std::ceil(digits_per_token * count_significant_tokens)
-    );
+        std::floor(digits_per_token * count_significant_tokens)
+    ) + 1;
 }
 
 void

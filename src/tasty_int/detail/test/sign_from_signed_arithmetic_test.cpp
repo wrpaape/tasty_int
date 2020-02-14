@@ -5,6 +5,7 @@
 
 #include "gtest/gtest.h"
 
+#include "tasty_int/detail/test/sign_test_common.hpp"
 #include "tasty_int_test/signed_arithmetic_types.hpp"
 
 
@@ -26,17 +27,32 @@ protected:
 
     static constexpr SignedArithmeticType max_negative_value()
     {
-        if constexpr (std::is_integral_v<SignedArithmeticType>) {
-            return SignedArithmeticType(-1);
-        } else {
-            return -std::numeric_limits<SignedArithmeticType>::epsilon();
-        }
+        return SignedArithmeticType(-1);
     }
 
     static constexpr SignedArithmeticType median_negative_value()
     {
         return (min_negative_value() - max_negative_value())
              / SignedArithmeticType(2);
+    }
+
+    static constexpr SignedArithmeticType min_zero_value()
+    {
+        if constexpr (std::is_integral_v<SignedArithmeticType>)
+            return median_zero_value();
+        else
+            return SignedArithmeticType(-1)
+                 + std::numeric_limits<SignedArithmeticType>::epsilon();
+    }
+
+    static constexpr SignedArithmeticType median_zero_value()
+    {
+        return SignedArithmeticType(0);
+    }
+
+    static constexpr SignedArithmeticType max_zero_value()
+    {
+        return -min_zero_value();
     }
 
     static constexpr SignedArithmeticType min_positive_value()
@@ -83,12 +99,28 @@ TYPED_TEST(SignFromSignedArithmeticTest, MaxNegativeValueProducesNegativeSign)
               sign_from_signed_arithmetic(max_negative_value));
 }
 
-TYPED_TEST(SignFromSignedArithmeticTest, ZeroProducesZeroSign)
+TYPED_TEST(SignFromSignedArithmeticTest, MinZeroValueProducesZeroSign)
 {
-    TypeParam zero(0);
+    auto min_zero_value = TestFixture::min_zero_value();
 
     EXPECT_EQ(Sign::ZERO,
-              sign_from_signed_arithmetic(zero));
+              sign_from_signed_arithmetic(min_zero_value));
+}
+
+TYPED_TEST(SignFromSignedArithmeticTest, MedianZeroValueProducesZeroSign)
+{
+    auto median_zero_value = TestFixture::median_zero_value();
+
+    EXPECT_EQ(Sign::ZERO,
+              sign_from_signed_arithmetic(median_zero_value));
+}
+
+TYPED_TEST(SignFromSignedArithmeticTest, MaxZeroValueProducesZeroSign)
+{
+    auto max_zero_value = TestFixture::max_zero_value();
+
+    EXPECT_EQ(Sign::ZERO,
+              sign_from_signed_arithmetic(max_zero_value));
 }
 
 TYPED_TEST(SignFromSignedArithmeticTest, MinPositiveValueProducesPositiveSign)

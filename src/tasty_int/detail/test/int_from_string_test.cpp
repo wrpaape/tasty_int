@@ -10,6 +10,7 @@
 
 #include "tasty_int/detail/digits_from_string.hpp"
 #include "tasty_int/detail/test/from_string_test_common.hpp"
+#include "tasty_int/detail/test/int_test_common.hpp"
 
 
 namespace {
@@ -20,24 +21,8 @@ using tasty_int::detail::digit_type;
 using tasty_int::detail::digits_from_string;
 using tasty_int::detail::int_from_string;
 using from_string_test_common::FromStringTestParam;
+using from_string_test_common::FromStringViewTestParam;
 using from_string_test_common::operator<<;
-
-
-void
-expect_equal(Sign                           expected_sign,
-             const std::vector<digit_type> &expected_digits,
-             const Int                     &result)
-{
-    EXPECT_EQ(expected_sign,   result.sign);
-    EXPECT_EQ(expected_digits, result.digits);
-}
-
-void
-expect_equal(const Int &expected,
-             const Int &actual)
-{
-    expect_equal(expected.sign, expected.digits, actual);
-}
 
 
 class EmptyTokensTest : public ::testing::TestWithParam<std::string>
@@ -121,7 +106,7 @@ INSTANTIATE_TEST_SUITE_P(
 
 
 class WhitespaceBetweenPrefixAndDigitsTest
-    : public ::testing::TestWithParam<FromStringTestParam>
+    : public ::testing::TestWithParam<FromStringViewTestParam>
 {}; // class WhitespaceBetweenPrefixAndDigitsTest
 
 TEST_P(WhitespaceBetweenPrefixAndDigitsTest,
@@ -147,7 +132,7 @@ INSTANTIATE_TEST_SUITE_P(
     IntFromStringTest,
     WhitespaceBetweenPrefixAndDigitsTest,
     ::testing::ValuesIn(
-        std::vector<FromStringTestParam> {
+        std::vector<FromStringViewTestParam> {
             {  2, "0b 10101" },
             {  2, "0B 10101" },
             {  2, "+0b 10101" },
@@ -174,34 +159,37 @@ INSTANTIATE_TEST_SUITE_P(
 
 
 class IntFromExplicitBaseStringTest
-    : public ::testing::TestWithParam<FromStringTestParam>
+    : public ::testing::TestWithParam<FromStringViewTestParam>
 {
 protected:
     IntFromExplicitBaseStringTest();
 
-    unsigned int            base;
-    std::string_view        tokens_without_sign;
-    std::vector<digit_type> expected_digits;
+    const unsigned int     base;
+    const std::string_view tokens_without_sign;
+    const Int              expected_int;
 }; // class IntFromExplicitBaseStringTest
 
 IntFromExplicitBaseStringTest::IntFromExplicitBaseStringTest()
     : base(GetParam().base)
     , tokens_without_sign(GetParam().tokens)
-    , expected_digits(digits_from_string(tokens_without_sign, base))
+    , expected_int({
+          .sign   = Sign::POSITIVE,
+          .digits = digits_from_string(tokens_without_sign, base)
+      })
 {}
 
 TEST_P(IntFromExplicitBaseStringTest, TokensWithExplicitBaseYieldCorrectInt)
 {
     Int result = int_from_string(tokens_without_sign, base);
 
-    expect_equal(Sign::POSITIVE, expected_digits, result);
+    EXPECT_EQ(expected_int, result);
 }
 
 INSTANTIATE_TEST_SUITE_P(
     IntFromStringTest,
     IntFromExplicitBaseStringTest,
     ::testing::ValuesIn(
-        std::vector<FromStringTestParam> {
+        std::vector<FromStringViewTestParam> {
             {  2, "10101" },
             {  8, "076543210" },
             { 10, "1234567890" },
@@ -222,20 +210,19 @@ struct SignTestParam
 
 class IntFromExplicitSignAndBaseStringTest
     : public ::testing::TestWithParam<
-          std::tuple<SignTestParam, FromStringTestParam>
+          std::tuple<SignTestParam, FromStringViewTestParam>
       >
 {
 protected:
     IntFromExplicitSignAndBaseStringTest();
     IntFromExplicitSignAndBaseStringTest(
         SignTestParam       sign_test_param,
-        FromStringTestParam from_string_test_param
+        FromStringViewTestParam from_string_test_param
     );
 
-    unsigned int            base;
-    std::string             tokens_with_sign;
-    Sign                    expected_sign;
-    std::vector<digit_type> expected_digits;
+    const unsigned int base;
+    std::string        tokens_with_sign;
+    Int                expected_int;
 }; // class IntFromExplicitSignAndBaseStringTest
 
 IntFromExplicitSignAndBaseStringTest::IntFromExplicitSignAndBaseStringTest()
@@ -245,10 +232,9 @@ IntFromExplicitSignAndBaseStringTest::IntFromExplicitSignAndBaseStringTest()
 
 IntFromExplicitSignAndBaseStringTest::IntFromExplicitSignAndBaseStringTest(
     SignTestParam       sign_test_param,
-    FromStringTestParam from_string_test_param
+    FromStringViewTestParam from_string_test_param
 )
     : base(from_string_test_param.base)
-    , expected_sign(sign_test_param.expected_sign)
 {
     char sign_token                      = sign_test_param.sign_token;
     std::string_view tokens_without_sign = from_string_test_param.tokens;
@@ -256,7 +242,8 @@ IntFromExplicitSignAndBaseStringTest::IntFromExplicitSignAndBaseStringTest(
     tokens_with_sign += sign_token;
     tokens_with_sign += tokens_without_sign;
 
-    expected_digits = digits_from_string(tokens_without_sign, base);
+    expected_int.sign   = sign_test_param.expected_sign;
+    expected_int.digits = digits_from_string(tokens_without_sign, base);
 }
 
 TEST_P(IntFromExplicitSignAndBaseStringTest,
@@ -264,7 +251,7 @@ TEST_P(IntFromExplicitSignAndBaseStringTest,
 {
     Int result = int_from_string(tokens_with_sign, base);
 
-    expect_equal(expected_sign, expected_digits, result);
+    EXPECT_EQ(expected_int, result);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -276,7 +263,7 @@ INSTANTIATE_TEST_SUITE_P(
             SignTestParam{ '-', Sign::NEGATIVE }
         ),
         ::testing::ValuesIn(
-            std::vector<FromStringTestParam> {
+            std::vector<FromStringViewTestParam> {
                 {  2, "10101" },
                 {  8, "076543210" },
                 { 10, "1234567890" },
@@ -292,7 +279,7 @@ INSTANTIATE_TEST_SUITE_P(
 
 struct ExplicitBaseWithPrefixTestParam
 {
-    FromStringTestParam input;
+    FromStringViewTestParam input;
     std::string_view    tokens_without_prefix;
 }; // struct SignTestParam
 
@@ -300,9 +287,9 @@ std::ostream &
 operator<<(std::ostream                          &output,
            const ExplicitBaseWithPrefixTestParam &test_param)
 {
-    return output << "[input=\"" << test_param.input
+    return output << "{ input=\"" << test_param.input
                   << "\", tokens_without_prefix="
-                  << test_param.tokens_without_prefix << ']';
+                  << test_param.tokens_without_prefix << " }";
 }
 
 class ExplicitBaseWithPrefixTest
@@ -311,25 +298,26 @@ class ExplicitBaseWithPrefixTest
 protected:
     ExplicitBaseWithPrefixTest();
 
-    std::string_view        input_tokens;
-    unsigned int            base;
-    std::vector<digit_type> expected_digits;
+    const std::string_view input_tokens;
+    const unsigned int     base;
+    const Int              expected_int;
 }; // class ExplicitBaseWithPrefixTest
 
 ExplicitBaseWithPrefixTest::ExplicitBaseWithPrefixTest()
     : input_tokens(GetParam().input.tokens)
     , base(GetParam().input.base)
-    , expected_digits(
-        digits_from_string(GetParam().tokens_without_prefix,
-                           GetParam().input.base)
-      )
+    , expected_int({
+        .sign   = Sign::POSITIVE,
+        .digits = digits_from_string(GetParam().tokens_without_prefix,
+                                     GetParam().input.base)
+      })
 {}
 
 TEST_P(ExplicitBaseWithPrefixTest, BasePrefixIsOnlyProcessedForMatchingBases)
 {
     Int result = int_from_string(input_tokens, base);
 
-    expect_equal(Sign::POSITIVE, expected_digits, result);
+    EXPECT_EQ(expected_int, result);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -362,16 +350,16 @@ INSTANTIATE_TEST_SUITE_P(
 struct InterprettedBaseTestParam
 {
     std::string_view    input_tokens;
-    FromStringTestParam expected_interpretation;
+    FromStringViewTestParam expected_interpretation;
 }; // struct SignTestParam
 
 std::ostream &
 operator<<(std::ostream                    &output,
            const InterprettedBaseTestParam &test_param)
 {
-    return output << "[input_tokens=\"" << test_param.input_tokens
+    return output << "{ input_tokens=\"" << test_param.input_tokens
                   << "\", expected_interpretation="
-                  << test_param.expected_interpretation << ']';
+                  << test_param.expected_interpretation << " }";
 }
 
 class InterprettedBaseTest
@@ -380,23 +368,24 @@ class InterprettedBaseTest
 protected:
     InterprettedBaseTest();
 
-    std::string_view        input_tokens;
-    std::vector<digit_type> expected_digits;
+    const std::string_view input_tokens;
+    const Int              expected_int;
 }; // class InterprettedBaseTest
 
 InterprettedBaseTest::InterprettedBaseTest()
     : input_tokens(GetParam().input_tokens)
-    , expected_digits(
-        digits_from_string(GetParam().expected_interpretation.tokens,
-                           GetParam().expected_interpretation.base)
-      )
+    , expected_int({
+        .sign   = Sign::POSITIVE,
+        .digits = digits_from_string(GetParam().expected_interpretation.tokens,
+                                     GetParam().expected_interpretation.base)
+      })
 {}
 
 TEST_P(InterprettedBaseTest, TokensWithInterprettedBaseYieldCorrectInt)
 {
     Int result = int_from_string(input_tokens, 0);
 
-    expect_equal(Sign::POSITIVE, expected_digits, result);
+    EXPECT_EQ(expected_int, result);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -421,10 +410,69 @@ INSTANTIATE_TEST_SUITE_P(
 
 TEST(IntFromStringTest, SingleZeroWithInterprettedBaseYieldsZeroInt)
 {
+    const Int ZERO = { .sign = Sign::ZERO, .digits = { 0 } };
+
     Int result = int_from_string("0", 0);
 
-    expect_equal(Sign::ZERO, std::vector<digit_type>{ 0 }, result);
+    EXPECT_EQ(ZERO, result);
 }
+
+
+std::vector<FromStringTestParam>
+make_zero_test_params()
+{
+    const std::vector<std::string> BASE_62_AND_UNDER_VALID_SIGNS = {
+        "", "+", "-"
+    };
+    const std::vector<std::string> BASE_63_AND_OVER_VALID_SIGNS = {
+        ""
+    };
+    const char BASE_36_AND_UNDER_ZERO_TOKEN = '0';
+    const char BASE_37_AND_OVER_ZERO_TOKEN  = 'A';
+
+    std::vector<FromStringTestParam> zero_test_params;
+
+    // start at base 0, skip base 1, then process bases 2 through 64
+    for (unsigned int base = 0, step = 2; base <= 64; base += step, step = 1) {
+           const auto& valid_signs = (base <= 62)
+                                   ? BASE_62_AND_UNDER_VALID_SIGNS
+                                   : BASE_63_AND_OVER_VALID_SIGNS;
+           char zero_token         = (base <= 36)
+                                   ? BASE_36_AND_UNDER_ZERO_TOKEN
+                                   : BASE_37_AND_OVER_ZERO_TOKEN;
+
+           for (const auto& valid_sign : valid_signs) {
+               for (unsigned int num_zero_tokens : { 1, 4 }) {
+                   zero_test_params.emplace_back(FromStringTestParam{
+                       .base   = base,
+                       .tokens = valid_sign
+                               + std::string(num_zero_tokens, zero_token)
+                   });
+               }
+           }
+    };
+
+    return zero_test_params;
+}
+
+class ZeroTest : public ::testing::TestWithParam<FromStringTestParam>
+{}; // ZeroTest
+
+TEST_P(ZeroTest, RepresentationsOfZeroAreInterprettedAsZero)
+{
+    const Int ZERO = { .sign = Sign::ZERO, .digits = { 0 } };
+    auto [base, zero_tokens] = GetParam();
+
+    Int result = int_from_string(zero_tokens, base);
+
+    EXPECT_EQ(ZERO, result);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    IntFromStringTest,
+    ZeroTest,
+    ::testing::ValuesIn(make_zero_test_params())
+);
 
 
 class EquivalentRepresentationTest
@@ -441,7 +489,7 @@ TEST_P(EquivalentRepresentationTest, EquivalentRepresentationsYieldEqualInts)
     Int expected = int_from_string(MINIMAL_BASE_16_REPRESENTATION, 16);
     Int result   = int_from_string(alternate_representation,       16);
 
-    expect_equal(expected, result);
+    EXPECT_EQ(expected, result);
 }
 
 const std::string_view

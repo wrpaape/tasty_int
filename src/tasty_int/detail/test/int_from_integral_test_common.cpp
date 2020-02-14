@@ -8,7 +8,7 @@ namespace int_from_integral_test_common {
 using tasty_int::detail::Int;
 using tasty_int::detail::Sign;
 using tasty_int::detail::digit_type;
-using tasty_int::detail::DIGIT_TYPE_BITS;
+using tasty_int::detail::DIGIT_BASE;
 using tasty_int::detail::DIGIT_TYPE_MAX;
 
 
@@ -22,7 +22,7 @@ expect_digits_equal(std::uintmax_t                 expected,
         EXPECT_EQ(1, digits.size());
 
     } else {
-        EXPECT_EQ(static_cast<digit_type>(expected >> DIGIT_TYPE_BITS),
+        EXPECT_EQ(static_cast<digit_type>(expected / DIGIT_BASE),
                   digits.at(1));
         EXPECT_EQ(2, digits.size());
     }

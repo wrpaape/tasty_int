@@ -54,16 +54,31 @@ template<typename FloatingPointType>
 class DigitFromNonNegativeFloatingPointTest : public ::testing::Test
 {
 protected:
-    static const std::vector<FloatingPointType> TEST_VALUES;
+    static std::vector<FloatingPointType> test_values();
 }; // class DigitFromNonNegativeFloatingPointTest
 
 template<typename FloatingPointType>
     requires std::is_floating_point_v<FloatingPointType>
-const std::vector<FloatingPointType>
-DigitFromNonNegativeFloatingPointTest<FloatingPointType>::TEST_VALUES =
-    tasty_int_test::logarithmic_range_values<FloatingPointType>(
-        0.0, std::numeric_limits<FloatingPointType>::max(), 2.0
-    );
+std::vector<FloatingPointType>
+DigitFromNonNegativeFloatingPointTest<FloatingPointType>::test_values()
+{
+    auto values = tasty_int_test::logarithmic_range_values<FloatingPointType>(
+            0.0, std::numeric_limits<uintmax_t>::max() - 1, 2.0
+        );
+
+    auto uint_max_to_floating_point_max =
+        tasty_int_test::logarithmic_range_values<FloatingPointType>(
+            std::numeric_limits<uintmax_t>::max(),
+            std::numeric_limits<FloatingPointType>::max(),
+            2.0
+        );
+
+    values.insert(values.end(),
+                  uint_max_to_floating_point_max.begin(),
+                  uint_max_to_floating_point_max.end());
+
+    return values;
+}
 
 TYPED_TEST_SUITE(DigitFromNonNegativeFloatingPointTest,
                  tasty_int_test::FloatingPointTypes);
@@ -71,7 +86,7 @@ TYPED_TEST_SUITE(DigitFromNonNegativeFloatingPointTest,
 TYPED_TEST(DigitFromNonNegativeFloatingPointTest,
            DigitFromNonNegativeFloatingPointEqualsFmodDigitBase)
 {
-    for (TypeParam value : TestFixture::TEST_VALUES)
+    for (TypeParam value : TestFixture::test_values())
         EXPECT_EQ(std::fmod(value, DIGIT_BASE),
                   digit_from_nonnegative_value(value));
 }

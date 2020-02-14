@@ -41,7 +41,17 @@ struct Int
      * value.
      */
     std::vector<digit_type> digits;
+
 }; // struct Int
+
+/// @todo Replace with default comparison semantics once compiler support is available.
+inline bool
+operator==(const Int &lhs,
+           const Int &rhs)
+{
+    return (lhs.sign   == rhs.sign)
+        && (lhs.digits == rhs.digits);
+}
 
 } // namespace detail
 } // namespace tasty_int

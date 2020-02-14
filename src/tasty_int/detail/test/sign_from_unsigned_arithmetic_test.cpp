@@ -5,6 +5,7 @@
 
 #include "gtest/gtest.h"
 
+#include "tasty_int/detail/test/sign_test_common.hpp"
 #include "tasty_int_test/unsigned_arithmetic_types.hpp"
 
 

@@ -23,8 +23,8 @@ size_digits(long double value)
 {
     return (value > 1.0L)
         ? static_cast<std::vector<digit_type>::size_type>(
-              std::ceil(log_digit_base(value))
-          )
+              std::floor(log_digit_base(value))
+          ) + 1
         : 1;
 }
 
@@ -42,6 +42,19 @@ fill_digits(long double              value,
     } while (++cursor != end);
 }
 
+bool
+have_trailing_zero(const std::vector<digit_type> &result)
+{
+    return ((result.size() > 1) && (result.back() == 0));
+}
+
+void
+trim_trailing_zero(std::vector<digit_type> &result)
+{
+    if (have_trailing_zero(result))
+        result.pop_back();
+}
+
 } // namespace
 
 
@@ -54,6 +67,8 @@ digits_from_floating_point(long double value)
     std::vector<digit_type> result(size_digits(value));
 
     fill_digits(value, result);
+
+    trim_trailing_zero(result);
 
     return result;
 }

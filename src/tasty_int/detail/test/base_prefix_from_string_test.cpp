@@ -17,8 +17,8 @@ std::ostream &
 operator<<(std::ostream     &output,
            const BasePrefix &base_prefix)
 {
-    return output << "[base=" << base_prefix.base
-                  << ", prefix_length=" << base_prefix.prefix_length << ']';
+    return output << "{ base=" << base_prefix.base
+                  << ", prefix_length=" << base_prefix.prefix_length << " }";
 }
 
 } // namespace detail

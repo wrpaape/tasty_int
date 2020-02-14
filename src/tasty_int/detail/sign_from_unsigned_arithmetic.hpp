@@ -13,15 +13,15 @@ namespace detail {
  * @brief Encodes the integer sign of @p value as a Sign.
  *
  * @param[in] value an unsigned (integer) value
- * @return Sign::ZERO if @p value is 0, Sign::POSITIVE otherwise
+ * @return Sign::ZERO if @p value is < 1, Sign::POSITIVE otherwise
  */
 template<typename T>
 Sign
 sign_from_unsigned_arithmetic(T value)
     requires std::is_unsigned_v<T>
 {
-    constexpr T ZERO(0);
-    return static_cast<Sign>(value > ZERO);
+    constexpr T ONE(1);
+    return static_cast<Sign>(value >= ONE);
 }
 
 } // namespace detail

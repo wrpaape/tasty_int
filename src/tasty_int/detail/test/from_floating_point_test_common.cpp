@@ -18,7 +18,8 @@ expect_digits_equal(long double                    expected,
     std::size_t index = 0;
 
     do {
-        digit_type next_digit = static_cast<digit_type>(expected);
+        digit_type next_digit =
+            static_cast<digit_type>(std::fmod(expected, DIGIT_BASE));
         EXPECT_EQ(next_digit, digits.at(index++));
         expected /= DIGIT_BASE;
     } while (expected >= 1.0L);
