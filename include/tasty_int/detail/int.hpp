@@ -15,19 +15,19 @@ namespace detail {
  * Int fields correspond to arbitrary-precision integers values accordingly:
  *
  *     Negative Values:
- *         | Int::sign      | Int::digits                |
- *         | -------------- | ---------------------------|
- *         | Sign::NEGATIVE | { lowest [, ... highest] } |
+ *         | Int::sign      | Int::digits                                    |
+ *         | -------------- | -----------------------------------------------|
+ *         | Sign::NEGATIVE | { least significant [, ... most significant] } |
  *
  *     Zero:
- *         | Int::sign      | Int::digits                |
- *         | -------------- | ---------------------------|
- *         | Sign::ZERO     | { 0 }                      |
+ *         | Int::sign      | Int::digits                                    |
+ *         | -------------- | -----------------------------------------------|
+ *         | Sign::ZERO     | { 0 }                                          |
  *
  *     Positive Values:
- *         | Int::sign      | Int::digits                |
- *         | -------------- | ---------------------------|
- *         | Sign::POSITIVE | { lowest [, ... highest] } |
+ *         | Int::sign      | Int::digits                                    |
+ *         | -------------- | -----------------------------------------------|
+ *         | Sign::POSITIVE | { least significant [, ... most significant] } |
  */
 struct Int
 {
@@ -41,7 +41,6 @@ struct Int
      * value.
      */
     std::vector<digit_type> digits;
-
 }; // struct Int
 
 /// @todo Replace with default comparison semantics once compiler support is available.

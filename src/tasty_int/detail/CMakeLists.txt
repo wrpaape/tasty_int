@@ -44,7 +44,7 @@ foreach(kind signed unsigned)
         tasty_int-detail-int_from_${kind}_integral
         STATIC
         int_from_${kind}_integral.cpp
-        int_from_${kind}_integral.hpp
+        ${TASTY_INT_DETAIL_INCLUDE_DIR}/int_from_${kind}_integral.hpp
         ${TASTY_INT_DETAIL_INCLUDE_DIR}/int.hpp
     )
     target_link_libraries(
@@ -69,7 +69,7 @@ add_library(
     tasty_int-detail-int_from_floating_point
     STATIC
     int_from_floating_point.cpp
-    int_from_floating_point.hpp
+    ${TASTY_INT_DETAIL_INCLUDE_DIR}/int_from_floating_point.hpp
     ${TASTY_INT_DETAIL_INCLUDE_DIR}/int.hpp
 )
 target_link_libraries(
@@ -102,7 +102,7 @@ add_library(
     tasty_int-detail-int_from_string
     STATIC
     int_from_string.cpp
-    int_from_string.hpp
+    ${TASTY_INT_DETAIL_INCLUDE_DIR}/int_from_string.hpp
     ${TASTY_INT_DETAIL_INCLUDE_DIR}/int.hpp
 )
 target_link_libraries(
