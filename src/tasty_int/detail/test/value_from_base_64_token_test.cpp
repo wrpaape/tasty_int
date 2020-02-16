@@ -5,9 +5,10 @@
 #include "gtest/gtest.h"
 
 
+namespace {
+
 using tasty_int::detail::value_from_base_64_token;
 
-namespace {
 
 TEST(ValueFromBase64TokenTest, TokensLessThanPlusAreInvalid)
 {

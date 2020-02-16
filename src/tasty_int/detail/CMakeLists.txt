@@ -111,6 +111,15 @@ target_link_libraries(
     tasty_int-detail-base_prefix_from_string
 )
 
+foreach(base 36 64)
+    add_library(
+        tasty_int-detail-base_${base}_token_from_value
+        OBJECT
+        base_${base}_token_from_value.cpp
+        base_${base}_token_from_value.hpp
+    )
+endforeach()
+
 if(BUILD_TESTING)
     add_subdirectory(test)
 endif()

@@ -171,3 +171,12 @@ add_google_test(
               tasty_int-detail-int_test_common
               tasty_int_test
 )
+
+
+foreach(base 36 64)
+    add_google_test(
+        NAME    tasty_int-detail-base_${base}_token_from_value_test
+        SOURCES base_${base}_token_from_value_test.cpp
+                $<TARGET_OBJECTS:tasty_int-detail-base_${base}_token_from_value>
+    )
+endforeach()

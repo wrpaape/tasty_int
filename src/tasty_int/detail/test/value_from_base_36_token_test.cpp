@@ -5,9 +5,10 @@
 #include "gtest/gtest.h"
 
 
+namespace {
+
 using tasty_int::detail::value_from_base_36_token;
 
-namespace {
 
 TEST(ValueFromBase36TokenTest, TokensLessThan0AreInvalid)
 {
