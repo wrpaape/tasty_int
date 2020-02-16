@@ -9,7 +9,7 @@
 #include "gtest/gtest.h"
 
 #include "tasty_int/detail/digits_from_string.hpp"
-#include "tasty_int/detail/test/from_string_test_common.hpp"
+#include "tasty_int/detail/test/string_conversion_test_common.hpp"
 #include "tasty_int/detail/test/int_test_common.hpp"
 
 
@@ -20,9 +20,9 @@ using tasty_int::detail::Sign;
 using tasty_int::detail::digit_type;
 using tasty_int::detail::digits_from_string;
 using tasty_int::detail::int_from_string;
-using from_string_test_common::FromStringTestParam;
-using from_string_test_common::FromStringViewTestParam;
-using from_string_test_common::operator<<;
+using string_conversion_test_common::StringConversionTestParam;
+using string_conversion_test_common::StringViewConversionTestParam;
+using string_conversion_test_common::operator<<;
 
 
 class EmptyTokensTest : public ::testing::TestWithParam<std::string>
@@ -106,7 +106,7 @@ INSTANTIATE_TEST_SUITE_P(
 
 
 class WhitespaceBetweenPrefixAndDigitsTest
-    : public ::testing::TestWithParam<FromStringViewTestParam>
+    : public ::testing::TestWithParam<StringViewConversionTestParam>
 {}; // class WhitespaceBetweenPrefixAndDigitsTest
 
 TEST_P(WhitespaceBetweenPrefixAndDigitsTest,
@@ -132,7 +132,7 @@ INSTANTIATE_TEST_SUITE_P(
     IntFromStringTest,
     WhitespaceBetweenPrefixAndDigitsTest,
     ::testing::ValuesIn(
-        std::vector<FromStringViewTestParam> {
+        std::vector<StringViewConversionTestParam> {
             {  2, "0b 10101" },
             {  2, "0B 10101" },
             {  2, "+0b 10101" },
@@ -159,7 +159,7 @@ INSTANTIATE_TEST_SUITE_P(
 
 
 class IntFromExplicitBaseStringTest
-    : public ::testing::TestWithParam<FromStringViewTestParam>
+    : public ::testing::TestWithParam<StringViewConversionTestParam>
 {
 protected:
     IntFromExplicitBaseStringTest();
@@ -189,7 +189,7 @@ INSTANTIATE_TEST_SUITE_P(
     IntFromStringTest,
     IntFromExplicitBaseStringTest,
     ::testing::ValuesIn(
-        std::vector<FromStringViewTestParam> {
+        std::vector<StringViewConversionTestParam> {
             {  2, "10101" },
             {  8, "076543210" },
             { 10, "1234567890" },
@@ -210,14 +210,14 @@ struct SignTestParam
 
 class IntFromExplicitSignAndBaseStringTest
     : public ::testing::TestWithParam<
-          std::tuple<SignTestParam, FromStringViewTestParam>
+          std::tuple<SignTestParam, StringViewConversionTestParam>
       >
 {
 protected:
     IntFromExplicitSignAndBaseStringTest();
     IntFromExplicitSignAndBaseStringTest(
         SignTestParam       sign_test_param,
-        FromStringViewTestParam from_string_test_param
+        StringViewConversionTestParam from_string_test_param
     );
 
     const unsigned int base;
@@ -232,7 +232,7 @@ IntFromExplicitSignAndBaseStringTest::IntFromExplicitSignAndBaseStringTest()
 
 IntFromExplicitSignAndBaseStringTest::IntFromExplicitSignAndBaseStringTest(
     SignTestParam       sign_test_param,
-    FromStringViewTestParam from_string_test_param
+    StringViewConversionTestParam from_string_test_param
 )
     : base(from_string_test_param.base)
 {
@@ -263,7 +263,7 @@ INSTANTIATE_TEST_SUITE_P(
             SignTestParam{ '-', Sign::NEGATIVE }
         ),
         ::testing::ValuesIn(
-            std::vector<FromStringViewTestParam> {
+            std::vector<StringViewConversionTestParam> {
                 {  2, "10101" },
                 {  8, "076543210" },
                 { 10, "1234567890" },
@@ -279,8 +279,8 @@ INSTANTIATE_TEST_SUITE_P(
 
 struct ExplicitBaseWithPrefixTestParam
 {
-    FromStringViewTestParam input;
-    std::string_view    tokens_without_prefix;
+    StringViewConversionTestParam input;
+    std::string_view              tokens_without_prefix;
 }; // struct SignTestParam
 
 std::ostream &
@@ -350,7 +350,7 @@ INSTANTIATE_TEST_SUITE_P(
 struct InterprettedBaseTestParam
 {
     std::string_view    input_tokens;
-    FromStringViewTestParam expected_interpretation;
+    StringViewConversionTestParam expected_interpretation;
 }; // struct SignTestParam
 
 std::ostream &
@@ -418,7 +418,7 @@ TEST(IntFromStringTest, SingleZeroWithInterprettedBaseYieldsZeroInt)
 }
 
 
-std::vector<FromStringTestParam>
+std::vector<StringConversionTestParam>
 make_zero_test_params()
 {
     const std::vector<std::string> BASE_62_AND_UNDER_VALID_SIGNS = {
@@ -430,7 +430,7 @@ make_zero_test_params()
     const char BASE_36_AND_UNDER_ZERO_TOKEN = '0';
     const char BASE_37_AND_OVER_ZERO_TOKEN  = 'A';
 
-    std::vector<FromStringTestParam> zero_test_params;
+    std::vector<StringConversionTestParam> zero_test_params;
 
     // start at base 0, skip base 1, then process bases 2 through 64
     for (unsigned int base = 0, step = 2; base <= 64; base += step, step = 1) {
@@ -443,7 +443,7 @@ make_zero_test_params()
 
            for (const auto& valid_sign : valid_signs) {
                for (unsigned int num_zero_tokens : { 1, 4 }) {
-                   zero_test_params.emplace_back(FromStringTestParam{
+                   zero_test_params.emplace_back(StringConversionTestParam{
                        .base   = base,
                        .tokens = valid_sign
                                + std::string(num_zero_tokens, zero_token)
@@ -455,7 +455,7 @@ make_zero_test_params()
     return zero_test_params;
 }
 
-class ZeroTest : public ::testing::TestWithParam<FromStringTestParam>
+class ZeroTest : public ::testing::TestWithParam<StringConversionTestParam>
 {}; // ZeroTest
 
 TEST_P(ZeroTest, RepresentationsOfZeroAreInterprettedAsZero)

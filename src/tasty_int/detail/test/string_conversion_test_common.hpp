@@ -1,5 +1,5 @@
-#ifndef TASTY_INT_TASTY_INT_DETAIL_TEST_FROM_STRING_TEST_COMMON_HPP
-#define TASTY_INT_TASTY_INT_DETAIL_TEST_FROM_STRING_TEST_COMMON_HPP
+#ifndef TASTY_INT_TASTY_INT_DETAIL_TEST_STRING_CONVERSION_TEST_COMMON_HPP
+#define TASTY_INT_TASTY_INT_DETAIL_TEST_STRING_CONVERSION_TEST_COMMON_HPP
 
 #include <iosfwd>
 #include <string>
@@ -7,7 +7,7 @@
 #include <utility>
 
 
-namespace from_string_test_common {
+namespace string_conversion_test_common {
 
 /**
  * @defgroup TestParameters Test Parameters
@@ -17,17 +17,17 @@ namespace from_string_test_common {
  * instance.
  */
 /// @{
-struct FromStringViewTestParam
+struct StringViewConversionTestParam
 {
     unsigned int     base;   ///< the base of the test case tokens
     std::string_view tokens; ///< the test case string of ASCII digits
-}; // struct FromStringViewTestParam
+}; // struct StringViewConversionTestParam
 
-struct FromStringTestParam
+struct StringConversionTestParam
 {
     unsigned int base;   ///< the base of the test case tokens
     std::string  tokens; ///< the test case string of ASCII digits
-}; // struct FromStringTestParam
+}; // struct StringConversionTestParam
 /// @}
 
 /**
@@ -36,19 +36,19 @@ struct FromStringTestParam
  * @brief Outputs FromString(View)TestParam for diagnostic purposes.
  *
  * @param[in,out] output the output stream
- * @param[in]     test_param the FromStringViewTestParam
+ * @param[in]     test_param the StringViewConversionTestParam
  * @return a reference to @p output
  */
 /// @{
 std::ostream &
 operator<<(std::ostream                  &output,
-           const FromStringViewTestParam &test_param);
+           const StringViewConversionTestParam &test_param);
 
 std::ostream &
 operator<<(std::ostream              &output,
-           const FromStringTestParam &test_param);
+           const StringConversionTestParam &test_param);
 /// @}
 
-} // namespace from_string_test_common
+} // namespace string_conversion_test_common
 
-#endif // ifndef TASTY_INT_TASTY_INT_DETAIL_TEST_FROM_STRING_TEST_COMMON_HPP
+#endif // ifndef TASTY_INT_TASTY_INT_DETAIL_TEST_STRING_CONVERSION_TEST_COMMON_HPP

@@ -9,7 +9,7 @@ namespace detail {
  *
  * @param[in] base_36_token an ASCII character token
  * @return the Base36 value associated with @p base_36_token or a value greater
- *     than or equal to 36 if @p base_36_token is not a Base36 token.
+ *     than or equal to 36 if @p base_36_token is not a Base36 token
  */
 unsigned int
 value_from_base_36_token(char base_36_token);

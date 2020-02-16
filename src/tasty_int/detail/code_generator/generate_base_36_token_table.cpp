@@ -23,5 +23,7 @@ main(int   argc,
     for (char token = 'a'; token <= 'z'; ++token)
         base_36_token_map.map_token(token, token - 'a' + 10);
 
-    return generate_token_table(argc, argv, base_36_token_map);
+    generate_token_table(argc, argv, base_36_token_map);
+
+    return 0;
 }

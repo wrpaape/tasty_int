@@ -11,7 +11,7 @@ namespace tasty_int {
 namespace detail {
 
 /**
- * @brief constructs a little-endian sequence of digits from @p tokens.
+ * @brief Converts @p tokens to a little-endian sequence of digits.
  *
  * @param[in] tokens a string of unsigned ASCII digits
  * @param[in] base   the numeric base/radix in which @p tokens is interpretted

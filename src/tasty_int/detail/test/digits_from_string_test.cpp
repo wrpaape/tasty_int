@@ -6,7 +6,7 @@
 
 #include "gtest/gtest.h"
 
-#include "tasty_int/detail/test/from_string_test_common.hpp"
+#include "tasty_int/detail/test/string_conversion_test_common.hpp"
 #include "tasty_int_test/logarithmic_range_values.hpp"
 
 
@@ -14,8 +14,8 @@ namespace {
 
 using tasty_int::detail::digit_type;
 using tasty_int::detail::digits_from_string;
-using from_string_test_common::FromStringViewTestParam;
-using from_string_test_common::operator<<;
+using string_conversion_test_common::StringViewConversionTestParam;
+using string_conversion_test_common::operator<<;
 
 auto
 invalid_bases()
@@ -65,7 +65,7 @@ INSTANTIATE_TEST_SUITE_P(
 );
 
 
-struct InvalidTokenTestParam : public FromStringViewTestParam
+struct InvalidTokenTestParam : public StringViewConversionTestParam
 {
     char first_invalid_token;
 }; // struct InvalidTokenTestParam
@@ -210,7 +210,7 @@ const std::string_view SINGLE_DIGIT_BASE_10_TOKENS = "1234567890";
 auto
 equivalent_single_digit_tokens_in_all_bases()
 {
-    static const std::vector<FromStringViewTestParam> test_parameters = {
+    static const std::vector<StringViewConversionTestParam> test_parameters = {
         { 2,  "1001001100101100000001011010010" },
         { 3,  "10012001001112202200" },
         { 4,  "1021211200023102" },
@@ -280,7 +280,7 @@ equivalent_single_digit_tokens_in_all_bases()
 }
 
 class SingleDigitConsistencyTest
-    : public ::testing::TestWithParam<FromStringViewTestParam>
+    : public ::testing::TestWithParam<StringViewConversionTestParam>
 {}; // class SingleDigitConsistencyTest
 
 TEST_P(SingleDigitConsistencyTest, TheSameValueInDifferenceBases)
@@ -312,7 +312,7 @@ const std::string_view MULTI_DIGIT_BASE_10_TOKENS = "11"
 auto
 equivalent_multi_digit_tokens_in_all_bases()
 {
-    static const std::vector<FromStringViewTestParam> test_parameters = {
+    static const std::vector<StringViewConversionTestParam> test_parameters = {
         {  2, "100110001110100010000001001000000110100001110111010110010011110100001010000011011001011010111000000110110100010010111101101011100101101010111111101101000100110000110000011000111010000010110100010001100001010111110000100001000000111101011010001011000111111010001000011010110111100100000010111010100001100000111111001110000100001001010011100111100000000000000000000" },
         {  3, "1211212100200102012002112100210010002110220002111021020221110202112020000012211110010211212102201100201022102111200112122200110111200210010022100220210121022002221221020012220210011221010222202100201201012102112101011222022002010" },
         {  4, "10301310100021000310032322302132201100123023113000312202113231130231113331220212012003013100112202030022332010020013223101120333101003112330200113110030013321300201022130330000000000" },
@@ -382,7 +382,7 @@ equivalent_multi_digit_tokens_in_all_bases()
 }
 
 class MultiDigitConsistencyTest
-    : public ::testing::TestWithParam<FromStringViewTestParam>
+    : public ::testing::TestWithParam<StringViewConversionTestParam>
 {}; // class MultiDigitConsistencyTest
 
 TEST_P(MultiDigitConsistencyTest, TheSameValueInDifferenceBases)

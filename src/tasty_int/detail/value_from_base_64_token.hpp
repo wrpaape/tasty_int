@@ -9,7 +9,7 @@ namespace detail {
  *
  * @param[in] base_64_token an ASCII character token
  * @return the Base64 value associated with @p base_64_token or a value greater
- *     than or equal to 64 if @p base_64_token is not a Base64 token.
+ *     than or equal to 64 if @p base_64_token is not a Base64 token
  */
 unsigned int
 value_from_base_64_token(char base_64_token);

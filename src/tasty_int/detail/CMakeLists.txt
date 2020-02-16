@@ -83,6 +83,7 @@ add_library(
     STATIC
     digits_from_string.cpp
     digits_from_string.hpp
+    $<TARGET_OBJECTS:tasty_int-detail-codegen-digits_per_token_table>
 )
 target_link_libraries(
     tasty_int-detail-digits_from_string
@@ -119,6 +120,19 @@ foreach(base 36 64)
         base_${base}_token_from_value.hpp
     )
 endforeach()
+
+add_library(
+    tasty_int-detail-string_from_digits
+    STATIC
+    string_from_digits.cpp
+    string_from_digits.hpp
+    $<TARGET_OBJECTS:tasty_int-detail-codegen-digits_per_token_table>
+)
+target_link_libraries(
+    tasty_int-detail-string_from_digits
+    tasty_int-detail-base_36_token_from_value
+    tasty_int-detail-base_64_token_from_value
+)
 
 if(BUILD_TESTING)
     add_subdirectory(test)

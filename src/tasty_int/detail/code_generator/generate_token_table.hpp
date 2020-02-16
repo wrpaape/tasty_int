@@ -23,10 +23,10 @@ namespace code_generator {
  *                      name>, <token table name>, <path to output directory> })
  * @param[in] token_map the mapping of character tokens to digit values (i.e. '1'->1)
  *
- * @return zero if the files were successfully generated, non-zero if an error
- *     is encountered.
+ * @pre Prints usage message and exits with `EXIT_FAILURE` if arguments are not
+ *     well defined.
  */
-int
+void
 generate_token_table(int                                  argc,
                      char                                *argv[],
                      const TokenTableGenerator::TokenMap &token_map);

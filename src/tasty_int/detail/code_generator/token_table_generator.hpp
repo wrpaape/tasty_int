@@ -1,12 +1,10 @@
 #ifndef TASTY_INT_TASTY_INT_DETAIL_CODE_GENERATOR_TOKEN_TABLE_GENERATOR_HPP
 #define TASTY_INT_TASTY_INT_DETAIL_CODE_GENERATOR_TOKEN_TABLE_GENERATOR_HPP
 
-#include <iosfwd>
 #include <limits>
-#include <string>
-#include <string_view>
 #include <unordered_map>
-#include <utility>
+
+#include "tasty_int/detail/code_generator/table_generator.hpp"
 
 
 namespace tasty_int {
@@ -19,7 +17,7 @@ namespace code_generator {
  * etc...).  TokenTableGenerator uses tasty_int::detail::TokenTable as the
  * lookup table implementation.
  */
-class TokenTableGenerator
+class TokenTableGenerator : public TableGenerator
 {
 public:
     /**
@@ -29,8 +27,16 @@ public:
     class TokenMap
     {
     public:
+        /**
+         * ASCII tokens without a defined mapping will be mapped to this value
+         * in the generated TokenTable.
+         */
         static constexpr unsigned char INVALID_VALUE =
             std::numeric_limits<unsigned char>::max();
+
+        /**
+         * The maximum digit value allowed in the generated TokenTable.
+         */
         static constexpr unsigned char MAX_VALUE = INVALID_VALUE - 1;
 
         /**
@@ -55,67 +61,36 @@ public:
         unsigned char
         value_from_token(char token) const;
 
+    private:
         std::unordered_map<char, unsigned char> mapping;
     }; // class TokenMap
 
     /**
+     * This struct defines the configuration parameters for a
+     * TokenTableGenerator.
+     */
+    struct TokenTableConfig
+    {
+        /**
+         * The name of the generated table.
+         */
+        std::string_view name;
+
+        /**
+         * The mapping of ASCII token to digit value.
+         */
+        TokenMap token_map;
+    }; // struct TokenTableConfig
+
+    /**
      * @brief Constructor.
      *
-     * @param[in] token_table_name the name of the generated code
+     * @param[in] token_table_config the token table configuration parameters
      */
-    TokenTableGenerator(std::string_view token_table_name);
-
-    /**
-     * @brief Generates the header file contents declaring the named
-     * tasty_int::detail::TokenTable.
-     *
-     * @param[out] output destination where the file contents will be written
-     */
-    void
-    generate_header(std::ostream &output) const;
-
-    /**
-     * @brief Generates the source file contents defining the named
-     * tasty_int::detail::TokenTable.
-     *
-     * @param[out] output destination where the file contents will be written
-     */
-    void
-    generate_source(const TokenMap &token_map,
-                    std::ostream   &output) const;
+    TokenTableGenerator(const TokenTableConfig &token_table_config);
 
 private:
-    void
-    put_open_namespaces(std::ostream &output) const;
-
-    void
-    put_close_namespaces(std::ostream &output) const;
-
-    void
-    put_source_head(std::ostream &output) const;
-
-    void
-    put_token_table_definition(const TokenMap &token_map,
-                               std::ostream   &output) const;
-
-    void
-    put_token_table_entries(const TokenMap &token_map,
-                            std::ostream   &output) const;
-
-    void
-    put_token_table_entry_row(
-        const TokenMap                        &token_map,
-        std::pair<unsigned int, unsigned int>  token_range,
-        std::ostream                          &output
-    ) const;
-
-    void
-    put_token_table_entry(const TokenMap &token_map,
-                          unsigned int    token,
-                          std::ostream   &output) const;
-
-    std::string_view name;
-    std::string      uppercase_name;
+    TokenMap token_map;
 }; // class TokenTableGenerator
 
 } // namespace code_generator

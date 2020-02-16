@@ -8,6 +8,7 @@
 #include <string>
 #include <utility>
 
+#include "tasty_int/detail/codegen/digits_per_token_table.hpp"
 #include "tasty_int/detail/digit_from_nonnegative_value.hpp"
 #include "tasty_int/detail/value_from_base_36_token.hpp"
 #include "tasty_int/detail/value_from_base_64_token.hpp"
@@ -65,8 +66,8 @@ public:
     parse_digits(std::string_view tokens) const;
 
 private:
-    /// @todo consider codegening
-    static const std::array<float, 65> DIGITS_PER_TOKEN;
+    static float
+    get_digits_per_token(unsigned int base);
 
     std::pair<std::string_view::iterator, std::vector<digit_type>>
     parse_most_significant_token(std::string_view tokens) const;
@@ -105,23 +106,17 @@ DigitsParser::DigitsParser(unsigned int base)
     : value_from_token((base <= 36) ? value_from_base_36_token
                                     : value_from_base_64_token)
     , token_base(base)
-    , digits_per_token(DIGITS_PER_TOKEN[base])
+    , digits_per_token(get_digits_per_token(base))
+{}
+
+float
+DigitsParser::get_digits_per_token(unsigned int base)
 {
     assert(base >= 2);
     assert(base <= 64);
+
+    return codegen::DIGITS_PER_TOKEN_TABLE[base];
 }
-
-const std::array<float, 65> DigitsParser::DIGITS_PER_TOKEN = [] {
-    constexpr float LOG2_DIGIT_BASE = DIGIT_TYPE_BITS;
-
-    std::array<float, 65> digits_per_token;
-
-    for (unsigned int base = 2; base <= digits_per_token.size(); ++base)
-        digits_per_token[base] = std::log2(static_cast<float>(base))
-                               / LOG2_DIGIT_BASE;
-
-    return digits_per_token;
-}();
 
 std::vector<digit_type>
 DigitsParser::parse_digits(std::string_view tokens) const

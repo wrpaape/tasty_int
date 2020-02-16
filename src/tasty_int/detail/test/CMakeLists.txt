@@ -123,16 +123,16 @@ add_google_test(
 
 
 add_library(
-    tasty_int-detail-from_string_test_common
+    tasty_int-detail-string_conversion_test_common
     OBJECT
-    from_string_test_common.cpp
-    from_string_test_common.hpp
+    string_conversion_test_common.cpp
+    string_conversion_test_common.hpp
 )
 
 add_google_test(
     NAME      tasty_int-detail-digits_from_string_test
     SOURCES   digits_from_string_test.cpp
-              $<TARGET_OBJECTS:tasty_int-detail-from_string_test_common>
+              $<TARGET_OBJECTS:tasty_int-detail-string_conversion_test_common>
     LIBRARIES tasty_int-detail-digits_from_string
 )
 
@@ -145,7 +145,7 @@ add_google_test(
 add_google_test(
     NAME      tasty_int-detail-int_from_string_test
     SOURCES   int_from_string_test.cpp
-              $<TARGET_OBJECTS:tasty_int-detail-from_string_test_common>
+              $<TARGET_OBJECTS:tasty_int-detail-string_conversion_test_common>
     LIBRARIES tasty_int-detail-int_from_string
               tasty_int-detail-int_test_common
 )
@@ -180,3 +180,11 @@ foreach(base 36 64)
                 $<TARGET_OBJECTS:tasty_int-detail-base_${base}_token_from_value>
     )
 endforeach()
+
+add_google_test(
+    NAME      tasty_int-detail-string_from_digits_test
+    SOURCES   string_from_digits_test.cpp
+              $<TARGET_OBJECTS:tasty_int-detail-string_conversion_test_common>
+    LIBRARIES tasty_int-detail-string_from_digits
+              tasty_int-detail-digits_from_string
+)

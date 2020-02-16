@@ -26,5 +26,7 @@ main(int   argc,
     base_64_token_map.map_token('+', 62);
     base_64_token_map.map_token('/', 63);
 
-    return generate_token_table(argc, argv, base_64_token_map);
+    generate_token_table(argc, argv, base_64_token_map);
+
+    return 0;
 }
