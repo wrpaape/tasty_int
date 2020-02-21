@@ -22,7 +22,6 @@ using tasty_int::detail::digits_from_string;
 using tasty_int::detail::int_from_string;
 using string_conversion_test_common::StringConversionTestParam;
 using string_conversion_test_common::StringViewConversionTestParam;
-using string_conversion_test_common::operator<<;
 
 
 class EmptyTokensTest : public ::testing::TestWithParam<std::string>
@@ -231,7 +230,7 @@ IntFromExplicitSignAndBaseStringTest::IntFromExplicitSignAndBaseStringTest()
 {}
 
 IntFromExplicitSignAndBaseStringTest::IntFromExplicitSignAndBaseStringTest(
-    SignTestParam       sign_test_param,
+    SignTestParam                 sign_test_param,
     StringViewConversionTestParam from_string_test_param
 )
     : base(from_string_test_param.base)
@@ -349,9 +348,9 @@ INSTANTIATE_TEST_SUITE_P(
 
 struct InterprettedBaseTestParam
 {
-    std::string_view    input_tokens;
+    std::string_view              input_tokens;
     StringViewConversionTestParam expected_interpretation;
-}; // struct SignTestParam
+}; // struct InterprettedBaseTestParam
 
 std::ostream &
 operator<<(std::ostream                    &output,

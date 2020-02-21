@@ -1,21 +1,61 @@
-#include "tasty_int/detail/string_from_digits.hpp"
+#include "tasty_int/detail/token_values_from_digits.hpp"
 
 #include <string>
 #include <vector>
 
 #include "gtest/gtest.h"
 
+#include "tasty_int/detail/base_36_token_from_value.hpp"
+#include "tasty_int/detail/base_64_token_from_value.hpp"
 #include "tasty_int/detail/digits_from_string.hpp"
 #include "tasty_int/detail/test/string_conversion_test_common.hpp"
 
 
 namespace {
 
+using tasty_int::detail::base_36_token_from_value;
+using tasty_int::detail::base_64_token_from_value;
 using tasty_int::detail::digit_type;
 using tasty_int::detail::digits_from_string;
-using tasty_int::detail::string_from_digits;
+using tasty_int::detail::token_values_from_digits;
 using string_conversion_test_common::StringViewConversionTestParam;
-using string_conversion_test_common::operator<<;
+
+
+std::string tokens_from_token_values(const std::string &token_values,
+                                     unsigned int       base)
+{
+    auto token_from_value = (base <= 36)
+                          ? base_36_token_from_value
+                          : base_64_token_from_value;
+
+    std::string tokens(token_values.size(), '\0');
+    auto token_cursor = tokens.end();
+    for (char value : token_values)
+        *--token_cursor = token_from_value(value);
+
+    return tokens;
+}
+
+
+class ZeroTest : public ::testing::TestWithParam<unsigned int>
+{}; // class ZeroTest
+
+TEST_P(ZeroTest, ZeroInterprettedAsZero)
+{
+    unsigned int base = GetParam();
+    std::string token_values;
+
+    token_values_from_digits(std::vector<digit_type>{ 0 }, base,
+                             token_values);
+
+    EXPECT_EQ(std::string{ '\0' }, token_values);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    StringFromDigitsTest,
+    ZeroTest,
+    ::testing::Range<unsigned int>(2, 64)
+);
 
 
 class SingleDigitConsistencyTest
@@ -106,7 +146,11 @@ TEST_P(SingleDigitConsistencyTest, ConversionToAllBasesIsConsistent)
 {
     auto [base, expected_output] = GetParam();
 
-    EXPECT_EQ(expected_output, string_from_digits(INPUT_DIGITS, base));
+    std::string token_values;
+    token_values_from_digits(INPUT_DIGITS, base,
+                             token_values);
+
+    EXPECT_EQ(expected_output, tokens_from_token_values(token_values, base));
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -213,7 +257,11 @@ TEST_P(MultiDigitConsistencyTest, ConversionToAllBasesIsConsistent)
 {
     auto [base, expected_output] = GetParam();
 
-    EXPECT_EQ(expected_output, string_from_digits(INPUT_DIGITS, base));
+    std::string token_values;
+    token_values_from_digits(INPUT_DIGITS, base,
+                             token_values);
+
+    EXPECT_EQ(expected_output, tokens_from_token_values(token_values, base));
 }
 
 INSTANTIATE_TEST_SUITE_P(

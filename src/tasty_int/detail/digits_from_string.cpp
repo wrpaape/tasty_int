@@ -10,6 +10,7 @@
 
 #include "tasty_int/detail/codegen/digits_per_token_table.hpp"
 #include "tasty_int/detail/digit_from_nonnegative_value.hpp"
+#include "tasty_int/detail/ensure_base_is_supported.hpp"
 #include "tasty_int/detail/value_from_base_36_token.hpp"
 #include "tasty_int/detail/value_from_base_64_token.hpp"
 
@@ -17,22 +18,6 @@
 namespace tasty_int {
 namespace detail {
 namespace {
-
-/**
- * @brief checks that @p base is a supported numeric base/radix
- *
- * @throw std::invalid_argument if @p base is unsupported
- */
-void
-ensure_base_is_valid(unsigned int base)
-{
-    if ((base < 2) || (base > 64))
-        throw std::invalid_argument(
-            "tasty_int::detail::digits_from_string - invalid base (" +
-            std::to_string(base) + "): Base is not within the range of "
-            "supported values [2,64]."
-        );
-}
 
 /**
  * This class parses a little-endian sequence of digits from an input string of
@@ -129,7 +114,11 @@ DigitsParser::parse_digits(std::string_view tokens) const
         accumulate_token(digits, *cursor);
 
     // ensure the initial sizing was correct
-    assert((digits.capacity() - digits.size()) <= 1);
+    assert(
+        (size_digits(tokens.end() + 1 -
+                     find_most_significant_value(tokens).first) - digits.size())
+        <= 1
+    );
 
     return digits;
 }
@@ -243,7 +232,7 @@ digits_from_string(std::string_view tokens,
 {
     assert(!tokens.empty());
 
-    ensure_base_is_valid(base);
+    ensure_base_is_supported(base);
 
     DigitsParser digits_parser(base);
 

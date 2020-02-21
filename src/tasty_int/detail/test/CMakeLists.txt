@@ -122,6 +122,26 @@ add_google_test(
 )
 
 
+add_library(tasty_int-detail-base_support_test_common INTERFACE)
+target_sources(
+    tasty_int-detail-base_support_test_common
+    INTERFACE
+    ${CMAKE_CURRENT_LIST_DIR}/base_support_test_common.hpp
+)
+target_link_libraries(
+    tasty_int-detail-base_support_test_common
+    INTERFACE
+    tasty_int_test
+    GTest::GTest
+)
+
+add_google_test(
+    NAME      tasty_int-detail-ensure_base_is_supported_test
+    SOURCES   ensure_base_is_supported_test.cpp
+              $<TARGET_OBJECTS:tasty_int-detail-ensure_base_is_supported>
+    LIBRARIES tasty_int-detail-base_support_test_common
+)
+
 add_library(
     tasty_int-detail-string_conversion_test_common
     OBJECT
@@ -134,6 +154,7 @@ add_google_test(
     SOURCES   digits_from_string_test.cpp
               $<TARGET_OBJECTS:tasty_int-detail-string_conversion_test_common>
     LIBRARIES tasty_int-detail-digits_from_string
+              tasty_int-detail-base_support_test_common
 )
 
 add_google_test(
@@ -182,9 +203,20 @@ foreach(base 36 64)
 endforeach()
 
 add_google_test(
-    NAME      tasty_int-detail-string_from_digits_test
-    SOURCES   string_from_digits_test.cpp
+    NAME      tasty_int-detail-token_values_from_digits_test
+    SOURCES   token_values_from_digits_test.cpp
+              $<TARGET_OBJECTS:tasty_int-detail-token_values_from_digits>
               $<TARGET_OBJECTS:tasty_int-detail-string_conversion_test_common>
-    LIBRARIES tasty_int-detail-string_from_digits
+              $<TARGET_OBJECTS:tasty_int-detail-base_36_token_from_value>
+              $<TARGET_OBJECTS:tasty_int-detail-base_64_token_from_value>
+    LIBRARIES 
+              tasty_int-detail-digits_from_string
+)
+
+add_google_test(
+    NAME      tasty_int-detail-string_from_int_test
+    SOURCES   string_from_int_test.cpp
+              $<TARGET_OBJECTS:tasty_int-detail-string_conversion_test_common>
+    LIBRARIES tasty_int-detail-string_from_int
               tasty_int-detail-digits_from_string
 )

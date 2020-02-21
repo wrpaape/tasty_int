@@ -41,11 +41,11 @@ struct StringConversionTestParam
  */
 /// @{
 std::ostream &
-operator<<(std::ostream                  &output,
+operator<<(std::ostream                        &output,
            const StringViewConversionTestParam &test_param);
 
 std::ostream &
-operator<<(std::ostream              &output,
+operator<<(std::ostream                    &output,
            const StringConversionTestParam &test_param);
 /// @}
 

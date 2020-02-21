@@ -19,9 +19,11 @@ namespace tasty_int_test {
  *     the sequence is descending.  Otherwise, if `first == last`, the single
  *     value @p first is returned.
  *
- * @param first the first value of the range (inclusive)
- * @param last  the last value of the range (inclusive)
- * @param scale the logarithmic scale of the range
+ * @param[in] first the first value of the range (inclusive)
+ * @param[in] last  the last value of the range (inclusive)
+ * @param[in] scale the logarithmic scale of the range
+ * @return the specified logarithmic sequence of values as a google test
+ *     parameter generator
  *
  * @pre `scale > 1`
  *

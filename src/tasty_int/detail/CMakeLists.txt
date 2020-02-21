@@ -79,11 +79,19 @@ target_link_libraries(
 )
 
 add_library(
+    tasty_int-detail-ensure_base_is_supported
+    OBJECT
+    ensure_base_is_supported.cpp
+    ensure_base_is_supported.hpp
+)
+
+add_library(
     tasty_int-detail-digits_from_string
     STATIC
     digits_from_string.cpp
     digits_from_string.hpp
     $<TARGET_OBJECTS:tasty_int-detail-codegen-digits_per_token_table>
+    $<TARGET_OBJECTS:tasty_int-detail-ensure_base_is_supported>
 )
 target_link_libraries(
     tasty_int-detail-digits_from_string
@@ -122,16 +130,23 @@ foreach(base 36 64)
 endforeach()
 
 add_library(
-    tasty_int-detail-string_from_digits
-    STATIC
-    string_from_digits.cpp
-    string_from_digits.hpp
-    $<TARGET_OBJECTS:tasty_int-detail-codegen-digits_per_token_table>
+    tasty_int-detail-token_values_from_digits
+    OBJECT
+    token_values_from_digits.cpp
+    token_values_from_digits.hpp
+    ${TASTY_INT_DETAIL_INCLUDE_DIR}/digit_type.hpp
 )
-target_link_libraries(
-    tasty_int-detail-string_from_digits
-    tasty_int-detail-base_36_token_from_value
-    tasty_int-detail-base_64_token_from_value
+
+add_library(
+    tasty_int-detail-string_from_int
+    STATIC
+    string_from_int.cpp
+    ${TASTY_INT_DETAIL_INCLUDE_DIR}/string_from_int.hpp
+    $<TARGET_OBJECTS:tasty_int-detail-base_36_token_from_value>
+    $<TARGET_OBJECTS:tasty_int-detail-base_64_token_from_value>
+    $<TARGET_OBJECTS:tasty_int-detail-codegen-digits_per_token_table>
+    $<TARGET_OBJECTS:tasty_int-detail-ensure_base_is_supported>
+    $<TARGET_OBJECTS:tasty_int-detail-token_values_from_digits>
 )
 
 if(BUILD_TESTING)

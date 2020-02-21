@@ -6,7 +6,7 @@
 namespace string_conversion_test_common {
 
 std::ostream &
-operator<<(std::ostream                  &output,
+operator<<(std::ostream                        &output,
            const StringViewConversionTestParam &test_param)
 {
     auto [base, tokens] = test_param;
@@ -15,7 +15,7 @@ operator<<(std::ostream                  &output,
 }
 
 std::ostream &
-operator<<(std::ostream              &output,
+operator<<(std::ostream                    &output,
            const StringConversionTestParam &test_param)
 {
     const auto& [base, tokens] = test_param;

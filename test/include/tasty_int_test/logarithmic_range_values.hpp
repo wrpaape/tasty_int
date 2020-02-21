@@ -70,9 +70,10 @@ append_intermediate_logarithmic_values(T first, T scale, T last_mult,
  *     the sequence is descending.  Otherwise, if `first == last`, the single
  *     value @p first is returned.
  *
- * @param first the first value of the range (inclusive)
- * @param last  the last value of the range (inclusive)
- * @param scale the logarithmic scale of the range
+ * @param[in] first the first value of the range (inclusive)
+ * @param[in] last  the last value of the range (inclusive)
+ * @param[in] scale the logarithmic scale of the range
+ * @return the specified logarithmic sequence of values
  *
  * @pre `scale > 1`
  *

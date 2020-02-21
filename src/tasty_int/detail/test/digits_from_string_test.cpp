@@ -6,28 +6,17 @@
 
 #include "gtest/gtest.h"
 
+#include "tasty_int/detail/test/base_support_test_common.hpp"
 #include "tasty_int/detail/test/string_conversion_test_common.hpp"
-#include "tasty_int_test/logarithmic_range_values.hpp"
 
 
 namespace {
 
 using tasty_int::detail::digit_type;
 using tasty_int::detail::digits_from_string;
+using base_support_test_common::unsupported_bases;
 using string_conversion_test_common::StringViewConversionTestParam;
-using string_conversion_test_common::operator<<;
 
-auto
-invalid_bases()
-{
-    auto values = tasty_int_test::logarithmic_range_values<unsigned int>(
-        65, std::numeric_limits<unsigned int>::max(), 2
-    );
-    values.emplace_back(0);
-    values.emplace_back(1);
-
-    return ::testing::ValuesIn(values);
-}
 
 void
 expect_single_digit_equals(digit_type                     value,
@@ -37,22 +26,23 @@ expect_single_digit_equals(digit_type                     value,
     EXPECT_EQ(1,     digits.size());
 }
 
-class InvalidBaseTest : public ::testing::TestWithParam<unsigned int>
-{}; // class InvalidBaseTest
 
-TEST_P(InvalidBaseTest, InvalidBaseThrowsInvalidArgument)
+class UnsupportedBaseTest : public ::testing::TestWithParam<unsigned int>
+{}; // class UnsupportedBaseTest
+
+TEST_P(UnsupportedBaseTest, UnsupportedBaseThrowsInvalidArgument)
 {
-    auto base = GetParam();
+    unsigned int unsupported_base = GetParam();
     try {
-        (void) digits_from_string("123", base);
+        (void) digits_from_string("123", unsupported_base);
         FAIL() << "did not throw expected std::invalid_argument";
 
     } catch (const std::invalid_argument &exception) {
         std::ostringstream expected_message;
         expected_message <<
-            "tasty_int::detail::digits_from_string - invalid base ("
-         << base << "): Base is not within the range of supported values "
-            "[2,64].";
+            "tasty_int::detail::ensure_base_is_supported - invalid base ("
+         << unsupported_base << "): Base is not within the range of supported "
+            "values [2,64].";
 
         EXPECT_EQ(expected_message.str(), exception.what());
     }
@@ -60,8 +50,8 @@ TEST_P(InvalidBaseTest, InvalidBaseThrowsInvalidArgument)
 
 INSTANTIATE_TEST_SUITE_P(
     DigitsFromStringTest,
-    InvalidBaseTest,
-    invalid_bases()
+    UnsupportedBaseTest,
+    unsupported_bases()
 );
 
 

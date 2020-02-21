@@ -23,7 +23,7 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param[in] input      a string of ASCII digits
+     * @param[in] input      a string of ASCII tokens
      * @param[in] input_base the numeric base/radix in which @p tokens is
      *     interpretted
      */
