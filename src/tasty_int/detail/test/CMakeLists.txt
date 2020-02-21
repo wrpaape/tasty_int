@@ -12,11 +12,11 @@ add_library(
 )
 
 add_library(
-    tasty_int-detail-int_test_common
+    tasty_int-detail-integer_test_common
     STATIC
-    int_test_common.cpp
-    int_test_common.hpp
-    ${TASTY_INT_DETAIL_INCLUDE_DIR}/int.hpp
+    integer_test_common.cpp
+    integer_test_common.hpp
+    ${TASTY_INT_DETAIL_INCLUDE_DIR}/integer.hpp
     $<TARGET_OBJECTS:tasty_int-detail-sign_test_common>
 )
 
@@ -70,23 +70,23 @@ add_google_test(
 )
 
 add_library(
-    tasty_int-detail-int_from_integral_test_common
+    tasty_int-detail-integer_from_integral_test_common
     OBJECT
-    int_from_integral_test_common.cpp
-    int_from_integral_test_common.hpp
+    integer_from_integral_test_common.cpp
+    integer_from_integral_test_common.hpp
     ${TASTY_INT_DETAIL_INCLUDE_DIR}/digit_type.hpp
-    ${TASTY_INT_DETAIL_INCLUDE_DIR}/int.hpp
+    ${TASTY_INT_DETAIL_INCLUDE_DIR}/integer.hpp
 )
 target_link_libraries(
-    tasty_int-detail-int_from_integral_test_common
+    tasty_int-detail-integer_from_integral_test_common
     GTest::GTest
 )
 foreach(kind signed unsigned)
     add_google_test(
-        NAME      tasty_int-detail-int_from_${kind}_integral_test
-        SOURCES   int_from_${kind}_integral_test.cpp
-                  $<TARGET_OBJECTS:tasty_int-detail-int_from_integral_test_common>
-        LIBRARIES tasty_int-detail-int_from_${kind}_integral
+        NAME      tasty_int-detail-integer_from_${kind}_integral_test
+        SOURCES   integer_from_${kind}_integral_test.cpp
+                  $<TARGET_OBJECTS:tasty_int-detail-integer_from_integral_test_common>
+        LIBRARIES tasty_int-detail-integer_from_${kind}_integral
                   tasty_int_test
     )
 endforeach()
@@ -113,11 +113,11 @@ add_google_test(
 )
 
 add_google_test(
-    NAME      tasty_int-detail-int_from_floating_point_test
-    SOURCES   int_from_floating_point_test.cpp
+    NAME      tasty_int-detail-integer_from_floating_point_test
+    SOURCES   integer_from_floating_point_test.cpp
               $<TARGET_OBJECTS:tasty_int-detail-from_floating_point_test_common>
-    LIBRARIES tasty_int-detail-int_from_floating_point
-              tasty_int-detail-int_test_common
+    LIBRARIES tasty_int-detail-integer_from_floating_point
+              tasty_int-detail-integer_test_common
               tasty_int_test
 )
 
@@ -164,11 +164,11 @@ add_google_test(
 )
 
 add_google_test(
-    NAME      tasty_int-detail-int_from_string_test
-    SOURCES   int_from_string_test.cpp
+    NAME      tasty_int-detail-integer_from_string_test
+    SOURCES   integer_from_string_test.cpp
               $<TARGET_OBJECTS:tasty_int-detail-string_conversion_test_common>
-    LIBRARIES tasty_int-detail-int_from_string
-              tasty_int-detail-int_test_common
+    LIBRARIES tasty_int-detail-integer_from_string
+              tasty_int-detail-integer_test_common
 )
 
 add_google_test(
@@ -182,14 +182,14 @@ add_google_test(
 )
 
 add_google_test(
-    NAME      tasty_int-detail-int_from_user_type_integration_test
-    SOURCES   int_from_user_type_integration_test.cpp
+    NAME      tasty_int-detail-integer_from_user_type_integration_test
+    SOURCES   integer_from_user_type_integration_test.cpp
               from_user_type_integration_test_common.hpp
-    LIBRARIES tasty_int-detail-int_from_unsigned_integral
-              tasty_int-detail-int_from_signed_integral
-              tasty_int-detail-int_from_floating_point
-              tasty_int-detail-int_from_string
-              tasty_int-detail-int_test_common
+    LIBRARIES tasty_int-detail-integer_from_unsigned_integral
+              tasty_int-detail-integer_from_signed_integral
+              tasty_int-detail-integer_from_floating_point
+              tasty_int-detail-integer_from_string
+              tasty_int-detail-integer_test_common
               tasty_int_test
 )
 
@@ -209,14 +209,13 @@ add_google_test(
               $<TARGET_OBJECTS:tasty_int-detail-string_conversion_test_common>
               $<TARGET_OBJECTS:tasty_int-detail-base_36_token_from_value>
               $<TARGET_OBJECTS:tasty_int-detail-base_64_token_from_value>
-    LIBRARIES 
-              tasty_int-detail-digits_from_string
+    LIBRARIES tasty_int-detail-digits_from_string
 )
 
 add_google_test(
-    NAME      tasty_int-detail-string_from_int_test
-    SOURCES   string_from_int_test.cpp
+    NAME      tasty_int-detail-string_from_integer_test
+    SOURCES   string_from_integer_test.cpp
               $<TARGET_OBJECTS:tasty_int-detail-string_conversion_test_common>
-    LIBRARIES tasty_int-detail-string_from_int
+    LIBRARIES tasty_int-detail-string_from_integer
               tasty_int-detail-digits_from_string
 )

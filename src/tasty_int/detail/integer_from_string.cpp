@@ -1,4 +1,4 @@
-#include "tasty_int/detail/int_from_string.hpp"
+#include "tasty_int/detail/integer_from_string.hpp"
 
 #include <cctype>
 
@@ -14,10 +14,10 @@ namespace detail {
 namespace {
 
 /**
- * This class parses a tasty_int::detail::Int from an input string of tokens
+ * This class parses a tasty_int::detail::Integer from an input string of tokens
  * and base.
  */
-class IntParser
+class IntegerParser
 {
 public:
     /**
@@ -27,17 +27,17 @@ public:
      * @param[in] input_base the numeric base/radix in which @p tokens is
      *     interpretted
      */
-    IntParser(std::string_view input,
-              unsigned int     input_base);
+    IntegerParser(std::string_view input,
+                  unsigned int     input_base);
 
     /**
-     * @brief Parses a tasty_int::detail::Int from the provided input.
+     * @brief Parses a tasty_int::detail::Integer from the provided input.
      *
      * @detail Leading whitespace is ignored.  If input base is zero, the
      *     correct base is determined from the leading tokens a la
      *     tasty_int::detail::base_prefix_from_string().
      *
-     * @return tasty_int::detail::Int representation of the input
+     * @return tasty_int::detail::Integer representation of the input
      *
      * @throw std::invalid_argument if input tokens contains no digits
      * @throw std::invalid_argument if input base is not a supported
@@ -45,8 +45,8 @@ public:
      * @throw std::invalid_argument if input contains an out-of-bounds token
      *     for the provided (or interpretted) base
      */
-    Int
-    parse_int();
+    Integer
+    parse_integer();
 
 private:
     void
@@ -93,18 +93,18 @@ private:
 
     std::string_view tokens;
     unsigned int     token_base;
-}; // class IntParser
+}; // class IntegerParser
 
-IntParser::IntParser(std::string_view input,
-                     unsigned int     input_base)
+IntegerParser::IntegerParser(std::string_view input,
+                             unsigned int     input_base)
     : tokens(input)
     , token_base(input_base)
 {}
 
-Int
-IntParser::parse_int()
+Integer
+IntegerParser::parse_integer()
 {
-    Int result;
+    Integer result;
     result.sign = Sign::POSITIVE;
 
     remove_leading_whitespace();
@@ -123,13 +123,13 @@ IntParser::parse_int()
 }
 
 void
-IntParser::remove_leading_whitespace()
+IntegerParser::remove_leading_whitespace()
 {
     remove_prefix(leading_whitespace_length());
 }
 
 std::string_view::size_type
-IntParser::leading_whitespace_length() const
+IntegerParser::leading_whitespace_length() const
 {
     auto end_of_whitespace = std::find_if_not(
         tokens.begin(),
@@ -144,14 +144,14 @@ IntParser::leading_whitespace_length() const
 }
 
 bool
-IntParser::token_base_supports_sign_prefix() const
+IntegerParser::token_base_supports_sign_prefix() const
 {
     // base 63 and 64 reserve '+' => all other bases support an explicit sign
     return token_base <= 62;
 }
 
 Sign
-IntParser::parse_sign()
+IntegerParser::parse_sign()
 {
     Sign sign = Sign::POSITIVE;
 
@@ -164,37 +164,37 @@ IntParser::parse_sign()
 }
 
 bool
-IntParser::have_leading_sign() const
+IntegerParser::have_leading_sign() const
 {
     return is_sign_token(tokens.front());
 }
 
 bool
-IntParser::is_sign_token(char token)
+IntegerParser::is_sign_token(char token)
 {
     return (token == '-') | (token == '+');
 }
 
 Sign
-IntParser::get_leading_sign() const
+IntegerParser::get_leading_sign() const
 {
    return sign_from_token(tokens.front());
 }
 
 Sign
-IntParser::sign_from_token(char token)
+IntegerParser::sign_from_token(char token)
 {
     return (token == '-') ? Sign::NEGATIVE : Sign::POSITIVE;
 }
 
 void
-IntParser::remove_leading_sign()
+IntegerParser::remove_leading_sign()
 {
     remove_prefix(1);
 }
 
 void
-IntParser::parse_token_base()
+IntegerParser::parse_token_base()
 {
     BasePrefix base_prefix = base_prefix_from_string(tokens);
     if (have_base_prefix(base_prefix.base)) {
@@ -204,29 +204,30 @@ IntParser::parse_token_base()
 }
 
 bool
-IntParser::have_base_prefix(unsigned int interpretted_base) const
+IntegerParser::have_base_prefix(unsigned int interpretted_base) const
 {
-    return (token_base == 0) || (token_base == interpretted_base);
+    return (token_base == 0)
+        || (token_base == interpretted_base);
 }
 
 void
-IntParser::remove_prefix(std::string_view::size_type prefix_length)
+IntegerParser::remove_prefix(std::string_view::size_type prefix_length)
 {
     tokens.remove_prefix(prefix_length);
     ensure_tokens_are_nonempty();
 }
 
 void
-IntParser::ensure_tokens_are_nonempty() const
+IntegerParser::ensure_tokens_are_nonempty() const
 {
     if (tokens.empty())
         throw std::invalid_argument(
-            "tasty_int::detail::int_from_string - empty tokens"
+            "tasty_int::detail::integer_from_string - empty tokens"
         );
 }
 
 bool
-IntParser::is_zero(const std::vector<digit_type> &digits)
+IntegerParser::is_zero(const std::vector<digit_type> &digits)
 {
     return (digits.size() == 1) && (digits.front() == 0);
 }
@@ -234,13 +235,13 @@ IntParser::is_zero(const std::vector<digit_type> &digits)
 } // namespace
 
 
-Int
-int_from_string(std::string_view tokens,
-                unsigned int     base)
+Integer
+integer_from_string(std::string_view tokens,
+                    unsigned int     base)
 {
-    IntParser int_parser(tokens, base);
+    IntegerParser integer_parser(tokens, base);
 
-    return int_parser.parse_int();
+    return integer_parser.parse_integer();
 }
 
 } // namespace detail

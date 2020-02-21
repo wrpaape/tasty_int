@@ -1,5 +1,5 @@
-#ifndef TASTY_INT_TASTY_INT_DETAIL_INT_HPP
-#define TASTY_INT_TASTY_INT_DETAIL_INT_HPP
+#ifndef TASTY_INT_TASTY_INT_DETAIL_INTEGER_HPP
+#define TASTY_INT_TASTY_INT_DETAIL_INTEGER_HPP
 
 #include <vector>
 
@@ -11,42 +11,46 @@ namespace tasty_int {
 namespace detail {
 
 /**
- * This struct serves as the low-level representation of tasty_int::TastyInt.
- * Int fields correspond to arbitrary-precision integers values accordingly:
+ * This struct serves as the internal representation of tasty_int::TastyInt.
+ * Integer fields correspond to arbitrary-precision integers values
+ * accordingly:
  *
  *     Negative Values:
- *         | Int::sign      | Int::digits                                    |
+ *         | Integer::sign  | Integer::digits                                |
  *         | -------------- | -----------------------------------------------|
  *         | Sign::NEGATIVE | { least significant [, ... most significant] } |
  *
  *     Zero:
- *         | Int::sign      | Int::digits                                    |
+ *         | Integer::sign  | Integer::digits                                |
  *         | -------------- | -----------------------------------------------|
  *         | Sign::ZERO     | { 0 }                                          |
  *
  *     Positive Values:
- *         | Int::sign      | Int::digits                                    |
+ *         | Integer::sign  | Integer::digits                                |
  *         | -------------- | -----------------------------------------------|
  *         | Sign::POSITIVE | { least significant [, ... most significant] } |
  */
-struct Int
+struct Integer
 {
     /**
-     * The integer sign of Int.
+     * The integer sign of Integer.
      */
     Sign                    sign;
 
     /**
-     * The little-endian positional notation representation of Int's absolute
-     * value.
+     * The little-endian positional notation representation of Integer's
+     * absolute value.
      */
     std::vector<digit_type> digits;
-}; // struct Int
+}; // struct Integer
 
-/// @todo Replace with default comparison semantics once compiler support is available.
+/**
+ * @todo Replace with default comparison semantics once compiler support is
+ * available.
+ */
 inline bool
-operator==(const Int &lhs,
-           const Int &rhs)
+operator==(const Integer &lhs,
+           const Integer &rhs)
 {
     return (lhs.sign   == rhs.sign)
         && (lhs.digits == rhs.digits);
@@ -55,4 +59,4 @@ operator==(const Int &lhs,
 } // namespace detail
 } // namespace tasty_int
 
-#endif // TASTY_INT_TASTY_INT_DETAIL_INT_HPP
+#endif // TASTY_INT_TASTY_INT_DETAIL_INTEGER_HPP

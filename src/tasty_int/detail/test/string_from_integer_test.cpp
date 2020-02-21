@@ -1,4 +1,4 @@
-#include "tasty_int/detail/string_from_int.hpp"
+#include "tasty_int/detail/string_from_integer.hpp"
 
 #include <string>
 #include <vector>
@@ -11,11 +11,11 @@
 
 namespace {
 
-using tasty_int::detail::Int;
+using tasty_int::detail::Integer;
 using tasty_int::detail::Sign;
 using tasty_int::detail::digit_type;
 using tasty_int::detail::digits_from_string;
-using tasty_int::detail::string_from_int;
+using tasty_int::detail::string_from_integer;
 using string_conversion_test_common::StringViewConversionTestParam;
 
 
@@ -26,9 +26,12 @@ class StringFromZeroTest :
 TEST_P(StringFromZeroTest, ZeroInterprettedAsZero)
 {
     auto [base, zero_token] = GetParam();
-    Int zero = { .sign = Sign::ZERO, .digits = std::vector<digit_type>{ 0 } };
+    Integer zero = {
+        .sign   = Sign::ZERO,
+        .digits = std::vector<digit_type>{ 0 }
+    };
 
-    std::string result = string_from_int(zero, base);
+    std::string result = string_from_integer(zero, base);
 
     EXPECT_EQ(std::string(1, zero_token), result);
 }
@@ -51,14 +54,14 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
-TEST(StringFromIntTest, SingleNegativeTokenTest)
+TEST(StringFromIntegerTest, SingleNegativeTokenTest)
 {
-    Int negative_one = {
-        .sign = Sign::NEGATIVE,
+    Integer negative_one = {
+        .sign   = Sign::NEGATIVE,
         .digits = std::vector<digit_type>{ 1 }
     };
 
-    std::string result = string_from_int(negative_one, 10);
+    std::string result = string_from_integer(negative_one, 10);
 
     EXPECT_EQ("-1", result);
 }
@@ -147,30 +150,38 @@ SingleDigitConsistencyTest::EQUIVALENT_SINGLE_DIGIT_TOKENS_IN_ALL_BASES = {
     { 64, "GBo" }
 };
 
-TEST_P(SingleDigitConsistencyTest, ConversionToAllBasesFromPositiveIntIsConsistent)
+TEST_P(SingleDigitConsistencyTest,
+       ConversionToAllBasesFromPositiveIntegerIsConsistent)
 {
     auto [base, expected_output] = GetParam();
-    Int positive_integer = { .sign = Sign::POSITIVE, .digits = INPUT_DIGITS };
+    Integer positive_integer = {
+        .sign   = Sign::POSITIVE,
+        .digits = INPUT_DIGITS
+    };
 
-    std::string result = string_from_int(positive_integer, base);
+    std::string result = string_from_integer(positive_integer, base);
 
     EXPECT_EQ(expected_output, result);
 }
 
-TEST_P(SingleDigitConsistencyTest, ConversionToAllBasesFromNegativeIntIsConsistent)
+TEST_P(SingleDigitConsistencyTest,
+       ConversionToAllBasesFromNegativeIntegerIsConsistent)
 {
     auto [base, expected_digits] = GetParam();
-    Int negative_integer = { .sign = Sign::NEGATIVE, .digits = INPUT_DIGITS };
+    Integer negative_integer = {
+        .sign   = Sign::NEGATIVE,
+        .digits = INPUT_DIGITS
+    };
     std::string expected_output  = "-";
     expected_output             += expected_digits;
 
-    std::string result = string_from_int(negative_integer, base);
+    std::string result = string_from_integer(negative_integer, base);
 
     EXPECT_EQ(expected_output, result);
 }
 
 INSTANTIATE_TEST_SUITE_P(
-    StringFromIntTest,
+    StringFromIntegerTest,
     SingleDigitConsistencyTest,
     ::testing::ValuesIn(
         SingleDigitConsistencyTest::EQUIVALENT_SINGLE_DIGIT_TOKENS_IN_ALL_BASES
@@ -271,30 +282,38 @@ MultiDigitConsistencyTest::EQUIVALENT_MULTI_DIGIT_TOKENS_IN_ALL_BASES = {
     { 64, "BINxr1aiarIpLND0SxwPPpLE0PiHvOQFTTR0jOg/CRZKsBh74OJoJbIL" }
 };
 
-TEST_P(MultiDigitConsistencyTest, ConversionToAllBasesFromPositiveIntIsConsistent)
+TEST_P(MultiDigitConsistencyTest,
+       ConversionToAllBasesFromPositiveIntegerIsConsistent)
 {
     auto [base, expected_output] = GetParam();
-    Int positive_integer = { .sign = Sign::POSITIVE, .digits = INPUT_DIGITS };
+    Integer positive_integer = {
+        .sign   = Sign::POSITIVE,
+        .digits = INPUT_DIGITS
+    };
 
-    std::string result = string_from_int(positive_integer, base);
+    std::string result = string_from_integer(positive_integer, base);
 
     EXPECT_EQ(expected_output, result);
 }
 
-TEST_P(MultiDigitConsistencyTest, ConversionToAllBasesFromNegativeIntIsConsistent)
+TEST_P(MultiDigitConsistencyTest,
+       ConversionToAllBasesFromNegativeIntegerIsConsistent)
 {
     auto [base, expected_digits] = GetParam();
-    Int negative_integer = { .sign = Sign::NEGATIVE, .digits = INPUT_DIGITS };
+    Integer negative_integer = {
+        .sign   = Sign::NEGATIVE,
+        .digits = INPUT_DIGITS
+    };
     std::string expected_output  = "-";
     expected_output             += expected_digits;
 
-    std::string result = string_from_int(negative_integer, base);
+    std::string result = string_from_integer(negative_integer, base);
 
     EXPECT_EQ(expected_output, result);
 }
 
 INSTANTIATE_TEST_SUITE_P(
-    StringFromIntTest,
+    StringFromIntegerTest,
     MultiDigitConsistencyTest,
     ::testing::ValuesIn(
         MultiDigitConsistencyTest::EQUIVALENT_MULTI_DIGIT_TOKENS_IN_ALL_BASES

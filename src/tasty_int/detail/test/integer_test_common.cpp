@@ -1,8 +1,8 @@
-#include "tasty_int/detail/test/int_test_common.hpp"
+#include "tasty_int/detail/test/integer_test_common.hpp"
 
 #include <ostream>
 
-#include "tasty_int/detail/int.hpp"
+#include "tasty_int/detail/integer.hpp"
 #include "tasty_int/detail/test/sign_test_common.hpp"
 
 
@@ -26,8 +26,8 @@ PrintTo(const std::vector<digit_type> &digits,
 } // namespace
 
 void
-PrintTo(const Int    &integer,
-        std::ostream *output)
+PrintTo(const Integer &integer,
+        std::ostream  *output)
 {
     *output << "{ sign=";
     PrintTo(integer.sign, output);

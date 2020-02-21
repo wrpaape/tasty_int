@@ -66,7 +66,7 @@ DigitFromNonNegativeFloatingPointTest<FloatingPointType>::test_values()
             0.0, std::numeric_limits<uintmax_t>::max() - 1, 2.0
         );
 
-    auto uint_max_to_floating_point_max =
+    auto uinteger_max_to_floating_point_max =
         tasty_int_test::logarithmic_range_values<FloatingPointType>(
             std::numeric_limits<uintmax_t>::max(),
             std::numeric_limits<FloatingPointType>::max(),
@@ -74,8 +74,8 @@ DigitFromNonNegativeFloatingPointTest<FloatingPointType>::test_values()
         );
 
     values.insert(values.end(),
-                  uint_max_to_floating_point_max.begin(),
-                  uint_max_to_floating_point_max.end());
+                  uinteger_max_to_floating_point_max.begin(),
+                  uinteger_max_to_floating_point_max.end());
 
     return values;
 }

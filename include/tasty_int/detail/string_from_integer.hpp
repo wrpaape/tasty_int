@@ -1,9 +1,9 @@
-#ifndef TASTY_INT_TASTY_INT_DETAIL_STRING_FROM_INT_HPP
-#define TASTY_INT_TASTY_INT_DETAIL_STRING_FROM_INT_HPP
+#ifndef TASTY_INT_TASTY_INT_DETAIL_STRING_FROM_INTEGER_HPP
+#define TASTY_INT_TASTY_INT_DETAIL_STRING_FROM_INTEGER_HPP
 
 #include <string>
 
-#include "tasty_int/detail/int.hpp"
+#include "tasty_int/detail/integer.hpp"
 
 
 namespace tasty_int {
@@ -17,10 +17,10 @@ namespace detail {
  * @return the string representation of @p integer in base @p base
  */
 std::string
-string_from_int(const Int    &integer,
-                unsigned int  base);
+string_from_integer(const Integer &integer,
+                    unsigned int   base);
 
 } // namespace detail
 } // namespace tasty_int
 
-#endif // ifndef TASTY_INT_TASTY_INT_DETAIL_STRING_FROM_INT_HPP
+#endif // ifndef TASTY_INT_TASTY_INT_DETAIL_STRING_FROM_INTEGER_HPP

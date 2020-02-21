@@ -1,4 +1,4 @@
-#include "tasty_int/detail/int_from_unsigned_integral.hpp"
+#include "tasty_int/detail/integer_from_unsigned_integral.hpp"
 
 #include <cmath>
 
@@ -10,15 +10,15 @@ namespace tasty_int {
 namespace detail {
 
 /**
- * @brief constructs a new tasty_int::detail::Int from @p value
+ * @brief constructs a new tasty_int::detail::Integer from @p value
  *
  * @param[in] value an unsigned integer value
- * @return the tasty_int::detail:Int representation of @p value
+ * @return the tasty_int::detail:Integer representation of @p value
  */
-Int
-int_from_unsigned_integral(std::uintmax_t value)
+Integer
+integer_from_unsigned_integral(std::uintmax_t value)
 {
-    Int result;
+    Integer result;
     result.sign   = sign_from_unsigned_arithmetic(value);
     result.digits = digits_from_integral(value);
     return result;

@@ -1,4 +1,4 @@
-#include "tasty_int/detail/string_from_int.hpp"
+#include "tasty_int/detail/string_from_integer.hpp"
 
 #include <cassert>
 #include <cmath>
@@ -17,8 +17,8 @@ namespace detail {
 namespace {
 
 /**
- * This class converts a tasty_int::detail::Int to a string of tokens presented
- * according to the provided base.
+ * This class converts a tasty_int::detail::Integer to a string of tokens
+ * presented according to the provided base.
  */
 class StringConverter
 {
@@ -41,7 +41,7 @@ public:
      * @return the string representation of @p integer in base @p base
      */
     std::string
-    convert_to_string(const Int &integer) const;
+    convert_to_string(const Integer &integer) const;
 
 private:
     static float
@@ -93,7 +93,7 @@ StringConverter::get_token_values_per_digit(unsigned int base)
 }
 
 std::string
-StringConverter::convert_to_string(const Int &integer) const
+StringConverter::convert_to_string(const Integer &integer) const
 {
     unsigned int integer_is_negative = (integer.sign == Sign::NEGATIVE);
     std::string token_buffer = allocate_token_buffer(integer_is_negative,
@@ -174,8 +174,8 @@ StringConverter::emplace_digit_tokens(std::string::iterator left_cursor,
 
 
 std::string
-string_from_int(const Int    &integer,
-                unsigned int  base)
+string_from_integer(const Integer &integer,
+                    unsigned int   base)
 {
     ensure_base_is_supported(base);
 
@@ -186,4 +186,3 @@ string_from_int(const Int    &integer,
 
 } // namespace detail
 } // namespace tasty_int
-

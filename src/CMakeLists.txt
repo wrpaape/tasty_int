@@ -19,8 +19,9 @@ set(TASTY_INT_INCLUDE_DIR        ${PROJECT_INCLUDE_DIR}/tasty_int)
 set(TASTY_INT_DETAIL_INCLUDE_DIR ${TASTY_INT_INCLUDE_DIR}/detail)
 set(
     TASTY_INT_HEADERS
+    ${TASTY_INT_DETAIL_INCLUDE_DIR}/sign.hpp
     ${TASTY_INT_DETAIL_INCLUDE_DIR}/digit_type.hpp
-    ${TASTY_INT_DETAIL_INCLUDE_DIR}/int.hpp
+    ${TASTY_INT_DETAIL_INCLUDE_DIR}/integer.hpp
     # TODO remove
     ${TASTY_INT_INCLUDE_DIR}/tasty_int.hpp
     ${TASTY_INT_INCLUDE_DIR}/tasty_int.ipp

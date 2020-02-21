@@ -41,14 +41,14 @@ foreach(kind signed unsigned)
     )
 
     add_library(
-        tasty_int-detail-int_from_${kind}_integral
+        tasty_int-detail-integer_from_${kind}_integral
         STATIC
-        int_from_${kind}_integral.cpp
-        ${TASTY_INT_DETAIL_INCLUDE_DIR}/int_from_${kind}_integral.hpp
-        ${TASTY_INT_DETAIL_INCLUDE_DIR}/int.hpp
+        integer_from_${kind}_integral.cpp
+        ${TASTY_INT_DETAIL_INCLUDE_DIR}/integer_from_${kind}_integral.hpp
+        ${TASTY_INT_DETAIL_INCLUDE_DIR}/integer.hpp
     )
     target_link_libraries(
-        tasty_int-detail-int_from_${kind}_integral
+        tasty_int-detail-integer_from_${kind}_integral
         tasty_int-detail-sign_from_${kind}_arithmetic
         tasty_int-detail-digits_from_integral
     )
@@ -66,14 +66,14 @@ target_link_libraries(
 )
 
 add_library(
-    tasty_int-detail-int_from_floating_point
+    tasty_int-detail-integer_from_floating_point
     STATIC
-    int_from_floating_point.cpp
-    ${TASTY_INT_DETAIL_INCLUDE_DIR}/int_from_floating_point.hpp
-    ${TASTY_INT_DETAIL_INCLUDE_DIR}/int.hpp
+    integer_from_floating_point.cpp
+    ${TASTY_INT_DETAIL_INCLUDE_DIR}/integer_from_floating_point.hpp
+    ${TASTY_INT_DETAIL_INCLUDE_DIR}/integer.hpp
 )
 target_link_libraries(
-    tasty_int-detail-int_from_floating_point
+    tasty_int-detail-integer_from_floating_point
     tasty_int-detail-sign_from_signed_arithmetic
     tasty_int-detail-digits_from_floating_point
 )
@@ -108,14 +108,14 @@ add_library(
 )
 
 add_library(
-    tasty_int-detail-int_from_string
+    tasty_int-detail-integer_from_string
     STATIC
-    int_from_string.cpp
-    ${TASTY_INT_DETAIL_INCLUDE_DIR}/int_from_string.hpp
-    ${TASTY_INT_DETAIL_INCLUDE_DIR}/int.hpp
+    integer_from_string.cpp
+    ${TASTY_INT_DETAIL_INCLUDE_DIR}/integer_from_string.hpp
+    ${TASTY_INT_DETAIL_INCLUDE_DIR}/integer.hpp
 )
 target_link_libraries(
-    tasty_int-detail-int_from_string
+    tasty_int-detail-integer_from_string
     tasty_int-detail-digits_from_string
     tasty_int-detail-base_prefix_from_string
 )
@@ -138,10 +138,10 @@ add_library(
 )
 
 add_library(
-    tasty_int-detail-string_from_int
+    tasty_int-detail-string_from_integer
     STATIC
-    string_from_int.cpp
-    ${TASTY_INT_DETAIL_INCLUDE_DIR}/string_from_int.hpp
+    string_from_integer.cpp
+    ${TASTY_INT_DETAIL_INCLUDE_DIR}/string_from_integer.hpp
     $<TARGET_OBJECTS:tasty_int-detail-base_36_token_from_value>
     $<TARGET_OBJECTS:tasty_int-detail-base_64_token_from_value>
     $<TARGET_OBJECTS:tasty_int-detail-codegen-digits_per_token_table>

@@ -1,4 +1,4 @@
-#include "tasty_int/detail/int_from_floating_point.hpp"
+#include "tasty_int/detail/integer_from_floating_point.hpp"
 
 #include <limits>
 #include <vector>
@@ -6,16 +6,16 @@
 #include "gtest/gtest.h"
 
 #include "tasty_int/detail/test/from_floating_point_test_common.hpp"
-#include "tasty_int/detail/test/int_test_common.hpp"
+#include "tasty_int/detail/test/integer_test_common.hpp"
 #include "tasty_int_test/logarithmic_range.hpp"
 
 
 
 namespace {
 
-using tasty_int::detail::Int;
+using tasty_int::detail::Integer;
 using tasty_int::detail::Sign;
-using tasty_int::detail::int_from_floating_point;
+using tasty_int::detail::integer_from_floating_point;
 using from_floating_point_test_common::expect_digits_equal;
 
 
@@ -23,7 +23,7 @@ class NegativeValuesTest : public ::testing::TestWithParam<long double>
 {}; // class NegativeValuesTest
 
 void
-expect_negative_int_equals(long double expected, const Int &actual)
+expect_negative_integer_equals(long double expected, const Integer &actual)
 {
     EXPECT_EQ(Sign::NEGATIVE, actual.sign);
 
@@ -31,14 +31,17 @@ expect_negative_int_equals(long double expected, const Int &actual)
 }
 
 TEST_P(NegativeValuesTest,
-       NegativeValuesLessThanOrEqualToNegativeOneProducesNegativeInt)
+       NegativeValuesLessThanOrEqualToNegativeOneProducesNegativeInteger)
 {
-    expect_negative_int_equals(GetParam(),
-                               int_from_floating_point(GetParam()));
+    long double negative_value = GetParam();
+
+    Integer result = integer_from_floating_point(negative_value);
+
+    expect_negative_integer_equals(negative_value, result);
 }
 
 INSTANTIATE_TEST_SUITE_P(
-    IntFromFloatingPointTest,
+    IntegerFromFloatingPointTest,
     NegativeValuesTest,
     tasty_int_test::logarithmic_range<long double>(
         -1.0,
@@ -51,17 +54,17 @@ INSTANTIATE_TEST_SUITE_P(
 class ZeroValueTest : public ::testing::TestWithParam<long double>
 {}; // class ZeroValueTest
 
-TEST_P(ZeroValueTest, AbsoluteValuesLessThanOneProduceZeroInt)
+TEST_P(ZeroValueTest, AbsoluteValuesLessThanOneProduceZeroInteger)
 {
-    const Int ZERO = { .sign = Sign::ZERO, .digits = { 0 } };
+    const Integer ZERO = { .sign = Sign::ZERO, .digits = { 0 } };
     long double zero_value = GetParam();
 
 
-    EXPECT_EQ(ZERO, int_from_floating_point(zero_value));
+    EXPECT_EQ(ZERO, integer_from_floating_point(zero_value));
 }
 
 INSTANTIATE_TEST_SUITE_P(
-    IntFromFloatingPointTest,
+    IntegerFromFloatingPointTest,
     ZeroValueTest,
     ::testing::Values(
       -1.0 + std::numeric_limits<long double>::epsilon(),
@@ -79,7 +82,7 @@ class PositiveValuesTest : public ::testing::TestWithParam<long double>
 {}; // class PositiveValuesTest
 
 void
-expect_positive_int_equals(long double expected, const Int &actual)
+expect_positive_integer_equals(long double expected, const Integer &actual)
 {
     EXPECT_EQ(Sign::POSITIVE, actual.sign);
 
@@ -87,14 +90,17 @@ expect_positive_int_equals(long double expected, const Int &actual)
 }
 
 TEST_P(PositiveValuesTest,
-       PositiveValuesGreaterThanOrEqualToOneProducePositiveInt)
+       PositiveValuesGreaterThanOrEqualToOneProducePositiveInteger)
 {
-    expect_positive_int_equals(GetParam(),
-                               int_from_floating_point(GetParam()));
+    long double positive_value = GetParam();
+
+    Integer result = integer_from_floating_point(positive_value);
+
+    expect_positive_integer_equals(positive_value, result);
 }
 
 INSTANTIATE_TEST_SUITE_P(
-    IntFromFloatingPointTest,
+    IntegerFromFloatingPointTest,
     PositiveValuesTest,
     tasty_int_test::logarithmic_range<long double>(
         1.0,

@@ -1,11 +1,11 @@
-#include "tasty_int/detail/test/int_from_integral_test_common.hpp"
+#include "tasty_int/detail/test/integer_from_integral_test_common.hpp"
 
 #include "gtest/gtest.h"
 
 
-namespace int_from_integral_test_common {
+namespace integer_from_integral_test_common {
 
-using tasty_int::detail::Int;
+using tasty_int::detail::Integer;
 using tasty_int::detail::Sign;
 using tasty_int::detail::digit_type;
 using tasty_int::detail::DIGIT_BASE;
@@ -29,7 +29,7 @@ expect_digits_equal(std::uintmax_t                 expected,
 }
 
 void
-expect_int_equals_zero(const Int &actual)
+expect_integer_equals_zero(const Integer &actual)
 {
     EXPECT_EQ(Sign::ZERO, actual.sign);
 
@@ -37,11 +37,12 @@ expect_int_equals_zero(const Int &actual)
 }
 
 void
-expect_positive_int_equals(std::uintmax_t expected, const Int &actual)
+expect_positive_integer_equals(std::uintmax_t  expected,
+                               const Integer  &actual)
 {
     EXPECT_EQ(Sign::POSITIVE, actual.sign);
 
     expect_digits_equal(expected, actual.digits);
 }
 
-} // namespace int_from_integral_test_common
+} // namespace integer_from_integral_test_common
