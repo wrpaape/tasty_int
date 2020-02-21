@@ -16,20 +16,23 @@ include_directories(${CMAKE_CURRENT_LIST_DIR})
 set(TASTY_INT_STATIC_LIBRARY     tasty_int_static)
 set(TASTY_INT_SHARED_LIBRARY     tasty_int_shared)
 set(TASTY_INT_INCLUDE_DIR        ${PROJECT_INCLUDE_DIR}/tasty_int)
-set(TASTY_INT_DETAIL_INCLUDE_DIR ${TASTY_INT_INCLUDE_DIR}/detail)
 set(
     TASTY_INT_HEADERS
-    ${TASTY_INT_DETAIL_INCLUDE_DIR}/sign.hpp
-    ${TASTY_INT_DETAIL_INCLUDE_DIR}/digit_type.hpp
-    ${TASTY_INT_DETAIL_INCLUDE_DIR}/integer.hpp
+    ${TASTY_INT_INCLUDE_DIR}/detail/sign.hpp
+    ${TASTY_INT_INCLUDE_DIR}/detail/digit_type.hpp
+    ${TASTY_INT_INCLUDE_DIR}/detail/integer.hpp
+    ${TASTY_INT_INCLUDE_DIR}/detail/conversions/integer_from_floating_point.hpp
+    ${TASTY_INT_INCLUDE_DIR}/detail/conversions/integer_from_signed_integral.hpp
+    ${TASTY_INT_INCLUDE_DIR}/detail/conversions/integer_from_string.hpp
+    ${TASTY_INT_INCLUDE_DIR}/detail/conversions/integer_from_unsigned_integral.hpp
+    ${TASTY_INT_INCLUDE_DIR}/detail/conversions/string_from_integer.hpp
     # TODO remove
     ${TASTY_INT_INCLUDE_DIR}/tasty_int.hpp
     ${TASTY_INT_INCLUDE_DIR}/tasty_int.ipp
-    ${TASTY_INT_DETAIL_INCLUDE_DIR}/get_digit.hpp
-    ${TASTY_INT_DETAIL_INCLUDE_DIR}/from_arithmetic.hpp
-    ${TASTY_INT_DETAIL_INCLUDE_DIR}/to_arithmetic.hpp
+    ${TASTY_INT_INCLUDE_DIR}/detail/conversions/get_digit.hpp
+    ${TASTY_INT_INCLUDE_DIR}/detail/conversions/from_arithmetic.hpp
+    ${TASTY_INT_INCLUDE_DIR}/detail/conversions/to_arithmetic.hpp
 )
 
-
 add_subdirectory(tasty_int)
-add_subdirectory(tasty_int_demo)
+# add_subdirectory(tasty_int_demo) TODO: remove

@@ -2,9 +2,12 @@
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_LIB_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_LIB_DIR})
 
+set(TASTY_INT_SRC_DIR ${CMAKE_CURRENT_LIST_DIR})
+
 # build internal implementation
 add_subdirectory(detail)
 
+if(TODO_REMOVE)
 # code generation 
 set(generate_dir         ${CMAKE_CURRENT_LIST_DIR}/generate)
 set(generate_src_dir     ${generate_dir}/src)
@@ -48,6 +51,7 @@ add_custom_command(
                       "tables"
 )
 
+endif(TODO_REMOVE)
 
 if(BUILD_TESTING)
     add_subdirectory(test)
