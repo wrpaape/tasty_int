@@ -2,20 +2,18 @@ include(set_have_type)
 
 find_package(GTest REQUIRED)
 
-set(TASTY_INT_TEST_INCLUDE_DIR ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test)
-
 add_library(tasty_int_test INTERFACE)
 target_sources(
     tasty_int_test
     INTERFACE
-    ${TASTY_INT_TEST_INCLUDE_DIR}/logarithmic_range.hpp
-    ${TASTY_INT_TEST_INCLUDE_DIR}/logarithmic_range_values.hpp
-    ${TASTY_INT_TEST_INCLUDE_DIR}/arithmetic_types.hpp
-    ${TASTY_INT_TEST_INCLUDE_DIR}/signed_arithmetic_types.hpp
-    ${TASTY_INT_TEST_INCLUDE_DIR}/unsigned_arithmetic_types.hpp
-    ${TASTY_INT_TEST_INCLUDE_DIR}/integral_types.hpp
-    ${TASTY_INT_TEST_INCLUDE_DIR}/floating_point_types.hpp
-    ${TASTY_INT_TEST_INCLUDE_DIR}/detail/filter_types.hpp
+    ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/logarithmic_range.hpp
+    ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/logarithmic_range_values.hpp
+    ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/arithmetic_types.hpp
+    ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/signed_arithmetic_types.hpp
+    ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/unsigned_arithmetic_types.hpp
+    ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/integral_types.hpp
+    ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/floating_point_types.hpp
+    ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/detail/filter_types.hpp
 )
 target_include_directories(
     tasty_int_test

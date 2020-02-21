@@ -21,13 +21,13 @@ usage:
 
 #]=======================================================================]
 function(set_std_filesystem_library)
-    set(build_dir ${PROJECT_CMAKE_BUILD_DIR}/std_filesystem_library)
-    set(src_dir   ${PROJECT_CMAKE_SRC_DIR}/std_filesystem_library)
+    set(binary_dir ${PROJECT_CMAKE_BINARY_DIR}/std_filesystem_library)
+    set(src_dir    ${PROJECT_CMAKE_SRC_DIR}/std_filesystem_library)
     set(library_candidates "" stdc++fs c++fs)
     foreach(library ${library_candidates})
         try_compile(
             library_compiled
-            ${build_dir}
+            ${binary_dir}
             ${src_dir}/test_std_filesystem_library.cpp
             LINK_LIBRARIES ${library}
         )

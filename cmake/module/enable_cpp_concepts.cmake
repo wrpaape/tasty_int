@@ -18,13 +18,13 @@ compiler/linker options in the current scope. Typical usage:
 
 #]=======================================================================]
 function(enable_cpp_concepts)
-    set(build_dir ${PROJECT_CMAKE_BUILD_DIR}/enable_cpp_concepts)
-    set(src_dir   ${PROJECT_CMAKE_SRC_DIR}/enable_cpp_concepts)
+    set(binary_dir ${PROJECT_CMAKE_BINARY_DIR}/enable_cpp_concepts)
+    set(src_dir    ${PROJECT_CMAKE_SRC_DIR}/enable_cpp_concepts)
     set(candidate_compile_options -fconcepts)
     foreach(compile_option "" ${candidate_compile_options})
         try_compile(
             compile_option_compiled
-            ${build_dir}
+            ${binary_dir}
             ${src_dir}/test_enable_cpp_concepts.cpp
             COMPILE_DEFINITIONS "${compile_option}" 
         )

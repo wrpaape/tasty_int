@@ -42,8 +42,8 @@ add_library(
     OBJECT
     integer_from_integral_test_common.cpp
     integer_from_integral_test_common.hpp
-    ${TASTY_INT_INCLUDE_DIR}/detail/digit_type.hpp
-    ${TASTY_INT_INCLUDE_DIR}/detail/integer.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
 )
 target_link_libraries(
     tasty_int-detail-conversions-integer_from_integral_test_common
@@ -65,7 +65,7 @@ add_library(
     OBJECT
     from_floating_point_test_common.cpp
     from_floating_point_test_common.hpp
-    ${TASTY_INT_INCLUDE_DIR}/detail/digit_type.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 target_link_libraries(
     tasty_int-detail-conversions-from_floating_point_test_common

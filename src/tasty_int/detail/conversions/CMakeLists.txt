@@ -14,8 +14,8 @@ add_library(tasty_int-detail-conversions-digit_from_nonnegative_value INTERFACE)
 target_sources(
     tasty_int-detail-conversions-digit_from_nonnegative_value
     INTERFACE
-    ${TASTY_INT_INCLUDE_DIR}/detail/digit_type.hpp
-    ${TASTY_INT_SRC_DIR}/detail/conversions/digit_from_nonnegative_value.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
+    ${PROJECT_SRC_DIR}/tasty_int/detail/conversions/digit_from_nonnegative_value.hpp
 )
 
 add_library(
@@ -34,16 +34,16 @@ foreach(kind signed unsigned)
     target_sources(
         tasty_int-detail-conversions-sign_from_${kind}_arithmetic
         INTERFACE
-        ${TASTY_INT_INCLUDE_DIR}/detail/sign.hpp
-        ${TASTY_INT_SRC_DIR}/detail/conversions/sign_from_${kind}_arithmetic.hpp
+        ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
+        ${PROJECT_SRC_DIR}/tasty_int/detail/conversions/sign_from_${kind}_arithmetic.hpp
     )
 
     add_library(
         tasty_int-detail-conversions-integer_from_${kind}_integral
         STATIC
         integer_from_${kind}_integral.cpp
-        ${TASTY_INT_INCLUDE_DIR}/detail/conversions/integer_from_${kind}_integral.hpp
-        ${TASTY_INT_INCLUDE_DIR}/detail/integer.hpp
+        ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/integer_from_${kind}_integral.hpp
+        ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
     )
     target_link_libraries(
         tasty_int-detail-conversions-integer_from_${kind}_integral
@@ -67,8 +67,8 @@ add_library(
     tasty_int-detail-conversions-integer_from_floating_point
     STATIC
     integer_from_floating_point.cpp
-    ${TASTY_INT_INCLUDE_DIR}/detail/conversions/integer_from_floating_point.hpp
-    ${TASTY_INT_INCLUDE_DIR}/detail/integer.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/integer_from_floating_point.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
 )
 target_link_libraries(
     tasty_int-detail-conversions-integer_from_floating_point
@@ -109,8 +109,8 @@ add_library(
     tasty_int-detail-conversions-integer_from_string
     STATIC
     integer_from_string.cpp
-    ${TASTY_INT_INCLUDE_DIR}/detail/conversions/integer_from_string.hpp
-    ${TASTY_INT_INCLUDE_DIR}/detail/integer.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/integer_from_string.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
 )
 target_link_libraries(
     tasty_int-detail-conversions-integer_from_string
@@ -132,14 +132,14 @@ add_library(
     OBJECT
     token_values_from_digits.cpp
     token_values_from_digits.hpp
-    ${TASTY_INT_INCLUDE_DIR}/detail/digit_type.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 
 add_library(
     tasty_int-detail-conversions-string_from_integer
     STATIC
     string_from_integer.cpp
-    ${TASTY_INT_INCLUDE_DIR}/detail/conversions/string_from_integer.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/string_from_integer.hpp
     $<TARGET_OBJECTS:tasty_int-detail-conversions-base_36_token_from_value>
     $<TARGET_OBJECTS:tasty_int-detail-conversions-base_64_token_from_value>
     $<TARGET_OBJECTS:tasty_int-detail-conversions-codegen-digits_per_token_table>

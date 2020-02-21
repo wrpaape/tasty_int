@@ -6,7 +6,7 @@ add_library(
     OBJECT
     table_generator.cpp
     table_generator.hpp
-    ${TASTY_INT_INCLUDE_DIR}/detail/digit_type.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 
 add_library(
@@ -14,7 +14,7 @@ add_library(
     STATIC
     token_table_generator.cpp
     token_table_generator.hpp
-    ${TASTY_INT_SRC_DIR}/detail/conversions/token_table.hpp
+    ${PROJECT_SRC_DIR}/tasty_int/detail/conversions/token_table.hpp
     $<TARGET_OBJECTS:tasty_int-detail-conversions-code_generator-table_generator>
 )
 
@@ -91,7 +91,7 @@ foreach(base 36 64)
     target_sources(
         tasty_int-detail-conversions-codegen-${token_table_name}
         PUBLIC
-        ${TASTY_INT_SRC_DIR}/detail/conversions/token_table.hpp
+        ${PROJECT_SRC_DIR}/tasty_int/detail/conversions/token_table.hpp
     )
 endforeach()
 
@@ -99,7 +99,7 @@ add_executable(
     tasty_int-detail-conversions-code_generator-generate_digits_per_token_table
     generate_digits_per_token_table.cpp
     $<TARGET_OBJECTS:tasty_int-detail-conversions-code_generator-parse_code_generator_arguments>
-    ${TASTY_INT_INCLUDE_DIR}/detail/digit_type.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 target_link_libraries(
     tasty_int-detail-conversions-code_generator-generate_digits_per_token_table

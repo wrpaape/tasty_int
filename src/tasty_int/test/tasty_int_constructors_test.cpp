@@ -8,7 +8,7 @@
 
 
 /**
- * TODO
+ * @todo investigate this test for anything salvageable then delete
  */
 template<typename ArithmeticType>
 struct TastyIntArtihmeticTypesConstructorTest : public ::testing::Test
