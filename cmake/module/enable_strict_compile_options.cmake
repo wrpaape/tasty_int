@@ -36,7 +36,7 @@ function(enable_strict_compile_options)
     message(
         STATUS
         "Enabling the following strict compile options: "
-        "'${space_separated_options}'"
+        "'${space_separated_options}'."
     )
     add_compile_options(${options})
 endfunction()

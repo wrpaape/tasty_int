@@ -45,11 +45,11 @@ add_library(
     generate_token_table.cpp
     generate_token_table.hpp
     $<TARGET_OBJECTS:tasty_int-detail-conversions-code_generator-parse_code_generator_arguments>
-    $<TARGET_OBJECTS:tasty_int-detail-conversions-code_generator-token_table_generator>
 )
 target_link_libraries(
     tasty_int-detail-conversions-code_generator-generate_token_table
     tasty_int-detail-conversions-code_generator-generate_table_files
+    tasty_int-detail-conversions-code_generator-token_table_generator
 )
 
 

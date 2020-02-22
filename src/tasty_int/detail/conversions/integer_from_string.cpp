@@ -173,7 +173,7 @@ IntegerParser::have_leading_sign() const
 bool
 IntegerParser::is_sign_token(char token)
 {
-    return (token == '-') | (token == '+');
+    return (token == '-') || (token == '+');
 }
 
 Sign

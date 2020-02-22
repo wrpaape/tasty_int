@@ -7,9 +7,8 @@ project(
 )
 
 # cmake options
-set(CMAKE_VERBOSE_MAKEFILE OFF)
-set(CMAKE_CXX_STANDARD     20)
-option(BUILD_TESTING "Enable unit testing." ON)
+include(CMakeDependentOption)
+set(CMAKE_CXX_STANDARD 20)
 if(NOT CMAKE_BUILD_TYPE)
   set(
       CMAKE_BUILD_TYPE "Debug"
@@ -18,6 +17,15 @@ if(NOT CMAKE_BUILD_TYPE)
       FORCE
   )
 endif()
+set(BUILD_DEBUG OFF)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(BUILD_DEBUG ON)
+endif()
+option(BUILD_TESTING "Enable unit testing." ${BUILD_DEBUG})
+cmake_dependent_option(
+    BUILD_COVERAGE "Generate code coverage report." ${BUILD_DEBUG}
+    BUILD_TESTING OFF
+)
 
 # config defines
 set(TASTY_INT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR})

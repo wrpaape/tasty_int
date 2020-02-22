@@ -16,6 +16,8 @@ namespace conversions {
  * @param[in] integer an arbitrary-precision integer
  * @param[in] base    the desired numeric base/radix of the output
  * @return the string representation of @p integer in base @p base
+ *
+ * @pre @p base is a supported numeric base
  */
 std::string
 string_from_integer(const Integer &integer,

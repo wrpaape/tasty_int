@@ -20,8 +20,8 @@ compiler/linker options in the current scope. Typical usage:
 function(enable_cpp_concepts)
     set(binary_dir ${PROJECT_CMAKE_BINARY_DIR}/enable_cpp_concepts)
     set(src_dir    ${PROJECT_CMAKE_SRC_DIR}/enable_cpp_concepts)
-    set(candidate_compile_options -fconcepts)
-    foreach(compile_option "" ${candidate_compile_options})
+    set(candidate_compile_options "" "-fconcepts" "-Xclang -fconcepts-ts")
+    foreach(compile_option IN LISTS candidate_compile_options)
         try_compile(
             compile_option_compiled
             ${binary_dir}

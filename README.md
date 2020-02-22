@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/wrpaape/tasty_int.png?branch=master)](https://travis-ci.org/wrpaape/tasty_int)
+[![Coverage Status](https://coveralls.io/repos/github/wrpaape/tasty_int/badge.png?branch=master)](https://coveralls.io/github/wrpaape/tasty_int?branch=master&service=github)
+
 # TastyInt
 
 

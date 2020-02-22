@@ -16,20 +16,6 @@ namespace tasty_int {
 namespace detail {
 namespace conversions {
 namespace code_generator {
-namespace {
-
-std::string
-to_uppercase(std::string_view string)
-{
-    std::string uppercase;
-    uppercase.reserve(string.size());
-    for (char c : string)
-        uppercase.push_back(std::toupper(c));
-
-    return uppercase;
-}
-
-} // namespace
 
 void
 TokenTableGenerator::TokenMap::map_token(char          token,

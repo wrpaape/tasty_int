@@ -152,7 +152,8 @@ StringConverter::max_count_token_values_from_count_digits(
 void
 StringConverter::emplace_minus_token(std::string &token_buffer) const
 {
-    token_buffer.push_back(token_from_value(token_buffer.front()));
+    char least_significant_token = token_from_value(token_buffer.front());
+    token_buffer.push_back(least_significant_token);
     token_buffer.front() = '-';
 }
 

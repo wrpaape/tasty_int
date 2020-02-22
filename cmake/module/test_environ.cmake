@@ -43,3 +43,19 @@ add_custom_target(
 )
 
 set(PROJECT_BUILD_TEST_COMMANDS build-test build-test-verbose)
+
+if(BUILD_COVERAGE)
+    include(CodeCoverage)
+
+    append_coverage_compiler_flags()
+    add_compile_options(-O0)
+    setup_target_for_coverage_lcov(
+        NAME       coverage
+        EXECUTABLE ${CMAKE_CTEST_COMMAND}
+        EXCLUDE    "/usr/*"                # system headers
+                   "*/third_party/*"       # third party code
+                   "*/gtest/*" "*/gmock/*" # testing framework
+                   "*/test/*"              # unit tests
+                   "*/generate_*.cpp"      # code generators
+    )
+endif()

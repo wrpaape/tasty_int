@@ -25,7 +25,7 @@ namespace conversions {
  * @return the tasty_int::detail::Integer representation of @p tokens
  *
  * @throw std::invalid_argument if @p tokens contains no digits
- * @throw std::invalid_argument if @p base is not a supported numerical base or
+ * @throw std::invalid_argument if @p base is not a supported numeric base or
  *     zero.
  * @throw std::invalid_argument if input contains an out-of-bounds token for
  *     the provided (or interpretted) base
