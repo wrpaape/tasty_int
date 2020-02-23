@@ -3,3 +3,4 @@ if(BUILD_TESTING)
 endif()
 
 add_subdirectory(conversions)
+add_subdirectory(comparisons)
