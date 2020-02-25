@@ -45,16 +45,40 @@ struct Integer
 }; // struct Integer
 
 /**
- * @todo Replace with default comparison semantics once compiler support is
- * available.
+ * @defgroup IntegerComparisonOperators Integer Comparison Operators
+ *
+ * These operators compare two tasty_int::detail::Integers like ordinary ints:
+ *     
+ *     - positive integers are greater than zero
+ *     - positive integers compare greater as their magnitude increases
+ *     - negative integers are less than zero
+ *     - negative integers compare lesser as their magnitude increases
  */
-inline bool
+/// @{
+bool
 operator==(const Integer &lhs,
-           const Integer &rhs)
-{
-    return (lhs.sign   == rhs.sign)
-        && (lhs.digits == rhs.digits);
-}
+           const Integer &rhs);
+
+bool
+operator!=(const Integer &lhs,
+           const Integer &rhs);
+
+bool
+operator<(const Integer &lhs,
+          const Integer &rhs);
+
+bool
+operator>(const Integer &lhs,
+          const Integer &rhs);
+
+bool
+operator<=(const Integer &lhs,
+           const Integer &rhs);
+
+bool
+operator>=(const Integer &lhs,
+           const Integer &rhs);
+/// @}
 
 } // namespace detail
 } // namespace tasty_int
