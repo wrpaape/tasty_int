@@ -1,4 +1,4 @@
-#include "tasty_int/detail/comparisons/digits_comparison_operators.hpp"
+#include "tasty_int/detail/digits_comparison_operators.hpp"
 
 #include "gtest/gtest.h"
 
@@ -7,12 +7,12 @@ namespace {
 
 using tasty_int::detail::digit_type;
 using tasty_int::detail::DIGIT_TYPE_MAX;
-using tasty_int::detail::comparisons::operator==;
-using tasty_int::detail::comparisons::operator!=;
-using tasty_int::detail::comparisons::operator<;
-using tasty_int::detail::comparisons::operator>;
-using tasty_int::detail::comparisons::operator<=;
-using tasty_int::detail::comparisons::operator>=;
+using tasty_int::detail::operator==;
+using tasty_int::detail::operator!=;
+using tasty_int::detail::operator<;
+using tasty_int::detail::operator>;
+using tasty_int::detail::operator<=;
+using tasty_int::detail::operator>=;
 
 
 using DigitsComparisonTestParam = std::pair<

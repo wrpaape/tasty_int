@@ -1,4 +1,4 @@
-#include "tasty_int/detail/comparisons/digits_comparison_operators.hpp"
+#include "tasty_int/detail/digits_comparison_operators.hpp"
 
 #include <algorithm>
 #include <functional>
@@ -6,7 +6,6 @@
 
 namespace tasty_int {
 namespace detail {
-namespace comparisons {
 namespace {
 
 template<template <typename> typename Compare>
@@ -90,6 +89,5 @@ operator>=(const std::vector<digit_type> &lhs,
     return have_inequality<std::greater, NonStrictSequenceInequality>(lhs, rhs);
 }
 
-} // namespace comparisons
 } // namespace detail
 } // namespace tasty_int

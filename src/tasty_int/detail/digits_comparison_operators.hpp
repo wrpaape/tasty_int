@@ -1,5 +1,5 @@
-#ifndef TASTY_INT_TASTY_INT_DETAIL_COMPARISONS_DIGITS_COMPARISON_OPERATORS_HPP
-#define TASTY_INT_TASTY_INT_DETAIL_COMPARISONS_DIGITS_COMPARISON_OPERATORS_HPP
+#ifndef TASTY_INT_TASTY_INT_DETAIL_DIGITS_COMPARISON_OPERATORS_HPP
+#define TASTY_INT_TASTY_INT_DETAIL_DIGITS_COMPARISON_OPERATORS_HPP
 
 #include <vector>
 
@@ -7,7 +7,6 @@
 
 namespace tasty_int {
 namespace detail {
-namespace comparisons {
 
 /**
  * @defgroup DigitsComparisonOperators Digits Comparison Operators
@@ -44,8 +43,7 @@ operator>=(const std::vector<digit_type> &lhs,
            const std::vector<digit_type> &rhs);
 /// @}
 
-} // namespace comparisons
 } // namespace detail
 } // namespace tasty_int
 
-#endif // ifndef TASTY_INT_TASTY_INT_DETAIL_COMPARISONS_DIGITS_COMPARISON_OPERATORS_HPP
+#endif // ifndef TASTY_INT_TASTY_INT_DETAIL_DIGITS_COMPARISON_OPERATORS_HPP
