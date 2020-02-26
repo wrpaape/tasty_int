@@ -12,14 +12,14 @@ integral_from_digits(const std::vector<digit_type> &digits)
 {
     assert(!digits.empty());
 
-    std::uintmax_t integral = digits.front();
+    std::uintmax_t value = digits.front();
 
     if (digits.size() > 1) {
         auto next_digit  = static_cast<std::uintmax_t>(digits[1]);
-        integral        |= (next_digit << DIGIT_TYPE_BITS);
+        value           |= (next_digit << DIGIT_TYPE_BITS);
     }
 
-    return integral;
+    return value;
 }
 
 } // namespace conversions

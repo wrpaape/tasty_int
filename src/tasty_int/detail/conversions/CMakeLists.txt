@@ -136,6 +136,15 @@ add_library(
 )
 
 add_library(
+    tasty_int-detail-conversions-floating_point_from_digits
+    OBJECT
+    floating_point_from_digits.cpp
+    floating_point_from_digits.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
+)
+
+
+add_library(
     tasty_int-detail-conversions-token_values_from_digits
     OBJECT
     token_values_from_digits.cpp

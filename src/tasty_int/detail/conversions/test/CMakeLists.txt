@@ -178,6 +178,16 @@ add_google_test(
 )
 
 add_google_test(
+    NAME      tasty_int-detail-conversions-floating_point_from_digits_test
+    SOURCES   floating_point_from_digits_test.cpp
+              $<TARGET_OBJECTS:tasty_int-detail-conversions-floating_point_from_digits>
+              $<TARGET_OBJECTS:tasty_int-detail-conversions-digits_from_floating_point>
+              from_user_type_integration_test_common.hpp
+    LIBRARIES tasty_int-detail-conversions-digits_from_string
+              tasty_int_test
+)
+
+add_google_test(
     NAME      tasty_int-detail-conversions-token_values_from_digits_test
     SOURCES   token_values_from_digits_test.cpp
               $<TARGET_OBJECTS:tasty_int-detail-conversions-token_values_from_digits>
