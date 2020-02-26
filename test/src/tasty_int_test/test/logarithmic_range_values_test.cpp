@@ -19,8 +19,7 @@ make_printable(T value)
 template<typename T>
     requires std::is_arithmetic_v<T>
 class LogarithmicRangeValuesTest : public ::testing::Test
-{
-}; // class LogarithmicRangeValuesTest
+{}; // class LogarithmicRangeValuesTest
 
 TYPED_TEST_SUITE_P(LogarithmicRangeValuesTest);
 

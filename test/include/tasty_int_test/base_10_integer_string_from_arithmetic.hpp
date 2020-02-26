@@ -1,12 +1,12 @@
-#ifndef TASTY_INT_TASTY_INT_DETAIL_CONVERSIONS_TEST_FROM_USER_TYPE_INTEGRATION_TEST_COMMON_HPP
-#define TASTY_INT_TASTY_INT_DETAIL_CONVERSIONS_TEST_FROM_USER_TYPE_INTEGRATION_TEST_COMMON_HPP
+#ifndef TASTY_INT_TASTY_INT_TEST_BASE_10_INTEGER_STRING_FROM_ARITHMETIC_HPP
+#define TASTY_INT_TASTY_INT_TEST_BASE_10_INTEGER_STRING_FROM_ARITHMETIC_HPP
 
 #include <iomanip>
 #include <sstream>
 #include <type_traits>
 
 
-namespace from_user_type_integration_test_common {
+namespace tasty_int_test {
 
 /**
  * @brief Converts an arithmetic value to its base 10 integer string
@@ -27,11 +27,11 @@ base_10_integer_string_from_arithmetic(ArithmeticType value)
     base_10_string << std::setbase(10)
                    << std::fixed
                    << std::setprecision(0)
-                   << value;
+                   << +value; // promote to int if char
 
     return base_10_string.str();
 }
 
-} // namespace from_user_type_integration_test_common
+} // namespace tasty_int_test
 
-#endif // ifndef TASTY_INT_TASTY_INT_DETAIL_CONVERSIONS_TEST_FROM_USER_TYPE_INTEGRATION_TEST_COMMON_HPP
+#endif // ifndef TASTY_INT_TASTY_INT_TEST_BASE_10_INTEGER_STRING_FROM_ARITHMETIC_HPP

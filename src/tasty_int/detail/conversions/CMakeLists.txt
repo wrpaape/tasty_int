@@ -143,7 +143,6 @@ add_library(
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 
-
 add_library(
     tasty_int-detail-conversions-token_values_from_digits
     OBJECT

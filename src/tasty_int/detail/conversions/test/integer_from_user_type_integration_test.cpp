@@ -5,8 +5,8 @@
 
 #include "gtest/gtest.h"
 
-#include "tasty_int/detail/conversions/test/from_user_type_integration_test_common.hpp"
 #include "tasty_int/detail/test/integer_test_common.hpp"
+#include "tasty_int_test/base_10_integer_string_from_arithmetic.hpp"
 #include "tasty_int_test/logarithmic_range.hpp"
 
 
@@ -16,7 +16,7 @@ using tasty_int::detail::conversions::integer_from_floating_point;
 using tasty_int::detail::conversions::integer_from_signed_integral;
 using tasty_int::detail::conversions::integer_from_string;
 using tasty_int::detail::conversions::integer_from_unsigned_integral;
-using from_user_type_integration_test_common::base_10_integer_string_from_arithmetic;
+using tasty_int_test::base_10_integer_string_from_arithmetic;
 
 
 class SameNegativeIntegralValueTest
