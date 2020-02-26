@@ -171,6 +171,13 @@ foreach(base 36 64)
 endforeach()
 
 add_google_test(
+    NAME      tasty_int-detail-conversions-integral_from_digits_test
+    SOURCES   integral_from_digits_test.cpp
+              $<TARGET_OBJECTS:tasty_int-detail-conversions-integral_from_digits>
+    LIBRARIES tasty_int_test
+)
+
+add_google_test(
     NAME      tasty_int-detail-conversions-token_values_from_digits_test
     SOURCES   token_values_from_digits_test.cpp
               $<TARGET_OBJECTS:tasty_int-detail-conversions-token_values_from_digits>
