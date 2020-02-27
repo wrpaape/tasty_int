@@ -9,7 +9,7 @@ namespace comparison_test_common {
 /**
  * @brief EXPECT that `lhs == rhs`.
  *
- * @detail Exercises all 6 comparison operators on two expectedly-equal
+ * @details Exercises all 6 comparison operators on two expectedly-equal
  *     operands and emits non-fatal google test failures if any operators
  *     behave unexpectedly.  The boolean variants of the EXPECT macros are used
  *     here in place of EXPECT_LE, EXPECT_GE, etc... so that the caller may
@@ -45,7 +45,7 @@ expect_equal(const T &lhs,
 /**
  * @brief EXPECT that `lhs < rhs`.
  *
- * @detail Exercises all 6 comparison operators on two
+ * @details Exercises all 6 comparison operators on two
  *     expectedly-strictly-unequal operands and emits non-fatal google test
  *     failures if any operators behave unexpectedly.  The boolean variants of
  *     the EXPECT macros are used here in place of EXPECT_LE, EXPECT_GE, etc...

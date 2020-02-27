@@ -12,7 +12,7 @@ using tasty_int::detail::conversions::value_from_base_36_token;
 
 TEST(ValueFromBase36TokenTest, TokensLessThan0AreInvalid)
 {
-    for (char token = std::numeric_limits<char>::min(); token < '0'; ++token)
+    for (char token = std::numeric_limits<char>::lowest(); token < '0'; ++token)
         ASSERT_GE(value_from_base_36_token(token), 36); // assert to avoid flood
 }
 

@@ -15,7 +15,7 @@ namespace conversions {
 /**
  * @brief Retrieve the integral value of @p digits.
  *
- * @brief If the value of @p digits is larger than what can be represented by
+ * @details If the value of @p digits is larger than what can be represented by
  *    std::uintmax_t, the result is truncated to the least-significant
  *    `sizeof(std::uintmax_t)` bytes.
  *

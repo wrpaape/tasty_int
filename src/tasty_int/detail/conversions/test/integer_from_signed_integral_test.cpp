@@ -45,7 +45,7 @@ INSTANTIATE_TEST_SUITE_P(
     IntegerFromSignedIntegralTest,
     NegativeValuesTest,
     tasty_int_test::logarithmic_range<std::intmax_t>(
-        -1, std::numeric_limits<std::intmax_t>::min(), 2
+        -1, std::numeric_limits<std::intmax_t>::lowest(), 2
     )
 );
 

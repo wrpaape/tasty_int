@@ -172,7 +172,22 @@ add_google_test(
     NAME      tasty_int-detail-conversions-integral_from_digits_test
     SOURCES   integral_from_digits_test.cpp
               $<TARGET_OBJECTS:tasty_int-detail-conversions-integral_from_digits>
+              $<TARGET_OBJECTS:tasty_int-detail-conversions-digits_from_integral>
     LIBRARIES tasty_int_test
+)
+
+foreach(kind signed unsigned)
+    add_google_test(
+        NAME      tasty_int-detail-conversions-${kind}_integral_from_integer_test
+        SOURCES   ${kind}_integral_from_integer_test.cpp
+        LIBRARIES tasty_int-detail-conversions-${kind}_integral_from_integer
+                  tasty_int-detail-conversions-integer_from_${kind}_integral
+                  tasty_int_test
+    )
+endforeach()
+target_link_libraries(
+    tasty_int-detail-conversions-unsigned_integral_from_integer_test
+    tasty_int-detail-conversions-integer_from_signed_integral
 )
 
 add_google_test(

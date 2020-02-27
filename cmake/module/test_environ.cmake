@@ -48,7 +48,11 @@ if(BUILD_COVERAGE)
     include(CodeCoverage)
 
     append_coverage_compiler_flags()
-    add_compile_options(-O0)
+    if(MSVC)
+        add_compile_options(/O0)
+    else()
+        add_compile_options(-O0)
+    endif()
     setup_target_for_coverage_lcov(
         NAME       coverage
         EXECUTABLE ${CMAKE_CTEST_COMMAND}

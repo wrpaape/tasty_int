@@ -8,17 +8,11 @@
 #include <stdexcept>
 #include <sstream>
 
+#include "tasty_int_test/make_arithmetic_printable.hpp"
+
 
 namespace tasty_int_test {
 namespace detail {
-
-template<typename T>
-auto
-make_printable(T value)
-    requires std::is_arithmetic_v<T>
-{
-    return +value; // promote to int if char
-}
 
 template<typename T>
 void
@@ -29,7 +23,7 @@ check_logarithmic_scale(T scale)
         std::ostringstream error_message;
         error_message <<
             "tasty_int_test::logarithmic_range_values - scale ("
-            << make_printable(scale) << ") <= 1.";
+            << make_arithmetic_printable(scale) << ") <= 1.";
 
         throw std::invalid_argument(error_message.str());
     }
@@ -66,7 +60,7 @@ append_intermediate_logarithmic_values(T first, T scale, T last_mult,
  *
  *     { first [, first +/- scale [, first +/- scale^2] ...] [, last] }
  *
- * @detail If `first < last`, the sequence is ascending.  If `first > last`,
+ * @details If `first < last`, the sequence is ascending.  If `first > last`,
  *     the sequence is descending.  Otherwise, if `first == last`, the single
  *     value @p first is returned.
  *

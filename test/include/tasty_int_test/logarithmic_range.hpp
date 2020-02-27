@@ -15,7 +15,7 @@ namespace tasty_int_test {
  *
  *     { first [, first +/- scale [, first +/- scale^2] ...] [, last] }
  *
- * @detail If `first < last`, the sequence is ascending.  If `first > last`,
+ * @details If `first < last`, the sequence is ascending.  If `first > last`,
  *     the sequence is descending.  Otherwise, if `first == last`, the single
  *     value @p first is returned.
  *

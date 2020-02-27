@@ -12,7 +12,7 @@ using tasty_int::detail::conversions::value_from_base_64_token;
 
 TEST(ValueFromBase64TokenTest, TokensLessThanPlusAreInvalid)
 {
-    for (char token = std::numeric_limits<char>::min(); token < '+'; ++token)
+    for (char token = std::numeric_limits<char>::lowest(); token < '+'; ++token)
         ASSERT_GE(value_from_base_64_token(token), 64); // assert to avoid flood
 }
 

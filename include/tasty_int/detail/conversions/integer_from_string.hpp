@@ -13,7 +13,7 @@ namespace conversions {
 /**
  * @brief Constructs a new tasty_int::detail::Integer from @p tokens.
  *
- * @detail Leading whitespace is ignored.  If @p base is zero, the correct
+ * @details Leading whitespace is ignored.  If @p base is zero, the correct
  *     base is determined from the leading characters a la
  *     tasty_int::detail::conversions::base_prefix_from_string().  If @p tokens
  *     has a prefix associated with @p base, then it will be ignored (i.e.

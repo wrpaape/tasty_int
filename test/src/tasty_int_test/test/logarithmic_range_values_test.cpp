@@ -5,16 +5,10 @@
 
 #include "gtest/gtest.h"
 
+#include "tasty_int_test/make_arithmetic_printable.hpp"
+
 
 namespace {
-
-template<typename T>
-auto
-make_printable(T value)
-    requires std::is_arithmetic_v<T>
-{
-    return +value; // promote to int if char
-}
 
 template<typename T>
     requires std::is_arithmetic_v<T>
@@ -39,7 +33,7 @@ TYPED_TEST_P(LogarithmicRangeValuesTest, ThrowsIfScaleIsLessThanOne)
         std::ostringstream expected_message;
         expected_message <<
             "tasty_int_test::logarithmic_range_values - scale ("
-            << make_printable(scale) << ") <= 1.";
+            << tasty_int_test::make_arithmetic_printable(scale) << ") <= 1.";
         EXPECT_EQ(expected_message.str(), exception.what());
     }
 }
@@ -60,7 +54,7 @@ TYPED_TEST_P(LogarithmicRangeValuesTest, ThrowsIfScaleIsEqualToOne)
         std::ostringstream expected_message;
         expected_message <<
             "tasty_int_test::logarithmic_range_values - scale ("
-            << make_printable(scale) << ") <= 1.";
+            << tasty_int_test::make_arithmetic_printable(scale) << ") <= 1.";
         EXPECT_EQ(expected_message.str(), exception.what());
     }
 }

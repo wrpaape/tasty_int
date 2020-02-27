@@ -136,6 +136,25 @@ add_library(
 )
 
 add_library(
+    tasty_int-detail-conversions-unsigned_integral_from_integer
+    STATIC
+    unsigned_integral_from_integer.cpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/unsigned_integral_from_integer.hpp
+    $<TARGET_OBJECTS:tasty_int-detail-conversions-integral_from_digits>
+)
+
+add_library(
+    tasty_int-detail-conversions-signed_integral_from_integer
+    STATIC
+    signed_integral_from_integer.cpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/signed_integral_from_integer.hpp
+)
+target_link_libraries(
+    tasty_int-detail-conversions-signed_integral_from_integer
+    tasty_int-detail-conversions-unsigned_integral_from_integer
+)
+
+add_library(
     tasty_int-detail-conversions-floating_point_from_digits
     OBJECT
     floating_point_from_digits.cpp

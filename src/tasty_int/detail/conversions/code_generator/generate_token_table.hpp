@@ -13,7 +13,7 @@ namespace code_generator {
  * @brief Generates the source and header files for a particular
  *     tasty_int::detail::conversions::TokenTable mapping.
  *
- * @detail Programs may forward @p argc and @argv directly from main() along
+ * @details Programs may forward @p argc and @argv directly from main() along
  *     with the configured @p token_map mapping.  The command line arguments
  *     are interpretted as { <program name>, <token table name>, <path to
  *     output directory> }.  If these arguments aren't provided then a usage

@@ -14,7 +14,8 @@ template<typename ArithmeticType>
 struct TastyIntArtihmeticTypesConstructorTest : public ::testing::Test
 {
     static constexpr auto ZERO    = static_cast<ArithmeticType>(0);
-    static constexpr auto MINIMUM = std::numeric_limits<ArithmeticType>::min();
+    static constexpr auto MINIMUM =
+        std::numeric_limits<ArithmeticType>::lowest();
     static constexpr auto MAXIMUM = std::numeric_limits<ArithmeticType>::max();
 
     static constexpr ArithmeticType

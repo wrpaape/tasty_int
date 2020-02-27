@@ -19,7 +19,8 @@ class Base10IntegerStringFromArithmeticTest : public ::testing::Test
 {
 protected:
     static constexpr auto ZERO    = static_cast<ArithmeticType>(0);
-    static constexpr auto MINIMUM = std::numeric_limits<ArithmeticType>::min();
+    static constexpr auto MINIMUM =
+        std::numeric_limits<ArithmeticType>::lowest();
     static constexpr auto MAXIMUM = std::numeric_limits<ArithmeticType>::max();
 
     static constexpr ArithmeticType
@@ -32,7 +33,9 @@ protected:
         return lower_bound + static_cast<ArithmeticType>(range / 2.0L);
     }
 
-    static constexpr auto MEDIAN         = get_middle(MINIMUM, MAXIMUM);
+    static constexpr auto MEDIAN = std::is_signed_v<ArithmeticType>
+                                 ? ZERO // avoid overflow for long double
+                                 : get_middle(MINIMUM, MAXIMUM);
     static constexpr auto LOWER_QUARTILE = get_middle(MINIMUM, MEDIAN);
     static constexpr auto UPPER_QUARTILE = get_middle(MEDIAN,  MAXIMUM);
 

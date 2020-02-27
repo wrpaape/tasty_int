@@ -5,6 +5,8 @@
 #include <sstream>
 #include <type_traits>
 
+#include "tasty_int_test/make_arithmetic_printable.hpp"
+
 
 namespace tasty_int_test {
 
@@ -27,7 +29,7 @@ base_10_integer_string_from_arithmetic(ArithmeticType value)
     base_10_string << std::setbase(10)
                    << std::fixed
                    << std::setprecision(0)
-                   << +value; // promote to int if char
+                   << make_arithmetic_printable(value);
 
     return base_10_string.str();
 }

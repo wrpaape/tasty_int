@@ -21,9 +21,9 @@ struct BasePrefix
  * @brief Attempts to extract information about the numeric base/radix of
  *     interpretation from the leading characters of @p tokens.
  *
- * @detail A leading "0b" or "0B" is considered binary. A leading '0' with at
- * least one other token is considered octal.  A leading "0x" or "0X" is
- * considered hexidecimal.  All other @p tokens are considered decimal.
+ * @details A leading "0b" or "0B" is considered binary. A leading '0' with at
+ *     least one other token is considered octal.  A leading "0x" or "0X" is
+ *     considered hexidecimal.  All other @p tokens are considered decimal.
  *
  * @param[in] tokens a string of ASCII tokens
  *

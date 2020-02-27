@@ -34,7 +34,7 @@ public:
     /**
      * @brief Parses a tasty_int::detail::Integer from the provided input.
      *
-     * @detail Leading whitespace is ignored.  If input base is zero, the
+     * @details Leading whitespace is ignored.  If input base is zero, the
      *     correct base is determined from the leading tokens a la
      *     tasty_int::detail::conversions::base_prefix_from_string().
      *

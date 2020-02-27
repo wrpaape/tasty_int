@@ -84,5 +84,3 @@ using FilterTypes = decltype(
 } // namespace tasty_int_test
 
 #endif // ifndef TASTY_INT_TEST_DETAIL_FILTER_TYPES_HPP
-
-
