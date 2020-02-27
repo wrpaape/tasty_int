@@ -2,7 +2,7 @@
 
 #include <functional>
 
-#include "tasty_int/detail/digits_comparison_operators.hpp"
+#include "tasty_int/detail/digits_comparison.hpp"
 
 
 namespace tasty_int {

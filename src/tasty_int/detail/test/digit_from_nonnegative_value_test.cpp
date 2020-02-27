@@ -1,4 +1,4 @@
-#include "tasty_int/detail/conversions/digit_from_nonnegative_value.hpp"
+#include "tasty_int/detail/digit_from_nonnegative_value.hpp"
 
 #include <cmath>
 
@@ -15,7 +15,7 @@
 namespace {
 
 using tasty_int::detail::DIGIT_BASE;
-using tasty_int::detail::conversions::digit_from_nonnegative_value;
+using tasty_int::detail::digit_from_nonnegative_value;
 
 
 template<typename IntegralType>

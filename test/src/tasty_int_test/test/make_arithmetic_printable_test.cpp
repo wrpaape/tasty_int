@@ -30,16 +30,10 @@ test_value(ArithmeticType value)
 }
 
 
-template<typename ArithmeticType>
-    requires std::is_arithmetic_v<ArithmeticType>
-class MakeArithmeticPrintableTest : public ::testing::Test
-{}; // class MakeArithmeticPrintableTest
-
-
 template<typename FloatingPointType>
     requires std::is_floating_point_v<FloatingPointType>
 class MakeArithmeticPrintableFloatingPointTest
-    : public MakeArithmeticPrintableTest<FloatingPointType>
+    : public ::testing::Test
 {
 protected:
     static void
@@ -70,7 +64,7 @@ TYPED_TEST(MakeArithmeticPrintableFloatingPointTest, MaximumValueIsPreserved)
 template<typename IntegralType>
     requires std::is_integral_v<IntegralType>
 class MakeArithmeticPrintableIntegralTest
-    : public MakeArithmeticPrintableTest<IntegralType>
+    : public ::testing::Test
 {}; // class MakeArithmeticPrintableIntegralTest
 
 TYPED_TEST_SUITE(MakeArithmeticPrintableIntegralTest,

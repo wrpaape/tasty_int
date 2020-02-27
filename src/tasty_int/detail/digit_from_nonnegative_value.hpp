@@ -1,5 +1,5 @@
-#ifndef TASTY_INT_TASTY_INT_DETAIL_CONVERSIONS_DIGIT_FROM_NONNEGATIVE_VALUE_HPP
-#define TASTY_INT_TASTY_INT_DETAIL_CONVERSIONS_DIGIT_FROM_NONNEGATIVE_VALUE_HPP
+#ifndef TASTY_INT_TASTY_INT_DETAIL_DIGIT_FROM_NONNEGATIVE_VALUE_HPP
+#define TASTY_INT_TASTY_INT_DETAIL_DIGIT_FROM_NONNEGATIVE_VALUE_HPP
 
 #include <cassert>
 #include <cmath>
@@ -12,7 +12,6 @@
 
 namespace tasty_int {
 namespace detail {
-namespace conversions {
 
 /**
  * @brief Extracts the least-significant digit from @p a value.
@@ -70,8 +69,7 @@ digit_from_nonnegative_value(FloatingPointType value)
     return static_cast<digit_type>(std::fmod(value, FLOATING_POINT_DIGIT_BASE));
 }
 
-} // namespace conversions
 } // namespace detail
 } // namespace tasty_int
 
-#endif // ifndef TASTY_INT_TASTY_INT_DETAIL_CONVERSIONS_DIGIT_FROM_NONNEGATIVE_VALUE_HPP
+#endif // ifndef TASTY_INT_TASTY_INT_DETAIL_DIGIT_FROM_NONNEGATIVE_VALUE_HPP

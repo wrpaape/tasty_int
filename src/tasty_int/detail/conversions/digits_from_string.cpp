@@ -9,10 +9,10 @@
 #include <utility>
 
 #include "tasty_int/detail/conversions/codegen/digits_per_token_table.hpp"
-#include "tasty_int/detail/conversions/digit_from_nonnegative_value.hpp"
 #include "tasty_int/detail/conversions/ensure_base_is_supported.hpp"
 #include "tasty_int/detail/conversions/value_from_base_36_token.hpp"
 #include "tasty_int/detail/conversions/value_from_base_64_token.hpp"
+#include "tasty_int/detail/digit_from_nonnegative_value.hpp"
 
 
 namespace tasty_int {

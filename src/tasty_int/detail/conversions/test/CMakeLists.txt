@@ -23,14 +23,6 @@ endforeach()
 
 
 add_google_test(
-    NAME      tasty_int-detail-conversions-digit_from_nonnegative_value_test
-    SOURCES   digit_from_nonnegative_value_test.cpp
-    LIBRARIES tasty_int-detail-conversions-digit_from_nonnegative_value
-              tasty_int_test
-)
-
-
-add_google_test(
     NAME      tasty_int-detail-conversions-digits_from_integral_test
     SOURCES   digits_from_integral_test.cpp
               $<TARGET_OBJECTS:tasty_int-detail-conversions-digits_from_integral>
@@ -75,9 +67,9 @@ target_link_libraries(
 add_google_test(
     NAME      tasty_int-detail-conversions-digits_from_floating_point_test
     SOURCES   digits_from_floating_point_test.cpp
-              $<TARGET_OBJECTS:tasty_int-detail-conversions-digits_from_floating_point>
               $<TARGET_OBJECTS:tasty_int-detail-conversions-from_floating_point_test_common>
-    LIBRARIES tasty_int_test
+    LIBRARIES tasty_int-detail-conversions-digits_from_floating_point
+              tasty_int_test
 )
 
 add_google_test(
@@ -194,8 +186,8 @@ add_google_test(
     NAME      tasty_int-detail-conversions-floating_point_from_digits_test
     SOURCES   floating_point_from_digits_test.cpp
               $<TARGET_OBJECTS:tasty_int-detail-conversions-floating_point_from_digits>
-              $<TARGET_OBJECTS:tasty_int-detail-conversions-digits_from_floating_point>
     LIBRARIES tasty_int-detail-conversions-digits_from_string
+              tasty_int-detail-conversions-digits_from_floating_point
               tasty_int_test
 )
 

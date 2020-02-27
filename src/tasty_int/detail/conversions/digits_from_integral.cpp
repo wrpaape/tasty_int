@@ -1,6 +1,6 @@
 #include "tasty_int/detail/conversions/digits_from_integral.hpp"
 
-#include "tasty_int/detail/conversions/digit_from_nonnegative_value.hpp"
+#include "tasty_int/detail/digit_from_nonnegative_value.hpp"
 
 
 namespace tasty_int {

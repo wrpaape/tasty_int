@@ -10,14 +10,6 @@ foreach(base 36 64)
     )
 endforeach()
 
-add_library(tasty_int-detail-conversions-digit_from_nonnegative_value INTERFACE)
-target_sources(
-    tasty_int-detail-conversions-digit_from_nonnegative_value
-    INTERFACE
-    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
-    ${PROJECT_SRC_DIR}/tasty_int/detail/conversions/digit_from_nonnegative_value.hpp
-)
-
 add_library(
     tasty_int-detail-conversions-digits_from_integral
     OBJECT
@@ -26,7 +18,7 @@ add_library(
 )
 target_link_libraries(
     tasty_int-detail-conversions-digits_from_integral
-    tasty_int-detail-conversions-digit_from_nonnegative_value
+    tasty_int-detail-digit_from_nonnegative_value
 )
 
 foreach(kind signed unsigned)
@@ -56,13 +48,15 @@ endforeach()
 
 add_library(
     tasty_int-detail-conversions-digits_from_floating_point
-    OBJECT
+    STATIC
     digits_from_floating_point.cpp
     digits_from_floating_point.hpp
+    $<TARGET_OBJECTS:tasty_int-detail-trim_trailing_zero>
 )
 target_link_libraries(
     tasty_int-detail-conversions-digits_from_floating_point
-    tasty_int-detail-conversions-digit_from_nonnegative_value
+    tasty_int-detail-digit_from_nonnegative_value
+    tasty_int-detail-size_digits_from_nonnegative_floating_point
 )
 
 add_library(
@@ -99,7 +93,7 @@ target_link_libraries(
     tasty_int-detail-conversions-digits_from_string
     tasty_int-detail-conversions-value_from_base_36_token
     tasty_int-detail-conversions-value_from_base_64_token
-    tasty_int-detail-conversions-digit_from_nonnegative_value
+    tasty_int-detail-digit_from_nonnegative_value
 )
 
 add_library(

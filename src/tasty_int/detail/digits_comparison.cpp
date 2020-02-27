@@ -1,4 +1,4 @@
-#include "tasty_int/detail/digits_comparison_operators.hpp"
+#include "tasty_int/detail/digits_comparison.hpp"
 
 #include <algorithm>
 #include <functional>

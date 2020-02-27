@@ -37,6 +37,27 @@ add_google_test(
             ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 
+add_google_test(
+    NAME      tasty_int-detail-digit_from_nonnegative_value_test
+    SOURCES   digit_from_nonnegative_value_test.cpp
+    LIBRARIES tasty_int-detail-digit_from_nonnegative_value
+              tasty_int_test
+)
+
+add_google_test(
+    NAME      tasty_int-detail-trim_trailing_zero_test
+    SOURCES   trim_trailing_zero_test.cpp
+              $<TARGET_OBJECTS:tasty_int-detail-trim_trailing_zero>
+)
+
+add_google_test(
+    NAME      tasty_int-detail-size_digits_from_nonnegative_floating_point_test
+    SOURCES   size_digits_from_nonnegative_floating_point_test.cpp
+              $<TARGET_OBJECTS:tasty_int-detail-size_digits_from_nonnegative_floating_point>
+    LIBRARIES tasty_int-detail-conversions-digits_from_floating_point
+              tasty_int_test
+)
+
 add_library(tasty_int-detail-comparison_test_common INTERFACE)
 target_sources(
     tasty_int-detail-comparison_test_common
@@ -50,16 +71,25 @@ target_link_libraries(
 )
 
 add_google_test(
-    NAME      tasty_int-detail-digits_comparison_operators_test
-    SOURCES   digits_comparison_operators_test.cpp
-              $<TARGET_OBJECTS:tasty_int-detail-digits_comparison_operators>
+    NAME      tasty_int-detail-digits_comparison_test
+    SOURCES   digits_comparison_test.cpp
+              $<TARGET_OBJECTS:tasty_int-detail-digits_comparison>
     LIBRARIES tasty_int-detail-comparison_test_common
 )
 
 add_google_test(
-    NAME      tasty_int-detail-integer_comparison_operators_test
-    SOURCES   integer_comparison_operators_test.cpp
+    NAME      tasty_int-detail-integer_comparison_test
+    SOURCES   integer_comparison_test.cpp
     LIBRARIES tasty_int-detail-integer
               tasty_int-detail-comparison_test_common
               tasty_int-detail-integer_test_common
+)
+
+add_google_test(
+    NAME      tasty_int-detail-digits_addition_test
+    SOURCES   digits_addition_test.cpp
+    LIBRARIES tasty_int-detail-digits_addition
+              tasty_int-detail-conversions-digits_from_integral
+              tasty_int-detail-conversions-digits_from_floating_point
+              tasty_int_test
 )
