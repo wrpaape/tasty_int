@@ -179,6 +179,11 @@ std::string
 string_from_integer(const Integer &integer,
                     unsigned int   base)
 {
+    assert((integer.sign == Sign::NEGATIVE) ||
+           (integer.sign == Sign::ZERO)     ||
+           (integer.sign == Sign::POSITIVE));
+    assert(!integer.digits.empty());
+
     ensure_base_is_supported(base);
 
     StringConverter string_converter(base);

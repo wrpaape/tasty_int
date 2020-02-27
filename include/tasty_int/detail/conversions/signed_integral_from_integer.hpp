@@ -20,7 +20,7 @@ namespace conversions {
  * @param[in] integer an arbitrary-precision integer
  * @return the integral value of @p integer
  *
- * @pre @p digits is not empty
+ * @pre @p integer has a valid sign and at least one digit
  */
 std::intmax_t
 signed_integral_from_integer(const Integer &integer);

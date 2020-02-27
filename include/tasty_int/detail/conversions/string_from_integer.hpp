@@ -17,7 +17,11 @@ namespace conversions {
  * @param[in] base    the desired numeric base/radix of the output
  * @return the string representation of @p integer in base @p base
  *
- * @pre @p base is a supported numeric base
+ *  @throw std::invalid_argument if @p base is not a supported numeric
+ *      base/radix
+ *
+ * @pre @p integer has a valid sign and at least one digit
+ * @pre @p base is a supported numeric base/radix
  */
 std::string
 string_from_integer(const Integer &integer,

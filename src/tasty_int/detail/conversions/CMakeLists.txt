@@ -44,6 +44,8 @@ foreach(kind signed unsigned)
         integer_from_${kind}_integral.cpp
         ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/integer_from_${kind}_integral.hpp
         ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
+        ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
+        ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
     )
     target_link_libraries(
         tasty_int-detail-conversions-integer_from_${kind}_integral
@@ -69,6 +71,8 @@ add_library(
     integer_from_floating_point.cpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/integer_from_floating_point.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 target_link_libraries(
     tasty_int-detail-conversions-integer_from_floating_point
@@ -111,6 +115,8 @@ add_library(
     integer_from_string.cpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/integer_from_string.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 target_link_libraries(
     tasty_int-detail-conversions-integer_from_string
@@ -140,6 +146,9 @@ add_library(
     STATIC
     unsigned_integral_from_integer.cpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/unsigned_integral_from_integer.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
     $<TARGET_OBJECTS:tasty_int-detail-conversions-integral_from_digits>
 )
 
@@ -148,6 +157,9 @@ add_library(
     STATIC
     signed_integral_from_integer.cpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/signed_integral_from_integer.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 target_link_libraries(
     tasty_int-detail-conversions-signed_integral_from_integer
@@ -163,6 +175,20 @@ add_library(
 )
 
 add_library(
+    tasty_int-detail-conversions-floating_point_from_integer
+    STATIC
+    floating_point_from_integer.cpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/floating_point_from_integer.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
+)
+target_link_libraries(
+    tasty_int-detail-conversions-floating_point_from_integer
+    tasty_int-detail-conversions-floating_point_from_digits
+)
+
+add_library(
     tasty_int-detail-conversions-token_values_from_digits
     OBJECT
     token_values_from_digits.cpp
@@ -175,6 +201,9 @@ add_library(
     STATIC
     string_from_integer.cpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/string_from_integer.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
     $<TARGET_OBJECTS:tasty_int-detail-conversions-base_36_token_from_value>
     $<TARGET_OBJECTS:tasty_int-detail-conversions-base_64_token_from_value>
     $<TARGET_OBJECTS:tasty_int-detail-conversions-codegen-digits_per_token_table>

@@ -1,5 +1,7 @@
 #include "tasty_int/detail/conversions/floating_point_from_digits.hpp"
 
+#include <cmath>
+
 #include <limits>
 #include <string>
 
@@ -27,7 +29,7 @@ TEST_P(FloatingPointFromDigitsTest, InitialValuePreserved)
     long double initial_value = GetParam();
     auto digits = digits_from_floating_point(initial_value);
 
-    EXPECT_EQ(initial_value, floating_point_from_digits(digits));
+    EXPECT_EQ(std::trunc(initial_value), floating_point_from_digits(digits));
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -47,7 +49,7 @@ TEST(FloatingPointFromDigitsTest, OverflowProducesPositiveInfinity)
         ) + '0';
     auto overflow_digits = digits_from_string(overflow_string, 10);
 
-    EXPECT_EQ(std::numeric_limits<long double>::infinity(),
+    EXPECT_EQ(+std::numeric_limits<long double>::infinity(),
               floating_point_from_digits(overflow_digits));
 }
 

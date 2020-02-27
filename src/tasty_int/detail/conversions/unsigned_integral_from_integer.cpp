@@ -1,5 +1,7 @@
 #include "tasty_int/detail/conversions/unsigned_integral_from_integer.hpp"
 
+#include <cassert>
+
 #include "tasty_int/detail/conversions/integral_from_digits.hpp"
 
 
@@ -10,6 +12,11 @@ namespace conversions {
 std::uintmax_t
 unsigned_integral_from_integer(const Integer &integer)
 {
+    assert((integer.sign == Sign::NEGATIVE) ||
+           (integer.sign == Sign::ZERO)     ||
+           (integer.sign == Sign::POSITIVE));
+    assert(!integer.digits.empty());
+
     std::uintmax_t value = integral_from_digits(integer.digits);
 
     if (integer.sign < Sign::ZERO) {
