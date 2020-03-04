@@ -7,6 +7,7 @@
 
 #include "tasty_int/detail/conversions/base_prefix_from_string.hpp"
 #include "tasty_int/detail/conversions/digits_from_string.hpp"
+#include "tasty_int/detail/sign_from_digits.hpp"
 
 
 namespace tasty_int {
@@ -89,9 +90,6 @@ private:
     void
     ensure_tokens_are_nonempty() const;
 
-    static bool
-    is_zero(const std::vector<digit_type> &digits);
-
     std::string_view tokens;
     unsigned int     token_base;
 }; // class IntegerParser
@@ -106,19 +104,18 @@ Integer
 IntegerParser::parse_integer()
 {
     Integer result;
-    result.sign = Sign::POSITIVE;
 
     remove_leading_whitespace();
 
+    Sign tentative_sign = Sign::POSITIVE;
     if (token_base_supports_sign_prefix()) {
-        result.sign = parse_sign();
+        tentative_sign = parse_sign();
         parse_token_base();
     }
 
     result.digits = digits_from_string(tokens, token_base);
 
-    if (is_zero(result.digits))
-        result.sign = Sign::ZERO;
+    result.sign = sign_from_digits(result.digits, tentative_sign);
 
     return result;
 }
@@ -225,12 +222,6 @@ IntegerParser::ensure_tokens_are_nonempty() const
         throw std::invalid_argument(
             "tasty_int::detail::conversions::integer_from_string - empty tokens"
         );
-}
-
-bool
-IntegerParser::is_zero(const std::vector<digit_type> &digits)
-{
-    return (digits.size() == 1) && (digits.front() == 0);
 }
 
 } // namespace

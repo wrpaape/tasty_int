@@ -78,6 +78,7 @@ operator<=(const Integer &lhs,
 bool
 operator>=(const Integer &lhs,
            const Integer &rhs);
+/// @todo: TODO: arithmetic types
 /// @}
 
 } // namespace detail

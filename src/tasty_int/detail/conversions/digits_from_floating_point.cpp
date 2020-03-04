@@ -5,7 +5,7 @@
 
 #include "tasty_int/detail/digit_from_nonnegative_value.hpp"
 #include "tasty_int/detail/size_digits_from_nonnegative_floating_point.hpp"
-#include "tasty_int/detail/trim_trailing_zero.hpp"
+#include "tasty_int/detail/trailing_zero.hpp"
 
 
 namespace tasty_int {

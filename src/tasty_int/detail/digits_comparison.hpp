@@ -41,6 +41,7 @@ operator<=(const std::vector<digit_type> &lhs,
 bool
 operator>=(const std::vector<digit_type> &lhs,
            const std::vector<digit_type> &rhs);
+/// @todo: TODO: arithmetic types
 /// @}
 
 } // namespace detail

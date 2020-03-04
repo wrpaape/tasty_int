@@ -15,10 +15,19 @@ add_library(
 )
 
 add_library(
-    tasty_int-detail-trim_trailing_zero
+    tasty_int-detail-sign_from_digits
     OBJECT
-    trim_trailing_zero.cpp
-    trim_trailing_zero.hpp
+    sign_from_digits.cpp
+    sign_from_digits.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
+)
+
+add_library(
+    tasty_int-detail-trailing_zero
+    OBJECT
+    trailing_zero.cpp
+    trailing_zero.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 
@@ -41,18 +50,48 @@ target_link_libraries(
     tasty_int-detail-digits_comparison
 )
 
+add_library(tasty_int-detail-integral_digits_view INTERFACE)
+target_sources(
+    tasty_int-detail-integral_digits_view
+    INTERFACE
+    ${PROJECT_SRC_DIR}/tasty_int/detail/integral_digits_view.hpp
+)
+target_link_libraries(
+    tasty_int-detail-integral_digits_view
+    INTERFACE
+    tasty_int-detail-digit_from_nonnegative_value
+)
+
 add_library(
     tasty_int-detail-digits_addition
     STATIC
     digits_addition.cpp
     digits_addition.hpp
     $<TARGET_OBJECTS:tasty_int-detail-size_digits_from_nonnegative_floating_point>
-    $<TARGET_OBJECTS:tasty_int-detail-trim_trailing_zero>
+    $<TARGET_OBJECTS:tasty_int-detail-trailing_zero>
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 target_link_libraries(
     tasty_int-detail-digits_addition
     tasty_int-detail-digit_from_nonnegative_value
+    tasty_int-detail-integral_digits_view
+)
+
+add_library(
+    tasty_int-detail-digits_subtraction
+    STATIC
+    digits_subtraction.cpp
+    digits_subtraction.hpp
+    $<TARGET_OBJECTS:tasty_int-detail-size_digits_from_nonnegative_floating_point>
+    $<TARGET_OBJECTS:tasty_int-detail-trailing_zero>
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
+)
+target_link_libraries(
+    tasty_int-detail-digits_subtraction
+    tasty_int-detail-digits_addition
+    tasty_int-detail-digit_from_nonnegative_value
+    tasty_int-detail-sign_from_digits
 )
 
 add_subdirectory(conversions)

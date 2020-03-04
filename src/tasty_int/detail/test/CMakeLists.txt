@@ -45,9 +45,9 @@ add_google_test(
 )
 
 add_google_test(
-    NAME      tasty_int-detail-trim_trailing_zero_test
-    SOURCES   trim_trailing_zero_test.cpp
-              $<TARGET_OBJECTS:tasty_int-detail-trim_trailing_zero>
+    NAME    tasty_int-detail-trailing_zero_test
+    SOURCES trailing_zero_test.cpp
+            $<TARGET_OBJECTS:tasty_int-detail-trailing_zero>
 )
 
 add_google_test(
@@ -56,6 +56,13 @@ add_google_test(
               $<TARGET_OBJECTS:tasty_int-detail-size_digits_from_nonnegative_floating_point>
     LIBRARIES tasty_int-detail-conversions-digits_from_floating_point
               tasty_int_test
+)
+
+add_google_test(
+    NAME      tasty_int-detail-sign_from_digits_test
+    SOURCES   sign_from_digits_test.cpp
+              $<TARGET_OBJECTS:tasty_int-detail-sign_from_digits>
+    LIBRARIES tasty_int-detail-sign_test_common
 )
 
 add_library(tasty_int-detail-comparison_test_common INTERFACE)
@@ -86,9 +93,50 @@ add_google_test(
 )
 
 add_google_test(
+    NAME      tasty_int-detail-integral_digits_view_test
+    SOURCES   integral_digits_view_test
+    LIBRARIES tasty_int-detail-integral_digits_view
+              tasty_int-detail-digit_from_nonnegative_value
+              tasty_int_test
+)
+
+add_library(tasty_int-detail-binary_digits_operation_test_common INTERFACE)
+target_sources(
+    tasty_int-detail-binary_digits_operation_test_common
+    INTERFACE
+    ${CMAKE_CURRENT_LIST_DIR}/binary_digits_operation_test_common.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
+)
+
+add_google_test(
     NAME      tasty_int-detail-digits_addition_test
     SOURCES   digits_addition_test.cpp
     LIBRARIES tasty_int-detail-digits_addition
+              tasty_int-detail-conversions-digits_from_integral
+              tasty_int-detail-conversions-digits_from_floating_point
+              tasty_int-detail-binary_digits_operation_test_common
+              tasty_int_test
+)
+
+add_google_test(
+    NAME      tasty_int-detail-digits_subtraction_test
+    SOURCES   digits_subtraction_test.cpp
+              $<TARGET_OBJECTS:tasty_int-detail-sign_from_digits>
+    LIBRARIES tasty_int-detail-digits_subtraction
+              tasty_int-detail-binary_digits_operation_test_common
+              tasty_int-detail-integer_test_common
+              tasty_int-detail-conversions-digits_from_integral
+              tasty_int-detail-conversions-digits_from_floating_point
+              tasty_int-detail-conversions-sign_from_signed_arithmetic
+              tasty_int-detail-conversions-sign_from_unsigned_arithmetic
+              tasty_int_test
+)
+
+add_google_test(
+    NAME      tasty_int-detail-digits_subtraction_arithmetic_integration_test
+    SOURCES   digits_subtraction_arithmetic_integration_test.cpp
+    LIBRARIES tasty_int-detail-digits_subtraction
+              tasty_int-detail-integer_test_common
               tasty_int-detail-conversions-digits_from_integral
               tasty_int-detail-conversions-digits_from_floating_point
               tasty_int_test

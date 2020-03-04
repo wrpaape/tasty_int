@@ -1,4 +1,4 @@
-#include "tasty_int/detail/trim_trailing_zero.hpp"
+#include "tasty_int/detail/trailing_zero.hpp"
 
 #include "gtest/gtest.h"
 
@@ -6,8 +6,29 @@
 namespace {
 
 using tasty_int::detail::digit_type;
+using tasty_int::detail::have_trailing_zero;
 using tasty_int::detail::trim_trailing_zero;
 
+TEST(HaveTrailingZeroTest, SingleZeroDoesNotHaveTrailingZero)
+{
+    std::vector<digit_type> zero = { 0 };
+
+    EXPECT_FALSE(have_trailing_zero(zero));
+}
+
+TEST(HaveTrailingZeroTest, TrailingZeroHasTrailingZero)
+{
+    std::vector<digit_type> trailing_zero = { 0, 0 };
+
+    EXPECT_TRUE(have_trailing_zero(trailing_zero));
+}
+
+TEST(HaveTrailingZeroTest, TrailingNonzeroDoesNotHaveTrailingZero)
+{
+    std::vector<digit_type> trailing_nonzero = { 0, 1 };
+
+    EXPECT_FALSE(have_trailing_zero(trailing_nonzero));
+}
 
 TEST(TrimTrailingZeroTest, TrimTrailingZeroDoesNotTrimSingleZero)
 {
@@ -19,7 +40,7 @@ TEST(TrimTrailingZeroTest, TrimTrailingZeroDoesNotTrimSingleZero)
     EXPECT_EQ(after_trim, digits);
 }
 
-TEST(TrimTrailingZeroTest, TrimTrailingZeroTrimsExtraTrailingZero)
+TEST(TrimTrailingZeroTest, TrimTrailingZeroTrimsTrailingZero)
 {
     std::vector<digit_type> digits     = { 0, 0 };
     std::vector<digit_type> after_trim = { 0 };

@@ -51,7 +51,7 @@ add_library(
     STATIC
     digits_from_floating_point.cpp
     digits_from_floating_point.hpp
-    $<TARGET_OBJECTS:tasty_int-detail-trim_trailing_zero>
+    $<TARGET_OBJECTS:tasty_int-detail-trailing_zero>
 )
 target_link_libraries(
     tasty_int-detail-conversions-digits_from_floating_point
@@ -116,6 +116,7 @@ target_link_libraries(
     tasty_int-detail-conversions-integer_from_string
     tasty_int-detail-conversions-digits_from_string
     tasty_int-detail-conversions-base_prefix_from_string
+    tasty_int-detail-sign_from_digits
 )
 
 foreach(base 36 64)
