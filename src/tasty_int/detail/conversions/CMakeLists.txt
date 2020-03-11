@@ -55,7 +55,7 @@ add_library(
 )
 target_link_libraries(
     tasty_int-detail-conversions-digits_from_floating_point
-    tasty_int-detail-digit_from_nonnegative_value
+    tasty_int-detail-floating_point_digits_iterator
     tasty_int-detail-size_digits_from_nonnegative_floating_point
 )
 

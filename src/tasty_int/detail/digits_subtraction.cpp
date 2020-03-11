@@ -2,6 +2,7 @@
 
 #include "tasty_int/detail/digits_addition.hpp"
 #include "tasty_int/detail/digit_from_nonnegative_value.hpp"
+#include "tasty_int/detail/floating_point_digits_iterator.hpp"
 #include "tasty_int/detail/integral_digits_view.hpp"
 #include "tasty_int/detail/sign_from_digits.hpp"
 #include "tasty_int/detail/size_digits_from_nonnegative_floating_point.hpp"
@@ -111,17 +112,16 @@ digit_accumulator_type
 fixed_add_complement(long double              addend,
                      std::vector<digit_type> &augend)
 {
-    constexpr long double LONG_DOUBLE_DIGIT_BASE = DIGIT_BASE;
-
+    FloatingPointDigitsIterator addend_cursor(addend);
     digit_accumulator_type carry = 0;
-    auto cursor     = augend.begin();
-    auto augend_end = augend.end();
+    auto augend_cursor           = augend.begin();
+    auto augend_end              = augend.end();
     do {
-        auto addend_digit = digit_from_nonnegative_value(addend);
-        addend /= LONG_DOUBLE_DIGIT_BASE;
+        auto addend_digit = *addend_cursor;
+        ++addend_cursor;
         auto addend_digit_compliment = make_digit_complement(addend_digit);
-        carry = add_at(addend_digit_compliment + carry, cursor);
-    } while (++cursor != augend_end);
+        carry = add_at(addend_digit_compliment + carry, augend_cursor);
+    } while (++augend_cursor != augend_end);
 
     return carry;
 }

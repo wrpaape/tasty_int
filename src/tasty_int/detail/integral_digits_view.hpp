@@ -1,8 +1,8 @@
 #ifndef TASTY_INT_TASTY_INT_DETAIL_INTEGRAL_DIGITS_VIEW_HPP
 #define TASTY_INT_TASTY_INT_DETAIL_INTEGRAL_DIGITS_VIEW_HPP
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 
 #include "tasty_int/detail/digit_from_nonnegative_value.hpp"
 

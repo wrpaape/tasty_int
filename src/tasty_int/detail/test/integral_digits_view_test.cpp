@@ -16,7 +16,7 @@ using tasty_int::detail::DIGIT_TYPE_MAX;
 using tasty_int::detail::DIGIT_TYPE_BITS;
 
 
-class IntegralDigitsViewTest : public :: testing::TestWithParam<std::uintmax_t>
+class IntegralDigitsViewTest : public ::testing::TestWithParam<std::uintmax_t>
 {}; // class IntegralDigitsViewTest
 
 TEST_P(IntegralDigitsViewTest, LowDigit)

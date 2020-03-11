@@ -8,6 +8,7 @@
 #include <utility>
 
 #include "tasty_int/detail/digit_from_nonnegative_value.hpp"
+#include "tasty_int/detail/floating_point_digits_iterator.hpp"
 #include "tasty_int/detail/integral_digits_view.hpp"
 #include "tasty_int/detail/size_digits_from_nonnegative_floating_point.hpp"
 #include "tasty_int/detail/trailing_zero.hpp"
@@ -128,19 +129,18 @@ digit_accumulator_type
 fixed_add(long double              addend,
           std::vector<digit_type> &augend)
 {
-    constexpr long double LONG_DOUBLE_DIGIT_BASE = DIGIT_BASE;
-
+    FloatingPointDigitsIterator addend_cursor(addend);
     digit_accumulator_type carry = 0;
-    auto cursor                  = augend.begin();
-    auto end                     = augend.end();
+    auto augend_cursor           = augend.begin();
+    auto augned_end              = augend.end();
     do {
-        carry += *cursor;
-        carry += digit_from_nonnegative_value(addend);
-        addend /= LONG_DOUBLE_DIGIT_BASE;
+        carry += *augend_cursor;
+        carry += *addend_cursor;
+        ++addend_cursor;
 
-        *cursor   = digit_from_nonnegative_value(carry);
-        carry   >>= DIGIT_TYPE_BITS;
-    } while (++cursor != end);
+        *augend_cursor   = digit_from_nonnegative_value(carry);
+        carry          >>= DIGIT_TYPE_BITS;
+    } while (++augend_cursor != augned_end);
 
     return carry;
 }

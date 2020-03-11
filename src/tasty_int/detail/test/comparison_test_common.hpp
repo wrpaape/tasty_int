@@ -18,10 +18,10 @@ namespace comparison_test_common {
  * @param[in] lhs the left-hand operand
  * @param[in] rhs the right-hand operand
  */
-template<typename T>
+template<typename T, typename U>
 void
 expect_equal(const T &lhs,
-             const T &rhs)
+             const U &rhs)
 {
     EXPECT_TRUE( lhs == rhs);
     EXPECT_TRUE( rhs == lhs);
@@ -55,10 +55,10 @@ expect_equal(const T &lhs,
  * @param[in] lesser the left-hand operand
  * @param[in] greater the right-hand operand
  */
-template<typename T>
+template<typename T, typename U>
 void
 expect_unequal(const T &lesser,
-               const T &greater)
+               const U &greater)
 {
     EXPECT_TRUE(lesser  != greater);
     EXPECT_TRUE(greater != lesser);

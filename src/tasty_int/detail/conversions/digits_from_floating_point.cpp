@@ -3,7 +3,7 @@
 #include <cassert>
 #include <cmath>
 
-#include "tasty_int/detail/digit_from_nonnegative_value.hpp"
+#include "tasty_int/detail/floating_point_digits_iterator.hpp"
 #include "tasty_int/detail/size_digits_from_nonnegative_floating_point.hpp"
 #include "tasty_int/detail/trailing_zero.hpp"
 
@@ -17,14 +17,13 @@ void
 fill_digits(long double              value,
             std::vector<digit_type> &result)
 {
-    constexpr long double LONG_DOUBLE_DIGIT_BASE = DIGIT_BASE;
-
-    auto cursor = result.begin();
-    auto end    = result.end();
+    FloatingPointDigitsIterator value_cursor(value);
+    auto result_cursor = result.begin();
+    auto result_end    = result.end();
     do {
-        *cursor = digit_from_nonnegative_value(value);
-        value /= LONG_DOUBLE_DIGIT_BASE;
-    } while (++cursor != end);
+        *result_cursor = *value_cursor;
+        ++value_cursor;
+    } while (++result_cursor != result_end);
 }
 
 } // namespace

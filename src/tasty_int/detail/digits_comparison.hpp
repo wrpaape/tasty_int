@@ -21,27 +21,98 @@ namespace detail {
 bool
 operator==(const std::vector<digit_type> &lhs,
            const std::vector<digit_type> &rhs);
+bool
+operator==(const std::vector<digit_type> &lhs,
+           std::uintmax_t                 rhs);
+bool
+operator==(std::uintmax_t                 lhs,
+           const std::vector<digit_type> &rhs);
+bool
+operator==(const std::vector<digit_type> &lhs,
+           long double                    rhs);
+bool
+operator==(long double                    lhs,
+           const std::vector<digit_type> &rhs);
 
 bool
 operator!=(const std::vector<digit_type> &lhs,
+           const std::vector<digit_type> &rhs);
+bool
+operator!=(const std::vector<digit_type> &lhs,
+           std::uintmax_t                 rhs);
+bool
+operator!=(std::uintmax_t                 lhs,
+           const std::vector<digit_type> &rhs);
+bool
+operator!=(const std::vector<digit_type> &lhs,
+           long double                    rhs);
+bool
+operator!=(long double                    lhs,
            const std::vector<digit_type> &rhs);
 
 bool
 operator<(const std::vector<digit_type> &lhs,
           const std::vector<digit_type> &rhs);
+bool
+operator<(const std::vector<digit_type> &lhs,
+          std::uintmax_t                 rhs);
+bool
+operator<(std::uintmax_t                 lhs,
+          const std::vector<digit_type> &rhs);
+bool
+operator<(const std::vector<digit_type> &lhs,
+          long double                    rhs);
+bool
+operator<(long double                    lhs,
+          const std::vector<digit_type> &rhs);
 
 bool
 operator>(const std::vector<digit_type> &lhs,
+          const std::vector<digit_type> &rhs);
+bool
+operator>(const std::vector<digit_type> &lhs,
+          std::uintmax_t                 rhs);
+bool
+operator>(std::uintmax_t                 lhs,
+          const std::vector<digit_type> &rhs);
+bool
+operator>(const std::vector<digit_type> &lhs,
+          long double                    rhs);
+bool
+operator>(long double                    lhs,
           const std::vector<digit_type> &rhs);
 
 bool
 operator<=(const std::vector<digit_type> &lhs,
            const std::vector<digit_type> &rhs);
+bool
+operator<=(const std::vector<digit_type> &lhs,
+           std::uintmax_t                 rhs);
+bool
+operator<=(std::uintmax_t                 lhs,
+           const std::vector<digit_type> &rhs);
+bool
+operator<=(const std::vector<digit_type> &lhs,
+           long double                    rhs);
+bool
+operator<=(long double                    lhs,
+           const std::vector<digit_type> &rhs);
 
 bool
 operator>=(const std::vector<digit_type> &lhs,
            const std::vector<digit_type> &rhs);
-/// @todo: TODO: arithmetic types
+bool
+operator>=(const std::vector<digit_type> &lhs,
+           std::uintmax_t                 rhs);
+bool
+operator>=(std::uintmax_t                 lhs,
+           const std::vector<digit_type> &rhs);
+bool
+operator>=(const std::vector<digit_type> &lhs,
+           long double                    rhs);
+bool
+operator>=(long double                    lhs,
+           const std::vector<digit_type> &rhs);
 /// @}
 
 } // namespace detail

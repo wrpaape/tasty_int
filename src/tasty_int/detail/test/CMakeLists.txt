@@ -80,8 +80,11 @@ target_link_libraries(
 add_google_test(
     NAME      tasty_int-detail-digits_comparison_test
     SOURCES   digits_comparison_test.cpp
-              $<TARGET_OBJECTS:tasty_int-detail-digits_comparison>
-    LIBRARIES tasty_int-detail-comparison_test_common
+    LIBRARIES tasty_int-detail-digits_comparison
+              tasty_int-detail-conversions-digits_from_integral
+              tasty_int-detail-conversions-digits_from_floating_point
+              tasty_int-detail-comparison_test_common
+              tasty_int_test
 )
 
 add_google_test(
@@ -96,6 +99,14 @@ add_google_test(
     NAME      tasty_int-detail-integral_digits_view_test
     SOURCES   integral_digits_view_test
     LIBRARIES tasty_int-detail-integral_digits_view
+              tasty_int-detail-digit_from_nonnegative_value
+              tasty_int_test
+)
+
+add_google_test(
+    NAME      tasty_int-detail-floating_point_digits_iterator_test
+    SOURCES   floating_point_digits_iterator_test
+    LIBRARIES tasty_int-detail-floating_point_digits_iterator
               tasty_int-detail-digit_from_nonnegative_value
               tasty_int_test
 )
