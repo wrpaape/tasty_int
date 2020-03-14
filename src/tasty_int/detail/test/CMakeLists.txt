@@ -58,6 +58,16 @@ add_google_test(
               tasty_int_test
 )
 
+foreach(kind signed unsigned)
+    add_google_test(
+        NAME      tasty_int-detail-sign_from_${kind}_arithmetic_test
+        SOURCES   sign_from_${kind}_arithmetic_test.cpp
+                  $<TARGET_OBJECTS:tasty_int-detail-sign_test_common>
+        LIBRARIES tasty_int-detail-sign_from_${kind}_arithmetic
+                  tasty_int_test
+    )
+endforeach()
+
 add_google_test(
     NAME      tasty_int-detail-sign_from_digits_test
     SOURCES   sign_from_digits_test.cpp
@@ -90,9 +100,14 @@ add_google_test(
 add_google_test(
     NAME      tasty_int-detail-integer_comparison_test
     SOURCES   integer_comparison_test.cpp
+              $<TARGET_OBJECTS:tasty_int-detail-sign_from_digits>
     LIBRARIES tasty_int-detail-integer
+              tasty_int-detail-conversions-digits_from_integral
+              tasty_int-detail-conversions-integer_from_signed_integral
+              tasty_int-detail-conversions-integer_from_unsigned_integral
               tasty_int-detail-comparison_test_common
               tasty_int-detail-integer_test_common
+              tasty_int_test
 )
 
 add_google_test(
@@ -134,12 +149,12 @@ add_google_test(
     SOURCES   digits_subtraction_test.cpp
               $<TARGET_OBJECTS:tasty_int-detail-sign_from_digits>
     LIBRARIES tasty_int-detail-digits_subtraction
-              tasty_int-detail-binary_digits_operation_test_common
-              tasty_int-detail-integer_test_common
+              tasty_int-detail-sign_from_signed_arithmetic
+              tasty_int-detail-sign_from_unsigned_arithmetic
               tasty_int-detail-conversions-digits_from_integral
               tasty_int-detail-conversions-digits_from_floating_point
-              tasty_int-detail-conversions-sign_from_signed_arithmetic
-              tasty_int-detail-conversions-sign_from_unsigned_arithmetic
+              tasty_int-detail-binary_digits_operation_test_common
+              tasty_int-detail-integer_test_common
               tasty_int_test
 )
 

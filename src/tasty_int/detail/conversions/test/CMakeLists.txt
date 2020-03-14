@@ -11,16 +11,6 @@ foreach(base 36 64)
     )
 endforeach()
 
-foreach(kind signed unsigned)
-    add_google_test(
-        NAME      tasty_int-detail-conversions-sign_from_${kind}_arithmetic_test
-        SOURCES   sign_from_${kind}_arithmetic_test.cpp
-                  $<TARGET_OBJECTS:tasty_int-detail-sign_test_common>
-        LIBRARIES tasty_int-detail-conversions-sign_from_${kind}_arithmetic
-                  tasty_int_test
-    )
-endforeach()
-
 
 add_google_test(
     NAME      tasty_int-detail-conversions-digits_from_integral_test

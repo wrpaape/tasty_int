@@ -23,6 +23,7 @@ using tasty_int::detail::DIGIT_TYPE_MAX;
 using tasty_int::detail::DIGIT_BASE;
 using tasty_int::detail::conversions::digits_from_integral;
 using tasty_int::detail::conversions::digits_from_floating_point;
+using comparison_test_common::InequalityTestParam;
 
 
 class DigitsAndDigitsEqualityTest
@@ -59,7 +60,7 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
-using DigitsAndDigitsInequalityTestParam = std::pair<
+using DigitsAndDigitsInequalityTestParam = InequalityTestParam<
     std::vector<digit_type>,
     std::vector<digit_type>
 >;
@@ -70,8 +71,8 @@ class DigitsAndDigitsInequalityTest
 
 TEST_P(DigitsAndDigitsInequalityTest, LhsLessThanRhs)
 {
-    const std::vector<digit_type> &lesser  = GetParam().first;
-    const std::vector<digit_type> &greater = GetParam().second;
+    const std::vector<digit_type> &lesser  = GetParam().smaller;
+    const std::vector<digit_type> &greater = GetParam().larger;
 
     comparison_test_common::expect_unequal(lesser, greater);
 }
@@ -81,12 +82,12 @@ INSTANTIATE_TEST_SUITE_P(
     DigitsAndDigitsInequalityTest,
     ::testing::ValuesIn(
         std::vector<DigitsAndDigitsInequalityTestParam> {
-            { { 0 },              /* < */ { 1 } },
-            { { 1 },              /* < */ { 0, 1 } },
-            { { DIGIT_TYPE_MAX }, /* < */ { 0, 1 } },
-            { { 1, 1, 1 },        /* < */ { 1, 1, 2 } },
-            { { 1, 1, 1 },        /* < */ { 1, 2, 1 } },
-            { { 1, 1, 1 },        /* < */ { 2, 1, 1 } }
+            { .smaller = { 0 },              .larger = { 1 } },
+            { .smaller = { 1 },              .larger = { 0, 1 } },
+            { .smaller = { DIGIT_TYPE_MAX }, .larger = { 0, 1 } },
+            { .smaller = { 1, 1, 1 },        .larger = { 1, 1, 2 } },
+            { .smaller = { 1, 1, 1 },        .larger = { 1, 2, 1 } },
+            { .smaller = { 1, 1, 1 },        .larger = { 2, 1, 1 } }
         }
     )
 );
@@ -112,19 +113,19 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
-using DigitsAndIntegralInequalityTestParam = std::pair<
+using DigitsSmallerThanIntegralTestParam = InequalityTestParam<
     std::vector<digit_type>,
     std::uintmax_t
 >;
 
 class DigitsLessThanIntegralTest
-    : public ::testing::TestWithParam<DigitsAndIntegralInequalityTestParam>
+    : public ::testing::TestWithParam<DigitsSmallerThanIntegralTestParam>
 {}; // class DigitsLessThanIntegralTest
 
 TEST_P(DigitsLessThanIntegralTest, LhsLessThanRhs)
 {
-    const std::vector<digit_type> &lesser  = GetParam().first;
-    std::uintmax_t                 greater = GetParam().second;
+    const std::vector<digit_type> &lesser  = GetParam().smaller;
+    std::uintmax_t                 greater = GetParam().larger;
 
     comparison_test_common::expect_unequal(lesser, greater);
 }
@@ -133,7 +134,7 @@ INSTANTIATE_TEST_SUITE_P(
     DigitsComparisonTest,
     DigitsLessThanIntegralTest,
     ::testing::ValuesIn(
-        std::vector<DigitsAndIntegralInequalityTestParam> {
+        std::vector<DigitsSmallerThanIntegralTestParam> {
             { { 0 },              /* < */ 1  },
             { { 1 },              /* < */ 2  },
             { { DIGIT_TYPE_MAX }, /* < */ DIGIT_BASE },
@@ -150,14 +151,19 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
+using IntegralSmallerThanDigitsTestParam = InequalityTestParam<
+    std::uintmax_t,
+    std::vector<digit_type>
+>;
+
 class IntegralLessThanDigitsTest
-    : public ::testing::TestWithParam<DigitsAndIntegralInequalityTestParam>
+    : public ::testing::TestWithParam<IntegralSmallerThanDigitsTestParam>
 {}; // class IntegralLessThanDigitsTest
 
 TEST_P(IntegralLessThanDigitsTest, LhsLessThanRhs)
 {
-    std::uintmax_t                 lesser  = GetParam().second;
-    const std::vector<digit_type> &greater = GetParam().first;
+    std::uintmax_t                 lesser  = GetParam().smaller;
+    const std::vector<digit_type> &greater = GetParam().larger;
 
     comparison_test_common::expect_unequal(lesser, greater);
 }
@@ -166,18 +172,18 @@ INSTANTIATE_TEST_SUITE_P(
     DigitsComparisonTest,
     IntegralLessThanDigitsTest,
     ::testing::ValuesIn(
-        std::vector<DigitsAndIntegralInequalityTestParam> {
-            { { 1 },    /* > */ 0  },
-            { { 2 },    /* > */ 1  },
-            { { 0, 1 }, /* > */ DIGIT_TYPE_MAX },
-            { { 1, 1 }, /* > */ DIGIT_BASE  },
+        std::vector<IntegralSmallerThanDigitsTestParam> {
+            { .smaller = 0,              .larger = { 1 } },
+            { .smaller = 1,              .larger = { 2 } },
+            { .smaller = DIGIT_TYPE_MAX, .larger = { 0, 1 } },
+            { .smaller = DIGIT_BASE,     .larger = { 1, 1 } },
             {
-                { 0, 0, 1 },
-                std::numeric_limits<std::uintmax_t>::max()
+                .smaller = std::numeric_limits<std::uintmax_t>::max(),
+                .larger  = { 0, 0, 1 }
             },
             {
-                { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX },
-                std::numeric_limits<std::uintmax_t>::max() - 1
+                .smaller = std::numeric_limits<std::uintmax_t>::max() - 1,
+                .larger  = { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX }
             }
         }
     )
@@ -204,19 +210,19 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
-using DigitsAndFloatingPointInequalityTestParam = std::pair<
+using DigitsSmallerThanFloatingPointTestParam = InequalityTestParam<
     std::vector<digit_type>,
     long double   
 >;
 
 class DigitsLessThanFloatingPointTest
-    : public ::testing::TestWithParam<DigitsAndFloatingPointInequalityTestParam>
+    : public ::testing::TestWithParam<DigitsSmallerThanFloatingPointTestParam>
 {}; // class DigitsLessThanFloatingPointTest
 
 TEST_P(DigitsLessThanFloatingPointTest, LhsLessThanRhs)
 {
-    const std::vector<digit_type> &lesser  = GetParam().first;
-    long double                    greater = GetParam().second;
+    const std::vector<digit_type> &lesser  = GetParam().smaller;
+    long double                    greater = GetParam().larger;
 
     comparison_test_common::expect_unequal(lesser, greater);
 }
@@ -225,33 +231,41 @@ INSTANTIATE_TEST_SUITE_P(
     DigitsComparisonTest,
     DigitsLessThanFloatingPointTest,
     ::testing::ValuesIn(
-        std::vector<DigitsAndFloatingPointInequalityTestParam> {
-            { { 0 },              /* < */ 1.0L  },
-            { { 0 },              /* < */ 1.5L  },
-            { { 1 },              /* < */ 2.1L  },
-            { { DIGIT_TYPE_MAX }, /* < */ DIGIT_BASE },
-            { { 0, 1 },           /* < */ DIGIT_BASE + 1.1L  },
+        std::vector<DigitsSmallerThanFloatingPointTestParam> {
+            { .smaller = { 0 },              .larger = 1.0L  },
+            { .smaller = { 0 },              .larger = 1.5L  },
+            { .smaller = { 1 },              .larger = 2.1L  },
+            { .smaller = { DIGIT_TYPE_MAX }, .larger = DIGIT_BASE },
+            { .smaller = { 0, 1 },           .larger = DIGIT_BASE + 1.1L },
             {
-                digits_from_floating_point(1.0e19L), /* < */ 1.1e20L
+                .smaller = digits_from_floating_point(1.0e19L),
+                .larger  = 1.1e20L
             },
             {
-                digits_from_floating_point(1.0e20L), /* < */ 1.00000001e20L
+                .smaller = digits_from_floating_point(1.0e20L),
+                .larger  =  1.00000001e20L
             },
-            {   { DIGIT_TYPE_MAX },
-                std::numeric_limits<long double>::max()
+            {
+                .smaller = { DIGIT_TYPE_MAX },
+                .larger  = std::numeric_limits<long double>::max()
             }
         }
     )
 );
 
+using FloatingPointSmallerThanDigitsTestParam = InequalityTestParam<
+    long double,
+    std::vector<digit_type>
+>;
+
 class FloatingPointLessThanDigitsTest
-    : public ::testing::TestWithParam<DigitsAndFloatingPointInequalityTestParam>
+    : public ::testing::TestWithParam<FloatingPointSmallerThanDigitsTestParam>
 {}; // class FloatingPointLessThanDigitsTest
 
 TEST_P(FloatingPointLessThanDigitsTest, LhsLessThanRhs)
 {
-    long double                    lesser  = GetParam().second;
-    const std::vector<digit_type> &greater = GetParam().first;
+    long double                    lesser  = GetParam().smaller;
+    const std::vector<digit_type> &greater = GetParam().larger;
 
     comparison_test_common::expect_unequal(lesser, greater);
 }
@@ -260,19 +274,21 @@ INSTANTIATE_TEST_SUITE_P(
     DigitsComparisonTest,
     FloatingPointLessThanDigitsTest,
     ::testing::ValuesIn(
-        std::vector<DigitsAndFloatingPointInequalityTestParam> {
-            { { 1 },       /* > */ 0.0L  },
-            { { 1 },       /* > */ 0.9L  },
-            { { 2 },       /* > */ 1.9L  },
-            { { 0, 1 },    /* > */ DIGIT_TYPE_MAX  },
-            { { 0, 1 },    /* > */ DIGIT_BASE - 0.1L  },
-            { { 1, 1 },    /* > */ DIGIT_BASE },
-            { { 0, 0, 1 }, /* > */ 1.1L },
+        std::vector<FloatingPointSmallerThanDigitsTestParam> {
+            { .smaller = 0.0L,              .larger = { 1 } },
+            { .smaller = 0.9L,              .larger = { 1 } },
+            { .smaller = 1.9L,              .larger = { 2 } },
+            { .smaller = DIGIT_TYPE_MAX,    .larger = { 0, 1 } },
+            { .smaller = DIGIT_BASE - 0.1L, .larger = { 0, 1 } },
+            { .smaller = DIGIT_BASE,        .larger = { 1, 1 } },
+            { .smaller = 1.1L,              .larger = { 0, 0, 1 } },
             {
-                digits_from_floating_point(1.1e20L), /* > */ 1.0e20L
+                .smaller = 1.0e20L,
+                .larger  = digits_from_floating_point(1.1e20L)
             },
             {
-                digits_from_floating_point(1.00000001e20L), /* > */ 1.0e20L
+                .smaller = 1.0e20L,
+                .larger = digits_from_floating_point(1.00000001e20L)
             }
         }
     )

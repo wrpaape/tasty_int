@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-#include "tasty_int/detail/conversions/sign_from_unsigned_arithmetic.hpp"
+#include "tasty_int/detail/sign_from_unsigned_arithmetic.hpp"
 #include "tasty_int/detail/conversions/digits_from_integral.hpp"
 
 

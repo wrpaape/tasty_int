@@ -1,5 +1,5 @@
-#ifndef TASTY_INT_TASTY_INT_DETAIL_CONVERSIONS_SIGN_FROM_UNSIGNED_ARITHMETIC_HPP
-#define TASTY_INT_TASTY_INT_DETAIL_CONVERSIONS_SIGN_FROM_UNSIGNED_ARITHMETIC_HPP
+#ifndef TASTY_INT_TASTY_INT_DETAIL_SIGN_FROM_UNSIGNED_ARITHMETIC_HPP
+#define TASTY_INT_TASTY_INT_DETAIL_SIGN_FROM_UNSIGNED_ARITHMETIC_HPP
 
 #include <type_traits>
 
@@ -8,7 +8,6 @@
 
 namespace tasty_int {
 namespace detail {
-namespace conversions {
 
 /**
  * @brief Encodes the integer sign of @p value as a Sign.
@@ -25,8 +24,7 @@ sign_from_unsigned_arithmetic(T value)
     return static_cast<Sign>(value >= ONE);
 }
 
-} // namespace conversions
 } // namespace detail
 } // namespace tasty_int
 
-#endif // ifndef TASTY_INT_TASTY_INT_DETAIL_CONVERSIONS_SIGN_FROM_UNSIGNED_ARITHMETIC_HPP
+#endif // ifndef TASTY_INT_TASTY_INT_DETAIL_SIGN_FROM_UNSIGNED_ARITHMETIC_HPP

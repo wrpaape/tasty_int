@@ -10,7 +10,7 @@
 namespace string_conversion_test_common {
 
 /**
- * @defgroup TestParameters Test Parameters
+ * @defgroup StringConversionTestParameters String Conversion Test Parameters
  *
  * These structs bundle the arguments of the
  * tasty_int::detail::conversions::<result>_from_string() routines under test
@@ -31,7 +31,7 @@ struct StringConversionTestParam
 /// @}
 
 /**
- * @defgroup TestParameterOutputOperators Test Parameter Output Operators
+ * @defgroup StringConversionTestParameterOutputOperators String Conversion Test Parameter Output Operators
  *
  * @brief Outputs FromString(View)TestParam for diagnostic purposes.
  *

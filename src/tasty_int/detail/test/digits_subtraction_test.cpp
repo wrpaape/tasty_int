@@ -4,12 +4,12 @@
 
 #include "gtest/gtest.h"
 
+#include "tasty_int/detail/integer.hpp"
+#include "tasty_int/detail/sign_from_signed_arithmetic.hpp"
+#include "tasty_int/detail/sign_from_unsigned_arithmetic.hpp"
+#include "tasty_int/detail/sign_from_digits.hpp"
 #include "tasty_int/detail/conversions/digits_from_floating_point.hpp"
 #include "tasty_int/detail/conversions/digits_from_integral.hpp"
-#include "tasty_int/detail/conversions/sign_from_signed_arithmetic.hpp"
-#include "tasty_int/detail/conversions/sign_from_unsigned_arithmetic.hpp"
-#include "tasty_int/detail/integer.hpp"
-#include "tasty_int/detail/sign_from_digits.hpp"
 #include "tasty_int/detail/test/binary_digits_operation_test_common.hpp"
 #include "tasty_int/detail/test/integer_test_common.hpp"
 #include "tasty_int_test/logarithmic_range.hpp"
@@ -22,12 +22,12 @@ using tasty_int::detail::DIGIT_BASE;
 using tasty_int::detail::DIGIT_TYPE_MAX;
 using tasty_int::detail::Integer;
 using tasty_int::detail::Sign;
+using tasty_int::detail::digit_type;
+using tasty_int::detail::sign_from_signed_arithmetic;
+using tasty_int::detail::sign_from_unsigned_arithmetic;
+using tasty_int::detail::sign_from_digits;
 using tasty_int::detail::conversions::digits_from_floating_point;
 using tasty_int::detail::conversions::digits_from_integral;
-using tasty_int::detail::conversions::sign_from_signed_arithmetic;
-using tasty_int::detail::conversions::sign_from_unsigned_arithmetic;
-using tasty_int::detail::digit_type;
-using tasty_int::detail::sign_from_digits;
 using binary_digits_operation_test_common::BinaryDigitsOperationTestParam;
 using binary_digits_operation_test_common::convert_to;
 

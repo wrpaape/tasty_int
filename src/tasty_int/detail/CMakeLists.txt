@@ -14,6 +14,15 @@ add_library(
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 
+foreach(kind signed unsigned)
+    add_library(tasty_int-detail-sign_from_${kind}_arithmetic INTERFACE)
+    target_sources(
+        tasty_int-detail-sign_from_${kind}_arithmetic
+        INTERFACE
+        ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
+        ${PROJECT_SRC_DIR}/tasty_int/detail/sign_from_${kind}_arithmetic.hpp
+    )
+endforeach()
 add_library(
     tasty_int-detail-sign_from_digits
     OBJECT
@@ -78,6 +87,7 @@ add_library(
 target_link_libraries(
     tasty_int-detail-integer
     tasty_int-detail-digits_comparison
+    tasty_int-detail-sign_from_signed_arithmetic
 )
 
 add_library(

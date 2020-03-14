@@ -1,4 +1,4 @@
-#include "tasty_int/detail/conversions/sign_from_unsigned_arithmetic.hpp"
+#include "tasty_int/detail/sign_from_unsigned_arithmetic.hpp"
 
 #include <limits>
 #include <type_traits>
@@ -12,7 +12,7 @@
 namespace {
 
 using tasty_int::detail::Sign;
-using tasty_int::detail::conversions::sign_from_unsigned_arithmetic;
+using tasty_int::detail::sign_from_unsigned_arithmetic;
 
 
 template<typename UnsignedArithmeticType>

@@ -1,6 +1,8 @@
 #ifndef TASTY_INT_TASTY_INT_DETAIL_INTEGER_HPP
 #define TASTY_INT_TASTY_INT_DETAIL_INTEGER_HPP
 
+#include <cstdint>
+
 #include <vector>
 
 #include "tasty_int/detail/sign.hpp"
@@ -47,7 +49,7 @@ struct Integer
 /**
  * @defgroup IntegerComparisonOperators Integer Comparison Operators
  *
- * These operators compare two tasty_int::detail::Integers like ordinary ints:
+ * These operators compare tasty_int::detail::Integer like ordinary ints:
  *     
  *     - positive integers are greater than zero
  *     - positive integers compare greater as their magnitude increases
@@ -58,27 +60,100 @@ struct Integer
 bool
 operator==(const Integer &lhs,
            const Integer &rhs);
+bool
+operator==(const Integer  &lhs,
+           std::uintmax_t  rhs);
+bool
+operator==(std::uintmax_t  lhs,
+           const Integer  &rhs);
+bool
+operator==(const Integer &lhs,
+           std::intmax_t  rhs);
+bool
+operator==(std::intmax_t  lhs,
+           const Integer &rhs);
 
 bool
 operator!=(const Integer &lhs,
+           const Integer &rhs);
+bool
+operator!=(const Integer  &lhs,
+           std::uintmax_t  rhs);
+bool
+operator!=(std::uintmax_t  lhs,
+           const Integer  &rhs);
+bool
+operator!=(const Integer &lhs,
+           std::intmax_t  rhs);
+bool
+operator!=(std::intmax_t  lhs,
            const Integer &rhs);
 
 bool
 operator<(const Integer &lhs,
           const Integer &rhs);
+bool
+operator<(const Integer  &lhs,
+          std::uintmax_t  rhs);
+bool
+operator<(std::uintmax_t  lhs,
+          const Integer  &rhs);
+bool
+operator<(const Integer &lhs,
+          std::intmax_t  rhs);
+bool
+operator<(std::intmax_t  lhs,
+          const Integer &rhs);
 
 bool
 operator>(const Integer &lhs,
+          const Integer &rhs);
+bool
+operator>(const Integer  &lhs,
+          std::uintmax_t  rhs);
+bool
+operator>(std::uintmax_t  lhs,
+          const Integer  &rhs);
+bool
+operator>(const Integer &lhs,
+          std::intmax_t  rhs);
+bool
+operator>(std::intmax_t  lhs,
           const Integer &rhs);
 
 bool
 operator<=(const Integer &lhs,
            const Integer &rhs);
+bool
+operator<=(const Integer  &lhs,
+           std::uintmax_t  rhs);
+bool
+operator<=(std::uintmax_t  lhs,
+           const Integer  &rhs);
+bool
+operator<=(const Integer &lhs,
+           std::intmax_t  rhs);
+bool
+operator<=(std::intmax_t  lhs,
+           const Integer &rhs);
 
 bool
 operator>=(const Integer &lhs,
            const Integer &rhs);
-/// @todo: TODO: arithmetic types
+bool
+operator>=(const Integer  &lhs,
+           std::uintmax_t  rhs);
+bool
+operator>=(std::uintmax_t  lhs,
+           const Integer  &rhs);
+bool
+operator>=(const Integer &lhs,
+           std::intmax_t  rhs);
+bool
+operator>=(std::intmax_t  lhs,
+           const Integer &rhs);
+
+/// @todo: TODO: floating point overloads
 /// @}
 
 } // namespace detail

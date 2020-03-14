@@ -22,14 +22,6 @@ target_link_libraries(
 )
 
 foreach(kind signed unsigned)
-    add_library(tasty_int-detail-conversions-sign_from_${kind}_arithmetic INTERFACE)
-    target_sources(
-        tasty_int-detail-conversions-sign_from_${kind}_arithmetic
-        INTERFACE
-        ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
-        ${PROJECT_SRC_DIR}/tasty_int/detail/conversions/sign_from_${kind}_arithmetic.hpp
-    )
-
     add_library(
         tasty_int-detail-conversions-integer_from_${kind}_integral
         STATIC
@@ -41,7 +33,7 @@ foreach(kind signed unsigned)
     )
     target_link_libraries(
         tasty_int-detail-conversions-integer_from_${kind}_integral
-        tasty_int-detail-conversions-sign_from_${kind}_arithmetic
+        tasty_int-detail-sign_from_${kind}_arithmetic
         tasty_int-detail-conversions-digits_from_integral
     )
 endforeach()
@@ -70,7 +62,7 @@ add_library(
 )
 target_link_libraries(
     tasty_int-detail-conversions-integer_from_floating_point
-    tasty_int-detail-conversions-sign_from_signed_arithmetic
+    tasty_int-detail-sign_from_signed_arithmetic
     tasty_int-detail-conversions-digits_from_floating_point
 )
 

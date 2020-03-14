@@ -12,6 +12,14 @@ namespace tasty_int {
 namespace detail {
 namespace {
 
+bool
+have_unequal_high_digits(const std::vector<digit_type> &lhs,
+                         IntegralDigitsView             rhs_view)
+{
+    return (lhs.size() == 2)
+        && (lhs.back() != rhs_view.high_digit());
+}
+
 template<template <typename> typename Compare>
 std::pair<bool, digit_type>
 sequence_inequality_common_compare(
@@ -71,10 +79,10 @@ struct StrictSequenceInequality
     operator()(const std::vector<digit_type> &lhs,
                IntegralDigitsView             rhs_view)
     {
-        return Compare<digit_type>{}(lhs.front(), rhs_view.low_digit())
-            || ((lhs.front() == rhs_view.low_digit()) &&
-                ((lhs.size() == 2) &&
-                  Compare<digit_type>{}(lhs.back(), rhs_view.high_digit())));
+        if (have_unequal_high_digits(lhs, rhs_view))
+            return Compare<digit_type>{}(lhs.back(), rhs_view.high_digit());
+
+        return Compare<digit_type>{}(lhs.front(), rhs_view.low_digit());
     }
 
     bool
@@ -105,12 +113,11 @@ struct NonStrictSequenceInequality
     operator()(const std::vector<digit_type> &lhs,
                IntegralDigitsView             rhs_view)
     {
-        if (lhs.front() != rhs_view.low_digit())
-            return Compare<digit_type>{}(lhs.front(), rhs_view.low_digit());
+        if (have_unequal_high_digits(lhs, rhs_view))
+            return Compare<digit_type>{}(lhs.back(), rhs_view.high_digit());
 
-        return (lhs.size() == 1)
-            || ((lhs.back() == rhs_view.high_digit()) ||
-                Compare<digit_type>{}(lhs.front(), rhs_view.high_digit()));
+        return (lhs.front() == rhs_view.low_digit())
+            || Compare<digit_type>{}(lhs.front(), rhs_view.low_digit());
     }
 
     bool
