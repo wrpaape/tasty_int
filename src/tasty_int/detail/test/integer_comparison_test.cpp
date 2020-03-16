@@ -7,8 +7,10 @@
 
 #include "tasty_int/detail/sign_from_digits.hpp"
 #include "tasty_int/detail/conversions/digits_from_integral.hpp"
+#include "tasty_int/detail/conversions/digits_from_floating_point.hpp"
 #include "tasty_int/detail/conversions/integer_from_signed_integral.hpp"
 #include "tasty_int/detail/conversions/integer_from_unsigned_integral.hpp"
+#include "tasty_int/detail/conversions/integer_from_floating_point.hpp"
 #include "tasty_int/detail/test/comparison_test_common.hpp"
 #include "tasty_int/detail/test/integer_test_common.hpp"
 #include "tasty_int_test/logarithmic_range.hpp"
@@ -23,8 +25,10 @@ using tasty_int::detail::Integer;
 using tasty_int::detail::Sign;
 using tasty_int::detail::sign_from_digits;
 using tasty_int::detail::conversions::digits_from_integral;
+using tasty_int::detail::conversions::digits_from_floating_point;
 using tasty_int::detail::conversions::integer_from_signed_integral;
 using tasty_int::detail::conversions::integer_from_unsigned_integral;
+using tasty_int::detail::conversions::integer_from_floating_point;
 using comparison_test_common::InequalityTestParam;
 
 
@@ -497,17 +501,17 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
-using PositiveSignedIntegralSmallerThanDigitsTestParam = InequalityTestParam<
+using NonnegativeSignedIntegralSmallerThanDigitsTestParam = InequalityTestParam<
     std::intmax_t, std::vector<digit_type>
 >;
 
-class PositiveSignedIntegralSmallerThanDigitsTest
+class NonnegativeSignedIntegralSmallerThanDigitsTest
     : public ::testing::TestWithParam<
-          PositiveSignedIntegralSmallerThanDigitsTestParam
+          NonnegativeSignedIntegralSmallerThanDigitsTestParam
       >
-{}; // class PositiveSigSmallerThantegralLessThanDigitsTest
+{}; // class NonnegativeSignedIntegralSmallerThanDigitsTest
 
-TEST_P(PositiveSignedIntegralSmallerThanDigitsTest,
+TEST_P(NonnegativeSignedIntegralSmallerThanDigitsTest,
        SmallerNonnegativeLhsIsLessThanLargerPositiveRhs)
 {
     std::intmax_t lesser = GetParam().smaller;
@@ -516,7 +520,7 @@ TEST_P(PositiveSignedIntegralSmallerThanDigitsTest,
     comparison_test_common::expect_unequal(lesser, greater);
 }
 
-TEST_P(PositiveSignedIntegralSmallerThanDigitsTest,
+TEST_P(NonnegativeSignedIntegralSmallerThanDigitsTest,
        LargerNegativeLhsIsLessThanSmallerNonnegativeRhs)
 {
     Integer lesser = { .sign = Sign::NEGATIVE, .digits = GetParam().larger };
@@ -527,9 +531,9 @@ TEST_P(PositiveSignedIntegralSmallerThanDigitsTest,
 
 INSTANTIATE_TEST_SUITE_P(
     IntegerComparisonTest,
-    PositiveSignedIntegralSmallerThanDigitsTest,
+    NonnegativeSignedIntegralSmallerThanDigitsTest,
     ::testing::ValuesIn(
-        std::vector<PositiveSignedIntegralSmallerThanDigitsTestParam> {
+        std::vector<NonnegativeSignedIntegralSmallerThanDigitsTestParam> {
             { .smaller = 0,              .larger = { 1 } },
             { .smaller = 1,              .larger = { 0, 1 } },
             { .smaller = DIGIT_TYPE_MAX, .larger = { 0, 1 } },
@@ -545,17 +549,17 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
-using NegativeSignedIntegralSmallerThanDigitsTestParam = InequalityTestParam<
+using NonpositiveSignedIntegralSmallerThanDigitsTestParam = InequalityTestParam<
     std::intmax_t, std::vector<digit_type> 
 >;
 
-class NegativeSignedIntegralSmallerThanDigitsTest
+class NonpositiveSignedIntegralSmallerThanDigitsTest
     : public ::testing::TestWithParam<
-          NegativeSignedIntegralSmallerThanDigitsTestParam
+          NonpositiveSignedIntegralSmallerThanDigitsTestParam
       >
-{}; // class NegativeSignedIntegralSmallerThanDigitsTest
+{}; // class NonpositiveSignedIntegralSmallerThanDigitsTest
 
-TEST_P(NegativeSignedIntegralSmallerThanDigitsTest,
+TEST_P(NonpositiveSignedIntegralSmallerThanDigitsTest,
        LargerNegativeLhsIsLessThanSmallerNonpositiveRhs)
 {
     Integer lesser       = {
@@ -567,7 +571,7 @@ TEST_P(NegativeSignedIntegralSmallerThanDigitsTest,
     comparison_test_common::expect_unequal(lesser, greater);
 }
 
-TEST_P(NegativeSignedIntegralSmallerThanDigitsTest,
+TEST_P(NonpositiveSignedIntegralSmallerThanDigitsTest,
        SmallerNonpositiveLhsIsLessThanLargerPositiveRhs)
 {
     std::intmax_t lesser = GetParam().smaller;
@@ -581,9 +585,9 @@ TEST_P(NegativeSignedIntegralSmallerThanDigitsTest,
 
 INSTANTIATE_TEST_SUITE_P(
     IntegerComparisonTest,
-    NegativeSignedIntegralSmallerThanDigitsTest,
+    NonpositiveSignedIntegralSmallerThanDigitsTest,
     ::testing::ValuesIn(
-        std::vector<NegativeSignedIntegralSmallerThanDigitsTestParam> {
+        std::vector<NonpositiveSignedIntegralSmallerThanDigitsTestParam> {
             { .smaller = 0, .larger = { 1 } },
             {
                 .smaller = -1,
@@ -595,6 +599,308 @@ INSTANTIATE_TEST_SUITE_P(
             },
             {
                 .smaller = -static_cast<std::intmax_t>(DIGIT_BASE),
+                .larger  = { 1 , 1 }
+            },
+            {
+                .smaller = std::numeric_limits<std::intmax_t>::lowest(),
+                .larger  = { 0, 0, 1 }
+            }
+        }
+    )
+);
+
+
+TEST(DigitsSameAsFloatingPointTest, ZeroEqualToZero)
+{
+    long double lhs = 0;
+    Integer     rhs = { .sign = Sign::ZERO, .digits = { 0 } };
+
+    comparison_test_common::expect_equal(lhs, rhs);
+}
+
+class DigitsSameAsPositiveFloatingPointTest
+    : public ::testing::TestWithParam<long double>
+{}; // class DigitsSameAsPositiveFloatingPointTest
+
+TEST_P(DigitsSameAsPositiveFloatingPointTest,
+       PositiveFloatingPointEqualToPositiveInteger)
+{
+    long double lhs = GetParam();
+    Integer     rhs = integer_from_floating_point(lhs);
+
+    comparison_test_common::expect_equal(lhs, rhs);
+}
+
+TEST_P(DigitsSameAsPositiveFloatingPointTest,
+       NegativeIntegerLessThanPositiveFloatingPoint)
+{
+    long double greater = GetParam();
+    Integer     lesser  = {
+        .sign   = Sign::NEGATIVE,
+        .digits = digits_from_floating_point(greater)
+    };
+
+    comparison_test_common::expect_unequal(lesser, greater);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    IntegerComparisonTest,
+    DigitsSameAsPositiveFloatingPointTest,
+    tasty_int_test::logarithmic_range<long double>(
+        1.0L, std::numeric_limits<long double>::max(), 1.0e20L
+    )
+);
+
+class DigitsSameAsNegativeFloatingPointTest
+    : public ::testing::TestWithParam<long double>
+{}; // class DigitsSameAsNegativeFloatingPointTest
+
+TEST_P(DigitsSameAsNegativeFloatingPointTest,
+       NegativeFloatingPointEqualToNegativeInteger)
+{
+    long double lhs = GetParam();
+    Integer     rhs = integer_from_floating_point(lhs);
+
+    comparison_test_common::expect_equal(lhs, rhs);
+}
+
+TEST_P(DigitsSameAsNegativeFloatingPointTest,
+       NegativeFloatingPointLessThanPositiveInteger)
+{
+    long double  lesser  = GetParam();
+    Integer      greater = {
+        .sign   = Sign::POSITIVE,
+        .digits = digits_from_floating_point(-lesser)
+    };
+
+    comparison_test_common::expect_unequal(lesser, greater);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    IntegerComparisonTest,
+    DigitsSameAsNegativeFloatingPointTest,
+    tasty_int_test::logarithmic_range<long double>(
+        -1, std::numeric_limits<long double>::lowest(), 1.0e20L
+    )
+);
+
+using DigitsSmallerThanPositiveFloatingPointTestParam = InequalityTestParam<
+    std::vector<digit_type>, long double
+>;
+
+class DigitsSmallerThanPositiveFloatingPointTest
+    : public ::testing::TestWithParam<
+          DigitsSmallerThanPositiveFloatingPointTestParam
+      >
+{}; // class DigitsSmallerThanPositiveFloatingPointTest
+
+TEST_P(DigitsSmallerThanPositiveFloatingPointTest,
+       SmallerNonnegativeLhsIsLessThanLargerPositiveRhs)
+{
+    Integer lesser      = {
+        .sign   = sign_from_digits(GetParam().smaller,
+                                   Sign::POSITIVE),
+        .digits = GetParam().smaller
+    };
+    long double greater = GetParam().larger;
+
+    comparison_test_common::expect_unequal(lesser, greater);
+}
+
+TEST_P(DigitsSmallerThanPositiveFloatingPointTest,
+       SmallerNonpositiveLhsIsLessThanLargerPositiveRhs)
+{
+    Integer lesser      = {
+        .sign   = sign_from_digits(GetParam().smaller,
+                                   Sign::NEGATIVE),
+        .digits = GetParam().smaller
+    };
+    long double greater = GetParam().larger;
+
+    comparison_test_common::expect_unequal(lesser, greater);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    IntegerComparisonTest,
+    DigitsSmallerThanPositiveFloatingPointTest,
+    ::testing::ValuesIn(
+        std::vector<DigitsSmallerThanPositiveFloatingPointTestParam> {
+            { .smaller = { 0 },              .larger = 1 },
+            { .smaller = { 1 },              .larger = DIGIT_BASE },
+            { .smaller = { DIGIT_TYPE_MAX }, .larger = DIGIT_BASE },
+            {
+                .smaller = { 0, 1 },
+                .larger  = DIGIT_BASE + 1.0L
+            },
+            {
+                .smaller = { DIGIT_TYPE_MAX, 1 },
+                .larger  = std::numeric_limits<long double>::max()
+            }
+        }
+    )
+);
+
+using DigitsSmallerThanNegativeFloatingPointTestParam = InequalityTestParam<
+    std::vector<digit_type>, long double
+>;
+
+class DigitsSmallerThanNegativeFloatingPointTest
+    : public ::testing::TestWithParam<
+          DigitsSmallerThanNegativeFloatingPointTestParam
+      >
+{}; // class DigitsSmallerThanNegativeFloatingPointTest
+
+TEST_P(DigitsSmallerThanNegativeFloatingPointTest,
+       LargerNegativeLhsIsLessThanSmallerNonpositiveRhs)
+{
+    long double lesser = GetParam().larger;
+    Integer greater    = {
+        .sign   = sign_from_digits(GetParam().smaller,
+                                   Sign::NEGATIVE),
+        .digits = GetParam().smaller
+    };
+
+    comparison_test_common::expect_unequal(lesser, greater);
+}
+
+TEST_P(DigitsSmallerThanNegativeFloatingPointTest,
+       LargerNegativeLhsIsLessThanSmallerNonnegativeRhs)
+{
+    long double lesser = GetParam().larger;
+    Integer greater    = {
+        .sign   = sign_from_digits(GetParam().smaller,
+                                   Sign::POSITIVE),
+        .digits = GetParam().smaller
+    };
+
+    comparison_test_common::expect_unequal(lesser, greater);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    IntegerComparisonTest,
+    DigitsSmallerThanNegativeFloatingPointTest,
+    ::testing::ValuesIn(
+        std::vector<DigitsSmallerThanNegativeFloatingPointTestParam> {
+            { .smaller = { 0 }, .larger = -1 },
+            {
+                .smaller = { 1 },
+                .larger  = -static_cast<long double>(DIGIT_BASE)
+            },
+            {
+                .smaller = { DIGIT_TYPE_MAX },
+                .larger  = -static_cast<long double>(DIGIT_BASE)
+            },
+            {
+                .smaller = { 0, 1 },
+                .larger  = -static_cast<long double>(DIGIT_BASE) - 1.0L
+            },
+            {
+                .smaller = { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX },
+                .larger  = std::numeric_limits<long double>::lowest()
+            }
+        }
+    )
+);
+
+using NonnegativeFloatingPointSmallerThanDigitsTestParam = InequalityTestParam<
+    long double, std::vector<digit_type>
+>;
+
+class NonnegativeFloatingPointSmallerThanDigitsTest
+    : public ::testing::TestWithParam<
+          NonnegativeFloatingPointSmallerThanDigitsTestParam
+      >
+{}; // class NonnegativeFloatingPointSmallerThanDigitsTest
+
+TEST_P(NonnegativeFloatingPointSmallerThanDigitsTest,
+       SmallerNonnegativeLhsIsLessThanLargerPositiveRhs)
+{
+    long double lesser = GetParam().smaller;
+    Integer greater = { .sign = Sign::POSITIVE, .digits = GetParam().larger };
+
+    comparison_test_common::expect_unequal(lesser, greater);
+}
+
+TEST_P(NonnegativeFloatingPointSmallerThanDigitsTest,
+       LargerNegativeLhsIsLessThanSmallerNonnegativeRhs)
+{
+    Integer lesser = { .sign = Sign::NEGATIVE, .digits = GetParam().larger };
+    long double greater = GetParam().smaller;
+
+    comparison_test_common::expect_unequal(lesser, greater);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    IntegerComparisonTest,
+    NonnegativeFloatingPointSmallerThanDigitsTest,
+    ::testing::ValuesIn(
+        std::vector<NonnegativeFloatingPointSmallerThanDigitsTestParam> {
+            { .smaller = 0.0,            .larger = { 1 } },
+            { .smaller = 0.9,            .larger = { 1 } },
+            { .smaller = 1.0,            .larger = { 0, 1 } },
+            { .smaller = DIGIT_TYPE_MAX, .larger = { 0, 1 } },
+            {
+                .smaller = DIGIT_BASE,
+                .larger  = { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX }
+            },
+            {
+                .smaller = std::numeric_limits<std::uintmax_t>::max(),
+                .larger  = { 0, 0, 1 }
+            }
+        }
+    )
+);
+
+using NonpositiveFloatingPointSmallerThanDigitsTestParam = InequalityTestParam<
+    long double, std::vector<digit_type> 
+>;
+
+class NonpositiveFloatingPointSmallerThanDigitsTest
+    : public ::testing::TestWithParam<
+          NonpositiveFloatingPointSmallerThanDigitsTestParam
+      >
+{}; // class NonpositiveFloatingPointSmallerThanDigitsTest
+
+TEST_P(NonpositiveFloatingPointSmallerThanDigitsTest,
+       LargerNegativeLhsIsLessThanSmallerNonpositiveRhs)
+{
+    Integer lesser      = {
+        .sign   = Sign::NEGATIVE,
+        .digits = GetParam().larger
+    };
+    long double greater = GetParam().smaller;
+
+    comparison_test_common::expect_unequal(lesser, greater);
+}
+
+TEST_P(NonpositiveFloatingPointSmallerThanDigitsTest,
+       SmallerNonpositiveLhsIsLessThanLargerPositiveRhs)
+{
+    long double lesser = GetParam().smaller;
+    Integer greater    = {
+        .sign   = Sign::POSITIVE,
+        .digits = GetParam().larger
+    };
+
+    comparison_test_common::expect_unequal(lesser, greater);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    IntegerComparisonTest,
+    NonpositiveFloatingPointSmallerThanDigitsTest,
+    ::testing::ValuesIn(
+        std::vector<NonpositiveFloatingPointSmallerThanDigitsTestParam> {
+            { .smaller = 0.0, .larger = { 1 } },
+            {
+                .smaller = -1.0,
+                .larger  = { DIGIT_TYPE_MAX }
+            },
+            {
+                .smaller = -static_cast<long double>(DIGIT_TYPE_MAX),
+                .larger  = { 0, 1 }
+            },
+            {
+                .smaller = -static_cast<long double>(DIGIT_BASE),
                 .larger  = { 1 , 1 }
             },
             {

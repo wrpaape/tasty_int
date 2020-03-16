@@ -205,7 +205,6 @@ greater_than_or_equal_to(const std::vector<digit_type> &lhs,
     return have_inequality<std::greater, NonStrictSequenceInequality>(lhs, rhs);
 }
 
-
 } // namespace
 
 

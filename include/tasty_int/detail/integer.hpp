@@ -72,6 +72,12 @@ operator==(const Integer &lhs,
 bool
 operator==(std::intmax_t  lhs,
            const Integer &rhs);
+bool
+operator==(const Integer &lhs,
+           long double    rhs);
+bool
+operator==(long double    lhs,
+           const Integer &rhs);
 
 bool
 operator!=(const Integer &lhs,
@@ -87,6 +93,12 @@ operator!=(const Integer &lhs,
            std::intmax_t  rhs);
 bool
 operator!=(std::intmax_t  lhs,
+           const Integer &rhs);
+bool
+operator!=(const Integer &lhs,
+           long double    rhs);
+bool
+operator!=(long double    lhs,
            const Integer &rhs);
 
 bool
@@ -104,6 +116,12 @@ operator<(const Integer &lhs,
 bool
 operator<(std::intmax_t  lhs,
           const Integer &rhs);
+bool
+operator<(const Integer &lhs,
+          long double    rhs);
+bool
+operator<(long double    lhs,
+          const Integer &rhs);
 
 bool
 operator>(const Integer &lhs,
@@ -119,6 +137,12 @@ operator>(const Integer &lhs,
           std::intmax_t  rhs);
 bool
 operator>(std::intmax_t  lhs,
+          const Integer &rhs);
+bool
+operator>(const Integer &lhs,
+          long double    rhs);
+bool
+operator>(long double    lhs,
           const Integer &rhs);
 
 bool
@@ -136,6 +160,12 @@ operator<=(const Integer &lhs,
 bool
 operator<=(std::intmax_t  lhs,
            const Integer &rhs);
+bool
+operator<=(const Integer &lhs,
+           long double    rhs);
+bool
+operator<=(long double    lhs,
+           const Integer &rhs);
 
 bool
 operator>=(const Integer &lhs,
@@ -152,8 +182,12 @@ operator>=(const Integer &lhs,
 bool
 operator>=(std::intmax_t  lhs,
            const Integer &rhs);
-
-/// @todo: TODO: floating point overloads
+bool
+operator>=(const Integer &lhs,
+           long double    rhs);
+bool
+operator>=(long double    lhs,
+           const Integer &rhs);
 /// @}
 
 } // namespace detail

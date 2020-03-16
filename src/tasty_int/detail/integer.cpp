@@ -1,6 +1,7 @@
 #include "tasty_int/detail/integer.hpp"
 
 #include <functional>
+#include <type_traits>
 
 #include "tasty_int/detail/digits_comparison.hpp"
 #include "tasty_int/detail/sign_from_signed_arithmetic.hpp"
@@ -36,6 +37,20 @@ struct DigitsLess
     {
         return static_cast<std::uintmax_t>(lhs) < rhs;
     }
+
+    bool
+    operator()(const std::vector<digit_type> &lhs,
+               long double                    rhs)
+    {
+        return lhs < rhs;
+    }
+
+    bool
+    operator()(long double                    lhs,
+               const std::vector<digit_type> &rhs)
+    {
+        return lhs < rhs;
+    }
 }; // struct DigitsLess
 
 struct DigitsGreater
@@ -59,6 +74,20 @@ struct DigitsGreater
                const std::vector<digit_type> &rhs)
     {
         return static_cast<std::uintmax_t>(lhs) > rhs;
+    }
+
+    bool
+    operator()(const std::vector<digit_type> &lhs,
+               long double                    rhs)
+    {
+        return lhs > rhs;
+    }
+
+    bool
+    operator()(long double                    lhs,
+               const std::vector<digit_type> &rhs)
+    {
+        return lhs > rhs;
     }
 }; // struct DigitsGreater
 
@@ -84,6 +113,20 @@ struct DigitsLessEqual
     {
         return static_cast<std::uintmax_t>(lhs) <= rhs;
     }
+
+    bool
+    operator()(const std::vector<digit_type> &lhs,
+               long double                    rhs)
+    {
+        return lhs <= rhs;
+    }
+
+    bool
+    operator()(long double                    lhs,
+               const std::vector<digit_type> &rhs)
+    {
+        return lhs <= rhs;
+    }
 }; // struct DigitsLessEqual
 
 struct DigitsGreaterEqual
@@ -108,7 +151,38 @@ struct DigitsGreaterEqual
     {
         return static_cast<std::uintmax_t>(lhs) >= rhs;
     }
+
+    bool
+    operator()(const std::vector<digit_type> &lhs,
+               long double                    rhs)
+    {
+        return lhs >= rhs;
+    }
+
+    bool
+    operator()(long double                    lhs,
+               const std::vector<digit_type> &rhs)
+    {
+        return lhs >= rhs;
+    }
 }; // struct DigitsGreaterEqual
+
+template<typename ValueType,
+         typename SignedArithmeticType>
+bool
+have_equality(const Integer        &lhs,
+              SignedArithmeticType  rhs)
+    requires std::is_convertible_v<SignedArithmeticType, ValueType>
+          && std::is_arithmetic_v<SignedArithmeticType>
+          && std::is_signed_v<SignedArithmeticType>
+{
+    Sign rhs_sign = sign_from_signed_arithmetic(rhs);
+    if (lhs.sign != rhs_sign)
+        return false;
+
+    ValueType rhs_value = (rhs_sign >= Sign::ZERO) ? rhs : -rhs;
+    return lhs.digits == rhs_value;
+}
 
 template<typename CompareDigits>
 bool
@@ -132,19 +206,53 @@ have_inequality(const Integer &lhs,
 }
 
 template<template <typename> typename CompareSign,
-         typename CompareDigits>
+         typename CompareDigits,
+         typename SignedArithmeticType>
 bool
-have_inequality(const Integer &lhs,
-                std::intmax_t  rhs)
+have_inequality(const Integer        &lhs,
+                SignedArithmeticType  rhs)
+    requires std::is_arithmetic_v<SignedArithmeticType>
+          && std::is_signed_v<SignedArithmeticType>
 {
     Sign rhs_sign = sign_from_signed_arithmetic(rhs);
     if (lhs.sign != rhs_sign)
         return CompareSign<Sign>{}(lhs.sign, rhs_sign);
 
-    std::uintmax_t rhs_value = rhs;
     return (rhs_sign >= Sign::ZERO)
-         ? CompareDigits{}(lhs.digits, rhs_value)
-         : CompareDigits{}(-rhs_value, lhs.digits);
+         ? CompareDigits{}(lhs.digits, rhs)
+         : CompareDigits{}(-rhs, lhs.digits);
+}
+
+template<typename RhsType>
+bool
+less_than(const Integer &lhs,
+          RhsType        rhs)
+{
+    return have_inequality<std::less, DigitsLess>(lhs, rhs);
+}
+
+template<typename RhsType>
+bool
+greater_than(const Integer &lhs,
+             RhsType        rhs)
+{
+    return have_inequality<std::greater, DigitsGreater>(lhs, rhs);
+}
+
+template<typename RhsType>
+bool
+less_than_or_equal_to(const Integer &lhs,
+                      RhsType        rhs)
+{
+    return have_inequality<std::less, DigitsLessEqual>(lhs, rhs);
+}
+
+template<typename RhsType>
+bool
+greater_than_or_equal_to(const Integer &lhs,
+                         RhsType        rhs)
+{
+    return have_inequality<std::greater, DigitsGreaterEqual>(lhs, rhs);
 }
 
 } // namespace
@@ -177,16 +285,25 @@ bool
 operator==(const Integer &lhs,
            std::intmax_t  rhs)
 {
-    Sign rhs_sign = sign_from_signed_arithmetic(rhs);
-    if (lhs.sign != rhs_sign)
-        return false;
-
-    std::uintmax_t rhs_value = (rhs_sign >= Sign::ZERO) ? rhs : -rhs;
-    return lhs.digits == rhs_value;
+    return have_equality<std::uintmax_t>(lhs, rhs);
 }
 
 bool
 operator==(std::intmax_t  lhs,
+           const Integer &rhs)
+{
+    return rhs == lhs;
+}
+
+bool
+operator==(const Integer &lhs,
+           long double    rhs)
+{
+    return have_equality<long double>(lhs, rhs);
+}
+
+bool
+operator==(long double    lhs,
            const Integer &rhs)
 {
     return rhs == lhs;
@@ -228,12 +345,26 @@ operator!=(std::intmax_t  lhs,
     return rhs != lhs;
 }
 
+bool
+operator!=(const Integer &lhs,
+           long double    rhs)
+{
+    return !(lhs == rhs);
+}
+
+bool
+operator!=(long double    lhs,
+           const Integer &rhs)
+{
+    return rhs != lhs;
+}
+
 
 bool
 operator<(const Integer &lhs,
           const Integer &rhs)
 {
-    return have_inequality<std::less, DigitsLess>(lhs, rhs);
+    return less_than(lhs, rhs);
 }
 
 bool
@@ -255,7 +386,7 @@ bool
 operator<(const Integer &lhs,
           std::intmax_t  rhs)
 {
-    return have_inequality<std::less, DigitsLess>(lhs, rhs);
+    return less_than(lhs, rhs);
 }
 
 bool
@@ -265,12 +396,25 @@ operator<(std::intmax_t  lhs,
     return rhs > lhs;
 }
 
+bool
+operator<(const Integer &lhs,
+          long double    rhs)
+{
+    return less_than(lhs, rhs);
+}
+
+bool
+operator<(long double    lhs,
+          const Integer &rhs)
+{
+    return rhs > lhs;
+}
 
 bool
 operator>(const Integer &lhs,
           const Integer &rhs)
 {
-    return have_inequality<std::greater, DigitsGreater>(lhs, rhs);
+    return greater_than(lhs, rhs);
 }
 
 bool
@@ -292,11 +436,25 @@ bool
 operator>(const Integer &lhs,
           std::intmax_t  rhs)
 {
-    return have_inequality<std::greater, DigitsGreater>(lhs, rhs);
+    return greater_than(lhs, rhs);
 }
 
 bool
 operator>(std::intmax_t  lhs,
+          const Integer &rhs)
+{
+    return rhs < lhs;
+}
+
+bool
+operator>(const Integer &lhs,
+          long double    rhs)
+{
+    return greater_than(lhs, rhs);
+}
+
+bool
+operator>(long double    lhs,
           const Integer &rhs)
 {
     return rhs < lhs;
@@ -307,7 +465,7 @@ bool
 operator<=(const Integer &lhs,
            const Integer &rhs)
 {
-    return have_inequality<std::less, DigitsLessEqual>(lhs, rhs);
+    return less_than_or_equal_to(lhs, rhs);
 }
 
 bool
@@ -329,11 +487,25 @@ bool
 operator<=(const Integer &lhs,
            std::intmax_t  rhs)
 {
-    return have_inequality<std::less, DigitsLessEqual>(lhs, rhs);
+    return less_than_or_equal_to(lhs, rhs);
 }
 
 bool
 operator<=(std::intmax_t  lhs,
+           const Integer &rhs)
+{
+    return rhs >= lhs;
+}
+
+bool
+operator<=(const Integer &lhs,
+           long double    rhs)
+{
+    return less_than_or_equal_to(lhs, rhs);
+}
+
+bool
+operator<=(long double    lhs,
            const Integer &rhs)
 {
     return rhs >= lhs;
@@ -344,7 +516,7 @@ bool
 operator>=(const Integer &lhs,
            const Integer &rhs)
 {
-    return have_inequality<std::greater, DigitsGreaterEqual>(lhs, rhs);
+    return greater_than_or_equal_to(lhs, rhs);
 }
 
 bool
@@ -366,11 +538,25 @@ bool
 operator>=(const Integer &lhs,
            std::intmax_t  rhs)
 {
-    return have_inequality<std::greater, DigitsGreaterEqual>(lhs, rhs);
+    return greater_than_or_equal_to(lhs, rhs);
 }
 
 bool
 operator>=(std::intmax_t  lhs,
+           const Integer &rhs)
+{
+    return rhs <= lhs;
+}
+
+bool
+operator>=(const Integer &lhs,
+           long double    rhs)
+{
+    return greater_than_or_equal_to(lhs, rhs);
+}
+
+bool
+operator>=(long double    lhs,
            const Integer &rhs)
 {
     return rhs <= lhs;

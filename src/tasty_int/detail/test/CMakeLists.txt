@@ -103,8 +103,10 @@ add_google_test(
               $<TARGET_OBJECTS:tasty_int-detail-sign_from_digits>
     LIBRARIES tasty_int-detail-integer
               tasty_int-detail-conversions-digits_from_integral
+              tasty_int-detail-conversions-digits_from_floating_point
               tasty_int-detail-conversions-integer_from_signed_integral
               tasty_int-detail-conversions-integer_from_unsigned_integral
+              tasty_int-detail-conversions-integer_from_floating_point
               tasty_int-detail-comparison_test_common
               tasty_int-detail-integer_test_common
               tasty_int_test
