@@ -93,8 +93,8 @@ append_carry_if_nonzero(digit_accumulator_type   carry,
 }
 
 void
-add(const std::vector<digit_type> &addend,
-    std::vector<digit_type>       &augend)
+add_in_place(const std::vector<digit_type> &addend,
+             std::vector<digit_type>       &augend)
 {
     auto [carry, augend_cursor] = add_into(addend, augend);
 
@@ -116,9 +116,9 @@ fixed_add(digit_accumulator_type   addend_low,
 }
 
 void
-add(digit_accumulator_type   addend_low,
-    digit_accumulator_type   addend_high,
-    std::vector<digit_type> &augend)
+add_in_place(digit_accumulator_type   addend_low,
+             digit_accumulator_type   addend_high,
+             std::vector<digit_type> &augend)
 {
     auto carry = fixed_add(addend_low, addend_high, augend);
 
@@ -146,8 +146,8 @@ fixed_add(long double              addend,
 }
 
 void
-add(long double              addend,
-    std::vector<digit_type> &augend)
+add_in_place(long double              addend,
+             std::vector<digit_type> &augend)
 {
     auto carry = fixed_add(addend, augend);
 
@@ -168,7 +168,7 @@ operator+=(std::vector<digit_type>       &lhs,
 
     pad_augend(rhs.size(), lhs);
 
-    add(rhs, lhs);
+    add_in_place(rhs, lhs);
 
     return lhs;
 }
@@ -183,7 +183,7 @@ operator+=(std::vector<digit_type> &lhs,
 
     pad_augend(rhs_view.digits_size(), lhs);
 
-    add(rhs_view.low_digit(), rhs_view.high_digit(), lhs);
+    add_in_place(rhs_view.low_digit(), rhs_view.high_digit(), lhs);
 
     return lhs;
 }
@@ -199,7 +199,7 @@ operator+=(std::vector<digit_type> &lhs,
     auto size_rhs = size_digits_from_nonnegative_floating_point(rhs);
     pad_augend(size_rhs, lhs);
 
-    add(rhs, lhs);
+    add_in_place(rhs, lhs);
 
     return lhs;
 }
@@ -215,7 +215,7 @@ operator+(const std::vector<digit_type> &lhs,
         
     auto augend = initialize_augend(larger);
 
-    add(smaller, augend);
+    add_in_place(smaller, augend);
 
     return augend;
 }
@@ -250,7 +250,7 @@ operator+(const std::vector<digit_type> &lhs,
 
     auto augend = initialize_augend_from_addends(lhs, rhs);
 
-    add(rhs, augend);
+    add_in_place(rhs, augend);
 
     return augend;
 }

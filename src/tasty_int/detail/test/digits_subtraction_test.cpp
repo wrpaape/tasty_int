@@ -18,6 +18,7 @@
 namespace {
 
 using tasty_int::detail::subtract;
+using tasty_int::detail::subtract_in_place;
 using tasty_int::detail::DIGIT_BASE;
 using tasty_int::detail::DIGIT_TYPE_MAX;
 using tasty_int::detail::Integer;
@@ -34,29 +35,40 @@ using binary_digits_operation_test_common::convert_to;
 
 template<typename SubtrahendType>
 void
-test_subtract(const std::vector<digit_type> &minuend,
-              const SubtrahendType          &subtrahend,
-              const Integer                 &expected_result)
+test_subtract_in_place(const std::vector<digit_type> &minuend,
+                       const SubtrahendType          &subtrahend,
+                       const Integer                 &expected_result)
 {
     std::vector<digit_type> result_digits = minuend;
 
-    Sign result_sign = subtract(subtrahend, result_digits);
+    Sign result_sign = subtract_in_place(subtrahend, result_digits);
 
     Integer result = { .sign = result_sign, .digits = result_digits };
     EXPECT_EQ(expected_result, result);
 }
 
-template<typename MinuendType>
+template<typename MinuendType, typename SubtrahendType>
 void
-test_subtract(MinuendType                    minuend,
-              const std::vector<digit_type> &subtrahend,
-              const Integer                 &expected_result)
-    requires std::is_arithmetic_v<MinuendType>
+test_subtract(const MinuendType    &minuend,
+              const SubtrahendType &subtrahend,
+              const Integer        &expected_result)
 {
     auto [result_sign, result_digits] = subtract(minuend, subtrahend);
 
     Integer result = { .sign = result_sign, .digits = result_digits };
     EXPECT_EQ(expected_result, result);
+}
+
+template<typename SubtrahendType>
+void
+test_subtract_from_digits(const std::vector<digit_type> &minuend,
+                          const SubtrahendType          &subtrahend,
+                          const Integer                 &expected_result)
+{
+    test_subtract_in_place(minuend, subtrahend, expected_result);
+
+    if constexpr (std::is_same_v<SubtrahendType, std::vector<digit_type>>)
+        test_subtract(minuend, subtrahend, expected_result);
 }
 
 template<typename SubtrahendType>
@@ -74,7 +86,7 @@ test_subtract_from_digits(
         .digits = expected_digits
     };
 
-    test_subtract(minuend, subtrahend, expected_result);
+    test_subtract_from_digits(minuend, subtrahend, expected_result);
 }
 
 template<typename MinuendType>
@@ -108,7 +120,7 @@ TEST_P(DigitsSubtractionIdentitiesTest,
     std::vector<digit_type> subtrahend = minuend;
     Integer ZERO = { .sign = Sign::ZERO, .digits = { 0 } };
 
-    test_subtract(minuend, subtrahend, ZERO);
+    test_subtract_from_digits(minuend, subtrahend, ZERO);
 }
 
 TEST_P(DigitsSubtractionIdentitiesTest,
@@ -121,7 +133,7 @@ TEST_P(DigitsSubtractionIdentitiesTest,
         .digits = minuend
     };
 
-    test_subtract(minuend, ZERO, original);
+    test_subtract_from_digits(minuend, ZERO, original);
 }
 
 TEST_P(DigitsSubtractionIdentitiesTest,
@@ -134,7 +146,7 @@ TEST_P(DigitsSubtractionIdentitiesTest,
         .digits = minuend
     };
 
-    test_subtract(minuend, ZERO, original);
+    test_subtract_from_digits(minuend, ZERO, original);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -280,7 +292,7 @@ TEST_P(IntegralSubtractionIdentitiesTest,
     std::uintmax_t          subtrahend = GetParam();
     std::vector<digit_type> minuend    = digits_from_integral(subtrahend);
 
-    test_subtract(minuend, subtrahend, ZERO);
+    test_subtract_from_digits(minuend, subtrahend, ZERO);
 }
 
 TEST_P(IntegralSubtractionIdentitiesTest,
@@ -576,7 +588,7 @@ TEST_P(FloatingPointSubtractionIdentitiesTest,
     long double             subtrahend = GetParam();
     std::vector<digit_type> minuend    = digits_from_floating_point(subtrahend);
 
-    test_subtract(minuend, subtrahend, ZERO);
+    test_subtract_from_digits(minuend, subtrahend, ZERO);
 }
 
 TEST_P(FloatingPointSubtractionIdentitiesTest,

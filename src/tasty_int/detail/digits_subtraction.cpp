@@ -13,6 +13,7 @@
 
 #include <algorithm>
 #include <type_traits>
+#include <utility>
 
 
 namespace tasty_int {
@@ -165,6 +166,18 @@ make_padded_digits(std::vector<digit_type>::size_type operand_size,
 }
 
 std::vector<digit_type>
+make_padded_minuend(const std::vector<digit_type>      &minuend,
+                    std::vector<digit_type>::size_type  subtrahend_size)
+{
+    std::vector<digit_type> padded_minuend =
+        make_padded_digits(minuend.size(), subtrahend_size);
+
+    std::copy(minuend.begin(), minuend.end(), padded_minuend.begin());
+
+    return padded_minuend;
+}
+
+std::vector<digit_type>
 make_padded_minuend(std::uintmax_t                     minuend,
                     std::vector<digit_type>::size_type subtrahend_size)
 {
@@ -227,8 +240,8 @@ complete_subtract(digit_accumulator_type   carry,
 }
 
 Sign
-minuend_compliment_subtract(const std::vector<digit_type> &subtrahend,
-                            std::vector<digit_type>       &minuend)
+minuend_compliment_subtract_in_place(const std::vector<digit_type> &subtrahend,
+                                     std::vector<digit_type>       &minuend)
 {
     make_digit_compliment(minuend);
 
@@ -237,24 +250,37 @@ minuend_compliment_subtract(const std::vector<digit_type> &subtrahend,
     return complete_subtract(carry, Sign::NEGATIVE, minuend);
 }
 
+template<typename MinuendType>
+std::pair<Sign, std::vector<digit_type>>
+minuend_compliment_subtract(const MinuendType             &minuend,
+                            const std::vector<digit_type> &subtrahend)
+{
+    auto result_digits = make_padded_minuend(minuend, subtrahend.size());
+
+    Sign result_sign = minuend_compliment_subtract_in_place(subtrahend,
+                                                            result_digits);
+
+    return { .first = result_sign, .second = std::move(result_digits) };
+}
+
 } // namespace
 
 
 Sign
-subtract(const std::vector<digit_type> &subtrahend,
-         std::vector<digit_type>       &minuend)
+subtract_in_place(const std::vector<digit_type> &subtrahend,
+                  std::vector<digit_type>       &minuend)
 {
     assert(!subtrahend.empty());
     assert(!minuend.empty());
 
     pad_minuend(subtrahend.size(), minuend);
 
-    return minuend_compliment_subtract(subtrahend, minuend);
+    return minuend_compliment_subtract_in_place(subtrahend, minuend);
 }
 
 Sign
-subtract(std::uintmax_t           subtrahend,
-         std::vector<digit_type> &minuend)
+subtract_in_place(std::uintmax_t           subtrahend,
+                  std::vector<digit_type> &minuend)
 {
     assert(!minuend.empty());
 
@@ -272,8 +298,8 @@ subtract(std::uintmax_t           subtrahend,
 }
 
 Sign
-subtract(long double              subtrahend,
-         std::vector<digit_type> &minuend)
+subtract_in_place(long double              subtrahend,
+                  std::vector<digit_type> &minuend)
 {
     assert(std::isfinite(subtrahend));
     assert(subtrahend >= 0.0L);
@@ -288,16 +314,22 @@ subtract(long double              subtrahend,
 }
 
 std::pair<Sign, std::vector<digit_type>>
+subtract(const std::vector<digit_type> &minuend,
+         const std::vector<digit_type> &subtrahend)
+{
+    assert(!minuend.empty());
+    assert(!subtrahend.empty());
+
+    return minuend_compliment_subtract(minuend, subtrahend);
+}
+
+std::pair<Sign, std::vector<digit_type>>
 subtract(std::uintmax_t                 minuend,
          const std::vector<digit_type> &subtrahend)
 {
     assert(!subtrahend.empty());
 
-    auto result_digits = make_padded_minuend(minuend, subtrahend.size());
-
-    Sign result_sign = minuend_compliment_subtract(subtrahend, result_digits);
-
-    return { .first = result_sign, .second = result_digits };
+    return minuend_compliment_subtract(minuend, subtrahend);
 }
 
 std::pair<Sign, std::vector<digit_type>>
@@ -308,14 +340,13 @@ subtract(long double                    minuend,
     assert(minuend >= 0.0L);
     assert(!subtrahend.empty());
 
-    std::vector<digit_type> result_digits = make_padded_subtrahend(minuend,
-                                                                   subtrahend);
+    auto result_digits = make_padded_subtrahend(minuend, subtrahend);
 
     auto carry = add_complement_with_end_around_carry(minuend, result_digits);
 
     Sign result_sign = complete_subtract(carry, Sign::NEGATIVE, result_digits);
 
-    return { .first = result_sign, .second = result_digits };
+    return { .first = result_sign, .second = std::move(result_digits) };
 }
 
 } // namespace detail

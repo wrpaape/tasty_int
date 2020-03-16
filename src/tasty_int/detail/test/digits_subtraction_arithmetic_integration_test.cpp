@@ -15,6 +15,7 @@
 namespace {
 
 using tasty_int::detail::subtract;
+using tasty_int::detail::subtract_in_place;
 using tasty_int::detail::digit_type;
 using tasty_int::detail::Integer;
 using tasty_int::detail::Sign;
@@ -30,7 +31,7 @@ subtract_from_digits(const std::vector<digit_type> &minuend,
 {
     auto result_digits = minuend;
 
-    Sign result_sign = subtract(subtrahend, result_digits);
+    Sign result_sign = subtract_in_place(subtrahend, result_digits);
 
     Integer result = { .sign = result_sign, .digits = result_digits };
 

@@ -35,15 +35,15 @@ namespace detail {
  */
 /// @{
 Sign
-subtract(const std::vector<digit_type> &subtrahend,
-         std::vector<digit_type>       &minuend);
+subtract_in_place(const std::vector<digit_type> &subtrahend,
+                  std::vector<digit_type>       &minuend);
 
 Sign
-subtract(std::uintmax_t           subtrahend,
-         std::vector<digit_type> &minuend);
+subtract_in_place(std::uintmax_t           subtrahend,
+                  std::vector<digit_type> &minuend);
 Sign
-subtract(long double              subtrahend,
-         std::vector<digit_type> &minuend);
+subtract_in_place(long double              subtrahend,
+                  std::vector<digit_type> &minuend);
 /// @}
 
 /**
@@ -57,6 +57,10 @@ subtract(long double              subtrahend,
  * @return `{ .first = <sign of result>, .second = <result digits> }`
  */
 /// @{
+std::pair<Sign, std::vector<digit_type>>
+subtract(const std::vector<digit_type> &minuend,
+         const std::vector<digit_type> &subtrahend);
+
 std::pair<Sign, std::vector<digit_type>>
 subtract(std::uintmax_t                 minuend,
          const std::vector<digit_type> &subtrahend);

@@ -79,18 +79,6 @@ target_link_libraries(
 )
 
 add_library(
-    tasty_int-detail-integer
-    STATIC
-    integer.cpp
-    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
-)
-target_link_libraries(
-    tasty_int-detail-integer
-    tasty_int-detail-digits_comparison
-    tasty_int-detail-sign_from_signed_arithmetic
-)
-
-add_library(
     tasty_int-detail-digits_addition
     STATIC
     digits_addition.cpp
@@ -122,6 +110,21 @@ target_link_libraries(
     tasty_int-detail-digit_from_nonnegative_value
     tasty_int-detail-floating_point_digits_iterator
     tasty_int-detail-sign_from_digits
+)
+
+add_library(
+    tasty_int-detail-integer
+    STATIC
+    integer.cpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
+)
+target_link_libraries(
+    tasty_int-detail-integer
+    tasty_int-detail-digits_comparison
+    tasty_int-detail-digits_addition
+    tasty_int-detail-digits_subtraction
+    tasty_int-detail-sign_from_signed_arithmetic
+    tasty_int-detail-sign_from_unsigned_arithmetic
 )
 
 add_subdirectory(conversions)

@@ -113,6 +113,15 @@ add_google_test(
 )
 
 add_google_test(
+    NAME      tasty_int-detail-integer_addition_test
+    SOURCES   integer_addition_test.cpp
+    LIBRARIES tasty_int-detail-integer
+              tasty_int-detail-conversions-integer_from_string
+              tasty_int-detail-integer_test_common
+              tasty_int_test
+)
+
+add_google_test(
     NAME      tasty_int-detail-integral_digits_view_test
     SOURCES   integral_digits_view_test
     LIBRARIES tasty_int-detail-integral_digits_view
