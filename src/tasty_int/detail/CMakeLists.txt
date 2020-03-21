@@ -40,6 +40,14 @@ add_library(
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 
+add_library(tasty_int-detail-flip_sign INTERFACE)
+target_sources(
+    tasty_int-detail-flip_sign
+    INTERFACE
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
+    ${PROJECT_SRC_DIR}/tasty_int/detail/flip_sign.hpp
+)
+
 add_library(tasty_int-detail-integral_digits_view INTERFACE)
 target_sources(
     tasty_int-detail-integral_digits_view
@@ -101,14 +109,14 @@ add_library(
     digits_subtraction.hpp
     $<TARGET_OBJECTS:tasty_int-detail-size_digits_from_nonnegative_floating_point>
     $<TARGET_OBJECTS:tasty_int-detail-trailing_zero>
-    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
-    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 target_link_libraries(
     tasty_int-detail-digits_subtraction
-    tasty_int-detail-digits_addition
     tasty_int-detail-digit_from_nonnegative_value
+    tasty_int-detail-digits_addition
+    tasty_int-detail-flip_sign
     tasty_int-detail-floating_point_digits_iterator
+    tasty_int-detail-integral_digits_view
     tasty_int-detail-sign_from_digits
 )
 
@@ -120,9 +128,10 @@ add_library(
 )
 target_link_libraries(
     tasty_int-detail-integer
-    tasty_int-detail-digits_comparison
     tasty_int-detail-digits_addition
+    tasty_int-detail-digits_comparison
     tasty_int-detail-digits_subtraction
+    tasty_int-detail-flip_sign
     tasty_int-detail-sign_from_signed_arithmetic
     tasty_int-detail-sign_from_unsigned_arithmetic
 )

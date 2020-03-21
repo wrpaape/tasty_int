@@ -16,9 +16,9 @@ using tasty_int::detail::conversions::integer_from_string;
 const Integer ZERO = { .sign = Sign::ZERO, .digits = { 0 } };
 
 void
-check_plus_equals_result(const Integer &expected_result,
-                         const Integer &augend,
-                         const Integer &result)
+check_add_in_place_result(const Integer &expected_result,
+                          const Integer &augend,
+                          const Integer &result)
 {
     EXPECT_EQ(&augend, &result)
         << "+= did not return reference to augend";
@@ -38,7 +38,7 @@ test_add_in_place(const Integer &lhs,
 
     const Integer &result = (augend += rhs);
 
-    check_plus_equals_result(expected_result, augend, result);
+    check_add_in_place_result(expected_result, augend, result);
 }
 
 template<typename LhsType, typename RhsType>

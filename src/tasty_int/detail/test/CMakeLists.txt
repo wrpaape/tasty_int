@@ -51,6 +51,13 @@ add_google_test(
 )
 
 add_google_test(
+    NAME      tasty_int-detail-flip_sign_test
+    SOURCES   flip_sign_test.cpp
+              $<TARGET_OBJECTS:tasty_int-detail-sign_test_common>
+    LIBRARIES tasty_int-detail-flip_sign
+)
+
+add_google_test(
     NAME      tasty_int-detail-size_digits_from_nonnegative_floating_point_test
     SOURCES   size_digits_from_nonnegative_floating_point_test.cpp
               $<TARGET_OBJECTS:tasty_int-detail-size_digits_from_nonnegative_floating_point>
@@ -113,15 +120,6 @@ add_google_test(
 )
 
 add_google_test(
-    NAME      tasty_int-detail-integer_addition_test
-    SOURCES   integer_addition_test.cpp
-    LIBRARIES tasty_int-detail-integer
-              tasty_int-detail-conversions-integer_from_string
-              tasty_int-detail-integer_test_common
-              tasty_int_test
-)
-
-add_google_test(
     NAME      tasty_int-detail-integral_digits_view_test
     SOURCES   integral_digits_view_test
     LIBRARIES tasty_int-detail-integral_digits_view
@@ -156,6 +154,16 @@ add_google_test(
 )
 
 add_google_test(
+    NAME      tasty_int-detail-integer_addition_test
+    SOURCES   integer_addition_test.cpp
+    LIBRARIES tasty_int-detail-integer
+              tasty_int-detail-conversions-integer_from_string
+              tasty_int-detail-integer_test_common
+              tasty_int_test
+)
+
+
+add_google_test(
     NAME      tasty_int-detail-digits_subtraction_test
     SOURCES   digits_subtraction_test.cpp
               $<TARGET_OBJECTS:tasty_int-detail-sign_from_digits>
@@ -176,5 +184,15 @@ add_google_test(
               tasty_int-detail-integer_test_common
               tasty_int-detail-conversions-digits_from_integral
               tasty_int-detail-conversions-digits_from_floating_point
+              tasty_int_test
+)
+
+add_google_test(
+    NAME      tasty_int-detail-integer_subtraction_test
+    SOURCES   integer_subtraction_test.cpp
+    LIBRARIES tasty_int-detail-integer
+              tasty_int-detail-conversions-integer_from_floating_point
+              tasty_int-detail-conversions-integer_from_string
+              tasty_int-detail-integer_test_common
               tasty_int_test
 )

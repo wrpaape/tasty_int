@@ -1,5 +1,6 @@
 #include "tasty_int/detail/integer.hpp" 
 
+#include <cassert>
 #include <cmath>
 
 #include <algorithm>
@@ -7,9 +8,10 @@
 #include <type_traits>
 #include <utility>
 
-#include "tasty_int/detail/digits_comparison.hpp"
 #include "tasty_int/detail/digits_addition.hpp"
+#include "tasty_int/detail/digits_comparison.hpp"
 #include "tasty_int/detail/digits_subtraction.hpp"
+#include "tasty_int/detail/flip_sign.hpp"
 #include "tasty_int/detail/sign_from_signed_arithmetic.hpp"
 #include "tasty_int/detail/sign_from_unsigned_arithmetic.hpp"
 
@@ -17,6 +19,21 @@
 namespace tasty_int {
 namespace detail {
 namespace {
+
+template<typename T>
+concept Arithmetic = std::is_arithmetic_v<T>;
+
+template<typename T>
+concept SignedArithmetic = std::is_signed_v<T>
+                        && Arithmetic<T>;
+
+template<typename T>
+concept ArithmeticValue = std::is_unsigned_v<T>
+                       || std::is_floating_point_v<T>;
+
+template<typename T>
+concept Value = ArithmeticValue<T>
+             || std::is_same_v<T, std::vector<digit_type>>;
 
 /// These specializations must be used in place of std::less, std::greater,
 /// etc... to avoid the Koenig lookup of the std::vector operators over the
@@ -174,20 +191,18 @@ struct DigitsGreaterEqual
     }
 }; // struct DigitsGreaterEqual
 
-template<typename ValueType,
-         typename SignedArithmeticType>
+template<ArithmeticValue  ArithmeticValueType,
+         SignedArithmetic SignedArithmeticType>
 bool
 have_equality(const Integer        &lhs,
               SignedArithmeticType  rhs)
-    requires std::is_convertible_v<SignedArithmeticType, ValueType>
-          && std::is_arithmetic_v<SignedArithmeticType>
-          && std::is_signed_v<SignedArithmeticType>
+    requires std::is_convertible_v<SignedArithmeticType, ArithmeticValueType>
 {
     Sign rhs_sign = sign_from_signed_arithmetic(rhs);
     if (lhs.sign != rhs_sign)
         return false;
 
-    ValueType rhs_value = (rhs_sign >= Sign::ZERO) ? rhs : -rhs;
+    ArithmeticValueType rhs_value = (rhs_sign >= Sign::ZERO) ? rhs : -rhs;
     return lhs.digits == rhs_value;
 }
 
@@ -213,13 +228,11 @@ have_inequality(const Integer &lhs,
 }
 
 template<template <typename> typename CompareSign,
-         typename CompareDigits,
-         typename SignedArithmeticType>
+         typename                     CompareDigits,
+         SignedArithmetic             SignedArithmeticType>
 bool
 have_inequality(const Integer        &lhs,
                 SignedArithmeticType  rhs)
-    requires std::is_arithmetic_v<SignedArithmeticType>
-          && std::is_signed_v<SignedArithmeticType>
 {
     Sign rhs_sign = sign_from_signed_arithmetic(rhs);
     if (lhs.sign != rhs_sign)
@@ -271,10 +284,12 @@ signs_agree(Sign sign1,
 }
 
 Sign
-sign_sum_from_agreeing_signs(Sign addend_sign1,
-                             Sign addend_sign2)
+larger_of_agreeing_signs(Sign sign1,
+                         Sign sign2)
 {
-    return static_cast<Sign>(addend_sign1 | addend_sign2);
+    assert(signs_agree(sign1, sign2));
+
+    return static_cast<Sign>(sign1 | sign2);
 }
 
 Sign
@@ -284,63 +299,69 @@ sign_difference(Sign minuend_sign,
     return static_cast<Sign>(minuend_sign * digits_difference_sign);
 }
 
-template<typename ValueType>
+template<Value ValueType>
 void
-add_aggreeing_terms_in_place(const ValueType &addend_value,
-                             Sign             addend_sign,
-                             Integer         &augend)
+add_agreeing_terms_in_place(const ValueType &addend_value,
+                            Sign             addend_sign,
+                            Integer         &augend)
 {
-    augend.sign    = sign_sum_from_agreeing_signs(augend.sign, addend_sign);
+    augend.sign    = larger_of_agreeing_signs(augend.sign, addend_sign);
     augend.digits += addend_value;
 }
 
-template<typename ValueType>
+template<Value ValueType>
 void
-subtract_disaggreeing_terms_in_place(const ValueType &subtrahend_value,
-                                     Integer         &minuend)
+subtract_value_in_place(const ValueType &subtrahend_value,
+                        Integer         &minuend)
 {
     Sign result_sign = subtract_in_place(subtrahend_value, minuend.digits);
     minuend.sign     = sign_difference(minuend.sign, result_sign);
 }
 
-template<typename ValueType,
-         typename SignedArithmeticType>
+template<ArithmeticValue  ArithmeticValueType,
+         SignedArithmetic SignedArithmeticType>
+std::pair<Sign, ArithmeticValueType>
+sign_and_value_from_signed_arithmetic(SignedArithmeticType signed_value)
+    requires std::is_convertible_v<SignedArithmeticType, ArithmeticValueType>
+{
+    return {
+        sign_from_signed_arithmetic(signed_value),
+        std::abs(signed_value)
+    };
+}
+
+template<ArithmeticValue  ArithmeticValueType,
+         SignedArithmetic SignedArithmeticType>
 Integer &
 add_signed_arithmetic_in_place(SignedArithmeticType  addend,
                                Integer              &augend)
-    requires std::is_arithmetic_v<ValueType>
-          && std::is_signed_v<SignedArithmeticType>
-          && std::is_arithmetic_v<SignedArithmeticType>
+    requires std::is_convertible_v<SignedArithmeticType, ArithmeticValueType>
 {
-    Sign addend_sign       = sign_from_signed_arithmetic(addend);
-    ValueType addend_value = std::abs(addend);
+    auto [addend_sign, addend_value] =
+        sign_and_value_from_signed_arithmetic<ArithmeticValueType>(addend);
 
-    if (signs_agree(augend.sign, addend_sign)) {
-        add_aggreeing_terms_in_place(addend_value, addend_sign, augend);
-    } else {
-        Sign result_sign = subtract_in_place(addend_value, augend.digits);
-        augend.sign      = sign_difference(augend.sign, result_sign);
-    }
+    if (signs_agree(augend.sign, addend_sign))
+        add_agreeing_terms_in_place(addend_value, addend_sign, augend);
+    else
+        subtract_value_in_place(addend_value, augend);
 
     return augend;
 }
 
-template<typename ValueType,
-         typename SignedArithmeticType>
+template<ArithmeticValue  ArithmeticValueType,
+         SignedArithmetic SignedArithmeticType>
 Integer
 add_signed_arithmetic(const Integer        &lhs,
                       SignedArithmeticType  rhs)
-    requires std::is_arithmetic_v<ValueType>
-          && std::is_signed_v<SignedArithmeticType>
-          && std::is_arithmetic_v<SignedArithmeticType>
+    requires std::is_convertible_v<SignedArithmeticType, ArithmeticValueType>
 {
     Integer result;
 
-    Sign rhs_sign       = sign_from_signed_arithmetic(rhs);
-    ValueType rhs_value = std::abs(rhs);
+    auto [rhs_sign, rhs_value] =
+        sign_and_value_from_signed_arithmetic<ArithmeticValueType>(rhs);
 
     if (signs_agree(lhs.sign, rhs_sign)) {
-        result.sign   = sign_sum_from_agreeing_signs(lhs.sign, rhs_sign);
+        result.sign   = larger_of_agreeing_signs(lhs.sign, rhs_sign);
         result.digits = lhs.digits + rhs_value;
     } else {
         auto [result_sign, result_digits] = subtract(rhs_value, lhs.digits);
@@ -349,6 +370,82 @@ add_signed_arithmetic(const Integer        &lhs,
     }
 
     return result;
+}
+
+template<Value ValueType>
+Integer &
+subtract_signed_value_in_place(Integer         &minuend,
+                               Sign             subtrahend_sign,
+                               const ValueType &subtrahend_value)
+{
+    if (signs_agree(minuend.sign, subtrahend_sign))
+        subtract_value_in_place(subtrahend_value, minuend);
+    else
+        minuend.digits += subtrahend_value;
+
+    return minuend;
+}
+
+template<ArithmeticValue  ArithmeticValueType,
+         SignedArithmetic SignedArithmeticType>
+Integer &
+subtract_signed_arithmetic_in_place(Integer              &minuend,
+                                    SignedArithmeticType  subtrahend)
+    requires std::is_convertible_v<SignedArithmeticType, ArithmeticValueType>
+{
+    auto [subtrahend_sign, subtrahend_value] =
+        sign_and_value_from_signed_arithmetic<ArithmeticValueType>(subtrahend);
+
+    return subtract_signed_value_in_place(minuend,
+                                          subtrahend_sign,
+                                          subtrahend_value);
+}
+
+template<Arithmetic ArithmeticType>
+Integer
+subtract_reverse_operands(const Integer  &lhs,
+                          ArithmeticType  rhs)
+{
+    Integer result = rhs - lhs;
+
+    result.sign = flip_sign(result.sign);
+    
+    return result;
+}
+
+template<Value ValueType>
+Integer
+subtract_signed_value(Sign             lhs_sign,
+                      const ValueType &lhs_value,
+                      const Integer   &rhs)
+{
+    Integer result;
+
+    if (signs_agree(lhs_sign, rhs.sign)) {
+        Sign larger_sign = larger_of_agreeing_signs(lhs_sign, rhs.sign);
+        auto [result_sign, result_digits] = subtract(lhs_value, rhs.digits);
+        result.sign   = sign_difference(larger_sign, result_sign);
+        result.digits = std::move(result_digits);
+    } else {
+        result.sign   = larger_of_agreeing_signs(lhs_sign,
+                                                 flip_sign(rhs.sign));
+        result.digits = lhs_value + rhs.digits;
+    }
+
+    return result;
+}
+
+template<ArithmeticValue  ArithmeticValueType,
+         SignedArithmetic SignedArithmeticType>
+Integer
+subtract_signed_arithmetic(SignedArithmeticType  lhs,
+                           const Integer        &rhs)
+    requires std::is_convertible_v<SignedArithmeticType, ArithmeticValueType>
+{
+    auto [lhs_sign, lhs_value] =
+        sign_and_value_from_signed_arithmetic<ArithmeticValueType>(lhs);
+
+    return subtract_signed_value<ArithmeticValueType>(lhs_sign, lhs_value, rhs);
 }
 
 } // namespace
@@ -664,9 +761,9 @@ operator+=(Integer       &lhs,
            const Integer &rhs)
 {
     if (signs_agree(lhs.sign, rhs.sign))
-        add_aggreeing_terms_in_place(rhs.digits, rhs.sign, lhs);
+        add_agreeing_terms_in_place(rhs.digits, rhs.sign, lhs);
     else
-        subtract_disaggreeing_terms_in_place(rhs.digits, lhs);
+        subtract_value_in_place(rhs.digits, lhs);
 
     return lhs;
 }
@@ -676,10 +773,10 @@ operator+=(Integer        &lhs,
            std::uintmax_t  rhs)
 {
     if (lhs.sign >= Sign::ZERO) {
-        Sign rhs_sign  = sign_from_unsigned_arithmetic(rhs);
-        add_aggreeing_terms_in_place(rhs, rhs_sign, lhs);
+        Sign rhs_sign = sign_from_unsigned_arithmetic(rhs);
+        add_agreeing_terms_in_place(rhs, rhs_sign, lhs);
     } else {
-        subtract_disaggreeing_terms_in_place(rhs, lhs);
+        subtract_value_in_place(rhs, lhs);
     }
 
     return lhs;
@@ -707,7 +804,7 @@ operator+(const Integer &lhs,
     Integer result;
 
     if (signs_agree(lhs.sign, rhs.sign)) {
-        result.sign   = sign_sum_from_agreeing_signs(lhs.sign, rhs.sign);
+        result.sign   = larger_of_agreeing_signs(lhs.sign, rhs.sign);
         result.digits = lhs.digits + rhs.digits;
     } else {
         auto [result_sign, result_digits] = subtract(lhs.digits, rhs.digits);
@@ -726,7 +823,7 @@ operator+(const Integer  &lhs,
 
     if (lhs.sign >= Sign::ZERO) {
         Sign rhs_sign = sign_from_unsigned_arithmetic(rhs);
-        result.sign   = sign_sum_from_agreeing_signs(lhs.sign, rhs_sign);
+        result.sign   = larger_of_agreeing_signs(lhs.sign, rhs_sign);
         result.digits = lhs.digits + rhs;
     } else {
         auto [result_sign, result_digits] = subtract(rhs, lhs.digits);
@@ -770,6 +867,103 @@ operator+(long double    lhs,
           const Integer &rhs)
 {
     return rhs + lhs;
+}
+
+
+Integer &
+operator-=(Integer       &lhs,
+           const Integer &rhs)
+{
+    return subtract_signed_value_in_place(lhs, rhs.sign, rhs.digits);
+}
+
+Integer &
+operator-=(Integer        &lhs,
+           std::uintmax_t  rhs)
+{
+    Sign rhs_sign = sign_from_unsigned_arithmetic(rhs);
+
+    if (signs_agree(lhs.sign, rhs_sign))
+        subtract_value_in_place(rhs, lhs);
+    else
+        lhs.digits += rhs;
+
+    return lhs;
+}
+
+Integer &
+operator-=(Integer       &lhs,
+           std::intmax_t  rhs)
+{
+    return subtract_signed_arithmetic_in_place<std::uintmax_t>(lhs, rhs);
+}
+
+Integer &
+operator-=(Integer     &lhs,
+           long double  rhs)
+{
+    return subtract_signed_arithmetic_in_place<long double>(lhs, rhs);
+}
+
+
+Integer
+operator-(const Integer &lhs,
+          const Integer &rhs)
+{
+    return subtract_signed_value(lhs.sign, lhs.digits, rhs);
+}
+
+Integer
+operator-(const Integer  &lhs,
+          std::uintmax_t  rhs)
+{
+    return subtract_reverse_operands(lhs, rhs);
+}
+
+Integer
+operator-(std::uintmax_t  lhs,
+          const Integer  &rhs)
+{
+    Integer result;
+
+    if (rhs.sign >= Sign::ZERO) {
+        auto [result_sign, result_digits] = subtract(lhs, rhs.digits);
+        result.sign   = result_sign;
+        result.digits = std::move(result_digits);
+    } else {
+        result.sign   = Sign::POSITIVE;
+        result.digits = rhs.digits + lhs;
+    }
+
+    return result;
+}
+
+Integer
+operator-(const Integer &lhs,
+          std::intmax_t  rhs)
+{
+    return subtract_reverse_operands(lhs, rhs);
+}
+
+Integer
+operator-(std::intmax_t  lhs,
+          const Integer &rhs)
+{
+    return subtract_signed_arithmetic<std::uintmax_t>(lhs, rhs);
+}
+
+Integer
+operator-(const Integer &lhs,
+          long double    rhs)
+{
+    return subtract_reverse_operands(lhs, rhs);
+}
+
+Integer
+operator-(long double    lhs,
+          const Integer &rhs)
+{
+    return subtract_signed_arithmetic<long double>(lhs, rhs);
 }
 
 } // namespace detail
