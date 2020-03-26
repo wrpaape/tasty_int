@@ -6,6 +6,7 @@
 #include "gtest/gtest.h"
 
 #include "tasty_int_test/arithmetic_types.hpp"
+#include "tasty_int_test/sample_arithmetic.hpp"
 
 
 namespace {
@@ -18,27 +19,6 @@ template<typename ArithmeticType>
 class Base10IntegerStringFromArithmeticTest : public ::testing::Test
 {
 protected:
-    static constexpr auto ZERO    = static_cast<ArithmeticType>(0);
-    static constexpr auto MINIMUM =
-        std::numeric_limits<ArithmeticType>::lowest();
-    static constexpr auto MAXIMUM = std::numeric_limits<ArithmeticType>::max();
-
-    static constexpr ArithmeticType
-    get_middle(ArithmeticType lower_bound,
-               ArithmeticType upper_bound)
-    {
-        // promote to long double to avoid overflow
-        auto range = static_cast<long double>(upper_bound)
-                   - static_cast<long double>(lower_bound);
-        return lower_bound + static_cast<ArithmeticType>(range / 2.0L);
-    }
-
-    static constexpr auto MEDIAN = std::is_signed_v<ArithmeticType>
-                                 ? ZERO // avoid overflow for long double
-                                 : get_middle(MINIMUM, MAXIMUM);
-    static constexpr auto LOWER_QUARTILE = get_middle(MINIMUM, MEDIAN);
-    static constexpr auto UPPER_QUARTILE = get_middle(MEDIAN,  MAXIMUM);
-
     static void
     test_value_is_convertible(ArithmeticType value);
 
@@ -47,7 +27,7 @@ protected:
 
     static std::string
     to_string(ArithmeticType value);
-}; // class LogarithmicRangeValuesTest
+}; // class Base10IntegerStringFromArithmeticTest
 
 template<typename ArithmeticType>
 void
@@ -93,32 +73,51 @@ TYPED_TEST_SUITE(Base10IntegerStringFromArithmeticTest,
 
 TYPED_TEST(Base10IntegerStringFromArithmeticTest, MinimumValue)
 {
-    TestFixture::test_value_is_convertible(TestFixture::MINIMUM);
+    TestFixture::test_value_is_convertible(
+        tasty_int_test::SampleArithmetic<TypeParam>::MINIMUM
+    );
 }
 
 TYPED_TEST(Base10IntegerStringFromArithmeticTest, LowerQuartileValue)
 {
-    TestFixture::test_value_is_convertible(TestFixture::LOWER_QUARTILE);
-}
-
-TYPED_TEST(Base10IntegerStringFromArithmeticTest, Zero)
-{
-    TestFixture::test_value_is_convertible(TestFixture::ZERO);
+    TestFixture::test_value_is_convertible(
+        tasty_int_test::SampleArithmetic<TypeParam>::LOWER_QUARTILE
+    );
 }
 
 TYPED_TEST(Base10IntegerStringFromArithmeticTest, MedianValue)
 {
-    TestFixture::test_value_is_convertible(TestFixture::MEDIAN);
+    TestFixture::test_value_is_convertible(
+        tasty_int_test::SampleArithmetic<TypeParam>::MEDIAN
+    );
 }
 
 TYPED_TEST(Base10IntegerStringFromArithmeticTest, UpperQuartileValue)
 {
-    TestFixture::test_value_is_convertible(TestFixture::UPPER_QUARTILE);
+    TestFixture::test_value_is_convertible(
+        tasty_int_test::SampleArithmetic<TypeParam>::UPPER_QUARTILE
+    );
 }
 
 TYPED_TEST(Base10IntegerStringFromArithmeticTest, MaximumValue)
 {
-    TestFixture::test_value_is_convertible(TestFixture::MAXIMUM);
+    TestFixture::test_value_is_convertible(
+        tasty_int_test::SampleArithmetic<TypeParam>::MAXIMUM
+    );
+}
+
+TYPED_TEST(Base10IntegerStringFromArithmeticTest, Zero)
+{
+    TestFixture::test_value_is_convertible(
+        tasty_int_test::SampleArithmetic<TypeParam>::ZERO
+    );
+}
+
+TYPED_TEST(Base10IntegerStringFromArithmeticTest, One)
+{
+    TestFixture::test_value_is_convertible(
+        tasty_int_test::SampleArithmetic<TypeParam>::ONE
+    );
 }
 
 } // namespace

@@ -13,6 +13,8 @@ namespace conversions {
  *
  * @param[in] value a floating point value
  * @return the tasty_int::detail::Integer representation of @p value
+ *
+ * @pre `std::isfinite(value) && (value >= 0.0)`
  */
 Integer
 integer_from_floating_point(long double value);

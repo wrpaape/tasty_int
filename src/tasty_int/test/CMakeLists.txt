@@ -1,10 +1,8 @@
 include(add_google_test)
 
-# @todo investigate this test for anything salvageable then delete
-#add_google_test(
-#    NAME      tasty_int_constructors_test
-#    SOURCES   tasty_int_constructors_test.cpp
-#              ${TASTY_INT_HEADERS}
-#    LIBRARIES ${TASTY_INT_SHARED_LIBRARY}
-#              tasty_int_test
-#)
+add_google_test(
+    NAME      tasty_int-tasty_int_conversions_test
+    SOURCES   tasty_int_conversions_test.cpp
+    LIBRARIES tasty_int
+              tasty_int_test
+)

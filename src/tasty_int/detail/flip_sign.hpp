@@ -7,6 +7,13 @@
 namespace tasty_int {
 namespace detail {
 
+/**
+ * @brief Flips the input sign.
+ *
+ * @param[in] sign the input sign
+ * @returns Sign::NEGATIVE if @p sign is Sign::POSITIVE, Sign::POSITIVE if @p
+ *     sign is Sign::NEGATIVE, and Sign::ZERO if @p sign is Sign::ZERO
+ */
 inline Sign
 flip_sign(Sign sign)
 {

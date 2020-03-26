@@ -7,6 +7,7 @@
 
 namespace {
 
+using tasty_int::detail::flip_sign;
 using tasty_int::detail::Sign;
 
 

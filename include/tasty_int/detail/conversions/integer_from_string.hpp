@@ -17,7 +17,9 @@ namespace conversions {
  *     base is determined from the leading characters a la
  *     tasty_int::detail::conversions::base_prefix_from_string().  If @p tokens
  *     has a prefix associated with @p base, then it will be ignored (i.e.
- *     `base=16 tokens=0xdead` is interpretted as `base=16 tokens=dead`).
+ *     `base=16 tokens=0xdead` is interpretted as `base=16 tokens=dead`). If no
+ *     base-specific prefix is found, @p tokens is interpretted in decimal form
+ *     (base 10).
  *
  * @param[in] tokens a string of ASCII tokens representing sign, numerical
  *     digits, and an optional prefix.
@@ -25,8 +27,8 @@ namespace conversions {
  * @return the tasty_int::detail::Integer representation of @p tokens
  *
  * @throw std::invalid_argument if @p tokens contains no digits
- * @throw std::invalid_argument if @p base is not a supported numeric base or
- *     zero.
+ * @throw std::invalid_argument if @p base is not either a supported numeric
+ *     base or zero.
  * @throw std::invalid_argument if input contains an out-of-bounds token for
  *     the provided (or interpretted) base
  */

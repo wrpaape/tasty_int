@@ -5,6 +5,32 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_LIB_DIR})
 # build internal implementation
 add_subdirectory(detail)
 
+add_library(
+    tasty_int
+    STATIC
+    ${PROJECT_INCLUDE_DIR}/tasty_int/tasty_int.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/integer_from_floating_point.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/integer_from_signed_integral.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/integer_from_unsigned_integral.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/integer_from_string.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/floating_point_from_integer.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/signed_integral_from_integer.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/unsigned_integral_from_integer.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/string_from_integer.hpp
+)
+target_link_libraries(
+    tasty_int
+    tasty_int-detail-integer
+    tasty_int-detail-conversions-integer_from_floating_point
+    tasty_int-detail-conversions-integer_from_signed_integral
+    tasty_int-detail-conversions-integer_from_unsigned_integral
+    tasty_int-detail-conversions-integer_from_string
+    tasty_int-detail-conversions-floating_point_from_integer
+    tasty_int-detail-conversions-signed_integral_from_integer
+    tasty_int-detail-conversions-unsigned_integral_from_integer
+    tasty_int-detail-conversions-string_from_integer
+)
+
 if(BUILD_TESTING)
     add_subdirectory(test)
 endif()
