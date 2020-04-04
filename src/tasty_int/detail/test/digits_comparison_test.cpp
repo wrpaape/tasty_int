@@ -7,6 +7,7 @@
 #include "tasty_int/detail/conversions/digits_from_integral.hpp"
 #include "tasty_int/detail/conversions/digits_from_floating_point.hpp"
 #include "tasty_int/detail/test/comparison_test_common.hpp"
+#include "tasty_int_test/comparison_tests.hpp"
 #include "tasty_int_test/logarithmic_range.hpp"
 
 
@@ -34,7 +35,7 @@ TEST_P(DigitsAndDigitsEqualityTest, ThisEqualToThis)
 {
     const std::vector<digit_type> &digits = GetParam();
 
-    comparison_test_common::expect_equal(digits, digits);
+    tasty_int_test::expect_equal(digits, digits);
 }
 
 TEST_P(DigitsAndDigitsEqualityTest, LhsEqualToRhsCopy)
@@ -42,7 +43,7 @@ TEST_P(DigitsAndDigitsEqualityTest, LhsEqualToRhsCopy)
     const std::vector<digit_type> &lhs = GetParam();
     auto rhs                           = lhs;
 
-    comparison_test_common::expect_equal(lhs, rhs);
+    tasty_int_test::expect_equal(lhs, rhs);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -74,7 +75,7 @@ TEST_P(DigitsAndDigitsInequalityTest, LhsLessThanRhs)
     const std::vector<digit_type> &lesser  = GetParam().smaller;
     const std::vector<digit_type> &greater = GetParam().larger;
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -102,7 +103,7 @@ TEST_P(DigitsAndIntegralEqualityTest, LhsEqualToRhs)
     std::uintmax_t value           = GetParam();
     std::vector<digit_type> digits = digits_from_integral(value);
 
-    comparison_test_common::expect_equal(digits, value);
+    tasty_int_test::expect_equal(digits, value);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -127,7 +128,7 @@ TEST_P(DigitsLessThanIntegralTest, LhsLessThanRhs)
     const std::vector<digit_type> &lesser  = GetParam().smaller;
     std::uintmax_t                 greater = GetParam().larger;
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -165,7 +166,7 @@ TEST_P(IntegralLessThanDigitsTest, LhsLessThanRhs)
     std::uintmax_t                 lesser  = GetParam().smaller;
     const std::vector<digit_type> &greater = GetParam().larger;
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -199,7 +200,7 @@ TEST_P(DigitsAndFloatingPointEqualityTest, LhsEqualToRhs)
     long double value              = GetParam();
     std::vector<digit_type> digits = digits_from_floating_point(value);
 
-    comparison_test_common::expect_equal(digits, value);
+    tasty_int_test::expect_equal(digits, value);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -224,7 +225,7 @@ TEST_P(DigitsLessThanFloatingPointTest, LhsLessThanRhs)
     const std::vector<digit_type> &lesser  = GetParam().smaller;
     long double                    greater = GetParam().larger;
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -267,7 +268,7 @@ TEST_P(FloatingPointLessThanDigitsTest, LhsLessThanRhs)
     long double                    lesser  = GetParam().smaller;
     const std::vector<digit_type> &greater = GetParam().larger;
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(

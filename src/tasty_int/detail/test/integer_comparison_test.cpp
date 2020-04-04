@@ -13,6 +13,7 @@
 #include "tasty_int/detail/conversions/integer_from_floating_point.hpp"
 #include "tasty_int/detail/test/comparison_test_common.hpp"
 #include "tasty_int/detail/test/integer_test_common.hpp"
+#include "tasty_int_test/comparison_tests.hpp"
 #include "tasty_int_test/logarithmic_range.hpp"
 
 
@@ -39,7 +40,7 @@ TEST_P(IntegerAndIntegerEqualityTest, ThisEqualToThis)
 {
     const Integer &integer = GetParam();
 
-    comparison_test_common::expect_equal(integer, integer);
+    tasty_int_test::expect_equal(integer, integer);
 }
 
 TEST_P(IntegerAndIntegerEqualityTest, LhsEqualToRhsCopy)
@@ -47,7 +48,7 @@ TEST_P(IntegerAndIntegerEqualityTest, LhsEqualToRhsCopy)
     const Integer &lhs = GetParam();
     auto rhs           = lhs;
 
-    comparison_test_common::expect_equal(lhs, rhs);
+    tasty_int_test::expect_equal(lhs, rhs);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -84,7 +85,7 @@ TEST_P(IntegerAndIntegerUnequalDigitsInequalityTest,
     Integer lesser  = { .sign = Sign::POSITIVE, .digits = GetParam().smaller };
     Integer greater = { .sign = Sign::POSITIVE, .digits = GetParam().larger  };
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 TEST_P(IntegerAndIntegerUnequalDigitsInequalityTest,
@@ -97,7 +98,7 @@ TEST_P(IntegerAndIntegerUnequalDigitsInequalityTest,
         .digits = GetParam().smaller
     };
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 TEST_P(IntegerAndIntegerUnequalDigitsInequalityTest,
@@ -110,7 +111,7 @@ TEST_P(IntegerAndIntegerUnequalDigitsInequalityTest,
     };
     Integer greater = { .sign = Sign::POSITIVE, .digits = GetParam().larger  };
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 TEST_P(IntegerAndIntegerUnequalDigitsInequalityTest,
@@ -123,7 +124,7 @@ TEST_P(IntegerAndIntegerUnequalDigitsInequalityTest,
         .digits = GetParam().smaller
     };
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -151,7 +152,7 @@ TEST_P(IntegerAndIntegerEqualDigitsInequalityTest,
     Integer lesser  = { .sign = Sign::NEGATIVE, .digits = GetParam() };
     Integer greater = { .sign = Sign::POSITIVE, .digits = GetParam() };
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -174,7 +175,7 @@ TEST(DigitsSameAsUnsignedIntegralTest, ZeroEqualToZero)
     std::uintmax_t lhs = 0;
     Integer        rhs = { .sign = Sign::ZERO, .digits = { 0 } };
 
-    comparison_test_common::expect_equal(lhs, rhs);
+    tasty_int_test::expect_equal(lhs, rhs);
 }
 
 class DigitsSameAsUnsignedIntegralTest
@@ -187,7 +188,7 @@ TEST_P(DigitsSameAsUnsignedIntegralTest,
     std::uintmax_t lhs = GetParam();
     Integer        rhs = integer_from_unsigned_integral(lhs);
 
-    comparison_test_common::expect_equal(lhs, rhs);
+    tasty_int_test::expect_equal(lhs, rhs);
 }
 
 TEST_P(DigitsSameAsUnsignedIntegralTest,
@@ -199,7 +200,7 @@ TEST_P(DigitsSameAsUnsignedIntegralTest,
         .digits = digits_from_integral(greater)
     };
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -230,7 +231,7 @@ TEST_P(DigitsSmallerThanUnsignedIntegralTest,
     };
     std::uintmax_t greater = GetParam().larger;
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 TEST_P(DigitsSmallerThanUnsignedIntegralTest,
@@ -243,7 +244,7 @@ TEST_P(DigitsSmallerThanUnsignedIntegralTest,
     };
     std::uintmax_t greater = GetParam().larger;
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -280,7 +281,7 @@ TEST_P(UnsignedIntegralSmallerThanDigitsTest,
     std::uintmax_t lesser = GetParam().smaller;
     Integer greater = { .sign = Sign::POSITIVE, .digits = GetParam().larger };
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 TEST_P(UnsignedIntegralSmallerThanDigitsTest,
@@ -289,7 +290,7 @@ TEST_P(UnsignedIntegralSmallerThanDigitsTest,
     Integer lesser = { .sign = Sign::NEGATIVE, .digits = GetParam().larger };
     std::uintmax_t greater = GetParam().smaller;
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -314,7 +315,7 @@ TEST(DigitsSameAsSignedIntegralTest, ZeroEqualToZero)
     std::intmax_t lhs = 0;
     Integer       rhs = { .sign = Sign::ZERO, .digits = { 0 } };
 
-    comparison_test_common::expect_equal(lhs, rhs);
+    tasty_int_test::expect_equal(lhs, rhs);
 }
 
 class DigitsSameAsPositiveSignedIntegralTest
@@ -327,7 +328,7 @@ TEST_P(DigitsSameAsPositiveSignedIntegralTest,
     std::intmax_t lhs = GetParam();
     Integer       rhs = integer_from_signed_integral(lhs);
 
-    comparison_test_common::expect_equal(lhs, rhs);
+    tasty_int_test::expect_equal(lhs, rhs);
 }
 
 TEST_P(DigitsSameAsPositiveSignedIntegralTest,
@@ -339,7 +340,7 @@ TEST_P(DigitsSameAsPositiveSignedIntegralTest,
         .digits = digits_from_integral(greater)
     };
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -360,7 +361,7 @@ TEST_P(DigitsSameAsNegativeSignedIntegralTest,
     std::intmax_t lhs = GetParam();
     Integer       rhs = integer_from_signed_integral(lhs);
 
-    comparison_test_common::expect_equal(lhs, rhs);
+    tasty_int_test::expect_equal(lhs, rhs);
 }
 
 TEST_P(DigitsSameAsNegativeSignedIntegralTest,
@@ -372,7 +373,7 @@ TEST_P(DigitsSameAsNegativeSignedIntegralTest,
         .digits = digits_from_integral(-lesser)
     };
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -403,7 +404,7 @@ TEST_P(DigitsSmallerThanPositiveSignedIntegralTest,
     };
     std::intmax_t greater = GetParam().larger;
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 TEST_P(DigitsSmallerThanPositiveSignedIntegralTest,
@@ -416,7 +417,7 @@ TEST_P(DigitsSmallerThanPositiveSignedIntegralTest,
     };
     std::intmax_t greater = GetParam().larger;
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -459,7 +460,7 @@ TEST_P(DigitsSmallerThanNegativeSignedIntegralTest,
         .digits = GetParam().smaller
     };
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 TEST_P(DigitsSmallerThanNegativeSignedIntegralTest,
@@ -472,7 +473,7 @@ TEST_P(DigitsSmallerThanNegativeSignedIntegralTest,
         .digits = GetParam().smaller
     };
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -517,7 +518,7 @@ TEST_P(NonnegativeSignedIntegralSmallerThanDigitsTest,
     std::intmax_t lesser = GetParam().smaller;
     Integer greater = { .sign = Sign::POSITIVE, .digits = GetParam().larger };
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 TEST_P(NonnegativeSignedIntegralSmallerThanDigitsTest,
@@ -526,7 +527,7 @@ TEST_P(NonnegativeSignedIntegralSmallerThanDigitsTest,
     Integer lesser = { .sign = Sign::NEGATIVE, .digits = GetParam().larger };
     std::intmax_t greater = GetParam().smaller;
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -568,7 +569,7 @@ TEST_P(NonpositiveSignedIntegralSmallerThanDigitsTest,
     };
     std::intmax_t greater = GetParam().smaller;
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 TEST_P(NonpositiveSignedIntegralSmallerThanDigitsTest,
@@ -580,7 +581,7 @@ TEST_P(NonpositiveSignedIntegralSmallerThanDigitsTest,
         .digits = GetParam().larger
     };
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -615,7 +616,7 @@ TEST(DigitsSameAsFloatingPointTest, ZeroEqualToZero)
     long double lhs = 0;
     Integer     rhs = { .sign = Sign::ZERO, .digits = { 0 } };
 
-    comparison_test_common::expect_equal(lhs, rhs);
+    tasty_int_test::expect_equal(lhs, rhs);
 }
 
 class DigitsSameAsPositiveFloatingPointTest
@@ -628,7 +629,7 @@ TEST_P(DigitsSameAsPositiveFloatingPointTest,
     long double lhs = GetParam();
     Integer     rhs = integer_from_floating_point(lhs);
 
-    comparison_test_common::expect_equal(lhs, rhs);
+    tasty_int_test::expect_equal(lhs, rhs);
 }
 
 TEST_P(DigitsSameAsPositiveFloatingPointTest,
@@ -640,7 +641,7 @@ TEST_P(DigitsSameAsPositiveFloatingPointTest,
         .digits = digits_from_floating_point(greater)
     };
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -661,7 +662,7 @@ TEST_P(DigitsSameAsNegativeFloatingPointTest,
     long double lhs = GetParam();
     Integer     rhs = integer_from_floating_point(lhs);
 
-    comparison_test_common::expect_equal(lhs, rhs);
+    tasty_int_test::expect_equal(lhs, rhs);
 }
 
 TEST_P(DigitsSameAsNegativeFloatingPointTest,
@@ -673,7 +674,7 @@ TEST_P(DigitsSameAsNegativeFloatingPointTest,
         .digits = digits_from_floating_point(-lesser)
     };
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -704,7 +705,7 @@ TEST_P(DigitsSmallerThanPositiveFloatingPointTest,
     };
     long double greater = GetParam().larger;
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 TEST_P(DigitsSmallerThanPositiveFloatingPointTest,
@@ -717,7 +718,7 @@ TEST_P(DigitsSmallerThanPositiveFloatingPointTest,
     };
     long double greater = GetParam().larger;
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -760,7 +761,7 @@ TEST_P(DigitsSmallerThanNegativeFloatingPointTest,
         .digits = GetParam().smaller
     };
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 TEST_P(DigitsSmallerThanNegativeFloatingPointTest,
@@ -773,7 +774,7 @@ TEST_P(DigitsSmallerThanNegativeFloatingPointTest,
         .digits = GetParam().smaller
     };
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -818,7 +819,7 @@ TEST_P(NonnegativeFloatingPointSmallerThanDigitsTest,
     long double lesser = GetParam().smaller;
     Integer greater = { .sign = Sign::POSITIVE, .digits = GetParam().larger };
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 TEST_P(NonnegativeFloatingPointSmallerThanDigitsTest,
@@ -827,7 +828,7 @@ TEST_P(NonnegativeFloatingPointSmallerThanDigitsTest,
     Integer lesser = { .sign = Sign::NEGATIVE, .digits = GetParam().larger };
     long double greater = GetParam().smaller;
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -870,7 +871,7 @@ TEST_P(NonpositiveFloatingPointSmallerThanDigitsTest,
     };
     long double greater = GetParam().smaller;
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 TEST_P(NonpositiveFloatingPointSmallerThanDigitsTest,
@@ -882,7 +883,7 @@ TEST_P(NonpositiveFloatingPointSmallerThanDigitsTest,
         .digits = GetParam().larger
     };
 
-    comparison_test_common::expect_unequal(lesser, greater);
+    tasty_int_test::expect_unequal(lesser, greater);
 }
 
 INSTANTIATE_TEST_SUITE_P(

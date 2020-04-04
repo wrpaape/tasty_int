@@ -1,6 +1,7 @@
 #ifndef TASTY_INT_TASTY_INT_HPP
 #define TASTY_INT_TASTY_INT_HPP
 
+#include <functional>
 #include <string>
 #include <string_view>
 #include <type_traits>
@@ -17,6 +18,16 @@
 
 
 namespace tasty_int {
+
+class TastyInt;
+
+namespace detail {
+
+const detail::Integer &
+prepare_operand(const TastyInt &operand);
+
+} // namespace detail
+
 
 /**
  * @defgroup TastyIntConcepts TastyInt Concepts
@@ -40,6 +51,15 @@ concept SignedIntegral = std::is_integral_v<T>
 template<typename T>
 concept UnsignedIntegral = std::is_integral_v<T>
                         && std::is_unsigned_v<T>;
+
+template<typename T>
+concept TastyIntOperand = Arithmetic<T>
+                       || std::is_same_v<T, TastyInt>;
+
+template<TastyIntOperand LhsType,
+         TastyIntOperand RhsType>
+concept TastyIntOperation = std::is_same_v<LhsType, TastyInt>
+                         || std::is_same_v<RhsType, TastyInt>;
 /// @}
 
 /**
@@ -223,9 +243,15 @@ public:
     }
 
 private:
+    friend const detail::Integer &
+    detail::prepare_operand(const TastyInt &operand);
+
     detail::Integer integer;
 }; // class TastyInt
 
 } // namespace tasty_int
+
+
+#include "tasty_int/tasty_int.ipp"
 
 #endif // ifndef TASTY_INT_TASTY_INT_HPP

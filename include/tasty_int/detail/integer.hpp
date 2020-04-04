@@ -49,12 +49,13 @@ struct Integer
 /**
  * @defgroup IntegerComparisonOperators Integer Comparison Operators
  *
- * These operators compare tasty_int::detail::Integer like ordinary ints:
+ * These operators compare tasty_int::detail::Integer and another arithmetic
+ * operand like ordinary ints:
  *     
- *     - positive integers are greater than zero
- *     - positive integers compare greater as their magnitude increases
- *     - negative integers are less than zero
- *     - negative integers compare lesser as their magnitude increases
+ *     - positive values are greater than zero
+ *     - positive values compare greater as their magnitude increases
+ *     - negative values are less than zero
+ *     - negative values compare lesser as their magnitude increases
  *
  * with the exception that floating point values are truncated toward zero.
  */
