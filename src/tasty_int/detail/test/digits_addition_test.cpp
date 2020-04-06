@@ -7,6 +7,7 @@
 
 #include "gtest/gtest.h"
 
+#include "tasty_int/detail/integral_digits_view.hpp"
 #include "tasty_int/detail/conversions/digits_from_floating_point.hpp"
 #include "tasty_int/detail/conversions/digits_from_integral.hpp"
 #include "tasty_int/detail/test/binary_digits_operation_test_common.hpp"
@@ -23,6 +24,7 @@ using tasty_int::detail::add_at;
 using tasty_int::detail::digit_type;
 using tasty_int::detail::digit_accumulator_type;
 using tasty_int::detail::DIGIT_TYPE_MAX;
+using tasty_int::detail::IntegralDigitsView;
 using tasty_int::detail::conversions::digits_from_floating_point;
 using tasty_int::detail::conversions::digits_from_integral;
 using binary_digits_operation_test_common::BinaryDigitsOperationTestParam;
@@ -99,6 +101,19 @@ TEST(DigitsAndDigitsAdditionTest, DigitsPlusEqualsDigitsReturnsReferenceToLhs)
     std::vector<digit_type> rhs = { 4, 5, 6 };
 
     EXPECT_EQ(&lhs, &(lhs += rhs));
+}
+
+TEST(DigitsAndDigitsAdditionTest, DigitsPlusEqualsSelfDoublesValue)
+{
+    std::vector<digit_type> digits = { 1, 0, 2, DIGIT_TYPE_MAX, 1 };
+    IntegralDigitsView carry(DIGIT_TYPE_MAX * 2);
+    std::vector<digit_type> expected = {
+        2, 0, 4, carry.low_digit(), carry.high_digit() + 2
+    };
+
+    digits += digits;
+
+    EXPECT_EQ(expected, digits);
 }
 
 class DigitsAndDigitsAdditionTest

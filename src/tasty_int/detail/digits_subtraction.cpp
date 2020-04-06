@@ -22,6 +22,13 @@ namespace detail {
 namespace {
 
 void
+make_zero(std::vector<digit_type> &digits)
+{
+    digits.front() = 0;
+    digits.resize(1);
+}
+
+void
 pad_minuend(std::vector<digit_type>::size_type  subtrahend_size,
             std::vector<digit_type>            &minuend)
 {
@@ -245,6 +252,15 @@ minuend_compliment_subtract_in_place(const std::vector<digit_type> &subtrahend,
     return complete_subtract(carry, Sign::NEGATIVE, minuend);
 }
 
+Sign
+subtract_distinct_in_place(const std::vector<digit_type> &subtrahend,
+                           std::vector<digit_type>       &minuend)
+{
+    pad_minuend(subtrahend.size(), minuend);
+
+    return minuend_compliment_subtract_in_place(subtrahend, minuend);
+}
+
 template<typename MinuendType>
 std::pair<Sign, std::vector<digit_type>>
 minuend_compliment_subtract(const MinuendType             &minuend,
@@ -268,9 +284,14 @@ subtract_in_place(const std::vector<digit_type> &subtrahend,
     assert(!subtrahend.empty());
     assert(!minuend.empty());
 
-    pad_minuend(subtrahend.size(), minuend);
+    Sign sign = Sign::ZERO;
 
-    return minuend_compliment_subtract_in_place(subtrahend, minuend);
+    if (&subtrahend != &minuend)
+        sign = subtract_distinct_in_place(subtrahend, minuend);
+    else
+        make_zero(minuend);
+
+    return sign;
 }
 
 Sign

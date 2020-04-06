@@ -123,6 +123,17 @@ TEST_P(DigitsSubtractionIdentitiesTest,
     test_subtract_from_digits(minuend, subtrahend, ZERO);
 }
 
+TEST_P(DigitsSubtractionIdentitiesTest, DigitsValueMinusSelfEqualsZero)
+{
+    std::vector<digit_type> digits = GetParam();
+    Integer ZERO = { .sign = Sign::ZERO, .digits = { 0 } };
+
+    auto sign = subtract_in_place(digits, digits);
+
+    Integer result = { .sign = sign, .digits = digits };
+    EXPECT_EQ(ZERO, result);
+}
+
 TEST_P(DigitsSubtractionIdentitiesTest,
        DigitsValueMinusZeroDigitsValueEqualsOriginalValue)
 {

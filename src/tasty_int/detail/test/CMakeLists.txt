@@ -147,6 +147,7 @@ add_google_test(
     NAME      tasty_int-detail-digits_addition_test
     SOURCES   digits_addition_test.cpp
     LIBRARIES tasty_int-detail-digits_addition
+              tasty_int-detail-integral_digits_view
               tasty_int-detail-conversions-digits_from_integral
               tasty_int-detail-conversions-digits_from_floating_point
               tasty_int-detail-binary_digits_operation_test_common
