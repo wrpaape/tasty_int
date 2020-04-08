@@ -1,9 +1,6 @@
 #include "tasty_int/tasty_int.hpp"
 
-#include <cmath>
-
 #include <limits>
-#include <type_traits>
 
 #include "gtest/gtest.h"
 

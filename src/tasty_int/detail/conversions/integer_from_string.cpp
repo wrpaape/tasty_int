@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include "tasty_int/detail/conversions/base_prefix_from_string.hpp"
+#include "tasty_int/detail/conversions/base_prefix_length_from_string.hpp"
 #include "tasty_int/detail/conversions/digits_from_string.hpp"
 #include "tasty_int/detail/sign_from_digits.hpp"
 
@@ -37,7 +37,7 @@ public:
      *
      * @details Leading whitespace is ignored.  If input base is zero, the
      *     correct base is determined from the leading tokens a la
-     *     tasty_int::detail::conversions::base_prefix_from_string().
+     *     tasty_int::detail::conversions::base_prefix_length_from_string().
      *
      * @return tasty_int::detail::Integer representation of the input
      *
@@ -194,10 +194,11 @@ IntegerParser::remove_leading_sign()
 void
 IntegerParser::parse_token_base()
 {
-    BasePrefix base_prefix = base_prefix_from_string(tokens);
-    if (have_base_prefix(base_prefix.base)) {
-        remove_prefix(base_prefix.prefix_length);
-        token_base = base_prefix.base;
+    BasePrefixLength base_prefix_length =
+        base_prefix_length_from_string(tokens);
+    if (have_base_prefix(base_prefix_length.base)) {
+        remove_prefix(base_prefix_length.prefix_length);
+        token_base = base_prefix_length.base;
     }
 }
 

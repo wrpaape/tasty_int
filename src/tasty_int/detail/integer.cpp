@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <ostream>
 #include <type_traits>
 #include <utility>
 
@@ -14,6 +15,8 @@
 #include "tasty_int/detail/flip_sign.hpp"
 #include "tasty_int/detail/sign_from_signed_arithmetic.hpp"
 #include "tasty_int/detail/sign_from_unsigned_arithmetic.hpp"
+#include "tasty_int/detail/conversions/base_prefix_format_from_ios_format.hpp"
+#include "tasty_int/detail/conversions/string_from_integer.hpp"
 
 
 namespace tasty_int {
@@ -964,6 +967,27 @@ operator-(long double    lhs,
           const Integer &rhs)
 {
     return subtract_signed_arithmetic<long double>(lhs, rhs);
+}
+
+
+std::ostream &
+operator<<(std::ostream  &output,
+           const Integer &integer)
+{
+    auto format =
+        conversions::base_prefix_format_from_ios_format(output.flags());
+
+    auto stringified = conversions::string_from_integer(integer, format.base);
+    std::string_view digits = stringified;
+
+    if (integer.sign >= Sign::ZERO) {
+        output << format.nonnegative_sign;
+    } else {
+        output << '-';
+        digits.remove_prefix(1);
+    }
+
+    return output << format.prefix << digits;
 }
 
 } // namespace detail

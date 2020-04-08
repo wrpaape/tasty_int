@@ -197,3 +197,10 @@ add_google_test(
               tasty_int-detail-integer_test_common
               tasty_int_test
 )
+
+add_google_test(
+    NAME      tasty_int-detail-integer_output_test
+    SOURCES   integer_output_test.cpp
+    LIBRARIES tasty_int-detail-integer
+              tasty_int-detail-conversions-integer_from_signed_integral
+)

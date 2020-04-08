@@ -89,10 +89,10 @@ target_link_libraries(
 )
 
 add_library(
-    tasty_int-detail-conversions-base_prefix_from_string
+    tasty_int-detail-conversions-base_prefix_length_from_string
     OBJECT
-    base_prefix_from_string.cpp
-    base_prefix_from_string.hpp
+    base_prefix_length_from_string.cpp
+    base_prefix_length_from_string.hpp
 )
 
 add_library(
@@ -107,7 +107,7 @@ add_library(
 target_link_libraries(
     tasty_int-detail-conversions-integer_from_string
     tasty_int-detail-conversions-digits_from_string
-    tasty_int-detail-conversions-base_prefix_from_string
+    tasty_int-detail-conversions-base_prefix_length_from_string
     tasty_int-detail-sign_from_digits
 )
 
@@ -196,6 +196,13 @@ add_library(
     $<TARGET_OBJECTS:tasty_int-detail-conversions-codegen-digits_per_token_table>
     $<TARGET_OBJECTS:tasty_int-detail-conversions-ensure_base_is_supported>
     $<TARGET_OBJECTS:tasty_int-detail-conversions-token_values_from_digits>
+)
+
+add_library(
+    tasty_int-detail-conversions-base_prefix_format_from_ios_format
+    OBJECT
+    base_prefix_format_from_ios_format.cpp
+    base_prefix_format_from_ios_format.hpp
 )
 
 if(BUILD_TESTING)

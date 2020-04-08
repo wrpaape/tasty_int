@@ -1,3 +1,5 @@
+add_subdirectory(conversions)
+
 add_library(tasty_int-detail-digit_from_nonnegative_value INTERFACE)
 target_sources(
     tasty_int-detail-digit_from_nonnegative_value
@@ -124,6 +126,7 @@ add_library(
     tasty_int-detail-integer
     STATIC
     integer.cpp
+    $<TARGET_OBJECTS:tasty_int-detail-conversions-base_prefix_format_from_ios_format>
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
 )
 target_link_libraries(
@@ -134,9 +137,8 @@ target_link_libraries(
     tasty_int-detail-flip_sign
     tasty_int-detail-sign_from_signed_arithmetic
     tasty_int-detail-sign_from_unsigned_arithmetic
+    tasty_int-detail-conversions-string_from_integer
 )
-
-add_subdirectory(conversions)
 
 if(BUILD_TESTING)
     add_subdirectory(test)

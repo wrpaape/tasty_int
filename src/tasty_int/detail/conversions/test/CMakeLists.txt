@@ -108,9 +108,9 @@ add_google_test(
 )
 
 add_google_test(
-    NAME      tasty_int-detail-conversions-base_prefix_from_string_test
-    SOURCES   base_prefix_from_string_test.cpp
-              $<TARGET_OBJECTS:tasty_int-detail-conversions-base_prefix_from_string>
+    NAME    tasty_int-detail-conversions-base_prefix_length_from_string_test
+    SOURCES base_prefix_length_from_string_test.cpp
+            $<TARGET_OBJECTS:tasty_int-detail-conversions-base_prefix_length_from_string>
 )
 
 add_google_test(
@@ -206,4 +206,10 @@ add_google_test(
               $<TARGET_OBJECTS:tasty_int-detail-conversions-string_conversion_test_common>
     LIBRARIES tasty_int-detail-conversions-string_from_integer
               tasty_int-detail-conversions-digits_from_string
+)
+
+add_google_test(
+    NAME    tasty_int-detail-conversions-base_prefix_format_from_ios_format_test
+    SOURCES base_prefix_format_from_ios_format_test.cpp
+            $<TARGET_OBJECTS:tasty_int-detail-conversions-base_prefix_format_from_ios_format>
 )

@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+#include <iomanip>
+#include <sstream>
 #include <type_traits>
 
 #include "gtest/gtest.h"
@@ -260,6 +262,270 @@ TEST_F(TastyIntStringConversionTest, ToStringBaseDefaultsToBase10)
 
     EXPECT_EQ("1234567890123456789012345678901234567890",
               tasty_int.to_string());
+}
+
+
+TEST(TastyIntOutputTest, OutputReturnsReferenceToSelf)
+{
+    std::ostringstream output;
+
+    EXPECT_EQ(&output, &(output << TastyInt(0)));
+}
+
+TEST(TastyIntOutputTest, NonnegativeNoFormat)
+{
+    std::ostringstream output;
+
+    output << TastyInt(1234567890);
+
+    EXPECT_EQ("1234567890", output.str());
+}
+
+TEST(TastyIntOutputTest, NonnegativeShowbase)
+{
+    std::ostringstream output;
+
+    output << std::showbase
+           << TastyInt(1234567890);
+
+    EXPECT_EQ("1234567890", output.str());
+}
+
+TEST(TastyIntOutputTest, NonnegativeShowpos)
+{
+    std::ostringstream output;
+
+    output << std::showpos
+           << TastyInt(1234567890);
+
+    EXPECT_EQ("+1234567890", output.str());
+}
+
+TEST(TastyIntOutputTest, NonnegativeShowbaseShowpos)
+{
+    std::ostringstream output;
+
+    output << std::showbase
+           << std::showpos
+           << TastyInt(1234567890);
+
+    EXPECT_EQ("+1234567890", output.str());
+}
+
+TEST(TastyIntOutputTest, NonnegativeHex)
+{
+    std::ostringstream output;
+
+    output << std::hex
+           << TastyInt(0xdeadf00);
+
+    EXPECT_EQ("deadf00", output.str());
+}
+
+TEST(TastyIntOutputTest, NonnegativeHexShowbase)
+{
+    std::ostringstream output;
+
+    output << std::hex
+           << std::showbase
+           << TastyInt(0xdeadf00);
+
+    EXPECT_EQ("0xdeadf00", output.str());
+}
+
+TEST(TastyIntOutputTest, NonnegativeHexShowpos)
+{
+    std::ostringstream output;
+
+    output << std::hex
+           << std::showpos
+           << TastyInt(0xdeadf00);
+
+    EXPECT_EQ("+deadf00", output.str());
+}
+
+TEST(TastyIntOutputTest, NonnegativeHexShowbaseShowpos)
+{
+    std::ostringstream output;
+
+    output << std::hex
+           << std::showbase
+           << std::showpos
+           << TastyInt(0xdeadf00);
+
+    EXPECT_EQ("+0xdeadf00", output.str());
+}
+
+TEST(TastyIntOutputTest, NonnegativeOct)
+{
+    std::ostringstream output;
+
+    output << std::oct
+           << TastyInt(0777);
+   
+    EXPECT_EQ("777", output.str());
+}
+
+TEST(TastyIntOutputTest, NonnegativeOctShowbase)
+{
+    std::ostringstream output;
+
+    output << std::oct
+           << std::showbase
+           << TastyInt(0777);
+
+    EXPECT_EQ("0777", output.str());
+}
+
+TEST(TastyIntOutputTest, NonnegativeOctShowpos)
+{
+    std::ostringstream output;
+
+    output << std::oct
+           << std::showpos
+           << TastyInt(0777);
+
+    EXPECT_EQ("+777", output.str());
+}
+
+TEST(TastyIntOutputTest, NonnegativeOctShowbaseShowpos)
+{
+    std::ostringstream output;
+
+    output << std::oct
+           << std::showbase
+           << std::showpos
+           << TastyInt(0777);
+
+    EXPECT_EQ("+0777", output.str());
+}
+
+TEST(TastyIntOutputTest, NegativeNoFormat)
+{
+    std::ostringstream output;
+
+    output << TastyInt(-1234567890);
+
+    EXPECT_EQ("-1234567890", output.str());
+}
+
+TEST(TastyIntOutputTest, NegativeShowbase)
+{
+    std::ostringstream output;
+
+    output << std::showbase
+           << TastyInt(-1234567890);
+
+    EXPECT_EQ("-1234567890", output.str());
+}
+
+TEST(TastyIntOutputTest, NegativeShowpos)
+{
+    std::ostringstream output;
+
+    output << std::showpos
+           << TastyInt(-1234567890);
+
+    EXPECT_EQ("-1234567890", output.str());
+}
+
+TEST(TastyIntOutputTest, NegativeShowbaseShowpos)
+{
+    std::ostringstream output;
+
+    output << std::showbase
+           << std::showpos
+           << TastyInt(-1234567890);
+
+    EXPECT_EQ("-1234567890", output.str());
+}
+
+TEST(TastyIntOutputTest, NegativeHex)
+{
+    std::ostringstream output;
+
+    output << std::hex
+           << TastyInt(-0xdeadf00);
+
+    EXPECT_EQ("-deadf00", output.str());
+}
+
+TEST(TastyIntOutputTest, NegativeHexShowbase)
+{
+    std::ostringstream output;
+
+    output << std::hex
+           << std::showbase
+           << TastyInt(-0xdeadf00);
+
+    EXPECT_EQ("-0xdeadf00", output.str());
+}
+
+TEST(TastyIntOutputTest, NegativeHexShowpos)
+{
+    std::ostringstream output;
+
+    output << std::hex
+           << std::showpos
+           << TastyInt(-0xdeadf00);
+
+    EXPECT_EQ("-deadf00", output.str());
+}
+
+TEST(TastyIntOutputTest, NegativeHexShowbaseShowpos)
+{
+    std::ostringstream output;
+
+    output << std::hex
+           << std::showbase
+           << std::showpos
+           << TastyInt(-0xdeadf00);
+
+    EXPECT_EQ("-0xdeadf00", output.str());
+}
+
+TEST(TastyIntOutputTest, NegativeOct)
+{
+    std::ostringstream output;
+
+    output << std::oct
+           << TastyInt(-0777);
+   
+    EXPECT_EQ("-777", output.str());
+}
+
+TEST(TastyIntOutputTest, NegativeOctShowbase)
+{
+    std::ostringstream output;
+
+    output << std::oct
+           << std::showbase
+           << TastyInt(-0777);
+
+    EXPECT_EQ("-0777", output.str());
+}
+
+TEST(TastyIntOutputTest, NegativeOctShowpos)
+{
+    std::ostringstream output;
+
+    output << std::oct
+           << std::showpos
+           << TastyInt(-0777);
+
+    EXPECT_EQ("-777", output.str());
+}
+
+TEST(TastyIntOutputTest, NegativeOctShowbaseShowpos)
+{
+    std::ostringstream output;
+
+    output << std::oct
+           << std::showbase
+           << std::showpos
+           << TastyInt(-0777);
+
+    EXPECT_EQ("-0777", output.str());
 }
 
 } // namespace

@@ -45,6 +45,19 @@ prepare_operand(UnsignedIntegralType operand)
 } // namespace detail
 
 
+/// @addtogroup TastyIntConcepts
+/// @{
+template<typename T>
+concept TastyIntOperand = Arithmetic<T>
+                       || std::is_same_v<T, TastyInt>;
+
+template<TastyIntOperand LhsType,
+         TastyIntOperand RhsType>
+concept TastyIntOperation = std::is_same_v<LhsType, TastyInt>
+                         || std::is_same_v<RhsType, TastyInt>;
+/// @}
+
+
 /**
  * @defgroup TastyIntComparisonOperators TastyInt Comparison Operators
  *
@@ -113,6 +126,34 @@ operator>=(const LhsType &lhs,
     return detail::prepare_operand(lhs) >= detail::prepare_operand(rhs);
 }
 /// @}
+
+
+/**
+ * @brief TastyInt output operator.
+ *
+ * @details Output is formatted as follows:
+ *
+ *     [sign][prefix][digits]
+ *
+ * where
+ *     sign   := - if tasty_int is negative, + if tasty_int is nonnegative and
+ *               output has been modified with std::shopos, otherwise the empty
+ *               string
+ *     prefix := 0x or 0 if output has been modified with std::hex or std::oct
+ *               respectively, otherwise the empty string
+ *     digits := the string representation of the numerical portion of
+ *               tasty_int
+ *
+ *aram[in,out] output the output stream
+ *aram[in]     tasty_int an arbitrary-precision integer
+ * @return a reference to output
+ */
+inline std::ostream &
+operator<<(std::ostream   &output,
+           const TastyInt &tasty_int)
+{
+    return output << detail::prepare_operand(tasty_int);
+}
 
 } // namespace tasty_int
 
