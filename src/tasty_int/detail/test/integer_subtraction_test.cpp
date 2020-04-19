@@ -69,12 +69,30 @@ test_subtraction(const MinuendType    &minuend,
 }
 
 
-TEST(IntegerAdditionTest, ZeroIntegerAndZeroInteger)
+TEST(IntegerSubtractionTest, ZeroIntegerAndZeroInteger)
 {
     test_subtraction(ZERO_INTEGER, ZERO_INTEGER, ZERO_INTEGER);
 }
 
-TEST(IntegerAdditionTest, PositiveIntegerAndZeroInteger)
+TEST(IntegerSubtractionTest, ZeroIntegerAndPositiveInteger)
+{
+    Integer minuend         = ZERO_INTEGER;
+    Integer subtrahend      = integer_from_string("+111111111111111111", 10);
+    Integer expected_result = integer_from_string("-111111111111111111", 10);
+
+    test_subtraction(minuend, subtrahend, expected_result);
+}
+
+TEST(IntegerSubtractionTest, ZeroIntegerAndNegativeInteger)
+{
+    Integer minuend         = ZERO_INTEGER;
+    Integer subtrahend      = integer_from_string("-222222222222222222", 10);
+    Integer expected_result = integer_from_string("+222222222222222222", 10);
+
+    test_subtraction(minuend, subtrahend, expected_result);
+}
+
+TEST(IntegerSubtractionTest, PositiveIntegerAndZeroInteger)
 {
     Integer minuend         = integer_from_string("+9876543210123456789", 10);
     Integer subtrahend      = ZERO_INTEGER;
@@ -83,7 +101,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndZeroInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveIntegerAndSamePositiveInteger)
+TEST(IntegerSubtractionTest, PositiveIntegerAndSamePositiveInteger)
 {
     Integer minuend         = integer_from_string("+9876543210123456789", 10);
     Integer subtrahend      = minuend;
@@ -92,7 +110,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndSamePositiveInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveIntegerAndSmallerPositiveInteger)
+TEST(IntegerSubtractionTest, PositiveIntegerAndSmallerPositiveInteger)
 {
     Integer minuend         = integer_from_string("+9876543210123456789", 10);
     Integer subtrahend      = integer_from_string(          "+123456789", 10);
@@ -101,7 +119,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndSmallerPositiveInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveIntegerAndLargerPositiveInteger)
+TEST(IntegerSubtractionTest, PositiveIntegerAndLargerPositiveInteger)
 {
     Integer minuend         = integer_from_string( "+9876543210123456789", 10);
     Integer subtrahend      = integer_from_string("+19876543210123456789", 10);
@@ -110,7 +128,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndLargerPositiveInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveIntegerAndNegativeInteger)
+TEST(IntegerSubtractionTest, PositiveIntegerAndNegativeInteger)
 {
     Integer minuend         = integer_from_string( "+9876543210123456789", 10);
     Integer subtrahend      = integer_from_string( "-9876543210123456789", 10);
@@ -119,7 +137,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndNegativeInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeIntegerAndZeroInteger)
+TEST(IntegerSubtractionTest, NegativeIntegerAndZeroInteger)
 {
     Integer minuend         = integer_from_string("-9876543210123456789", 10);
     Integer subtrahend      = ZERO_INTEGER;
@@ -128,7 +146,7 @@ TEST(IntegerAdditionTest, NegativeIntegerAndZeroInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeIntegerAndSameNegativeInteger)
+TEST(IntegerSubtractionTest, NegativeIntegerAndSameNegativeInteger)
 {
     Integer minuend         = integer_from_string("-9876543210123456789", 10);
     Integer subtrahend      = minuend;
@@ -137,7 +155,7 @@ TEST(IntegerAdditionTest, NegativeIntegerAndSameNegativeInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeIntegerAndSmallerNegativeInteger)
+TEST(IntegerSubtractionTest, NegativeIntegerAndSmallerNegativeInteger)
 {
     Integer minuend         = integer_from_string("-9876543210123456789", 10);
     Integer subtrahend      = integer_from_string(          "-123456789", 10);
@@ -146,7 +164,7 @@ TEST(IntegerAdditionTest, NegativeIntegerAndSmallerNegativeInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeIntegerAndLargerNegativeInteger)
+TEST(IntegerSubtractionTest, NegativeIntegerAndLargerNegativeInteger)
 {
     Integer minuend         = integer_from_string( "-9876543210123456789", 10);
     Integer subtrahend      = integer_from_string("-19876543210123456789", 10);
@@ -155,7 +173,7 @@ TEST(IntegerAdditionTest, NegativeIntegerAndLargerNegativeInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeIntegerAndPositiveInteger)
+TEST(IntegerSubtractionTest, NegativeIntegerAndPositiveInteger)
 {
     Integer minuend         = integer_from_string( "-9876543210123456789", 10);
     Integer subtrahend      = integer_from_string( "+9876543210123456789", 10);
@@ -165,12 +183,21 @@ TEST(IntegerAdditionTest, NegativeIntegerAndPositiveInteger)
 }
 
 
-TEST(IntegerAdditionTest, ZeroIntegerAndZeroUnsignedIntegral)
+TEST(IntegerSubtractionTest, ZeroIntegerAndZeroUnsignedIntegral)
 {
     test_subtraction(ZERO_INTEGER, std::uintmax_t(0), ZERO_INTEGER);
 }
 
-TEST(IntegerAdditionTest, PositiveIntegerAndZeroUnsignedIntegral)
+TEST(IntegerSubtractionTest, ZeroIntegerAndPositiveUnsignedIntegral)
+{
+    Integer minuend           =                ZERO_INTEGER;
+    std::uintmax_t subtrahend =                      +55555;
+    Integer expected_result   = integer_from_string("-55555", 10);
+
+    test_subtraction(minuend, subtrahend, expected_result);
+}
+
+TEST(IntegerSubtractionTest, PositiveIntegerAndZeroUnsignedIntegral)
 {
     Integer minuend           = integer_from_string("+54321", 10);
     std::uintmax_t subtrahend = 0;
@@ -179,7 +206,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndZeroUnsignedIntegral)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveIntegerAndSamePositiveUnsignedIntegral)
+TEST(IntegerSubtractionTest, PositiveIntegerAndSamePositiveUnsignedIntegral)
 {
     Integer minuend           = integer_from_string("+54321", 10);
     std::uintmax_t subtrahend =                      +54321;
@@ -188,7 +215,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndSamePositiveUnsignedIntegral)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveIntegerAndSmallerPositiveUnsignedIntegral)
+TEST(IntegerSubtractionTest, PositiveIntegerAndSmallerPositiveUnsignedIntegral)
 {
     Integer minuend           = integer_from_string("+54321", 10);
     std::uintmax_t subtrahend =                      +43210;
@@ -197,7 +224,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndSmallerPositiveUnsignedIntegral)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveIntegerAndLargerPositiveUnsignedIntegral)
+TEST(IntegerSubtractionTest, PositiveIntegerAndLargerPositiveUnsignedIntegral)
 {
     Integer minuend           = integer_from_string("+54321", 10);
     std::uintmax_t subtrahend =                      +65432;
@@ -206,7 +233,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndLargerPositiveUnsignedIntegral)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeIntegerAndZeroUnsignedIntegral)
+TEST(IntegerSubtractionTest, NegativeIntegerAndZeroUnsignedIntegral)
 {
     Integer minuend           = integer_from_string("-54321", 10);
     std::uintmax_t subtrahend = 0;
@@ -215,7 +242,7 @@ TEST(IntegerAdditionTest, NegativeIntegerAndZeroUnsignedIntegral)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeIntegerAndPositiveUnsignedIntegral)
+TEST(IntegerSubtractionTest, NegativeIntegerAndPositiveUnsignedIntegral)
 {
     Integer minuend           = integer_from_string("-54321", 10);
     std::uintmax_t subtrahend =                      +11111;
@@ -224,12 +251,12 @@ TEST(IntegerAdditionTest, NegativeIntegerAndPositiveUnsignedIntegral)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, ZeroUnsignedIntegralAndZeroInteger)
+TEST(IntegerSubtractionTest, ZeroUnsignedIntegralAndZeroInteger)
 {
     test_subtraction(std::uintmax_t(0), ZERO_INTEGER, ZERO_INTEGER);
 }
 
-TEST(IntegerAdditionTest, PositiveUnsignedIntegralAndZeroInteger)
+TEST(IntegerSubtractionTest, PositiveUnsignedIntegralAndZeroInteger)
 {
     std::uintmax_t minuend  =                      +54321;
     Integer subtrahend      =                ZERO_INTEGER;
@@ -238,7 +265,7 @@ TEST(IntegerAdditionTest, PositiveUnsignedIntegralAndZeroInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveUnsignedIntegralAndSamePositiveInteger)
+TEST(IntegerSubtractionTest, PositiveUnsignedIntegralAndSamePositiveInteger)
 {
     std::uintmax_t minuend  =                      +54321;
     Integer subtrahend      = integer_from_string("+54321", 10);
@@ -247,7 +274,7 @@ TEST(IntegerAdditionTest, PositiveUnsignedIntegralAndSamePositiveInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveUnsignedIntegralAndSmallerPositiveInteger)
+TEST(IntegerSubtractionTest, PositiveUnsignedIntegralAndSmallerPositiveInteger)
 {
     std::uintmax_t minuend  =                      +54321;
     Integer subtrahend      = integer_from_string("+43210", 10);
@@ -256,7 +283,7 @@ TEST(IntegerAdditionTest, PositiveUnsignedIntegralAndSmallerPositiveInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveUnsignedIntegralAndLargerPositiveInteger)
+TEST(IntegerSubtractionTest, PositiveUnsignedIntegralAndLargerPositiveInteger)
 {
     std::uintmax_t minuend  =                      +54321;
     Integer subtrahend      = integer_from_string("+65432", 10);
@@ -266,12 +293,30 @@ TEST(IntegerAdditionTest, PositiveUnsignedIntegralAndLargerPositiveInteger)
 }
 
 
-TEST(IntegerAdditionTest, ZeroIntegerAndZeroSignedIntegral)
+TEST(IntegerSubtractionTest, ZeroIntegerAndZeroSignedIntegral)
 {
     test_subtraction(ZERO_INTEGER, std::intmax_t(0), ZERO_INTEGER);
 }
 
-TEST(IntegerAdditionTest, PositiveIntegerAndZeroSignedIntegral)
+TEST(IntegerSubtractionTest, ZeroIntegerAndPositiveSignedIntegral)
+{
+    Integer minuend          =                 ZERO_INTEGER;
+    std::intmax_t subtrahend =                      +666666;
+    Integer expected_result  = integer_from_string("-666666", 10);
+
+    test_subtraction(minuend, subtrahend, expected_result);
+}
+
+TEST(IntegerSubtractionTest, ZeroIntegerAndNegativeSignedIntegral)
+{
+    Integer minuend          =                  ZERO_INTEGER;
+    std::intmax_t subtrahend =                      -7777777;
+    Integer expected_result  = integer_from_string("+7777777", 10);
+
+    test_subtraction(minuend, subtrahend, expected_result);
+}
+
+TEST(IntegerSubtractionTest, PositiveIntegerAndZeroSignedIntegral)
 {
     Integer minuend          = integer_from_string("+32123", 10);
     std::intmax_t subtrahend = 0;
@@ -280,7 +325,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndZeroSignedIntegral)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveIntegerAndSamePositiveSignedIntegral)
+TEST(IntegerSubtractionTest, PositiveIntegerAndSamePositiveSignedIntegral)
 {
     Integer minuend          = integer_from_string("+32123", 10);
     std::intmax_t subtrahend =                      +32123;
@@ -289,7 +334,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndSamePositiveSignedIntegral)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveIntegerAndSmallerPositiveSignedIntegral)
+TEST(IntegerSubtractionTest, PositiveIntegerAndSmallerPositiveSignedIntegral)
 {
     Integer minuend          = integer_from_string("+32123", 10);
     std::intmax_t subtrahend =                       +2123;
@@ -298,7 +343,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndSmallerPositiveSignedIntegral)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveIntegerAndLargerPositiveSignedIntegral)
+TEST(IntegerSubtractionTest, PositiveIntegerAndLargerPositiveSignedIntegral)
 {
     Integer minuend          = integer_from_string("+32123", 10);
     std::intmax_t subtrahend =                      +32767;
@@ -307,7 +352,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndLargerPositiveSignedIntegral)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveIntegerAndNegativeSignedIntegral)
+TEST(IntegerSubtractionTest, PositiveIntegerAndNegativeSignedIntegral)
 {
     Integer minuend          = integer_from_string("+32123", 10);
     std::intmax_t subtrahend =                      -32123;
@@ -316,7 +361,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndNegativeSignedIntegral)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeIntegerAndZeroSignedIntegral)
+TEST(IntegerSubtractionTest, NegativeIntegerAndZeroSignedIntegral)
 {
     Integer minuend          = integer_from_string("-32123", 10);
     std::intmax_t subtrahend = 0;
@@ -325,7 +370,7 @@ TEST(IntegerAdditionTest, NegativeIntegerAndZeroSignedIntegral)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeIntegerAndSameNegativeSignedIntegral)
+TEST(IntegerSubtractionTest, NegativeIntegerAndSameNegativeSignedIntegral)
 {
     Integer minuend          = integer_from_string("-32123", 10);
     std::intmax_t subtrahend =                      -32123;
@@ -334,7 +379,7 @@ TEST(IntegerAdditionTest, NegativeIntegerAndSameNegativeSignedIntegral)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeIntegerAndSmallerNegativeSignedIntegral)
+TEST(IntegerSubtractionTest, NegativeIntegerAndSmallerNegativeSignedIntegral)
 {
     Integer minuend          = integer_from_string("-32123", 10);
     std::intmax_t subtrahend =                      -32100;
@@ -343,7 +388,7 @@ TEST(IntegerAdditionTest, NegativeIntegerAndSmallerNegativeSignedIntegral)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeIntegerAndLargerNegativeSignedIntegral)
+TEST(IntegerSubtractionTest, NegativeIntegerAndLargerNegativeSignedIntegral)
 {
     Integer minuend          = integer_from_string("-32123", 10);
     std::intmax_t subtrahend =                      -32767;
@@ -352,7 +397,7 @@ TEST(IntegerAdditionTest, NegativeIntegerAndLargerNegativeSignedIntegral)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeIntegerAndPositiveSignedIntegral)
+TEST(IntegerSubtractionTest, NegativeIntegerAndPositiveSignedIntegral)
 {
     Integer minuend          = integer_from_string("-32123", 10);
     std::intmax_t subtrahend =                      +32123;
@@ -361,12 +406,12 @@ TEST(IntegerAdditionTest, NegativeIntegerAndPositiveSignedIntegral)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, ZeroSignedIntegralAndZeroInteger)
+TEST(IntegerSubtractionTest, ZeroSignedIntegralAndZeroInteger)
 {
     test_subtraction(std::intmax_t(0), ZERO_INTEGER, ZERO_INTEGER);
 }
 
-TEST(IntegerAdditionTest, PositiveSignedIntegralAndZeroInteger)
+TEST(IntegerSubtractionTest, PositiveSignedIntegralAndZeroInteger)
 {
     std::intmax_t minuend   =                      +32123;
     Integer subtrahend      =                ZERO_INTEGER;
@@ -375,7 +420,7 @@ TEST(IntegerAdditionTest, PositiveSignedIntegralAndZeroInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveSignedIntegralAndSamePositiveInteger)
+TEST(IntegerSubtractionTest, PositiveSignedIntegralAndSamePositiveInteger)
 {
     std::intmax_t minuend   =                      +32123;
     Integer subtrahend      = integer_from_string("+32123", 10);
@@ -384,7 +429,7 @@ TEST(IntegerAdditionTest, PositiveSignedIntegralAndSamePositiveInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveSignedIntegralAndSmallerPositiveInteger)
+TEST(IntegerSubtractionTest, PositiveSignedIntegralAndSmallerPositiveInteger)
 {
     std::intmax_t minuend   =                      +32123;
     Integer subtrahend      = integer_from_string( "+2123", 10);
@@ -393,7 +438,7 @@ TEST(IntegerAdditionTest, PositiveSignedIntegralAndSmallerPositiveInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveSignedIntegralAndLargerPositiveInteger)
+TEST(IntegerSubtractionTest, PositiveSignedIntegralAndLargerPositiveInteger)
 {
     std::intmax_t minuend   =                      +32123;
     Integer subtrahend      = integer_from_string("+32767", 10);
@@ -402,7 +447,7 @@ TEST(IntegerAdditionTest, PositiveSignedIntegralAndLargerPositiveInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveSignedIntegralAndNegativeInteger)
+TEST(IntegerSubtractionTest, PositiveSignedIntegralAndNegativeInteger)
 {
     std::intmax_t minuend   =                      +32123;
     Integer subtrahend      = integer_from_string("-32123", 10);
@@ -411,7 +456,7 @@ TEST(IntegerAdditionTest, PositiveSignedIntegralAndNegativeInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeSignedIntegralAndZeroInteger)
+TEST(IntegerSubtractionTest, NegativeSignedIntegralAndZeroInteger)
 {
     std::intmax_t minuend   =                      -32123;
     Integer subtrahend      =                ZERO_INTEGER;
@@ -420,7 +465,7 @@ TEST(IntegerAdditionTest, NegativeSignedIntegralAndZeroInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeSignedIntegralAndSameNegativeInteger)
+TEST(IntegerSubtractionTest, NegativeSignedIntegralAndSameNegativeInteger)
 {
     std::intmax_t minuend   =                      -32123;
     Integer subtrahend      = integer_from_string("-32123", 10);
@@ -429,7 +474,7 @@ TEST(IntegerAdditionTest, NegativeSignedIntegralAndSameNegativeInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeSignedIntegralAndSmallerNegativeInteger)
+TEST(IntegerSubtractionTest, NegativeSignedIntegralAndSmallerNegativeInteger)
 {
     std::intmax_t minuend   =                      -32123;
     Integer subtrahend      = integer_from_string("-32100", 10);
@@ -438,7 +483,7 @@ TEST(IntegerAdditionTest, NegativeSignedIntegralAndSmallerNegativeInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeSignedIntegralAndLargerNegativeInteger)
+TEST(IntegerSubtractionTest, NegativeSignedIntegralAndLargerNegativeInteger)
 {
     std::intmax_t minuend   =                      -32123;
     Integer subtrahend      = integer_from_string("-32767", 10);
@@ -447,7 +492,7 @@ TEST(IntegerAdditionTest, NegativeSignedIntegralAndLargerNegativeInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeSignedIntegralAndPositiveInteger)
+TEST(IntegerSubtractionTest, NegativeSignedIntegralAndPositiveInteger)
 {
     std::intmax_t minuend   =                      -32123;
     Integer subtrahend      = integer_from_string("+32123", 10);
@@ -457,12 +502,12 @@ TEST(IntegerAdditionTest, NegativeSignedIntegralAndPositiveInteger)
 }
 
 
-TEST(IntegerAdditionTest, ZeroIntegerAndZeroFloatingPoint)
+TEST(IntegerSubtractionTest, ZeroIntegerAndZeroFloatingPoint)
 {
     test_subtraction(ZERO_INTEGER, 0.0L, ZERO_INTEGER);
 }
 
-TEST(IntegerAdditionTest, PositiveIntegerAndZeroFloatingPoint)
+TEST(IntegerSubtractionTest, PositiveIntegerAndZeroFloatingPoint)
 {
     Integer minuend         = integer_from_floating_point(+77777.0L);
     long double subtrahend  = 0;
@@ -471,7 +516,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndZeroFloatingPoint)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveIntegerAndSamePositiveFloatingPoint)
+TEST(IntegerSubtractionTest, PositiveIntegerAndSamePositiveFloatingPoint)
 {
     Integer minuend         = integer_from_floating_point(+123.0e17L);
     long double subtrahend  =                             +123.0e17L;
@@ -480,7 +525,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndSamePositiveFloatingPoint)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveIntegerAndSmallerPositiveFloatingPoint)
+TEST(IntegerSubtractionTest, PositiveIntegerAndSmallerPositiveFloatingPoint)
 {
     Integer minuend         = integer_from_floating_point(+1987654321.9L);
     long double subtrahend  =                              +987654321.0L;
@@ -489,7 +534,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndSmallerPositiveFloatingPoint)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveIntegerAndLargerPositiveFloatingPoint)
+TEST(IntegerSubtractionTest, PositiveIntegerAndLargerPositiveFloatingPoint)
 {
     Integer minuend         = integer_from_floating_point(+987654321.9L);
     long double subtrahend  =                                 +54321.0L;
@@ -498,7 +543,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndLargerPositiveFloatingPoint)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveIntegerAndNegativeFloatingPoint)
+TEST(IntegerSubtractionTest, PositiveIntegerAndNegativeFloatingPoint)
 {
     Integer minuend         = integer_from_floating_point( +987654321.4L);
     long double subtrahend  =                              -987654321.4L;
@@ -507,7 +552,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndNegativeFloatingPoint)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeIntegerAndZeroFloatingPoint)
+TEST(IntegerSubtractionTest, NegativeIntegerAndZeroFloatingPoint)
 {
     Integer minuend         = integer_from_floating_point(-987654321.0L);
     long double subtrahend  = 0.0L;
@@ -516,7 +561,7 @@ TEST(IntegerAdditionTest, NegativeIntegerAndZeroFloatingPoint)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeIntegerAndSameNegativeFloatingPoint)
+TEST(IntegerSubtractionTest, NegativeIntegerAndSameNegativeFloatingPoint)
 {
     Integer minuend         = integer_from_floating_point(-456.0e25L);
     long double subtrahend  =                             -456.0e25L;
@@ -525,7 +570,7 @@ TEST(IntegerAdditionTest, NegativeIntegerAndSameNegativeFloatingPoint)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeIntegerAndSmallerNegativeFloatingPoint)
+TEST(IntegerSubtractionTest, NegativeIntegerAndSmallerNegativeFloatingPoint)
 {
     Integer minuend         = integer_from_floating_point(-987654321.9L);
     long double subtrahend  =                              -87654321.0L;
@@ -534,7 +579,7 @@ TEST(IntegerAdditionTest, NegativeIntegerAndSmallerNegativeFloatingPoint)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeIntegerAndLargerNegativeFloatingPoint)
+TEST(IntegerSubtractionTest, NegativeIntegerAndLargerNegativeFloatingPoint)
 {
     Integer minuend         = integer_from_floating_point( -87654321.9L);
     long double subtrahend  =                             -987654321.0L;
@@ -543,7 +588,7 @@ TEST(IntegerAdditionTest, NegativeIntegerAndLargerNegativeFloatingPoint)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeIntegerAndPositiveFloatingPoint)
+TEST(IntegerSubtractionTest, NegativeIntegerAndPositiveFloatingPoint)
 {
     Integer minuend         = integer_from_floating_point( -987654321.9L);
     long double subtrahend  =                              +987654321.9L;
@@ -552,12 +597,12 @@ TEST(IntegerAdditionTest, NegativeIntegerAndPositiveFloatingPoint)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, ZeroFloatingPointAndZeroInteger)
+TEST(IntegerSubtractionTest, ZeroFloatingPointAndZeroInteger)
 {
     test_subtraction(0.0L, ZERO_INTEGER, ZERO_INTEGER);
 }
 
-TEST(IntegerAdditionTest, PositiveFloatingPointAndZeroInteger)
+TEST(IntegerSubtractionTest, PositiveFloatingPointAndZeroInteger)
 {
     long double minuend     = +987654321.0L;
     Integer subtrahend      = ZERO_INTEGER;
@@ -566,7 +611,7 @@ TEST(IntegerAdditionTest, PositiveFloatingPointAndZeroInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveFloatingPointAndSamePositiveInteger)
+TEST(IntegerSubtractionTest, PositiveFloatingPointAndSamePositiveInteger)
 {
     long double minuend     =                             +987654321.0L;
     Integer subtrahend      = integer_from_floating_point(+987654321.0L);
@@ -575,7 +620,7 @@ TEST(IntegerAdditionTest, PositiveFloatingPointAndSamePositiveInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveFloatingPointAndSmallerPositiveInteger)
+TEST(IntegerSubtractionTest, PositiveFloatingPointAndSmallerPositiveInteger)
 {
     long double minuend     =                             +1987654321.0L;
     Integer subtrahend      = integer_from_floating_point( +987654321.0L);
@@ -584,7 +629,7 @@ TEST(IntegerAdditionTest, PositiveFloatingPointAndSmallerPositiveInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveFloatingPointAndLargerPositiveInteger)
+TEST(IntegerSubtractionTest, PositiveFloatingPointAndLargerPositiveInteger)
 {
     long double minuend     =                              +987654321.0L;
     Integer subtrahend      = integer_from_floating_point(+1987654321.0L);
@@ -593,7 +638,7 @@ TEST(IntegerAdditionTest, PositiveFloatingPointAndLargerPositiveInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, PositiveFloatingPointAndNegativeInteger)
+TEST(IntegerSubtractionTest, PositiveFloatingPointAndNegativeInteger)
 {
     long double minuend     =                              +987654321.0L;
     Integer subtrahend      = integer_from_floating_point( -987654321.0L);
@@ -602,7 +647,7 @@ TEST(IntegerAdditionTest, PositiveFloatingPointAndNegativeInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeFloatingPointAndZeroInteger)
+TEST(IntegerSubtractionTest, NegativeFloatingPointAndZeroInteger)
 {
     long double minuend     =                             -987654321.0L;
     Integer subtrahend      =                              ZERO_INTEGER;
@@ -611,7 +656,7 @@ TEST(IntegerAdditionTest, NegativeFloatingPointAndZeroInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeFloatingPointAndSameNegativeInteger)
+TEST(IntegerSubtractionTest, NegativeFloatingPointAndSameNegativeInteger)
 {
     long double minuend     =                             -987654321.0L;
     Integer subtrahend      = integer_from_floating_point(-987654321.0L);
@@ -620,7 +665,7 @@ TEST(IntegerAdditionTest, NegativeFloatingPointAndSameNegativeInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeFloatingPointAndSmallerNegativeInteger)
+TEST(IntegerSubtractionTest, NegativeFloatingPointAndSmallerNegativeInteger)
 {
     long double minuend     =                             -1987654321.0L;
     Integer subtrahend      = integer_from_floating_point( -987654321.0L);
@@ -629,7 +674,7 @@ TEST(IntegerAdditionTest, NegativeFloatingPointAndSmallerNegativeInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeFloatingPointAndLargerNegativeInteger)
+TEST(IntegerSubtractionTest, NegativeFloatingPointAndLargerNegativeInteger)
 {
     long double minuend     =                              -987654321.0L;
     Integer subtrahend      = integer_from_floating_point(-1987654321.0L);
@@ -638,9 +683,9 @@ TEST(IntegerAdditionTest, NegativeFloatingPointAndLargerNegativeInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
-TEST(IntegerAdditionTest, NegativeFloatingPointAndPositiveInteger)
+TEST(IntegerSubtractionTest, NegativeFloatingPointAndPositiveInteger)
 {
-    long double minuend   =                                -987654321.0L;
+    long double minuend     =                              -987654321.0L;
     Integer subtrahend      = integer_from_floating_point( +987654321.0L);
     Integer expected_result = integer_from_floating_point(-1975308642.0L);
 

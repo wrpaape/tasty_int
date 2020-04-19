@@ -8,6 +8,7 @@
 #include <utility>
 
 #include "tasty_int/detail/integer.hpp"
+#include "tasty_int/detail/flip_sign.hpp"
 #include "tasty_int/detail/conversions/integer_from_floating_point.hpp"
 #include "tasty_int/detail/conversions/integer_from_signed_integral.hpp"
 #include "tasty_int/detail/conversions/integer_from_unsigned_integral.hpp"
@@ -246,6 +247,68 @@ public:
         return detail::conversions::string_from_integer(integer, base);
     }
 
+
+    /**
+     * @defgroup TastyIntUnaryOperators TastyInt Unary Operators
+     *
+     * These operators operate on `this` as if it were an ordinary signed
+     * integer.  Note that all but post-increment/decrement return a deep copy
+     * of `this`.
+     */
+    /// @{
+    TastyInt
+    operator+() const
+    {
+        return *this;
+    }
+
+    TastyInt
+    operator-() const
+    {
+        auto copy = *this;
+
+        copy.integer.sign = detail::flip_sign(copy.integer.sign);
+
+        return copy;
+    }
+
+    TastyInt &
+    operator++()
+    {
+        integer += std::uintmax_t(1);
+
+        return *this;
+    }
+
+    TastyInt
+    operator++(int)
+    {
+        auto copy = *this;
+
+        ++*this;
+
+        return copy;
+    }
+
+    TastyInt &
+    operator--()
+    {
+        integer -= std::uintmax_t(1);
+
+        return *this;
+    }
+
+    TastyInt
+    operator--(int)
+    {
+        auto copy = *this;
+
+        --*this;
+
+        return copy;
+    }
+    /// @}
+
 private:
     friend const detail::Integer &
     detail::prepare_operand(const TastyInt &operand);
@@ -256,6 +319,11 @@ private:
         requires TastyIntOperation<LhsType, RhsType>
     friend TastyInt
     operator+(const LhsType &lhs,
+              const RhsType &rhs);
+    template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+        requires TastyIntOperation<LhsType, RhsType>
+    friend TastyInt
+    operator-(const LhsType &lhs,
               const RhsType &rhs);
 
     TastyInt(detail::Integer&& result)

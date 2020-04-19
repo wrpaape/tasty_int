@@ -47,7 +47,7 @@ target_sources(
     tasty_int-detail-flip_sign
     INTERFACE
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
-    ${PROJECT_SRC_DIR}/tasty_int/detail/flip_sign.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/flip_sign.hpp
 )
 
 add_library(tasty_int-detail-integral_digits_view INTERFACE)

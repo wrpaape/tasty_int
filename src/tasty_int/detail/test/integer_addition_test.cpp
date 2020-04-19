@@ -13,7 +13,7 @@ using tasty_int::detail::Integer;
 using tasty_int::detail::Sign;
 using tasty_int::detail::conversions::integer_from_string;
 
-const Integer ZERO = { .sign = Sign::ZERO, .digits = { 0 } };
+const Integer ZERO_INTEGER = { .sign = Sign::ZERO, .digits = { 0 } };
 
 void
 check_add_in_place_result(const Integer &expected_result,
@@ -72,13 +72,31 @@ test_addition(const Integer &addend1,
 
 TEST(IntegerAdditionTest, ZeroIntegerAndZeroInteger)
 {
-    test_addition(ZERO, ZERO, ZERO);
+    test_addition(ZERO_INTEGER, ZERO_INTEGER, ZERO_INTEGER);
+}
+
+TEST(IntegerAdditionTest, ZeroIntegerAndPositiveInteger)
+{
+    Integer addend1         = ZERO_INTEGER;
+    Integer addend2         = integer_from_string("+111111111111111111", 10);
+    Integer expected_result = integer_from_string("+111111111111111111", 10);
+
+    test_addition(addend1, addend2, expected_result);
+}
+
+TEST(IntegerAdditionTest, ZeroIntegerAndNegativeInteger)
+{
+    Integer addend1         = ZERO_INTEGER;
+    Integer addend2         = integer_from_string("-222222222222222222", 10);
+    Integer expected_result = integer_from_string("-222222222222222222", 10);
+
+    test_addition(addend1, addend2, expected_result);
 }
 
 TEST(IntegerAdditionTest, PositiveIntegerAndZeroInteger)
 {
     Integer addend1         = integer_from_string("+12345678901234567890", 10);
-    Integer addend2         = ZERO;
+    Integer addend2         = ZERO_INTEGER;
     Integer expected_result = addend1;
 
     test_addition(addend1, addend2, expected_result);
@@ -98,7 +116,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndSameNegativeInteger)
     Integer addend1 = integer_from_string("+12345678901234567890", 10);
     Integer addend2 = integer_from_string("-12345678901234567890", 10);
 
-    test_addition(addend1, addend2, ZERO);
+    test_addition(addend1, addend2, ZERO_INTEGER);
 }
 
 TEST(IntegerAdditionTest, PositiveIntegerAndSmallerNegativeInteger)
@@ -122,7 +140,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndLargerNegativeInteger)
 TEST(IntegerAdditionTest, NegativeIntegerAndZeroInteger)
 {
     Integer addend1         = integer_from_string("-12345678901234567890", 10);
-    Integer addend2         = ZERO;
+    Integer addend2         = ZERO_INTEGER;
     Integer expected_result = addend1;
 
     test_addition(addend1, addend2, expected_result);
@@ -131,12 +149,12 @@ TEST(IntegerAdditionTest, NegativeIntegerAndZeroInteger)
 
 TEST(IntegerAdditionTest, ZeroIntegerAndZeroUnsignedIntegral)
 {
-    test_addition(ZERO, std::uintmax_t(0), ZERO);
+    test_addition(ZERO_INTEGER, std::uintmax_t(0), ZERO_INTEGER);
 }
 
 TEST(IntegerAdditionTest, ZeroIntegerAndPositiveUnsignedIntegral)
 {
-    Integer addend1         =                        ZERO;
+    Integer addend1         =                ZERO_INTEGER;
     std::uintmax_t addend2  =                      +33333;
     Integer expected_result = integer_from_string("+33333", 10);
 
@@ -184,7 +202,7 @@ TEST(IntegerAdditionTest, NegativeIntegerAndSameUnsignedIntegral)
     Integer addend1        = integer_from_string("-57890", 10);
     std::uintmax_t addend2 =                      +57890;
 
-    test_addition(addend1, addend2, ZERO);
+    test_addition(addend1, addend2, ZERO_INTEGER);
 }
 
 TEST(IntegerAdditionTest, NegativeIntegerAndLargerUnsignedIntegral)
@@ -199,12 +217,12 @@ TEST(IntegerAdditionTest, NegativeIntegerAndLargerUnsignedIntegral)
 
 TEST(IntegerAdditionTest, ZeroIntegerAndZeroSignedIntegral)
 {
-    test_addition(ZERO, std::intmax_t(0), ZERO);
+    test_addition(ZERO_INTEGER, std::intmax_t(0), ZERO_INTEGER);
 }
 
 TEST(IntegerAdditionTest, ZeroIntegerAndPositiveSignedIntegral)
 {
-    Integer addend1         =                        ZERO;
+    Integer addend1         =                ZERO_INTEGER;
     std::intmax_t addend2   =                      +44444;
     Integer expected_result = integer_from_string("+44444", 10);
 
@@ -213,7 +231,7 @@ TEST(IntegerAdditionTest, ZeroIntegerAndPositiveSignedIntegral)
 
 TEST(IntegerAdditionTest, ZeroIntegerAndNegativeSignedIntegral)
 {
-    Integer addend1         =                        ZERO;
+    Integer addend1         =                ZERO_INTEGER;
     std::intmax_t addend2   =                      -44444;
     Integer expected_result = integer_from_string("-44444", 10);
 
@@ -243,7 +261,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndSameNegativeSignedIntegral)
     Integer addend1       = integer_from_string("+12345", 10);
     std::intmax_t addend2 =                      -12345;
 
-    test_addition(addend1, addend2, ZERO);
+    test_addition(addend1, addend2, ZERO_INTEGER);
 }
 
 TEST(IntegerAdditionTest, PositiveIntegerAndSmallerNegativeSignedIntegral)
@@ -276,12 +294,12 @@ TEST(IntegerAdditionTest, NegativeIntegerAndZeroSignedIntegral)
 
 TEST(IntegerAdditionTest, ZeroIntegerAndZeroFloatingPoint)
 {
-    test_addition(ZERO, 0.0L, ZERO);
+    test_addition(ZERO_INTEGER, 0.0L, ZERO_INTEGER);
 }
 
 TEST(IntegerAdditionTest, ZeroIntegerAndPositiveFloatingPoint)
 {
-    Integer addend1         =                          ZERO;
+    Integer addend1         =                      ZERO_INTEGER;
     long double addend2     =                      +7777777.77L;
     Integer expected_result = integer_from_string("+7777777", 10);
 
@@ -290,7 +308,7 @@ TEST(IntegerAdditionTest, ZeroIntegerAndPositiveFloatingPoint)
 
 TEST(IntegerAdditionTest, ZeroIntegerAndNegativeFloatingPoint)
 {
-    Integer addend1         =                          ZERO;
+    Integer addend1         =                      ZERO_INTEGER;
     long double addend2     =                      -7777777.77L;
     Integer expected_result = integer_from_string("-7777777", 10);
 
@@ -320,7 +338,7 @@ TEST(IntegerAdditionTest, PositiveIntegerAndSameNegativeFloatingPoint)
     Integer addend1     = integer_from_string("+12345", 10);
     long double addend2 =                      -12345.0L;
 
-    test_addition(addend1, addend2, ZERO);
+    test_addition(addend1, addend2, ZERO_INTEGER);
 }
 
 TEST(IntegerAdditionTest, PositiveIntegerAndSmallerNegativeFloatingPoint)

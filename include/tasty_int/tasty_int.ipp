@@ -151,6 +151,35 @@ operator+(const LhsType &lhs,
 
 
 /**
+ * @defgroup TastyIntSubtractionOperators TastyInt Subtraction Operators
+ *
+ * These operators apply subtraction to tasty_int::detail::TastyInt and the
+ * supported arithmetic types.  Note that floating point values are effectively
+ * truncated toward zero before subtraction.
+ */
+/// @{
+template<TastyIntOperand RhsType>
+TastyInt &
+operator-=(TastyInt      &lhs,
+           const RhsType &rhs)
+{
+    detail::prepare_operand(lhs) -= detail::prepare_operand(rhs);
+
+    return lhs;
+}
+
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+TastyInt
+operator-(const LhsType &lhs,
+          const RhsType &rhs)
+{
+    return detail::prepare_operand(lhs) - detail::prepare_operand(rhs);
+}
+/// @}
+
+
+/**
  * @brief TastyInt output operator.
  *
  * @details Output is formatted as follows:

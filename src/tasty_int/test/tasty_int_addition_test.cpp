@@ -74,15 +74,14 @@ template<tasty_int::Arithmetic ArithmeticType>
 class TastyIntAndArithmeticTypeAdditionTest : public ::testing::Test
 {
 protected:
-    void
+    static void
     test_addition(ArithmeticType lhs,
                   ArithmeticType rhs)
     {
-        auto expected_sum = static_cast<long double>(lhs) + rhs;
+        auto expected_sum = tasty_int::detail::prepare_operand(lhs) + rhs;
 
         ::test_addition(lhs, rhs, expected_sum);
     }
-
 }; // class TastyIntAndArithmeticTypeAdditionTest
 
 TYPED_TEST_SUITE(TastyIntAndArithmeticTypeAdditionTest,
@@ -94,16 +93,10 @@ TYPED_TEST(TastyIntAndArithmeticTypeAdditionTest, LowerQuartileAndLowerQuartile)
                                SampleArithmetic<TypeParam>::LOWER_QUARTILE);
 }
 
-TYPED_TEST(TastyIntAndArithmeticTypeAdditionTest, MedianAndMedianAddition)
+TYPED_TEST(TastyIntAndArithmeticTypeAdditionTest, MedianAndMedian)
 {
     TestFixture::test_addition(SampleArithmetic<TypeParam>::MEDIAN,
                                SampleArithmetic<TypeParam>::MEDIAN);
-}
-
-TYPED_TEST(TastyIntAndArithmeticTypeAdditionTest, UpperQuartileAndUpperQuartile)
-{
-    TestFixture::test_addition(SampleArithmetic<TypeParam>::UPPER_QUARTILE,
-                               SampleArithmetic<TypeParam>::UPPER_QUARTILE);
 }
 
 TYPED_TEST(TastyIntAndArithmeticTypeAdditionTest, LowerQuartileAndUpperQuartile)
