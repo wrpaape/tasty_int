@@ -13,3 +13,10 @@ add_google_test(
     LIBRARIES tasty_int
               tasty_int_test
 )
+
+add_google_test(
+    NAME      tasty_int-tasty_int_addition_test
+    SOURCES   tasty_int_addition_test.cpp
+    LIBRARIES tasty_int
+              tasty_int_test
+)

@@ -20,6 +20,12 @@ prepare_operand(const TastyInt &operand)
     return operand.integer;
 }
 
+inline detail::Integer &
+prepare_operand(TastyInt &operand)
+{
+    return operand.integer;
+}
+
 template<FloatingPoint FloatingPointType>
 auto
 prepare_operand(FloatingPointType operand)
@@ -43,19 +49,6 @@ prepare_operand(UnsignedIntegralType operand)
 /// @}
 
 } // namespace detail
-
-
-/// @addtogroup TastyIntConcepts
-/// @{
-template<typename T>
-concept TastyIntOperand = Arithmetic<T>
-                       || std::is_same_v<T, TastyInt>;
-
-template<TastyIntOperand LhsType,
-         TastyIntOperand RhsType>
-concept TastyIntOperation = std::is_same_v<LhsType, TastyInt>
-                         || std::is_same_v<RhsType, TastyInt>;
-/// @}
 
 
 /**
@@ -129,6 +122,35 @@ operator>=(const LhsType &lhs,
 
 
 /**
+ * @defgroup TastyIntAdditionOperators TastyInt Addition Operators
+ *
+ * These operators apply addition to tasty_int::detail::TastyInt and the
+ * supported arithmetic types.  Note that floating point values are effectively
+ * truncated toward zero before addition.
+ */
+/// @{
+template<TastyIntOperand RhsType>
+TastyInt &
+operator+=(TastyInt      &lhs,
+           const RhsType &rhs)
+{
+    detail::prepare_operand(lhs) += detail::prepare_operand(rhs);
+
+    return lhs;
+}
+
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+TastyInt
+operator+(const LhsType &lhs,
+          const RhsType &rhs)
+{
+    return detail::prepare_operand(lhs) + detail::prepare_operand(rhs);
+}
+/// @}
+
+
+/**
  * @brief TastyInt output operator.
  *
  * @details Output is formatted as follows:
@@ -136,8 +158,9 @@ operator>=(const LhsType &lhs,
  *     [sign][prefix][digits]
  *
  * where
+ *
  *     sign   := - if tasty_int is negative, + if tasty_int is nonnegative and
- *               output has been modified with std::shopos, otherwise the empty
+ *               output has been modified with std::showpos, otherwise the empty
  *               string
  *     prefix := 0x or 0 if output has been modified with std::hex or std::oct
  *               respectively, otherwise the empty string

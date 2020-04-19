@@ -5,6 +5,7 @@
 #include <string>
 #include <string_view>
 #include <type_traits>
+#include <utility>
 
 #include "tasty_int/detail/integer.hpp"
 #include "tasty_int/detail/conversions/integer_from_floating_point.hpp"
@@ -25,6 +26,9 @@ namespace detail {
 
 const detail::Integer &
 prepare_operand(const TastyInt &operand);
+
+detail::Integer &
+prepare_operand(TastyInt &operand);
 
 } // namespace detail
 
@@ -51,6 +55,15 @@ concept SignedIntegral = std::is_integral_v<T>
 template<typename T>
 concept UnsignedIntegral = std::is_integral_v<T>
                         && std::is_unsigned_v<T>;
+
+template<typename T>
+concept TastyIntOperand = Arithmetic<T>
+                       || std::is_same_v<T, TastyInt>;
+
+template<TastyIntOperand LhsType,
+         TastyIntOperand RhsType>
+concept TastyIntOperation = std::is_same_v<LhsType, TastyInt>
+                         || std::is_same_v<RhsType, TastyInt>;
 /// @}
 
 /**
@@ -214,7 +227,7 @@ public:
         );
     }
     /// @}
-    
+
     /**
      * @param[in] base the desired base of the output value.
      *
@@ -236,6 +249,18 @@ public:
 private:
     friend const detail::Integer &
     detail::prepare_operand(const TastyInt &operand);
+    friend detail::Integer &
+    detail::prepare_operand(TastyInt &operand);
+
+    template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+        requires TastyIntOperation<LhsType, RhsType>
+    friend TastyInt
+    operator+(const LhsType &lhs,
+              const RhsType &rhs);
+
+    TastyInt(detail::Integer&& result)
+        : integer(std::move(result))
+    {}
 
     detail::Integer integer;
 }; // class TastyInt

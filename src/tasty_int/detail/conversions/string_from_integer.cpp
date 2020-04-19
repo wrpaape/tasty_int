@@ -112,7 +112,7 @@ StringConverter::convert_to_string(const Integer &integer) const
     // ensure the initial sizing was correct:
     assert(
        (  size_tokens(integer_is_negative, integer.digits.size())
-        - token_buffer.size()) < size_tokens(integer_is_negative, 1)
+        - token_buffer.size()) <= size_tokens(integer_is_negative, 1)
     );
 
     return token_buffer;
