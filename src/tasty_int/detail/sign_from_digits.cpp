@@ -2,19 +2,11 @@
 
 #include <cassert>
 
+#include "tasty_int/detail/is_zero.hpp"
+
 
 namespace tasty_int {
 namespace detail {
-namespace {
-
-bool
-is_zero(const std::vector<digit_type> &digits)
-{
-    return ((digits.size() == 1) && (digits.front() == 0));
-}
-
-} // namespace
-
 
 Sign
 sign_from_digits(const std::vector<digit_type> &digits,

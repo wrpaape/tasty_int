@@ -4,8 +4,8 @@ add_library(tasty_int-detail-digit_from_nonnegative_value INTERFACE)
 target_sources(
     tasty_int-detail-digit_from_nonnegative_value
     INTERFACE
-    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
     ${PROJECT_SRC_DIR}/tasty_int/detail/digit_from_nonnegative_value.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 
 add_library(
@@ -21,10 +21,19 @@ foreach(kind signed unsigned)
     target_sources(
         tasty_int-detail-sign_from_${kind}_arithmetic
         INTERFACE
-        ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
         ${PROJECT_SRC_DIR}/tasty_int/detail/sign_from_${kind}_arithmetic.hpp
+        ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
     )
 endforeach()
+
+add_library(tasty_int-detail-is_zero INTERFACE)
+target_sources(
+    tasty_int-detail-is_zero
+    INTERFACE
+    ${PROJECT_SRC_DIR}/tasty_int/detail/is_zero.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
+)
+
 add_library(
     tasty_int-detail-sign_from_digits
     OBJECT
@@ -32,6 +41,11 @@ add_library(
     sign_from_digits.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
+)
+target_link_libraries(
+    tasty_int-detail-sign_from_digits
+    PRIVATE
+    tasty_int-detail-is_zero
 )
 
 add_library(
@@ -46,8 +60,16 @@ add_library(tasty_int-detail-flip_sign INTERFACE)
 target_sources(
     tasty_int-detail-flip_sign
     INTERFACE
-    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/flip_sign.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
+)
+
+add_library(tasty_int-detail-order_by_size INTERFACE)
+target_sources(
+    tasty_int-detail-order_by_size
+    INTERFACE
+    ${PROJECT_SRC_DIR}/tasty_int/detail/order_by_size.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 
 add_library(tasty_int-detail-integral_digits_view INTERFACE)
@@ -102,6 +124,7 @@ target_link_libraries(
     tasty_int-detail-digit_from_nonnegative_value
     tasty_int-detail-floating_point_digits_iterator
     tasty_int-detail-integral_digits_view
+    tasty_int-detail-order_by_size
 )
 
 add_library(
@@ -120,6 +143,22 @@ target_link_libraries(
     tasty_int-detail-floating_point_digits_iterator
     tasty_int-detail-integral_digits_view
     tasty_int-detail-sign_from_digits
+)
+
+add_library(
+    tasty_int-detail-digits_multiplication
+    STATIC
+    digits_multiplication.cpp
+    digits_multiplication.hpp
+    $<TARGET_OBJECTS:tasty_int-detail-trailing_zero>
+)
+target_link_libraries(
+    tasty_int-detail-digits_multiplication
+    tasty_int-detail-digit_from_nonnegative_value
+    tasty_int-detail-is_zero
+    tasty_int-detail-order_by_size
+    tasty_int-detail-digits_addition
+    tasty_int-detail-digits_subtraction
 )
 
 add_library(

@@ -12,6 +12,7 @@
 #include "tasty_int/detail/integral_digits_view.hpp"
 #include "tasty_int/detail/size_digits_from_nonnegative_floating_point.hpp"
 #include "tasty_int/detail/trailing_zero.hpp"
+#include "tasty_int/detail/order_by_size.hpp"
 
 
 namespace tasty_int {
@@ -26,19 +27,6 @@ pad_augend(std::vector<digit_type>::size_type  addend_size,
         augend.reserve(addend_size + 1); // room for carry
         augend.resize(addend_size);
     }
-}
-
-std::pair<const std::vector<digit_type> &, const std::vector<digit_type> &>
-order_by_size(const std::vector<digit_type> &digits1,
-              const std::vector<digit_type> &digits2)
-{
-    return std::minmax(digits1, digits2,
-        [](const std::vector<digit_type> &lhs,
-           const std::vector<digit_type> &rhs)
-        {
-            return lhs.size() < rhs.size();
-        }
-    );
 }
 
 std::vector<digit_type>

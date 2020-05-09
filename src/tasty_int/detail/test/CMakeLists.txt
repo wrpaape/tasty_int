@@ -45,19 +45,6 @@ add_google_test(
 )
 
 add_google_test(
-    NAME    tasty_int-detail-trailing_zero_test
-    SOURCES trailing_zero_test.cpp
-            $<TARGET_OBJECTS:tasty_int-detail-trailing_zero>
-)
-
-add_google_test(
-    NAME      tasty_int-detail-flip_sign_test
-    SOURCES   flip_sign_test.cpp
-              $<TARGET_OBJECTS:tasty_int-detail-sign_test_common>
-    LIBRARIES tasty_int-detail-flip_sign
-)
-
-add_google_test(
     NAME      tasty_int-detail-size_digits_from_nonnegative_floating_point_test
     SOURCES   size_digits_from_nonnegative_floating_point_test.cpp
               $<TARGET_OBJECTS:tasty_int-detail-size_digits_from_nonnegative_floating_point>
@@ -76,10 +63,35 @@ foreach(kind signed unsigned)
 endforeach()
 
 add_google_test(
+    NAME      tasty_int-detail-is_zero_test
+    SOURCES   is_zero_test.cpp
+    LIBRARIES tasty_int-detail-is_zero
+)
+
+add_google_test(
     NAME      tasty_int-detail-sign_from_digits_test
     SOURCES   sign_from_digits_test.cpp
               $<TARGET_OBJECTS:tasty_int-detail-sign_from_digits>
     LIBRARIES tasty_int-detail-sign_test_common
+)
+
+add_google_test(
+    NAME    tasty_int-detail-trailing_zero_test
+    SOURCES trailing_zero_test.cpp
+            $<TARGET_OBJECTS:tasty_int-detail-trailing_zero>
+)
+
+add_google_test(
+    NAME      tasty_int-detail-flip_sign_test
+    SOURCES   flip_sign_test.cpp
+              $<TARGET_OBJECTS:tasty_int-detail-sign_test_common>
+    LIBRARIES tasty_int-detail-flip_sign
+)
+
+add_google_test(
+    NAME      tasty_int-detail-order_by_size_test
+    SOURCES   order_by_size_test.cpp
+    LIBRARIES tasty_int-detail-order_by_size
 )
 
 add_library(tasty_int-detail-comparison_test_common INTERFACE)
@@ -196,6 +208,14 @@ add_google_test(
               tasty_int-detail-conversions-integer_from_string
               tasty_int-detail-integer_test_common
               tasty_int_test
+)
+
+add_google_test(
+    NAME      tasty_int-detail-digits_multiplication_test
+    SOURCES   digits_multiplication_test.cpp
+    LIBRARIES tasty_int-detail-digits_multiplication
+              tasty_int-detail-integral_digits_view
+              tasty_int-detail-conversions-digits_from_string
 )
 
 add_google_test(
