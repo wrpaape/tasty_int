@@ -14,6 +14,11 @@ using tasty_int::detail::DIGIT_TYPE_MAX;
 class MultiplyDigitsBenchmark : public benchmark::Fixture
 {
 public:
+    static constexpr int RANGE_MULTIPLIER           = 2;
+    static constexpr int RANGE_FIRST                = 8;
+    static constexpr int RANGE_LAST                 = RANGE_FIRST << 11;
+    static constexpr benchmark::TimeUnit TIME_UNITS = benchmark::kMillisecond;
+
     void SetUp(benchmark::State &state) override;
     void TearDown(benchmark::State &state) override;
 
@@ -44,9 +49,10 @@ BENCHMARK_DEFINE_F(MultiplyDigitsBenchmark, LongMultiply)(
         benchmark::DoNotOptimize(long_multiply(lhs, rhs));
 }
 BENCHMARK_REGISTER_F(MultiplyDigitsBenchmark, LongMultiply)
-    ->RangeMultiplier(2)
-    ->Range(8, 8 << 11)
-    ->Unit(benchmark::kMillisecond);
+    ->RangeMultiplier(MultiplyDigitsBenchmark::RANGE_MULTIPLIER)
+    ->Range(MultiplyDigitsBenchmark::RANGE_FIRST,
+            MultiplyDigitsBenchmark::RANGE_LAST) 
+    ->Unit(MultiplyDigitsBenchmark::TIME_UNITS);
 
 BENCHMARK_DEFINE_F(MultiplyDigitsBenchmark, KaratsubaMultiply)(
     benchmark::State &state
@@ -56,9 +62,10 @@ BENCHMARK_DEFINE_F(MultiplyDigitsBenchmark, KaratsubaMultiply)(
         benchmark::DoNotOptimize(karatsuba_multiply(lhs, rhs));
 }
 BENCHMARK_REGISTER_F(MultiplyDigitsBenchmark, KaratsubaMultiply)
-    ->RangeMultiplier(2)
-    ->Range(8, 8 << 11)
-    ->Unit(benchmark::kMillisecond);
+    ->RangeMultiplier(MultiplyDigitsBenchmark::RANGE_MULTIPLIER)
+    ->Range(MultiplyDigitsBenchmark::RANGE_FIRST,
+            MultiplyDigitsBenchmark::RANGE_LAST) 
+    ->Unit(MultiplyDigitsBenchmark::TIME_UNITS);
 
 
 // Run the benchmark

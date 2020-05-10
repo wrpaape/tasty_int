@@ -17,5 +17,12 @@ trim_trailing_zero(std::vector<digit_type> &digits)
         digits.pop_back();
 }
 
+void
+trim_trailing_zeros(std::vector<digit_type> &digits)
+{
+    while (have_trailing_zero(digits))
+        digits.pop_back();
+}
+
 } // namespace detail
 } // namespace tasty_int

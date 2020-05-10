@@ -1,5 +1,5 @@
-#ifndef TASTY_INT_DETAIL_ORDER_BY_SIZE_HPP
-#define TASTY_INT_DETAIL_ORDER_BY_SIZE_HPP
+#ifndef TASTY_INT_TASTY_INT_DETAIL_ORDER_BY_SIZE_HPP
+#define TASTY_INT_TASTY_INT_DETAIL_ORDER_BY_SIZE_HPP
 
 #include <algorithm>
 #include <vector>
@@ -35,4 +35,4 @@ order_by_size(const std::vector<digit_type> &digits1,
 } // namespace detail
 } // namespace tasty_int
 
-#endif // ifndef TASTY_INT_DETAIL_ORDER_BY_SIZE_HPP
+#endif // ifndef TASTY_INT_TASTY_INT_DETAIL_ORDER_BY_SIZE_HPP

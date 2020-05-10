@@ -2,6 +2,7 @@
 
 #include "gtest/gtest.h"
 
+
 namespace {
 
 using tasty_int::detail::is_zero;

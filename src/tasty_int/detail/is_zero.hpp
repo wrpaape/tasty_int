@@ -1,5 +1,5 @@
-#ifndef TASTY_INT_DETAIL_IS_ZERO_HPP
-#define TASTY_INT_DETAIL_IS_ZERO_HPP
+#ifndef TASTY_INT_TASTY_INT_DETAIL_IS_ZERO_HPP
+#define TASTY_INT_TASTY_INT_DETAIL_IS_ZERO_HPP
 
 #include <vector>
 
@@ -26,4 +26,4 @@ is_zero(const std::vector<digit_type> &digits)
 } // namespace detail
 } // namespace tasty_int
 
-#endif // ifndef TASTY_INT_DETAIL_IS_ZERO_HPP
+#endif // ifndef TASTY_INT_TASTY_INT_DETAIL_IS_ZERO_HPP

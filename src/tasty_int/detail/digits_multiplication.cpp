@@ -9,6 +9,7 @@
 #include "tasty_int/detail/is_zero.hpp"
 #include "tasty_int/detail/trailing_zero.hpp"
 #include "tasty_int/detail/order_by_size.hpp"
+#include "tasty_int/detail/integral_digits_view.hpp"
 #include "tasty_int/detail/digits_addition.hpp"
 #include "tasty_int/detail/digits_subtraction.hpp"
 
@@ -79,10 +80,9 @@ split(const std::vector<digit_type>      &digits,
     auto split_at = digits.begin() + index;
 
     std::vector<digit_type> low(digits.begin(), split_at);
-    while ((low.back() == 0) && (low.size() > 1))
-        low.pop_back();
+    trim_trailing_zeros(low);
 
-    std::vector<digit_type> high(split_at,      digits.end());
+    std::vector<digit_type> high(split_at, digits.end());
 
     return { std::move(low), std::move(high) };
 }
@@ -160,6 +160,16 @@ karatsuba_merge(KaratsubaPartiion                  &partition,
     return std::move(result);
 }
 
+template<typename RhsType>
+std::vector<digit_type> &
+times_equals(std::vector<digit_type> &lhs,
+             const RhsType           &rhs)
+{
+    lhs = lhs * rhs;
+
+    return lhs;
+}
+
 } // namespace
 
 
@@ -167,60 +177,73 @@ std::vector<digit_type> &
 operator*=(std::vector<digit_type>       &lhs,
            const std::vector<digit_type> &rhs)
 {
-    lhs = lhs * rhs;
-
-    return lhs;
+    return times_equals(lhs, rhs);
 }
 
 std::vector<digit_type> &
 operator*=(std::vector<digit_type> &lhs,
            std::uintmax_t           rhs)
 {
-    return lhs; // TODO
+    return times_equals(lhs, rhs);
 }
 
-std::vector<digit_type> &
-operator*=(std::vector<digit_type> &lhs,
-           long double              rhs)
-{
-    return lhs; // TODO
-}
+// std::vector<digit_type> &
+// operator*=(std::vector<digit_type> &lhs,
+//            long double              rhs)
+// {
+//     return times_equals(lhs, rhs); // TODO
+// }
 
 std::vector<digit_type>
 operator*(const std::vector<digit_type> &lhs,
           const std::vector<digit_type> &rhs)
 {
-    // return karatsuba_multiply(rhs, lhs);
-    return long_multiply(rhs, lhs);
+    return karatsuba_multiply(rhs, lhs);
 }
 
 std::vector<digit_type>
 operator*(const std::vector<digit_type> &lhs,
           std::uintmax_t                 rhs)
 {
-    return lhs; // TODO
+    if (rhs == 0)
+        return { 0 };
+
+    IntegralDigitsView rhs_view(rhs);
+
+    auto size_rhs_digits = rhs_view.digits_size();
+    std::vector<digit_type> result(lhs.size() + size_rhs_digits);
+
+    auto result_cursor = result.begin();
+    long_multiply_digit(lhs, rhs_view.low_digit(), result_cursor);
+
+    if (size_rhs_digits > 1)
+        long_multiply_digit(lhs, rhs_view.high_digit(), ++result_cursor);
+
+    trim_trailing_zero(result);
+
+    return result;
 }
 
 std::vector<digit_type>
 operator*(std::uintmax_t                 lhs,
           const std::vector<digit_type> &rhs)
 {
-    return rhs; // TODO
+    return rhs * lhs;
 }
 
-std::vector<digit_type>
-operator*(const std::vector<digit_type> &lhs,
-          long double                    rhs)
-{
-    return lhs; // TODO
-}
+// std::vector<digit_type>
+// operator*(const std::vector<digit_type> &lhs,
+//           long double                    rhs)
+// {
+//     return lhs; // TODO
+// }
 
-std::vector<digit_type>
-operator*(long double                    lhs,
-          const std::vector<digit_type> &rhs)
-{
-    return rhs; // TODO
-}
+// std::vector<digit_type>
+// operator*(long double                    lhs,
+//           const std::vector<digit_type> &rhs)
+// {
+//     return rhs; // TODO
+// }
 
 
 std::vector<digit_type>
@@ -246,6 +269,7 @@ std::vector<digit_type>
 karatsuba_multiply(const std::vector<digit_type> &lhs,
                    const std::vector<digit_type> &rhs)
 {
+    /// @todo TODO: tune
     constexpr std::vector<digit_type>::size_type 
         LONG_MULTIPLY_THRESHOLD_MAGNTIUDE = 100;
 

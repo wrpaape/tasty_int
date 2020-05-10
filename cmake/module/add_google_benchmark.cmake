@@ -46,7 +46,7 @@ function(add_google_benchmark)
         # benchmark::Fixture is in the process of depreciating its
         # SetUp/TearDown interface, and at the moment a "new" and "old" pair of
         # function virtual signatures exist side-by-side.  This will generate a
-        # warning if '-Woverloaded-virtual' is enabled => disable it to be sure.
+        # warning if '-Woverloaded-virtual' is enabled => disable the warning.
         set(google_benchmark_compile_options -Wno-overloaded-virtual)
     endif()
 

@@ -217,13 +217,6 @@ make_padded_subtrahend(long double                    minuend,
     return padded_subtrahend;
 }
 
-void
-trim_trailing_zeros(std::vector<digit_type> &digits)
-{
-    while (have_trailing_zero(digits))
-        digits.pop_back();
-}
-
 Sign
 complete_subtract(digit_accumulator_type   carry,
                   Sign                     carried_sign,

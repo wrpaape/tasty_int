@@ -43,22 +43,22 @@ std::vector<digit_type>
 operator*(std::uintmax_t                 lhs,
           const std::vector<digit_type> &rhs);
 
-/// @pre `std::isfinite(rhs) && (rhs >= 0.0)`
-std::vector<digit_type>
-operator*(const std::vector<digit_type> &lhs,
-          long double                    rhs);
+// /// @pre `std::isfinite(rhs) && (rhs >= 0.0)`
+// std::vector<digit_type>
+// operator*(const std::vector<digit_type> &lhs,
+//           long double                    rhs); // TODO
 
-/// @pre `std::isfinite(lhs) && (lhs >= 0.0)`
-std::vector<digit_type>
-operator*(long double                    lhs,
-          const std::vector<digit_type> &rhs);
+// /// @pre `std::isfinite(lhs) && (lhs >= 0.0)`
+// std::vector<digit_type>
+// operator*(long double                    lhs,
+//           const std::vector<digit_type> &rhs); // TODO
 /// @}
 
 
 /**
  * @defgroup DigitsMultiplicationAlgorithms Digits Multiplication Algorithms
  *
- * These algorithms implement the operators `*` and `*=`
+ * These algorithms implement `operator*`.
  *
  * @pre input digits vectors must be non-empty
  * @pre every element of input digits vectors must be `<= DIGIT_TYPE_MAX`

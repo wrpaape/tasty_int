@@ -3,10 +3,10 @@ project(benchmark_third_party)
 
 include(ExternalProject)
 
-# GoogleBenchmark
+# benchmark
 # ------------------------------------------------------------------------------
 ExternalProject_Add(
-    googletest
+    benchmark
     GIT_REPOSITORY https://github.com/google/benchmark.git
     GIT_TAG        master
     SOURCE_DIR     ${CMAKE_CURRENT_LIST_DIR}/benchmark

@@ -2,6 +2,8 @@
 
 #include "gtest/gtest.h"
 
+#include <limits>
+
 #include "tasty_int/detail/integral_digits_view.hpp"
 #include "tasty_int/detail/conversions/digits_from_string.hpp"
 
@@ -24,9 +26,10 @@ TEST(DigitsAndDigitsMultiplicationTest,
     EXPECT_EQ(&lhs, &(lhs *= rhs));
 }
 
+template<typename RhsType>
 void
 test_multiply_in_place(const std::vector<digit_type> &lhs,
-                       const std::vector<digit_type> &rhs,
+                       const RhsType                 &rhs,
                        const std::vector<digit_type> &expected_result)
 {
     auto multiplicand = lhs;
@@ -36,9 +39,11 @@ test_multiply_in_place(const std::vector<digit_type> &lhs,
     EXPECT_EQ(expected_result, multiplicand);
 }
 
+template<typename LhsType,
+         typename RhsType>
 void
-test_multiply(const std::vector<digit_type> &lhs,
-              const std::vector<digit_type> &rhs,
+test_multiply(const LhsType                 &lhs,
+              const RhsType                 &rhs,
               const std::vector<digit_type> &expected_result)
 {
     auto result = lhs * rhs;
@@ -46,20 +51,24 @@ test_multiply(const std::vector<digit_type> &lhs,
     EXPECT_EQ(expected_result, result);
 }
 
+template<typename MultiplierType>
 void
-test_multiplication(const std::vector<digit_type> &digits1,
-                    const std::vector<digit_type> &digits2,
+test_multiplication(const std::vector<digit_type> &digits,
+                    const MultiplierType          &multiplier,
                     const std::vector<digit_type> &expected_result)
 {
-    test_multiply_in_place(digits1, digits2, expected_result);
-    test_multiply_in_place(digits2, digits1, expected_result);
+    test_multiply_in_place(digits, multiplier, expected_result);
 
-    test_multiply(digits1, digits2, expected_result);
-    test_multiply(digits2, digits1, expected_result);
+    if constexpr (std::is_same_v<MultiplierType, std::vector<digit_type>>)
+        test_multiply_in_place(multiplier, digits, expected_result);
+
+    test_multiply(digits, multiplier, expected_result);
+
+    test_multiply(multiplier, digits, expected_result);
 }
 
-TEST(DigitsAndDigitsMultiplicationTest,
-     DigitsTimesOneDigitsValueEqualsOriginalValue)
+
+TEST(DigitsAndDigitsMultiplicationTest, DigitsTimesOneEqualsOriginalValue)
 {
     std::vector<digit_type> digits          = { 1, 2, 3 };
     std::vector<digit_type> ONE             = { 1 };
@@ -68,14 +77,14 @@ TEST(DigitsAndDigitsMultiplicationTest,
     test_multiplication(digits, ONE, expected_result);
 }
 
-TEST(DigitsAndDigitsMultiplicationTest, ZeroDigitsTimesZeroDigitsValueEqualsZero)
+TEST(DigitsAndDigitsMultiplicationTest, ZeroTimesZeroEqualsZero)
 {
     std::vector<digit_type> ZERO = { 0 };
 
     test_multiplication(ZERO, ZERO, ZERO);
 }
 
-TEST(DigitsAndDigitsMultiplicationTest, OneDigitsTimesZeroDigitsValueEqualsZero)
+TEST(DigitsAndDigitsMultiplicationTest, OneTimesZeroEqualsZero)
 {
     std::vector<digit_type> ONE  = { 1 };
     std::vector<digit_type> ZERO = { 0 };
@@ -83,7 +92,7 @@ TEST(DigitsAndDigitsMultiplicationTest, OneDigitsTimesZeroDigitsValueEqualsZero)
     test_multiplication(ONE, ZERO, ZERO);
 }
 
-TEST(DigitsAndDigitsMultiplicationTest, DigitsTimesZeroDigitsValueEqualsZero)
+TEST(DigitsAndDigitsMultiplicationTest, DigitsTimesZeroEqualsZero)
 {
     std::vector<digit_type> digits = { 1, 2, 3 };
     std::vector<digit_type> ZERO   = { 0 };
@@ -142,8 +151,8 @@ TEST(DigitsAndDigitsMultiplicationTest, ZeroDigitsTimesManyDigits)
 
 TEST(DigitsAndDigitsMultiplicationTest, FewDigitsTimesManyDigits)
 {
-    auto digits1 = digits_from_string("100000000000000000000", 10);
-    auto digits2 = digits_from_string(
+    auto few_digits = digits_from_string("100000000000000000000", 10);
+    auto many_digits = digits_from_string(
         "888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888",
         10
     );
@@ -152,7 +161,7 @@ TEST(DigitsAndDigitsMultiplicationTest, FewDigitsTimesManyDigits)
         10
     );
 
-    test_multiplication(digits1, digits2, expected_result);
+    test_multiplication(few_digits, many_digits, expected_result);
 }
 
 TEST(DigitsAndDigitsMultiplicationTest, ManyDigitsTimesManyDigits)
@@ -183,6 +192,80 @@ TEST(DigitsAndDigitsMultiplicationTest, SparseManyDigitsTimeManyDigits)
     digits2.back() = 1;
     std::vector<digit_type> expected_result(digits1.size() + digits2.size() - 1);
     expected_result.back() = 1;
+
+    test_multiplication(digits1, digits2, expected_result);
+}
+
+
+TEST(DigitsAndIntegralMultiplicationTest, DigitsTimesOneEqualsOriginalValue)
+{
+    std::vector<digit_type> digits          = { 1, 2, 3 };
+    std::uintmax_t          ONE             = 1;
+    std::vector<digit_type> expected_result = digits;
+
+    test_multiplication(digits, ONE, expected_result);
+}
+
+TEST(DigitsAndIntegralMultiplicationTest, ZeroTimesZeroEqualsZero)
+{
+    std::vector<digit_type> ZERO_DIGITS   = { 0 };
+    std::uintmax_t          ZERO_INTEGRAL = 0;
+
+    test_multiplication(ZERO_DIGITS, ZERO_INTEGRAL, ZERO_DIGITS);
+}
+
+TEST(DigitsAndIntegralMultiplicationTest, OneTimesZeroEqualsZero)
+{
+    std::vector<digit_type> ONE           = { 1 };
+    std::uintmax_t          ZERO_INTEGRAL = 0;
+    std::vector<digit_type> ZERO_DIGITS   = { 0 };
+
+    test_multiplication(ONE, ZERO_INTEGRAL, ZERO_DIGITS);
+}
+
+TEST(DigitsAndIntegralMultiplicationTest, DigitsTimesZeroEqualsZero)
+{
+    std::vector<digit_type> digits = { 1, 2, 3 };
+    std::uintmax_t          ZERO_INTEGRAL = 0;
+    std::vector<digit_type> ZERO_DIGITS   = { 0 };
+
+    test_multiplication(digits, ZERO_INTEGRAL, ZERO_DIGITS);
+}
+
+TEST(DigitsAndIntegralMultiplicationTest, DigitsTimesSingleDigitNoCarry)
+{
+    std::vector<digit_type> digits          = { 1, 2, 3 };
+    std::uintmax_t          single_digit    = 2;
+    std::vector<digit_type> expected_result = { 2, 4, 6 };
+
+    test_multiplication(digits, single_digit, expected_result);
+}
+
+TEST(DigitsAndIntegralMultiplicationTest, DigitsTimesSingleDigitCarry)
+{
+    std::vector<digit_type> digits = { 1, 2, 1 };
+    std::uintmax_t single_digit = DIGIT_TYPE_MAX;
+    IntegralDigitsView carry1(DIGIT_TYPE_MAX * 2);
+    IntegralDigitsView carry2(carry1.high_digit() + DIGIT_TYPE_MAX);
+    std::vector<digit_type> expected_result = {
+        DIGIT_TYPE_MAX,
+        carry1.low_digit(),
+        carry2.low_digit(),
+        carry2.high_digit()
+    };
+
+    test_multiplication(digits, single_digit, expected_result);
+}
+
+TEST(DigitsAndIntegralMultiplicationTest, MultipleDigitsTimesMultipleDigits)
+{
+    std::vector<digit_type> digits1 = {
+        DIGIT_TYPE_MAX, DIGIT_TYPE_MAX, DIGIT_TYPE_MAX
+    };
+    auto digits2 = std::numeric_limits<std::uintmax_t>::max();
+    std::vector<digit_type> expected_result = {
+        1, 0, DIGIT_TYPE_MAX, DIGIT_TYPE_MAX - 1, DIGIT_TYPE_MAX
+    };
 
     test_multiplication(digits1, digits2, expected_result);
 }

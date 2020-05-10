@@ -157,6 +157,7 @@ target_link_libraries(
     tasty_int-detail-digit_from_nonnegative_value
     tasty_int-detail-is_zero
     tasty_int-detail-order_by_size
+    tasty_int-detail-integral_digits_view
     tasty_int-detail-digits_addition
     tasty_int-detail-digits_subtraction
 )
@@ -182,6 +183,7 @@ target_link_libraries(
 if(BUILD_TESTING)
     add_subdirectory(test)
 endif()
+
 if(BUILD_BENCHMARKING)
     add_subdirectory(benchmark)
 endif()
