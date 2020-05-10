@@ -38,7 +38,7 @@ macro(parse_arguments _prefix
         message(
             SEND_ERROR
             "parse_arguments -- missing required arguments for keywords: "
-            ${${_prefix}_MISSING_REQUIRED_ARGUMENTS}
+            "${${_prefix}_MISSING_REQUIRED_ARGUMENTS}"
         )
     endif()
 

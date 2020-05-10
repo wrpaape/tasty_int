@@ -5,10 +5,6 @@ include(ExternalProject)
 
 # GTest, GMock
 # ------------------------------------------------------------------------------
-find_package(Threads REQUIRED) # We need thread support
-# Prevent GoogleTest from overriding our compiler/linker options
-# when building with Visual Studio
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 ExternalProject_Add(
     googletest
     GIT_REPOSITORY https://github.com/google/googletest.git
@@ -18,4 +14,7 @@ ExternalProject_Add(
     CMAKE_ARGS     -DCMAKE_INSTALL_PREFIX:STRING=${CMAKE_INSTALL_PREFIX}
                    # FindGTest will choke if release version not available
                    -DCMAKE_BUILD_TYPE:STRING=Release
+                   # Prevent GoogleTest from overriding our compiler/linker
+                   # options when building with Visual Studio
+                   -Dgtest_force_shared_crt:BOOL=ON
 )

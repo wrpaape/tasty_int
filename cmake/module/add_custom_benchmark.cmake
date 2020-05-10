@@ -1,15 +1,15 @@
-if(PROJECT_CMAKE_ADD_CUSTOM_TEST_CMAKE_INCLUDED)
+if(PROJECT_CMAKE_ADD_CUSTOM_BENCHMARK_CMAKE_INCLUDED)
     return()
 endif()
-set(PROJECT_CMAKE_ADD_CUSTOM_TEST_CMAKE_INCLUDED TRUE)
+set(PROJECT_CMAKE_ADD_CUSTOM_BENCHMARK_CMAKE_INCLUDED TRUE)
 #[=======================================================================[.rst:
-add_custom_test
----------------
+add_custom_benchmark
+--------------------
 
-This Module defines add_custom_test():
+This Module defines add_custom_benchmark():
 
 ::
-    add_custom_test(
+    add_custom_benchmark(
         <NAME                          <name>>
         <SOURCES                       <srcs>>
         [INCLUDE_DIRECTORIES           <dirs>]
@@ -28,7 +28,7 @@ This Module defines add_custom_test():
 
 which adds an executable target called <name> built according to the specified
 parameters.  Parameters marked with the ``FRAMEWORK_`` prefix may be leveraged
-by wrapper modules as a channel for injecting testing framework dependencies.
+by wrapper modules as a channel for injecting benchmark framework dependencies.
 #]=======================================================================]
 # External Dependencies
 # ------------------------------------------------------------------------------
@@ -36,30 +36,33 @@ include(add_custom_executable)
 
 # External API
 # ------------------------------------------------------------------------------
-function(add_custom_test)
+function(add_custom_benchmark)
     add_custom_executable(
         ${ARGV}
-        RUNTIME_OUTPUT_DIRECTORY ${PROJECT_TEST_BIN_DIR}
+        RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BENCHMARK_BIN_DIR}
     )
 
     target_include_directories(
         ${CUSTOM_EXECUTABLE_NAME}
         PRIVATE
-        ${PROJECT_TEST_INCLUDE_DIR}
+        ${PROJECT_BENCHMARK_INCLUDE_DIR}
     )
 
-    add_test(
-        NAME              ${CUSTOM_EXECUTABLE_NAME}
-        COMMAND           ${CUSTOM_EXECUTABLE_NAME}
-        WORKING_DIRECTORY ${PROJECT_TEST_BIN_DIR}
+    set(echo_command ${CMAKE_COMMAND} -E cmake_echo_color --cyan)
+    set(echo_line_command ${echo_command} ================================================================================)
+    set(run_custom_benchmark_target run_benchmark-${CUSTOM_EXECUTABLE_NAME})
+
+    add_custom_target(
+        ${run_custom_benchmark_target}
+        COMMAND           ${echo_command}
+        COMMAND           ${echo_line_command}
+        COMMAND           ${echo_command} "Running Benchmark: ${CUSTOM_EXECUTABLE_NAME}"
+        COMMAND           ${echo_line_command}
+        COMMAND           $<TARGET_FILE:${CUSTOM_EXECUTABLE_NAME}>
+        COMMAND           ${echo_line_command}
+        WORKING_DIRECTORY ${PROJECT_BENCHMARK_BIN_DIR}
     )
 
-    # append to dependencies of 'make build-test', etc...
-    foreach(target ${PROJECT_BUILD_TEST_COMMANDS})
-        add_dependencies(${target} ${CUSTOM_EXECUTABLE_NAME})
-    endforeach()
-
-    if(BUILD_COVERAGE)
-        add_dependencies(coverage ${CUSTOM_EXECUTABLE_NAME})
-    endif()
+    # append to dependencies of 'make benchmark'
+    add_dependencies(benchmark ${run_custom_benchmark_target})
 endfunction()

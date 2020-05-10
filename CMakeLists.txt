@@ -26,6 +26,7 @@ cmake_dependent_option(
     BUILD_COVERAGE "Generate code coverage report." ${BUILD_DEBUG}
     BUILD_TESTING OFF
 )
+option(BUILD_BENCHMARKING "Enable micro benchmarks." ON)
 
 # config defines
 set(TASTY_INT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR})
@@ -37,6 +38,7 @@ set(PROJECT_INCLUDE_DIR      ${PROJECT_SOURCE_DIR}/include)
 set(PROJECT_BIN_DIR          ${PROJECT_SOURCE_DIR}/bin)
 set(PROJECT_LIB_DIR          ${PROJECT_SOURCE_DIR}/lib)
 set(PROJECT_TEST_DIR         ${PROJECT_SOURCE_DIR}/test)
+set(PROJECT_BENCHMARK_DIR    ${PROJECT_SOURCE_DIR}/benchmark)
 set(PROJECT_CMAKE_DIR        ${PROJECT_SOURCE_DIR}/cmake)
 set(PROJECT_CMAKE_MODULE_DIR ${PROJECT_CMAKE_DIR}/module)
 
@@ -52,6 +54,15 @@ include(cmake_environ)
 if(BUILD_TESTING)
     include(test_environ)
     add_subdirectory(test)
+endif()
+
+# set up project micro benchmarking environment
+# to disable benchmarks, invoke cmake with '-DBUILD_BENCHMARKING=OFF' from the
+# command line or set BUILD_BENCHMARKING to OFF in the interactive GUI (if
+# supported)
+if(BUILD_BENCHMARKING)
+    include(benchmark_environ)
+    add_subdirectory(benchmark)
 endif()
 
 # enter

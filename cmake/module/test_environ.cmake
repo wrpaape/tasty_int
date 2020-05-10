@@ -60,6 +60,7 @@ if(BUILD_COVERAGE)
                    "*/third_party/*"       # third party code
                    "*/gtest/*" "*/gmock/*" # testing framework
                    "*/test/*"              # unit tests
+                   "*/benchmark/*"         # benchmark framework, benchmarks
                    "*/generate_*.cpp"      # code generators
     )
 endif()

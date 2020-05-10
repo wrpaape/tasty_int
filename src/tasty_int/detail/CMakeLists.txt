@@ -182,3 +182,6 @@ target_link_libraries(
 if(BUILD_TESTING)
     add_subdirectory(test)
 endif()
+if(BUILD_BENCHMARKING)
+    add_subdirectory(benchmark)
+endif()

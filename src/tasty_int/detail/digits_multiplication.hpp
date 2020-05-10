@@ -54,6 +54,26 @@ operator*(long double                    lhs,
           const std::vector<digit_type> &rhs);
 /// @}
 
+
+/**
+ * @defgroup DigitsMultiplicationAlgorithms Digits Multiplication Algorithms
+ *
+ * These algorithms implement the operators `*` and `*=`
+ *
+ * @pre input digits vectors must be non-empty
+ * @pre every element of input digits vectors must be `<= DIGIT_TYPE_MAX`
+ */
+/// @{
+std::vector<digit_type>
+long_multiply(const std::vector<digit_type> &lhs,
+              const std::vector<digit_type> &rhs);
+
+std::vector<digit_type>
+karatsuba_multiply(const std::vector<digit_type> &lhs,
+                   const std::vector<digit_type> &rhs);
+
+/// @}
+
 } // namespace detail
 } // namespace tasty_int
 

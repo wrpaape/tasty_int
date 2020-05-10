@@ -18,9 +18,9 @@ namespace detail {
 namespace {
 
 void
-naive_multiply_digit(const std::vector<digit_type>    &lhs,
-                     digit_type                        rhs_digit,
-                     std::vector<digit_type>::iterator result_cursor)
+long_multiply_digit(const std::vector<digit_type>    &lhs,
+                    digit_type                        rhs_digit,
+                    std::vector<digit_type>::iterator result_cursor)
 {
     digit_accumulator_type carry = 0;
 
@@ -38,12 +38,12 @@ naive_multiply_digit(const std::vector<digit_type>    &lhs,
 }
 
 std::vector<digit_type>
-naive_multiply_digit(const std::vector<digit_type>    &lhs,
-                     digit_type                        rhs_digit)
+long_multiply_digit(const std::vector<digit_type>    &lhs,
+                    digit_type                        rhs_digit)
 {
     std::vector<digit_type> result(lhs.size() + 1);
 
-    naive_multiply_digit(lhs, rhs_digit, result.begin());
+    long_multiply_digit(lhs, rhs_digit, result.begin());
 
     trim_trailing_zero(result);
 
@@ -51,33 +51,14 @@ naive_multiply_digit(const std::vector<digit_type>    &lhs,
 }
 
 void
-naive_multiply_digits(const std::vector<digit_type> &lhs,
-                      const std::vector<digit_type> &rhs,
-                      std::vector<digit_type>       &result)
+long_multiply_digits(const std::vector<digit_type> &lhs,
+                     const std::vector<digit_type> &rhs,
+                     std::vector<digit_type>       &result)
 {
     auto result_cursor = result.begin();
 
     for (auto rhs_digit : rhs)
-        naive_multiply_digit(lhs, rhs_digit, result_cursor++);
-}
-
-std::vector<digit_type>
-naive_multiply(const std::vector<digit_type> &lhs,
-               const std::vector<digit_type> &rhs)
-{
-    if (is_zero(lhs))
-        return lhs;
-
-    if (is_zero(rhs))
-        return rhs;
-
-    std::vector<digit_type> result(lhs.size() + rhs.size());
-
-    naive_multiply_digits(lhs, rhs, result);
-
-    trim_trailing_zero(result);
-
-    return result;
+        long_multiply_digit(lhs, rhs_digit, result_cursor++);
 }
 
 std::vector<digit_type>
@@ -85,7 +66,7 @@ karatsuba_multiply_trivial(const std::vector<digit_type> &smaller,
                            const std::vector<digit_type> &larger)
 {
     if (smaller.front() > 1)
-        return naive_multiply_digit(larger, smaller.front());
+        return long_multiply_digit(larger, smaller.front());
 
     return (smaller.front() == 0) ? smaller : larger;
 }
@@ -120,9 +101,6 @@ multiply_digit_power(std::vector<digit_type>::size_type  digit_power,
                      multiplicand.rbegin());
 }
 
-std::vector<digit_type>
-karatsuba_multiply(const std::vector<digit_type> &lhs,
-                   const std::vector<digit_type> &rhs);
 
 struct KaratsubaPartiion
 {
@@ -182,30 +160,6 @@ karatsuba_merge(KaratsubaPartiion                  &partition,
     return std::move(result);
 }
 
-std::vector<digit_type>
-karatsuba_multiply(const std::vector<digit_type> &lhs,
-                   const std::vector<digit_type> &rhs)
-{
-    constexpr std::vector<digit_type>::size_type 
-        NAIVE_MULTIPLY_THRESHOLD_MAGNTIUDE = 1000;
-
-    const auto &[smaller, larger] = order_by_size(lhs, rhs);
-
-    if (larger.size() <= NAIVE_MULTIPLY_THRESHOLD_MAGNTIUDE)
-        return naive_multiply(smaller, larger);
-
-    if (smaller.size() == 1)
-        return karatsuba_multiply_trivial(smaller, larger);
-
-    const auto split_size = smaller.size() / 2;
-
-    auto &&partition = karatsuba_partition(smaller, larger, split_size);
-
-    auto max_result_size = smaller.size() + larger.size();
-
-    return karatsuba_merge(partition, max_result_size);
-}
-
 } // namespace
 
 
@@ -236,8 +190,8 @@ std::vector<digit_type>
 operator*(const std::vector<digit_type> &lhs,
           const std::vector<digit_type> &rhs)
 {
-    return karatsuba_multiply(rhs, lhs);
-    // return naive_multiply(rhs, lhs);
+    // return karatsuba_multiply(rhs, lhs);
+    return long_multiply(rhs, lhs);
 }
 
 std::vector<digit_type>
@@ -266,6 +220,50 @@ operator*(long double                    lhs,
           const std::vector<digit_type> &rhs)
 {
     return rhs; // TODO
+}
+
+
+std::vector<digit_type>
+long_multiply(const std::vector<digit_type> &lhs,
+              const std::vector<digit_type> &rhs)
+{
+    if (is_zero(lhs))
+        return lhs;
+
+    if (is_zero(rhs))
+        return rhs;
+
+    std::vector<digit_type> result(lhs.size() + rhs.size());
+
+    long_multiply_digits(lhs, rhs, result);
+
+    trim_trailing_zero(result);
+
+    return result;
+}
+
+std::vector<digit_type>
+karatsuba_multiply(const std::vector<digit_type> &lhs,
+                   const std::vector<digit_type> &rhs)
+{
+    constexpr std::vector<digit_type>::size_type 
+        LONG_MULTIPLY_THRESHOLD_MAGNTIUDE = 100;
+
+    const auto &[smaller, larger] = order_by_size(lhs, rhs);
+
+    if (larger.size() <= LONG_MULTIPLY_THRESHOLD_MAGNTIUDE)
+        return long_multiply(smaller, larger);
+
+    if (smaller.size() == 1)
+        return karatsuba_multiply_trivial(smaller, larger);
+
+    const auto split_size = smaller.size() / 2;
+
+    auto &&partition = karatsuba_partition(smaller, larger, split_size);
+
+    auto max_result_size = smaller.size() + larger.size();
+
+    return karatsuba_merge(partition, max_result_size);
 }
 
 } // namespace detail
