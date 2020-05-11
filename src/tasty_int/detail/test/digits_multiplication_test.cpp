@@ -1,8 +1,10 @@
 #include "tasty_int/detail/digits_multiplication.hpp"
 
-#include "gtest/gtest.h"
+#include <cmath>
 
 #include <limits>
+
+#include "gtest/gtest.h"
 
 #include "tasty_int/detail/integral_digits_view.hpp"
 #include "tasty_int/detail/conversions/digits_from_string.hpp"
@@ -14,6 +16,7 @@ using tasty_int::detail::operator*=;
 using tasty_int::detail::operator*;
 using tasty_int::detail::digit_type;
 using tasty_int::detail::DIGIT_TYPE_MAX;
+using tasty_int::detail::DIGIT_BASE;
 using tasty_int::detail::IntegralDigitsView;
 using tasty_int::detail::conversions::digits_from_string;
 
@@ -266,6 +269,80 @@ TEST(DigitsAndIntegralMultiplicationTest, MultipleDigitsTimesMultipleDigits)
     std::vector<digit_type> expected_result = {
         1, 0, DIGIT_TYPE_MAX, DIGIT_TYPE_MAX - 1, DIGIT_TYPE_MAX
     };
+
+    test_multiplication(digits1, digits2, expected_result);
+}
+
+
+TEST(DigitsAndFloatingPointMultiplicationTest, DigitsTimesOneEqualsOriginalValue)
+{
+    std::vector<digit_type> digits = { 1, 2, 3 };
+    long double          ONE       = 1.0;
+    std::vector<digit_type> expected_result = digits;
+
+    test_multiplication(digits, ONE, expected_result);
+}
+
+TEST(DigitsAndFloatingPointMultiplicationTest, ZeroTimesZeroEqualsZero)
+{
+    std::vector<digit_type> ZERO_DIGITS = { 0 };
+    long double ZERO_FLOATING_POINT     = 0.0;
+
+    test_multiplication(ZERO_DIGITS, ZERO_FLOATING_POINT, ZERO_DIGITS);
+}
+
+TEST(DigitsAndFloatingPointMultiplicationTest, OneTimesZeroEqualsZero)
+{
+    std::vector<digit_type> ONE         = { 1 };
+    long double ZERO_FLOATING_POINT     = 0.0;
+    std::vector<digit_type> ZERO_DIGITS = { 0 };
+
+    test_multiplication(ONE, ZERO_FLOATING_POINT, ZERO_DIGITS);
+}
+
+TEST(DigitsAndFloatingPointMultiplicationTest, DigitsTimesZeroEqualsZero)
+{
+    std::vector<digit_type> digits      = { 1, 2, 3 };
+    long double ZERO_FLOATING_POINT     = 0.0;
+    std::vector<digit_type> ZERO_DIGITS = { 0 };
+
+    test_multiplication(digits, ZERO_FLOATING_POINT, ZERO_DIGITS);
+}
+
+TEST(DigitsAndFloatingPointMultiplicationTest, DigitsTimesSingleDigitNoCarry)
+{
+    std::vector<digit_type> digits          = { 1, 2, 3 };
+    long double single_digit                = 2.0;
+    std::vector<digit_type> expected_result = { 2, 4, 6 };
+
+    test_multiplication(digits, single_digit, expected_result);
+}
+
+TEST(DigitsAndFloatingPointMultiplicationTest, DigitsTimesSingleDigitCarry)
+{
+    std::vector<digit_type> digits = { 1, 2, 1 };
+    long double single_digit = DIGIT_TYPE_MAX;
+    IntegralDigitsView carry1(DIGIT_TYPE_MAX * 2);
+    IntegralDigitsView carry2(carry1.high_digit() + DIGIT_TYPE_MAX);
+    std::vector<digit_type> expected_result = {
+        DIGIT_TYPE_MAX,
+        carry1.low_digit(),
+        carry2.low_digit(),
+        carry2.high_digit()
+    };
+
+    test_multiplication(digits, single_digit, expected_result);
+}
+
+TEST(DigitsAndFloatingPointMultiplicationTest, MultipleDigitsTimesMultipleDigits)
+{
+    std::vector<digit_type> digits1 = {
+        DIGIT_TYPE_MAX, DIGIT_TYPE_MAX
+    };
+    auto digits2 = std::pow(DIGIT_BASE, 10.0L);
+    std::vector<digit_type> expected_result(12);
+    expected_result[expected_result.size() - 2] = DIGIT_TYPE_MAX;
+    expected_result.back()                      = DIGIT_TYPE_MAX;
 
     test_multiplication(digits1, digits2, expected_result);
 }

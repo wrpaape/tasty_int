@@ -12,11 +12,21 @@
 #include "tasty_int/detail/integral_digits_view.hpp"
 #include "tasty_int/detail/digits_addition.hpp"
 #include "tasty_int/detail/digits_subtraction.hpp"
+#include "tasty_int/detail/conversions/digits_from_floating_point.hpp"
 
 
 namespace tasty_int {
 namespace detail {
 namespace {
+
+std::vector<digit_type>
+allocate_result(std::size_t lhs_size,
+                std::size_t rhs_size)
+{
+    std::vector<digit_type> result(lhs_size + rhs_size);
+
+    return result;
+}
 
 void
 long_multiply_digit(const std::vector<digit_type>    &lhs,
@@ -42,7 +52,7 @@ std::vector<digit_type>
 long_multiply_digit(const std::vector<digit_type>    &lhs,
                     digit_type                        rhs_digit)
 {
-    std::vector<digit_type> result(lhs.size() + 1);
+    auto result = allocate_result(lhs.size(), 1);
 
     long_multiply_digit(lhs, rhs_digit, result.begin());
 
@@ -60,6 +70,19 @@ long_multiply_digits(const std::vector<digit_type> &lhs,
 
     for (auto rhs_digit : rhs)
         long_multiply_digit(lhs, rhs_digit, result_cursor++);
+}
+
+void
+long_multiply_digits(const std::vector<digit_type> &lhs,
+                     IntegralDigitsView             rhs_view,
+                     std::vector<digit_type>       &result)
+{
+    auto result_cursor = result.begin();
+
+    long_multiply_digit(lhs, rhs_view.low_digit(), result_cursor);
+
+    if (rhs_view.digits_size() > 1)
+        long_multiply_digit(lhs, rhs_view.high_digit(), ++result_cursor);
 }
 
 std::vector<digit_type>
@@ -122,10 +145,10 @@ karatsuba_partition(const std::vector<digit_type>      &smaller,
     struct KaratsubaPartiion result;
 
     result.split_size   = split_size;
-    result.low_product  = karatsuba_multiply(smaller_low, larger_low);
-    result.high_product = karatsuba_multiply(smaller_high, larger_high);
-    result.sum_product  = karatsuba_multiply(smaller_low + smaller_high,
-                                             larger_low  + larger_high);
+    result.low_product  = smaller_low  * larger_low;
+    result.high_product = smaller_high * larger_high;
+    result.sum_product  = (smaller_low + smaller_high)
+                        * (larger_low  + larger_high);
 
     return result;
 }
@@ -187,17 +210,23 @@ operator*=(std::vector<digit_type> &lhs,
     return times_equals(lhs, rhs);
 }
 
-// std::vector<digit_type> &
-// operator*=(std::vector<digit_type> &lhs,
-//            long double              rhs)
-// {
-//     return times_equals(lhs, rhs); // TODO
-// }
+std::vector<digit_type> &
+operator*=(std::vector<digit_type> &lhs,
+           long double              rhs)
+{
+    return times_equals(lhs, rhs);
+}
 
 std::vector<digit_type>
 operator*(const std::vector<digit_type> &lhs,
           const std::vector<digit_type> &rhs)
 {
+    assert(!lhs.empty());
+    assert(!have_trailing_zero(lhs));
+
+    assert(!rhs.empty());
+    assert(!have_trailing_zero(rhs));
+
     return karatsuba_multiply(rhs, lhs);
 }
 
@@ -205,19 +234,17 @@ std::vector<digit_type>
 operator*(const std::vector<digit_type> &lhs,
           std::uintmax_t                 rhs)
 {
+    assert(!lhs.empty());
+    assert(!have_trailing_zero(lhs));
+
     if (rhs == 0)
         return { 0 };
 
     IntegralDigitsView rhs_view(rhs);
 
-    auto size_rhs_digits = rhs_view.digits_size();
-    std::vector<digit_type> result(lhs.size() + size_rhs_digits);
+    auto result = allocate_result(lhs.size(), rhs_view.digits_size());
 
-    auto result_cursor = result.begin();
-    long_multiply_digit(lhs, rhs_view.low_digit(), result_cursor);
-
-    if (size_rhs_digits > 1)
-        long_multiply_digit(lhs, rhs_view.high_digit(), ++result_cursor);
+    long_multiply_digits(lhs, rhs_view, result);
 
     trim_trailing_zero(result);
 
@@ -231,19 +258,22 @@ operator*(std::uintmax_t                 lhs,
     return rhs * lhs;
 }
 
-// std::vector<digit_type>
-// operator*(const std::vector<digit_type> &lhs,
-//           long double                    rhs)
-// {
-//     return lhs; // TODO
-// }
+std::vector<digit_type>
+operator*(const std::vector<digit_type> &lhs,
+          long double                    rhs)
+{
+    assert(std::isfinite(rhs));
+    assert(rhs >= 0.0L);
 
-// std::vector<digit_type>
-// operator*(long double                    lhs,
-//           const std::vector<digit_type> &rhs)
-// {
-//     return rhs; // TODO
-// }
+    return lhs * conversions::digits_from_floating_point(rhs);
+}
+
+std::vector<digit_type>
+operator*(long double                    lhs,
+          const std::vector<digit_type> &rhs)
+{
+    return rhs * lhs;
+}
 
 
 std::vector<digit_type>
@@ -256,7 +286,7 @@ long_multiply(const std::vector<digit_type> &lhs,
     if (is_zero(rhs))
         return rhs;
 
-    std::vector<digit_type> result(lhs.size() + rhs.size());
+    auto result = allocate_result(lhs.size(), rhs.size());
 
     long_multiply_digits(lhs, rhs, result);
 
