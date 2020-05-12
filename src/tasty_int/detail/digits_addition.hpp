@@ -18,6 +18,7 @@ namespace detail {
  * These operations operate on little-endian `std::vector`s of `digit_type`.
  *
  * @pre input digits vectors must be non-empty
+ * @pre input digits may have no leading zeros
  * @pre every element of input digits vectors must be `<= DIGIT_TYPE_MAX`
  */
 /// @{

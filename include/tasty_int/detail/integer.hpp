@@ -285,6 +285,53 @@ operator-(long double    lhs,
 /// @}
 
 
+#if 0 // TODO
+/**
+ * @defgroup IntegerMultiplicationOperators Integer Multiplication Operators
+ *
+ * These operators apply multiplication to tasty_int::detail::Integer and the
+ * supported arithmetic types.  Note that floating point values are effectively
+ * truncated toward zero before multiplication.
+ */
+/// @{
+Integer &
+operator*=(Integer       &lhs,
+           const Integer &rhs);
+Integer &
+operator*=(Integer        &lhs,
+           std::uintmax_t  rhs);
+Integer &
+operator*=(Integer       &lhs,
+           std::intmax_t  rhs);
+Integer &
+operator*=(Integer     &lhs,
+           long double  rhs);
+
+Integer
+operator*(const Integer &lhs,
+          const Integer &rhs);
+Integer
+operator*(const Integer  &lhs,
+          std::uintmax_t  rhs);
+Integer
+operator*(std::uintmax_t  lhs,
+          const Integer  &rhs);
+Integer
+operator*(const Integer &lhs,
+          std::intmax_t  rhs);
+Integer
+operator*(std::intmax_t  lhs,
+          const Integer &rhs);
+Integer
+operator*(const Integer &lhs,
+          long double    rhs);
+Integer
+operator*(long double    lhs,
+          const Integer &rhs);
+/// @}
+#endif // TODO
+
+
 /**
  * @brief Integer output operator.
  *

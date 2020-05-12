@@ -15,6 +15,7 @@ namespace detail {
  * These operations operate on little-endian `std::vector`s of `digit_type`.
  *
  * @pre input digits vectors must be non-empty
+ * @pre input digits may have no leading zeros
  * @pre every element of input digits vectors must be `<= DIGIT_TYPE_MAX`
  */
 /// @{
@@ -56,11 +57,36 @@ operator*(long double                    lhs,
 
 
 /**
+ * @brief Multiply @p multiplicand by `DIGIT_BASE`.
+ *
+ * @param[in] multiplicand the digits to be multiplied
+ * @return `multiplicand * DIGIT_BASE`
+ *
+ * @pre `multiplicand != 0`
+ */
+std::vector<digit_type>
+multiply_digit_base(const std::vector<digit_type> &multiplicand);
+
+/**
+ * @brief Multiply @p multiplicand by `DIGIT_BASE^exponent`.
+ *
+ * @param[in] exponent         the desired power of `DIGIT_BASE`
+ * @param[in,out] multiplicand the digits to be multiplied
+ */
+void
+multiply_digit_base_power_in_place(
+    std::vector<digit_type>::size_type  exponent,
+    std::vector<digit_type>            &multiplicand
+);
+
+
+/**
  * @defgroup DigitsMultiplicationAlgorithms Digits Multiplication Algorithms
  *
  * These algorithms implement `operator*`.
  *
  * @pre input digits vectors must be non-empty
+ * @pre input digits may have no leading zeros
  * @pre every element of input digits vectors must be `<= DIGIT_TYPE_MAX`
  */
 /// @{

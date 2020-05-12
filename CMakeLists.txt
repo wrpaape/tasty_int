@@ -27,6 +27,7 @@ cmake_dependent_option(
     BUILD_TESTING OFF
 )
 option(BUILD_BENCHMARKING "Enable micro benchmarks." ON)
+# @todo TODO: sanitizer flags
 
 # config defines
 set(TASTY_INT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR})

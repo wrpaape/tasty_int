@@ -94,6 +94,12 @@ add_google_test(
     LIBRARIES tasty_int-detail-order_by_size
 )
 
+add_google_test(
+    NAME      tasty_int-detail-split_digits_test
+    SOURCES   split_digits_test.cpp
+    LIBRARIES tasty_int-detail-split_digits
+)
+
 add_library(tasty_int-detail-comparison_test_common INTERFACE)
 target_sources(
     tasty_int-detail-comparison_test_common
@@ -172,7 +178,6 @@ add_google_test(
     LIBRARIES tasty_int-detail-integer
               tasty_int-detail-conversions-integer_from_string
               tasty_int-detail-integer_test_common
-              tasty_int_test
 )
 
 
@@ -207,7 +212,6 @@ add_google_test(
               tasty_int-detail-conversions-integer_from_floating_point
               tasty_int-detail-conversions-integer_from_string
               tasty_int-detail-integer_test_common
-              tasty_int_test
 )
 
 add_google_test(
@@ -216,6 +220,22 @@ add_google_test(
     LIBRARIES tasty_int-detail-digits_multiplication
               tasty_int-detail-integral_digits_view
               tasty_int-detail-conversions-digits_from_string
+)
+
+add_google_test(
+    NAME      tasty_int-detail-integer_multiplication_test
+    SOURCES   integer_multiplication_test.cpp
+    LIBRARIES tasty_int-detail-integer
+              tasty_int-detail-conversions-integer_from_string
+              tasty_int-detail-integer_test_common
+)
+
+add_google_test(
+    NAME      tasty_int-detail-digits_division_test
+    SOURCES   digits_division_test.cpp
+    LIBRARIES tasty_int-detail-digits_division
+              tasty_int-detail-digits_addition
+              tasty_int-detail-digits_multiplication
 )
 
 add_google_test(

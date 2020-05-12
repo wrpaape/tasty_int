@@ -110,21 +110,6 @@ split(const std::vector<digit_type>      &digits,
     return { std::move(low), std::move(high) };
 }
 
-void
-multiply_digit_power(std::vector<digit_type>::size_type  digit_power,
-                     std::vector<digit_type>            &multiplicand)
-{
-    auto initial_size = multiplicand.size();
-    multiplicand.resize(initial_size + digit_power);
-
-    auto initial_end = multiplicand.rbegin() + digit_power;
-
-    std::swap_ranges(initial_end,
-                     multiplicand.rend(),
-                     multiplicand.rbegin());
-}
-
-
 struct KaratsubaPartiion
 {
     std::vector<digit_type>::size_type split_size;
@@ -170,11 +155,11 @@ karatsuba_merge(KaratsubaPartiion                  &partition,
     [[maybe_unused]] auto sign2 = subtract_in_place(low_product, result);
     assert(sign2 >= Sign::ZERO);
 
-    multiply_digit_power(split_size, result);
+    multiply_digit_base_power_in_place(split_size, result);
 
     result += low_product;
 
-    multiply_digit_power(split_size * 2, high_product);
+    multiply_digit_base_power_in_place(split_size * 2, high_product);
 
     result += high_product;
 
@@ -273,6 +258,44 @@ operator*(long double                    lhs,
           const std::vector<digit_type> &rhs)
 {
     return rhs * lhs;
+}
+
+
+std::vector<digit_type>
+multiply_digit_base(const std::vector<digit_type> &multiplicand)
+{
+    assert(!is_zero(multiplicand));
+
+    std::vector<digit_type> result;
+
+    result.reserve(multiplicand.size() + 1);
+
+    result.emplace_back(0);
+
+    result.insert(result.end(),
+                  multiplicand.begin(),
+                  multiplicand.end());
+
+    return result;
+}
+
+void
+multiply_digit_base_power_in_place(
+    std::vector<digit_type>::size_type  exponent,
+    std::vector<digit_type>            &multiplicand
+)
+{
+    if (is_zero(multiplicand))
+        return;
+
+    auto initial_size = multiplicand.size();
+    multiplicand.resize(initial_size + exponent);
+
+    auto initial_end = multiplicand.rbegin() + exponent;
+
+    std::swap_ranges(initial_end,
+                     multiplicand.rend(),
+                     multiplicand.rbegin());
 }
 
 

@@ -76,8 +76,8 @@ private:
     size_digits(std::string_view::size_type count_significant_tokens) const;
 
     digit_accumulator_type
-    multiply_accumulate(std::vector<digit_type> &digits,
-                        digit_accumulator_type   addend) const;
+    multiply_base_accumulate(std::vector<digit_type> &digits,
+                             digit_accumulator_type   addend) const;
 
     digit_accumulator_type
     get_value_from_token(char token) const; 
@@ -186,7 +186,7 @@ void
 DigitsParser::accumulate_value(std::vector<digit_type> &digits,
                                digit_accumulator_type   value) const
 {
-    digit_accumulator_type carry = multiply_accumulate(digits, value);
+    digit_accumulator_type carry = multiply_base_accumulate(digits, value);
 
     if (carry > 0) {
         // carry from the last multiplication => do not need to truncate
@@ -196,8 +196,8 @@ DigitsParser::accumulate_value(std::vector<digit_type> &digits,
 }
 
 digit_accumulator_type
-DigitsParser::multiply_accumulate(std::vector<digit_type> &digits,
-                                  digit_accumulator_type   addend) const
+DigitsParser::multiply_base_accumulate(std::vector<digit_type> &digits,
+                                       digit_accumulator_type   addend) const
 {
     for (digit_type &digit : digits) {
         digit_accumulator_type accumulator = digit;

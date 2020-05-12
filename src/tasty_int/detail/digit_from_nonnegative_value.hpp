@@ -41,11 +41,10 @@ digit_from_nonnegative_value(IntegralType value)
 
     assert(value >= IntegralType(0));
 
-    if constexpr (TRUNCATE_INTEGRAL_TYPE) {
+    if constexpr (TRUNCATE_INTEGRAL_TYPE)
         return static_cast<digit_type>(value) & DIGIT_TYPE_MAX;
-    } else {
+    else
         return static_cast<digit_type>(value);
-    }
 }
 
 /**

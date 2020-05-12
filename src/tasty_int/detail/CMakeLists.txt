@@ -72,6 +72,14 @@ target_sources(
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 
+add_library(tasty_int-detail-split_digits INTERFACE)
+target_sources(
+    tasty_int-detail-split_digits
+    INTERFACE
+    ${PROJECT_SRC_DIR}/tasty_int/detail/split_digits.hpp
+    $<TARGET_OBJECTS:tasty_int-detail-trailing_zero>
+)
+
 add_library(tasty_int-detail-integral_digits_view INTERFACE)
 target_sources(
     tasty_int-detail-integral_digits_view
@@ -161,6 +169,24 @@ target_link_libraries(
     tasty_int-detail-digits_addition
     tasty_int-detail-digits_subtraction
     tasty_int-detail-conversions-digits_from_floating_point
+)
+
+add_library(
+    tasty_int-detail-digits_division
+    STATIC
+    digits_division.cpp
+    digits_division.hpp
+    $<TARGET_OBJECTS:tasty_int-detail-conversions-digits_from_integral>
+)
+target_link_libraries(
+    tasty_int-detail-digits_division
+    tasty_int-detail-digits_addition
+    tasty_int-detail-digits_comparison
+    tasty_int-detail-digits_subtraction
+    tasty_int-detail-digits_multiplication
+    tasty_int-detail-digit_from_nonnegative_value
+    tasty_int-detail-is_zero
+    tasty_int-detail-trailing_zero
 )
 
 add_library(
