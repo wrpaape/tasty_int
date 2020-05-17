@@ -47,12 +47,6 @@ set(PROJECT_BUILD_TEST_COMMANDS build-test build-test-verbose)
 if(BUILD_COVERAGE)
     include(CodeCoverage)
 
-    append_coverage_compiler_flags()
-    if(MSVC)
-        add_compile_options(/O0)
-    else()
-        add_compile_options(-O0)
-    endif()
     setup_target_for_coverage_lcov(
         NAME       coverage
         EXECUTABLE ${CMAKE_CTEST_COMMAND}
@@ -60,6 +54,7 @@ if(BUILD_COVERAGE)
                    "*/third_party/*"       # third party code
                    "*/gtest/*" "*/gmock/*" # testing framework
                    "*/test/*"              # unit tests
+                   "*/cmake/*"             # cmake executables
                    "*/benchmark/*"         # benchmark framework, benchmarks
                    "*/generate_*.cpp"      # code generators
     )

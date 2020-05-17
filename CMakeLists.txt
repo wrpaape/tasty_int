@@ -27,7 +27,7 @@ cmake_dependent_option(
     BUILD_TESTING OFF
 )
 option(BUILD_BENCHMARKING "Enable micro benchmarks." ON)
-# @todo TODO: sanitizer flags
+# @todo TODO: https://svn.boost.org/trac10/wiki/BestPracticeHandbook
 
 # config defines
 set(TASTY_INT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR})

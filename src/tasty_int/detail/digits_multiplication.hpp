@@ -64,6 +64,7 @@ operator*(long double                    lhs,
  *
  * @pre `multiplicand != 0`
  */
+/// @todo: TODO: remove if not required by digits_division
 std::vector<digit_type>
 multiply_digit_base(const std::vector<digit_type> &multiplicand);
 

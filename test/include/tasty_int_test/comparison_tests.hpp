@@ -43,7 +43,7 @@ expect_equal(const T &lhs,
 }
 
 /**
- * @brief EXPECT that `lhs < rhs`.
+ * @brief EXPECT that `lesser < greater`.
  *
  * @details Exercises all 6 comparison operators on two
  *     expectedly-strictly-unequal operands and emits non-fatal google test

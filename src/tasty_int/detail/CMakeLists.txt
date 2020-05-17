@@ -1,3 +1,11 @@
+add_library(
+    tasty_int-detail-trailing_zero
+    OBJECT
+    ${CMAKE_CURRENT_LIST_DIR}/trailing_zero.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/trailing_zero.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
+)
+
 add_subdirectory(conversions)
 
 add_library(tasty_int-detail-digit_from_nonnegative_value INTERFACE)
@@ -48,14 +56,6 @@ target_link_libraries(
     tasty_int-detail-is_zero
 )
 
-add_library(
-    tasty_int-detail-trailing_zero
-    OBJECT
-    trailing_zero.cpp
-    trailing_zero.hpp
-    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
-)
-
 add_library(tasty_int-detail-flip_sign INTERFACE)
 target_sources(
     tasty_int-detail-flip_sign
@@ -79,6 +79,15 @@ target_sources(
     ${PROJECT_SRC_DIR}/tasty_int/detail/split_digits.hpp
     $<TARGET_OBJECTS:tasty_int-detail-trailing_zero>
 )
+
+add_library(
+    tasty_int-detail-next_power_of_two
+    OBJECT
+    next_power_of_two.cpp
+    next_power_of_two.hpp
+)
+include(set_intrinsic_count_leading_zeros)
+set_intrinsic_count_leading_zeros(tasty_int-detail-next_power_of_two)
 
 add_library(tasty_int-detail-integral_digits_view INTERFACE)
 target_sources(
@@ -165,6 +174,7 @@ target_link_libraries(
     tasty_int-detail-digit_from_nonnegative_value
     tasty_int-detail-is_zero
     tasty_int-detail-order_by_size
+    tasty_int-detail-split_digits
     tasty_int-detail-integral_digits_view
     tasty_int-detail-digits_addition
     tasty_int-detail-digits_subtraction
@@ -176,17 +186,17 @@ add_library(
     STATIC
     digits_division.cpp
     digits_division.hpp
-    $<TARGET_OBJECTS:tasty_int-detail-conversions-digits_from_integral>
+    $<TARGET_OBJECTS:tasty_int-detail-trailing_zero>
 )
 target_link_libraries(
     tasty_int-detail-digits_division
-    tasty_int-detail-digits_addition
-    tasty_int-detail-digits_comparison
-    tasty_int-detail-digits_subtraction
-    tasty_int-detail-digits_multiplication
     tasty_int-detail-digit_from_nonnegative_value
     tasty_int-detail-is_zero
-    tasty_int-detail-trailing_zero
+    tasty_int-detail-split_digits
+    tasty_int-detail-digits_comparison
+    tasty_int-detail-digits_addition
+    tasty_int-detail-digits_subtraction
+    tasty_int-detail-digits_multiplication
 )
 
 add_library(

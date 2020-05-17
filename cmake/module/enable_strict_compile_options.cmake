@@ -19,7 +19,9 @@ function(enable_strict_compile_options)
     unset(supported_flags)
     if(MSVC)
         set(options /W4 /WX)
-    else()
+    elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        set(options -W -Wall -Werror)
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         set(
             options
             -Wall -Wextra -pedantic -Wstrict-aliasing -Wunreachable-code
@@ -31,6 +33,9 @@ function(enable_strict_compile_options)
             -Wno-unused -Wno-variadic-macros -Wno-parentheses
             -fdiagnostics-show-option -Werror
         )
+    else()
+        message(STATUS "Unknown compiler - not adding strict compile options.")
+        return()
     endif()
     string(REPLACE ";" " " space_separated_options "${options}")
     message(

@@ -9,6 +9,7 @@
 #include "tasty_int/detail/is_zero.hpp"
 #include "tasty_int/detail/trailing_zero.hpp"
 #include "tasty_int/detail/order_by_size.hpp"
+#include "tasty_int/detail/split_digits.hpp"
 #include "tasty_int/detail/integral_digits_view.hpp"
 #include "tasty_int/detail/digits_addition.hpp"
 #include "tasty_int/detail/digits_subtraction.hpp"
@@ -95,21 +96,6 @@ karatsuba_multiply_trivial(const std::vector<digit_type> &smaller,
     return (smaller.front() == 0) ? smaller : larger;
 }
 
-std::pair<std::vector<digit_type>, std::vector<digit_type>>
-split(const std::vector<digit_type>      &digits,
-      std::vector<digit_type>::size_type  index)
-{
-
-    auto split_at = digits.begin() + index;
-
-    std::vector<digit_type> low(digits.begin(), split_at);
-    trim_trailing_zeros(low);
-
-    std::vector<digit_type> high(split_at, digits.end());
-
-    return { std::move(low), std::move(high) };
-}
-
 struct KaratsubaPartiion
 {
     std::vector<digit_type>::size_type split_size;
@@ -124,8 +110,8 @@ karatsuba_partition(const std::vector<digit_type>      &smaller,
                     std::vector<digit_type>::size_type  split_size)
 {
 
-    auto [smaller_low, smaller_high] = split(smaller, split_size);
-    auto [larger_low,  larger_high]  = split(larger,  split_size);
+    auto [smaller_low, smaller_high] = split_digits<2>(smaller, split_size);
+    auto [larger_low,  larger_high]  = split_digits<2>(larger,  split_size);
 
     struct KaratsubaPartiion result;
 
@@ -260,7 +246,7 @@ operator*(long double                    lhs,
     return rhs * lhs;
 }
 
-
+/// @todo: TODO: remove if not required by digits_division
 std::vector<digit_type>
 multiply_digit_base(const std::vector<digit_type> &multiplicand)
 {

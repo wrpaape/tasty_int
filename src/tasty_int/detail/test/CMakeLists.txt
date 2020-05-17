@@ -76,9 +76,9 @@ add_google_test(
 )
 
 add_google_test(
-    NAME    tasty_int-detail-trailing_zero_test
-    SOURCES trailing_zero_test.cpp
-            $<TARGET_OBJECTS:tasty_int-detail-trailing_zero>
+    NAME      tasty_int-detail-trailing_zero_test
+    SOURCES   trailing_zero_test.cpp
+              $<TARGET_OBJECTS:tasty_int-detail-trailing_zero>
 )
 
 add_google_test(
@@ -98,6 +98,12 @@ add_google_test(
     NAME      tasty_int-detail-split_digits_test
     SOURCES   split_digits_test.cpp
     LIBRARIES tasty_int-detail-split_digits
+)
+
+add_google_test(
+    NAME      tasty_int-detail-next_power_of_two_test
+    SOURCES   next_power_of_two_test.cpp
+    LIBRARIES tasty_int-detail-next_power_of_two
 )
 
 add_library(tasty_int-detail-comparison_test_common INTERFACE)

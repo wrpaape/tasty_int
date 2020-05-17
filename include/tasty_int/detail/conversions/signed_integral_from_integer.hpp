@@ -11,9 +11,9 @@ namespace detail {
 namespace conversions {
 
 /**
- * @brief Retrieve the integral value of @p integer.
+ * @brief Retrieves the integral value of @p integer.
  *
- * @brief If the value of @p integer lies outside the bounds of what can be
+ * @details If the value of @p integer lies outside the bounds of what can be
  *    represented by std::intmax_t, the result is truncated to the
  *    least-significant `sizeof(std::uintmax_t)` bytes.
  *

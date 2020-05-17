@@ -13,9 +13,11 @@ namespace {
 
 using tasty_int_test::base_10_integer_string_from_arithmetic;
 
-
 template<typename ArithmeticType>
-    requires std::is_arithmetic_v<ArithmeticType>
+concept Arithmetic = std::is_arithmetic_v<ArithmeticType>;
+
+
+template<Arithmetic ArithmeticType>
 class Base10IntegerStringFromArithmeticTest : public ::testing::Test
 {
 protected:
@@ -29,7 +31,7 @@ protected:
     to_string(ArithmeticType value);
 }; // class Base10IntegerStringFromArithmeticTest
 
-template<typename ArithmeticType>
+template<Arithmetic ArithmeticType>
 void
 Base10IntegerStringFromArithmeticTest<ArithmeticType>::test_value_is_convertible(
     ArithmeticType value
@@ -39,7 +41,7 @@ Base10IntegerStringFromArithmeticTest<ArithmeticType>::test_value_is_convertible
               base_10_integer_string_from_arithmetic(value));
 }
 
-template<typename ArithmeticType>
+template<Arithmetic ArithmeticType>
 std::string
 Base10IntegerStringFromArithmeticTest<ArithmeticType>::make_expected_base_10_integer_string(
     ArithmeticType value
@@ -51,7 +53,7 @@ Base10IntegerStringFromArithmeticTest<ArithmeticType>::make_expected_base_10_int
     return base_10_string.substr(0, decimal_point);
 }
 
-template<typename ArithmeticType>
+template<Arithmetic ArithmeticType>
 std::string
 Base10IntegerStringFromArithmeticTest<ArithmeticType>::to_string(
     ArithmeticType value

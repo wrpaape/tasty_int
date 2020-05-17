@@ -9,9 +9,9 @@ namespace detail {
 namespace conversions {
 
 /**
- * @brief Retrieve the floating-point value of @p integer.
+ * @brief Retrieves the floating-point value of @p integer.
  *
- * @brief If the value of @p integer is larger than what can be represented by
+ * @details If the value of @p integer is larger than what can be represented by
  *    long double, the result is +/- infinity.
  *
  * @param[in] integer an arbitrary-precision integer

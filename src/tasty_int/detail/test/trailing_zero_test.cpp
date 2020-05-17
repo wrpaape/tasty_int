@@ -10,6 +10,7 @@ using tasty_int::detail::have_trailing_zero;
 using tasty_int::detail::trim_trailing_zero;
 using tasty_int::detail::trim_trailing_zeros;
 
+
 TEST(HaveTrailingZeroTest, SingleZeroDoesNotHaveTrailingZero)
 {
     std::vector<digit_type> zero = { 0 };

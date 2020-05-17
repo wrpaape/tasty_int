@@ -61,10 +61,12 @@ template<typename T>
 concept TastyIntOperand = Arithmetic<T>
                        || std::is_same_v<T, TastyInt>;
 
-template<TastyIntOperand LhsType,
-         TastyIntOperand RhsType>
-concept TastyIntOperation = std::is_same_v<LhsType, TastyInt>
-                         || std::is_same_v<RhsType, TastyInt>;
+template<typename LhsType,
+         typename RhsType>
+concept TastyIntOperation =
+    (std::is_same_v<LhsType, TastyInt> && TastyIntOperand<RhsType>)
+ || (std::is_same_v<RhsType, TastyInt> && TastyIntOperand<LhsType>);
+
 /// @}
 
 /**

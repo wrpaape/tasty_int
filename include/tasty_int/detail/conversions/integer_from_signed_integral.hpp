@@ -11,7 +11,7 @@ namespace detail {
 namespace conversions {
 
 /**
- * @brief constructs a new tasty_int::detail::Integer from @p value
+ * @brief Constructs a new tasty_int::detail::Integer from @p value
  *
  * @param[in] value a signed integer value
  * @return the tasty_int::detail::Integer representation of @p value

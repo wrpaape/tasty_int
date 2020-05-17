@@ -6,7 +6,7 @@ namespace detail {
 namespace conversions {
 
 /**
- * @brief Convert a Base36 value into its associated ASCII character.
+ * @brief Converts a Base36 value into its associated ASCII character.
  *
  * @param[in] value an integer in the range [0, 36)
  * @return the ASCII character token associated with @p value.

@@ -7,8 +7,8 @@
 #include "tasty_int/detail/conversions/digits_from_integral.hpp"
 #include "tasty_int/detail/conversions/digits_from_floating_point.hpp"
 #include "tasty_int/detail/test/comparison_test_common.hpp"
-#include "tasty_int_test/comparison_tests.hpp"
 #include "tasty_int_test/logarithmic_range.hpp"
+#include "tasty_int_test/comparison_tests.hpp"
 
 
 namespace {
@@ -26,22 +26,38 @@ using tasty_int::detail::conversions::digits_from_integral;
 using tasty_int::detail::conversions::digits_from_floating_point;
 using comparison_test_common::InequalityTestParam;
 
+/**
+ * The point of this wrapper is to expose the comparison operator overloads for
+ * `std::vector<digit_type>` that are declared in the `tasty_int::detail`
+ * namespace to the test routines `expect_equal` and `expect_unequal,` which
+ * are declared in the `tasty_int_test` namespace.  The `using
+ * tasty_int::detail::operator` declarations in this namespace are essential.
+ */
+class WrappedDigits : public std::vector<digit_type>
+{
+public:
+    using std::vector<digit_type>::vector;
 
-class DigitsAndDigitsEqualityTest
-    : public ::testing::TestWithParam<std::vector<digit_type>>
+    WrappedDigits(std::vector<digit_type>&& base)
+        : std::vector<digit_type>(std::move(base))
+    {}
+}; // class WrappedDigits
+
+
+class DigitsAndDigitsEqualityTest : public ::testing::TestWithParam<WrappedDigits>
 {}; // class DigitsAndDigitsEqualityTest
 
 TEST_P(DigitsAndDigitsEqualityTest, ThisEqualToThis)
 {
-    const std::vector<digit_type> &digits = GetParam();
+    const WrappedDigits &digits = GetParam();
 
     tasty_int_test::expect_equal(digits, digits);
 }
 
 TEST_P(DigitsAndDigitsEqualityTest, LhsEqualToRhsCopy)
 {
-    const std::vector<digit_type> &lhs = GetParam();
-    auto rhs                           = lhs;
+    const WrappedDigits &lhs = GetParam();
+    auto rhs                 = lhs;
 
     tasty_int_test::expect_equal(lhs, rhs);
 }
@@ -50,21 +66,19 @@ INSTANTIATE_TEST_SUITE_P(
     DigitsComparisonTest,
     DigitsAndDigitsEqualityTest,
     ::testing::ValuesIn(
-        std::vector<std::vector<digit_type>> {
-            { { 0 } },
-            { { 1 } },
-            { { 0, 1 } },
-            { { 0, 0, 1 } },
-            { { 0, 1, 1 } },
-            { { 1, 1, 1 } }
+        std::vector<WrappedDigits> {
+            { 0 },
+            { 1 },
+            { 0, 1 },
+            { 0, 0, 1 },
+            { 0, 1, 1 },
+            { 1, 1, 1 }
         }
     )
 );
 
-using DigitsAndDigitsInequalityTestParam = InequalityTestParam<
-    std::vector<digit_type>,
-    std::vector<digit_type>
->;
+using DigitsAndDigitsInequalityTestParam =
+    InequalityTestParam<WrappedDigits, WrappedDigits>;
 
 class DigitsAndDigitsInequalityTest
     : public ::testing::TestWithParam<DigitsAndDigitsInequalityTestParam>
@@ -72,8 +86,8 @@ class DigitsAndDigitsInequalityTest
 
 TEST_P(DigitsAndDigitsInequalityTest, LhsLessThanRhs)
 {
-    const std::vector<digit_type> &lesser  = GetParam().smaller;
-    const std::vector<digit_type> &greater = GetParam().larger;
+    const WrappedDigits &lesser  = GetParam().smaller;
+    const WrappedDigits &greater = GetParam().larger;
 
     tasty_int_test::expect_unequal(lesser, greater);
 }
@@ -100,8 +114,8 @@ class DigitsAndIntegralEqualityTest
 
 TEST_P(DigitsAndIntegralEqualityTest, LhsEqualToRhs)
 {
-    std::uintmax_t value           = GetParam();
-    std::vector<digit_type> digits = digits_from_integral(value);
+    std::uintmax_t value = GetParam();
+    WrappedDigits digits = digits_from_integral(value);
 
     tasty_int_test::expect_equal(digits, value);
 }
@@ -114,10 +128,8 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
-using DigitsSmallerThanIntegralTestParam = InequalityTestParam<
-    std::vector<digit_type>,
-    std::uintmax_t
->;
+using DigitsSmallerThanIntegralTestParam =
+    InequalityTestParam<WrappedDigits, std::uintmax_t>;
 
 class DigitsLessThanIntegralTest
     : public ::testing::TestWithParam<DigitsSmallerThanIntegralTestParam>
@@ -125,8 +137,8 @@ class DigitsLessThanIntegralTest
 
 TEST_P(DigitsLessThanIntegralTest, LhsLessThanRhs)
 {
-    const std::vector<digit_type> &lesser  = GetParam().smaller;
-    std::uintmax_t                 greater = GetParam().larger;
+    const WrappedDigits &lesser  = GetParam().smaller;
+    std::uintmax_t       greater = GetParam().larger;
 
     tasty_int_test::expect_unequal(lesser, greater);
 }
@@ -152,10 +164,8 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
-using IntegralSmallerThanDigitsTestParam = InequalityTestParam<
-    std::uintmax_t,
-    std::vector<digit_type>
->;
+using IntegralSmallerThanDigitsTestParam =
+    InequalityTestParam<std::uintmax_t, WrappedDigits>;
 
 class IntegralLessThanDigitsTest
     : public ::testing::TestWithParam<IntegralSmallerThanDigitsTestParam>
@@ -163,8 +173,8 @@ class IntegralLessThanDigitsTest
 
 TEST_P(IntegralLessThanDigitsTest, LhsLessThanRhs)
 {
-    std::uintmax_t                 lesser  = GetParam().smaller;
-    const std::vector<digit_type> &greater = GetParam().larger;
+    std::uintmax_t       lesser  = GetParam().smaller;
+    const WrappedDigits &greater = GetParam().larger;
 
     tasty_int_test::expect_unequal(lesser, greater);
 }
@@ -197,8 +207,8 @@ class DigitsAndFloatingPointEqualityTest
 
 TEST_P(DigitsAndFloatingPointEqualityTest, LhsEqualToRhs)
 {
-    long double value              = GetParam();
-    std::vector<digit_type> digits = digits_from_floating_point(value);
+    long double value    = GetParam();
+    WrappedDigits digits = digits_from_floating_point(value);
 
     tasty_int_test::expect_equal(digits, value);
 }
@@ -211,10 +221,8 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
-using DigitsSmallerThanFloatingPointTestParam = InequalityTestParam<
-    std::vector<digit_type>,
-    long double   
->;
+using DigitsSmallerThanFloatingPointTestParam =
+    InequalityTestParam<WrappedDigits, long double>;
 
 class DigitsLessThanFloatingPointTest
     : public ::testing::TestWithParam<DigitsSmallerThanFloatingPointTestParam>
@@ -222,8 +230,8 @@ class DigitsLessThanFloatingPointTest
 
 TEST_P(DigitsLessThanFloatingPointTest, LhsLessThanRhs)
 {
-    const std::vector<digit_type> &lesser  = GetParam().smaller;
-    long double                    greater = GetParam().larger;
+    const WrappedDigits &lesser  = GetParam().smaller;
+    long double          greater = GetParam().larger;
 
     tasty_int_test::expect_unequal(lesser, greater);
 }
@@ -254,10 +262,8 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
-using FloatingPointSmallerThanDigitsTestParam = InequalityTestParam<
-    long double,
-    std::vector<digit_type>
->;
+using FloatingPointSmallerThanDigitsTestParam =
+    InequalityTestParam<long double, WrappedDigits>;
 
 class FloatingPointLessThanDigitsTest
     : public ::testing::TestWithParam<FloatingPointSmallerThanDigitsTestParam>
@@ -265,8 +271,8 @@ class FloatingPointLessThanDigitsTest
 
 TEST_P(FloatingPointLessThanDigitsTest, LhsLessThanRhs)
 {
-    long double                    lesser  = GetParam().smaller;
-    const std::vector<digit_type> &greater = GetParam().larger;
+    long double          lesser  = GetParam().smaller;
+    const WrappedDigits &greater = GetParam().larger;
 
     tasty_int_test::expect_unequal(lesser, greater);
 }

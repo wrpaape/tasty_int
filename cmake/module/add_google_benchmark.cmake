@@ -49,6 +49,11 @@ function(add_google_benchmark)
         # warning if '-Woverloaded-virtual' is enabled => disable the warning.
         set(google_benchmark_compile_options -Wno-overloaded-virtual)
     endif()
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        # BENCHMARK_MAIN() emits the warning "non-void function does not return
+        # a value in all control paths" on Clang => disable the warning.
+        set(google_benchmark_compile_options -Wno-return-type)
+    endif()
 
     add_custom_benchmark(
         ${ARGV}

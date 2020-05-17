@@ -290,8 +290,7 @@ operator-(long double    lhs,
  * @defgroup IntegerMultiplicationOperators Integer Multiplication Operators
  *
  * These operators apply multiplication to tasty_int::detail::Integer and the
- * supported arithmetic types.  Note that floating point values are effectively
- * truncated toward zero before multiplication.
+ * supported arithmetic types.
  */
 /// @{
 Integer &

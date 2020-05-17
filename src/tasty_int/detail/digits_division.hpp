@@ -14,8 +14,8 @@ namespace detail {
  */
 struct DigitsDivisionResult
 {
-    std::vector<digit_type> quotient;
-    std::vector<digit_type> remainder;
+    std::vector<digit_type> quotient;  ///< the division quotient
+    std::vector<digit_type> remainder; ///< the division remainder
 }; // struct DigitsDivisionResult
 
 

@@ -264,7 +264,7 @@ minuend_compliment_subtract(const MinuendType             &minuend,
     Sign result_sign = minuend_compliment_subtract_in_place(subtrahend,
                                                             result_digits);
 
-    return { .first = result_sign, .second = std::move(result_digits) };
+    return std::make_pair(result_sign, std::move(result_digits));
 }
 
 } // namespace
@@ -355,7 +355,7 @@ subtract(long double                    minuend,
 
     Sign result_sign = complete_subtract(carry, Sign::NEGATIVE, result_digits);
 
-    return { .first = result_sign, .second = std::move(result_digits) };
+    return std::make_pair(result_sign, std::move(result_digits));
 }
 
 } // namespace detail

@@ -96,8 +96,6 @@ public:
     static constexpr int RANGE_SIZE_FIRST           = 8;
     static constexpr int RANGE_SIZE_LAST            = RANGE_SIZE_FIRST << 11;
 
-    static constexpr int RANGE_POWER_MULTIPLIER = 2;
-
     static constexpr benchmark::TimeUnit TIME_UNITS = benchmark::kNanosecond;
 
     static void make_arguments(benchmark::internal::Benchmark *benchmark)
@@ -215,8 +213,8 @@ BENCHMARK_REGISTER_F(MultiplyDigitsByDigitsBenchmark, KaratsubaMultiply)
             MultiplyDigitsByDigitsBenchmark::RANGE_LAST) 
     ->Unit(MultiplyDigitsByDigitsBenchmark::TIME_UNITS);
 
+} // namespace
+
 
 // Run the benchmark
 BENCHMARK_MAIN();
-
-} // namespace

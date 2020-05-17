@@ -31,7 +31,6 @@ split(const std::vector<digit_type>                     &digits,
     if constexpr (is_final_split(SPLIT_INDEX, COUNT_PIECES)) {
         result[SPLIT_INDEX] = std::vector<digit_type>(split_begin,
                                                       digits.end());
-
     } else {
         auto split_end = split_begin + split_size;
         auto piece     = std::vector<digit_type>(split_begin, split_end);
@@ -45,6 +44,23 @@ split(const std::vector<digit_type>                     &digits,
 
 } // namespace split_digits_detail
 
+
+/**
+ * @brief Splits @p digits into @p COUNT_PIECES pieces with sizes of at least
+ *     @p split_size.
+ *
+ * @details The first `COUNT_PIECES - 1` pieces are allocated @p split_size
+ *     digits a piece, and the final piece is allocated the remainder.  Leading
+ *     zeros are stripped from the resulting pieces.
+ *
+ * @tparam COUNT_PIECES the number of pieces
+ * @param[in] digits     a little-endian sequence of digits
+ * @param[in] split_size the minimum split interval between consecutive pieces
+ *
+ *
+ * @pre `COUNT_PIECES > 0`
+ * @pre `digits.size() > (split_size * (COUNT_PIECES - 1))`
+ */
 template<std::size_t COUNT_PIECES>
 std::array<std::vector<digit_type>, COUNT_PIECES>
 split_digits(const std::vector<digit_type>      &digits,
@@ -52,7 +68,7 @@ split_digits(const std::vector<digit_type>      &digits,
 {
     static_assert(COUNT_PIECES > 0);
 
-    assert((split_size * (COUNT_PIECES - 1)) <= digits.size());
+    assert(digits.size() > (split_size * (COUNT_PIECES - 1)));
 
     std::array<std::vector<digit_type>, COUNT_PIECES> result;
 

@@ -31,8 +31,8 @@ expect_equal(const DigitsDivisionResult    &expected_result,
 }
 
 void
-expect_equal(const DigitsDivisionResult    &expected_result,
-             const DigitsDivisionResult    &actual_result)
+expect_equal(const DigitsDivisionResult &expected_result,
+             const DigitsDivisionResult &actual_result)
 {
     expect_equal(expected_result,
                  actual_result.quotient,

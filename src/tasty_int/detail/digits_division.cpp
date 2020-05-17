@@ -5,145 +5,144 @@
 #include <algorithm>
 #include <array>
 #include <iterator>
-#include <tuple>
 #include <utility>
 
+#include "tasty_int/detail/digit_from_nonnegative_value.hpp"
+#include "tasty_int/detail/is_zero.hpp"
+#include "tasty_int/detail/trailing_zero.hpp"
+#include "tasty_int/detail/split_digits.hpp"
 #include "tasty_int/detail/digits_comparison.hpp"
 #include "tasty_int/detail/digits_addition.hpp"
 #include "tasty_int/detail/digits_subtraction.hpp"
 #include "tasty_int/detail/digits_multiplication.hpp"
-#include "tasty_int/detail/digit_from_nonnegative_value.hpp"
-#include "tasty_int/detail/is_zero.hpp"
-#include "tasty_int/detail/trailing_zero.hpp"
-#include "tasty_int/detail/conversions/digits_from_integral.hpp"
 
 
 namespace tasty_int {
 namespace detail {
 namespace {
 
-// TODO: remove
-using SmallDigitBuffer = std::array<digit_type, 3>;
+// // TODO: remove
+// using SmallDigitBuffer = std::array<digit_type, 3>;
+
+// // TODO: remove
+// void
+// subtract_from_buffer(digit_type        subtrahend,
+//                      SmallDigitBuffer &minuend)
+// {
+//     if (subtrahend <= minuend.front()) {
+//         minuend.front() -= subtrahend;
+//         return;
+//     }
+
+//     if (minuend[1] > 0) {
+//         --minuend[1];
+//     } else {
+//         assert(minuend.back() > 0);
+//         --minuend.back();
+//         minuend[1] = DIGIT_TYPE_MAX;
+//     }
+
+//     digit_accumulator_type accumulator = minuend.front();
+//     accumulator += DIGIT_BASE;
+//     accumulator -= subtrahend;
+//     minuend.front() = digit_from_nonnegative_value(accumulator);
+// }
 
 // TODO: remove
-void
-subtract_from_buffer(digit_type        subtrahend,
-                     SmallDigitBuffer &minuend)
-{
-    if (subtrahend <= minuend.front()) {
-        minuend.front() -= subtrahend;
-        return;
-    }
+// DigitsDivisionResult
+// barrett_reduction_division(const std::vector<digit_type> &dividend,
+//                            const std::vector<digit_type> &divisor)
+// {
+//     assert(!is_zero(divisor));
 
-    if (minuend[1] > 0) {
-        --minuend[1];
-    } else {
-        assert(minuend.back() > 0);
-        --minuend.back();
-        minuend[1] = DIGIT_TYPE_MAX;
-    }
+//     auto magnitude_difference = dividend.size() - divisor.size();
+//     auto quotient_size = magnitude_difference + 1;
+//     std::vector<digit_type> quotient(quotient_size);
+//     auto remainder     = dividend;
 
-    digit_accumulator_type accumulator = minuend.front();
-    accumulator += DIGIT_BASE;
-    accumulator -= subtrahend;
-    minuend.front() = digit_from_nonnegative_value(accumulator);
-}
+//     std::vector<digit_type> divisor_power(dividend.size());
 
-// TODO: remove
-DigitsDivisionResult
-barrett_reduction_division(const std::vector<digit_type> &dividend,
-                           const std::vector<digit_type> &divisor)
-{
-    assert(!is_zero(divisor));
+//     std::copy(divisor.begin(),
+//               divisor.end(),
+//               divisor_power.begin() + magnitude_difference);
 
-    auto magnitude_difference = dividend.size() - divisor.size();
-    auto quotient_size = magnitude_difference + 1;
-    std::vector<digit_type> quotient(quotient_size);
-    auto remainder     = dividend;
+//     if (remainder >= divisor_power) {
+//         [[maybe_unused]] auto sign = subtract_in_place(divisor_power,
+//                                                        remainder);
+//         assert(sign >= Sign::ZERO);
+//         quotient.back() = 1;
+//     }
 
-    std::vector<digit_type> divisor_power(dividend.size());
+//     assert(remainder < divisor_power);
 
-    std::copy(divisor.begin(),
-              divisor.end(),
-              divisor_power.begin() + magnitude_difference);
+//     auto most_sig_divisor_digit = divisor.back();
 
-    if (remainder >= divisor_power) {
-        [[maybe_unused]] auto sign = subtract_in_place(divisor_power,
-                                                       remainder);
-        assert(sign >= Sign::ZERO);
-        quotient.back() = 1;
-    }
+//     for (auto mag         = dividend.size() - 1,
+//               divisor_mag = divisor.size() - 1;
+//          mag > divisor_mag; --mag) {
 
-    assert(remainder < divisor_power);
+//         auto next_quotient_digit = DIGIT_TYPE_MAX;
 
-    auto most_sig_divisor_digit = divisor.back();
+//         auto prev_remainder_digit = remainder[mag - 1];
+//         auto next_remainder_digit = remainder[mag];
+//         if (next_remainder_digit != most_sig_divisor_digit) {
+//             digit_accumulator_type accumulator = next_remainder_digit;
+//             accumulator *= DIGIT_BASE;
+//             accumulator += prev_remainder_digit;
+//             accumulator /= most_sig_divisor_digit;
 
-    for (auto mag         = dividend.size() - 1,
-              divisor_mag = divisor.size() - 1;
-         mag > divisor_mag; --mag) {
+//             next_quotient_digit = digit_from_nonnegative_value(accumulator);
+//         }
 
-        auto next_quotient_digit = DIGIT_TYPE_MAX;
+//         const SmallDigitBuffer rhs = {
+//             remainder[mag - 2], prev_remainder_digit, next_remainder_digit
+//         };
 
-        auto prev_remainder_digit = remainder[mag - 1];
-        auto next_remainder_digit = remainder[mag];
-        if (next_remainder_digit != most_sig_divisor_digit) {
-            digit_accumulator_type accumulator = next_remainder_digit;
-            accumulator *= DIGIT_BASE;
-            accumulator += prev_remainder_digit;
-            accumulator /= most_sig_divisor_digit;
+//         SmallDigitBuffer lhs = {
+//             divisor[mag - 1], divisor[mag], 0
+//         };
+//         digit_accumulator_type carry = 0;
+//         for (auto& digit : lhs) {
+//             digit_accumulator_type accumulator = digit;
+//             accumulator *= next_quotient_digit;
+//             accumulator += carry;
+//             digit = digit_from_nonnegative_value(accumulator);
+//             carry = accumulator >> DIGIT_TYPE_BITS;
+//         }
 
-            next_quotient_digit = digit_from_nonnegative_value(accumulator);
-        }
+//         while (std::lexicographical_compare(rhs.rbegin(), rhs.rend(),
+//                                             lhs.rbegin(), lhs.rend())) {
+//                --next_quotient_digit;
+//                subtract_from_buffer(next_quotient_digit, lhs);
+//         }
 
-        const SmallDigitBuffer rhs = {
-            remainder[mag - 2], prev_remainder_digit, next_remainder_digit
-        };
+//         divisor_power.erase(divisor_power.end() - divisor.size() - 1);
 
-        SmallDigitBuffer lhs = {
-            divisor[mag - 1], divisor[mag], 0
-        };
-        digit_accumulator_type carry = 0;
-        for (auto& digit : lhs) {
-            digit_accumulator_type accumulator = digit;
-            accumulator *= next_quotient_digit;
-            accumulator += carry;
-            digit = digit_from_nonnegative_value(accumulator);
-            carry = accumulator >> DIGIT_TYPE_BITS;
-        }
+//         auto sign = subtract_in_place(divisor_power * next_quotient_digit,
+//                                       remainder);
+//         if (sign < Sign::ZERO) {
+//             remainder += divisor_power;
+//             --next_quotient_digit;
+//         }
 
-        while (std::lexicographical_compare(rhs.rbegin(), rhs.rend(),
-                                            lhs.rbegin(), lhs.rend())) {
-               --next_quotient_digit;
-               subtract_from_buffer(next_quotient_digit, lhs);
-        }
+//         quotient[mag - 1 - divisor_mag] = next_quotient_digit;
+//     }
 
-        divisor_power.erase(divisor_power.end() - divisor.size() - 1);
+//     return {
+//         .quotient = std::move(quotient), .remainder = std::move(remainder)
+//     };
+// }
 
-        auto sign = subtract_in_place(divisor_power * next_quotient_digit,
-                                      remainder);
-        if (sign < Sign::ZERO) {
-            remainder += divisor_power;
-            --next_quotient_digit;
-        }
+// bool
+// have_order_of_magnitude_difference(const std::vector<digit_type> &larger,
+//                                    const std::vector<digit_type> &smaller)
+// {
+//     auto magnitude_difference = larger.size() - smaller.size();
 
-        quotient[mag - 1 - divisor_mag] = next_quotient_digit;
-    }
-
-    return {
-        .quotient = std::move(quotient), .remainder = std::move(remainder)
-    };
-}
-
-bool
-have_order_of_magnitude_difference(const std::vector<digit_type> &larger,
-                                   const std::vector<digit_type> &smaller)
-{
-    auto magnitude_difference = larger.size() - smaller.size();
-
-    return (magnitude_difference > 1)
-        || ((magnitude_difference == 1) &&
-            (larger.back() >= smaller.back()));
-}
+//     return (magnitude_difference > 1)
+//         || ((magnitude_difference == 1) &&
+//             (larger.back() >= smaller.back()));
+// }
 
 void
 multiply_digit_base_accumulate_in_place(digit_type               addend,
@@ -266,143 +265,110 @@ long_divide(const std::vector<digit_type> &dividend,
     return result;
 }
 
-bool
-is_odd(std::vector<digit_type>::size_type value)
-{
-    return (value & 1) != 0;
-}
+// bool
+// is_odd(std::vector<digit_type>::size_type value)
+// {
+//     return (value & 1) != 0;
+// }
 
-bool
-is_divide_and_conquer_divide_base_case(
-    std::vector<digit_type>::size_type split_size
-)
-{
-    /// @todo TODO: tune
-    constexpr std::vector<digit_type>::size_type
-        LONG_DIVIDE_THRESHOLD_SPLIT_SIZE = 100;
+// bool
+// is_divide_and_conquer_divide_base_case(
+//     std::vector<digit_type>::size_type split_size
+// )
+// {
+//     /// @todo TODO: tune
+//     constexpr std::vector<digit_type>::size_type
+//         LONG_DIVIDE_THRESHOLD_SPLIT_SIZE = 100;
 
-    return is_odd(split_size)
-        || (split_size <= LONG_DIVIDE_THRESHOLD_SPLIT_SIZE);
-}
+//     return is_odd(split_size)
+//         || (split_size <= LONG_DIVIDE_THRESHOLD_SPLIT_SIZE);
+// }
 
-DigitsDivisionResult
-divide_and_conquer_divide_2_to_1_split(const std::vector<digit_type> &dividend,
-                                       const std::vector<digit_type> &divisor)
-{
-    assert(dividend.size() >= divisor.size());
+// DigitsDivisionResult
+// divide_and_conquer_divide_2_to_1_split(const std::vector<digit_type> &dividend,
+//                                        const std::vector<digit_type> &divisor)
+// {
+//     assert(dividend.size() >= divisor.size());
 
-    auto split_size = std::max(dividend.size() + 1 - divisor.size(),
-                               divisor.size());
+//     auto split_size = std::max(dividend.size() + 1 - divisor.size(),
+//                                divisor.size());
 
-    if (is_divide_and_conquer_divide_base_case(split_size))
-        return long_divide(dividend, divisor);
+//     if (is_divide_and_conquer_divide_base_case(split_size))
+//         return long_divide(dividend, divisor);
 
-    return {}; // TODO
-}
+//     return {}; // TODO
+// }
 
-#ifndef NDEBUG
-bool
-split_size_correct(std::vector<digit_type>::size_type digits_size,
-                   std::vector<digit_type>::size_type split_size,
-                   std::vector<digit_type>::size_type num_splits)
+// #ifndef NDEBUG
+// bool
+// split_size_correct(std::vector<digit_type>::size_type digits_size,
+//                    std::vector<digit_type>::size_type split_size,
+//                    std::vector<digit_type>::size_type num_splits)
 
-{
-    auto [smaller, larger] = std::minmax(digits_size, split_size * num_splits);
-    return (larger - smaller) <= 1;
-}
-#endif // ifndef NDEBUG
+// {
+//     auto [smaller, larger] = std::minmax(digits_size, split_size * num_splits);
+//     return (larger - smaller) <= 1;
+// }
+// #endif // ifndef NDEBUG
 
-std::tuple<std::vector<digit_type>,
-           std::vector<digit_type>,
-           std::vector<digit_type>>
-threeway_split(const std::vector<digit_type>      &digits,
-               std::vector<digit_type>::size_type  split_size)
-{
-    assert(split_size_correct(digits.size(), split_size, 3));
+// DigitsDivisionResult
+// divide_and_conquer_divide_3_to_2_split(const std::vector<digit_type> &dividend,
+//                                        const std::vector<digit_type> &divisor)
+// {
+//     assert(dividend.size() < (divisor.size() * 3 / 2));
 
-    auto mid_begin  = digits.begin() + split_size;
-    auto high_begin = mid_begin + split_size;
+//     auto split_size = divisor.size() / 2;
+//     auto [dividend_low, dividend_mid, dividend_high]
+//         = split_digits<3>(dividend, split_size);
 
-    std::vector<digit_type> low(digits.begin(), mid_begin);
-    trim_trailing_zeros(low);
-    std::vector<digit_type> mid(mid_begin,      high_begin);
-    trim_trailing_zeros(mid);
-    std::vector<digit_type> high(high_begin,    digits.end());
+//     auto [divisor_low, divisor_high] = split_digits<2>(divisor, split_size);
 
-    return { std::move(low), std::move(mid), std::move(high) };
-}
+//     return {}; // TODO
+// }
 
-std::pair<std::vector<digit_type>, std::vector<digit_type>>
-twoway_split(const std::vector<digit_type>      &digits,
-             std::vector<digit_type>::size_type  split_size)
-{
-    assert(split_size_correct(digits.size(), split_size, 2));
+// DigitsDivisionResult
+// divide_and_conquer_divide(const std::vector<digit_type> &dividend,
+//                           const std::vector<digit_type> &divisor)
+// {
+//     (void) dividend;
+//     (void) divisor;
+//     return {}; // TODO
+// }
 
-    auto split_at = digits.begin() + split_size;
+// DigitsDivisionResult
+// long_divide_digit(const std::vector<digit_type> &dividend,
+//                   digit_type                     divisor)
+// {
+//     assert(divisor != 0);
 
-    std::vector<digit_type> low(digits.begin(), split_at);
-    trim_trailing_zeros(low);
-    std::vector<digit_type> high(split_at,      digits.end());
+//     DigitsDivisionResult result;
 
-    return { std::move(low), std::move(high) };
-}
+//     auto& quotient = result.quotient;
+//     quotient.reserve(dividend.size());
 
-DigitsDivisionResult
-divide_and_conquer_divide_3_to_2_split(const std::vector<digit_type> &dividend,
-                                       const std::vector<digit_type> &divisor)
-{
-    assert(dividend.size() < (divisor.size() * 3 / 2));
+//     auto dividend_cursor = dividend.rbegin();
+//     digit_accumulator_type accumulator = 0;
 
-    auto split_size = divisor.size() / 2;
-    auto [dividend_low, dividend_mid, dividend_high]
-        = threeway_split(dividend, split_size);
+//     do {
+//         accumulator <<= DIGIT_TYPE_BITS;
+//         accumulator  |= *dividend_cursor;
 
-    auto [divisor_low, divisor_high] = twoway_split(divisor, split_size);
+//         auto next_quotient_digit = accumulator / divisor;
+//         accumulator %= divisor;
 
-    return {}; // TODO
-}
+//         quotient.emplace_back(
+//             digit_from_nonnegative_value(next_quotient_digit)
+//         );
+//     } while (++dividend_cursor != dividend.rend());
 
-DigitsDivisionResult
-divide_and_conquer_divide(const std::vector<digit_type> &dividend,
-                          const std::vector<digit_type> &divisor)
-{
-    return {}; // TODO
-}
+//     std::reverse(quotient.begin(), quotient.end());
 
-DigitsDivisionResult
-long_divide_digit(const std::vector<digit_type> &dividend,
-                  digit_type                     divisor)
-{
-    assert(divisor != 0);
+//     trim_trailing_zero(quotient);
 
-    DigitsDivisionResult result;
+//     result.remainder = { digit_from_nonnegative_value(accumulator) };
 
-    auto& quotient = result.quotient;
-    quotient.reserve(dividend.size());
-
-    auto dividend_cursor = dividend.rbegin();
-    digit_accumulator_type accumulator = 0;
-
-    do {
-        accumulator <<= DIGIT_TYPE_BITS;
-        accumulator  |= *dividend_cursor;
-
-        auto next_quotient_digit = accumulator / divisor;
-        accumulator %= divisor;
-
-        quotient.emplace_back(
-            digit_from_nonnegative_value(next_quotient_digit)
-        );
-    } while (++dividend_cursor != dividend.rend());
-
-    std::reverse(quotient.begin(), quotient.end());
-
-    trim_trailing_zero(quotient);
-
-    result.remainder = { digit_from_nonnegative_value(accumulator) };
-
-    return result;
-}
+//     return result;
+// }
 
 } // namespace
 
