@@ -1,8 +1,8 @@
 add_library(
     tasty_int-detail-trailing_zero
-    OBJECT
-    ${CMAKE_CURRENT_LIST_DIR}/trailing_zero.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/trailing_zero.hpp
+    STATIC
+    trailing_zero.cpp
+    trailing_zero.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 
@@ -77,7 +77,11 @@ target_sources(
     tasty_int-detail-split_digits
     INTERFACE
     ${PROJECT_SRC_DIR}/tasty_int/detail/split_digits.hpp
-    $<TARGET_OBJECTS:tasty_int-detail-trailing_zero>
+)
+target_link_libraries(
+    tasty_int-detail-split_digits
+    INTERFACE
+    tasty_int-detail-trailing_zero
 )
 
 add_library(
@@ -133,7 +137,6 @@ add_library(
     digits_addition.cpp
     digits_addition.hpp
     $<TARGET_OBJECTS:tasty_int-detail-size_digits_from_nonnegative_floating_point>
-    $<TARGET_OBJECTS:tasty_int-detail-trailing_zero>
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 target_link_libraries(
@@ -142,6 +145,7 @@ target_link_libraries(
     tasty_int-detail-floating_point_digits_iterator
     tasty_int-detail-integral_digits_view
     tasty_int-detail-order_by_size
+    tasty_int-detail-trailing_zero
 )
 
 add_library(
@@ -150,7 +154,6 @@ add_library(
     digits_subtraction.cpp
     digits_subtraction.hpp
     $<TARGET_OBJECTS:tasty_int-detail-size_digits_from_nonnegative_floating_point>
-    $<TARGET_OBJECTS:tasty_int-detail-trailing_zero>
 )
 target_link_libraries(
     tasty_int-detail-digits_subtraction
@@ -160,6 +163,7 @@ target_link_libraries(
     tasty_int-detail-floating_point_digits_iterator
     tasty_int-detail-integral_digits_view
     tasty_int-detail-sign_from_digits
+    tasty_int-detail-trailing_zero
 )
 
 add_library(
@@ -167,7 +171,6 @@ add_library(
     STATIC
     digits_multiplication.cpp
     digits_multiplication.hpp
-    $<TARGET_OBJECTS:tasty_int-detail-trailing_zero>
 )
 target_link_libraries(
     tasty_int-detail-digits_multiplication
@@ -175,6 +178,7 @@ target_link_libraries(
     tasty_int-detail-is_zero
     tasty_int-detail-order_by_size
     tasty_int-detail-split_digits
+    tasty_int-detail-trailing_zero
     tasty_int-detail-integral_digits_view
     tasty_int-detail-digits_addition
     tasty_int-detail-digits_subtraction
@@ -186,13 +190,13 @@ add_library(
     STATIC
     digits_division.cpp
     digits_division.hpp
-    $<TARGET_OBJECTS:tasty_int-detail-trailing_zero>
 )
 target_link_libraries(
     tasty_int-detail-digits_division
     tasty_int-detail-digit_from_nonnegative_value
     tasty_int-detail-is_zero
     tasty_int-detail-split_digits
+    tasty_int-detail-trailing_zero
     tasty_int-detail-digits_comparison
     tasty_int-detail-digits_addition
     tasty_int-detail-digits_subtraction

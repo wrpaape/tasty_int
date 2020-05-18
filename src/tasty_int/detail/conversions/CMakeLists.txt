@@ -43,12 +43,12 @@ add_library(
     STATIC
     digits_from_floating_point.cpp
     digits_from_floating_point.hpp
-    $<TARGET_OBJECTS:tasty_int-detail-trailing_zero>
 )
 target_link_libraries(
     tasty_int-detail-conversions-digits_from_floating_point
     tasty_int-detail-floating_point_digits_iterator
     tasty_int-detail-size_digits_from_nonnegative_floating_point
+    tasty_int-detail-trailing_zero
 )
 
 add_library(

@@ -78,7 +78,7 @@ add_google_test(
 add_google_test(
     NAME      tasty_int-detail-trailing_zero_test
     SOURCES   trailing_zero_test.cpp
-              $<TARGET_OBJECTS:tasty_int-detail-trailing_zero>
+    LIBRARIES tasty_int-detail-trailing_zero
 )
 
 add_google_test(
