@@ -85,13 +85,21 @@ target_link_libraries(
 )
 
 add_library(
-    tasty_int-detail-next_power_of_two
+    tasty_int-detail-count_leading_zero_bits
     OBJECT
+    count_leading_zero_bits.cpp
+    count_leading_zero_bits.hpp
+)
+include(set_intrinsic_count_leading_zero_bits)
+set_intrinsic_count_leading_zero_bits(tasty_int-detail-count_leading_zero_bits)
+
+add_library(
+    tasty_int-detail-next_power_of_two
+    STATIC
     next_power_of_two.cpp
     next_power_of_two.hpp
+    $<TARGET_OBJECTS:tasty_int-detail-count_leading_zero_bits>
 )
-include(set_intrinsic_count_leading_zeros)
-set_intrinsic_count_leading_zeros(tasty_int-detail-next_power_of_two)
 
 add_library(tasty_int-detail-integral_digits_view INTERFACE)
 target_sources(
@@ -197,6 +205,7 @@ target_link_libraries(
     tasty_int-detail-is_zero
     tasty_int-detail-split_digits
     tasty_int-detail-trailing_zero
+    tasty_int-detail-next_power_of_two
     tasty_int-detail-digits_comparison
     tasty_int-detail-digits_addition
     tasty_int-detail-digits_subtraction

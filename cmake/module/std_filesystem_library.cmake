@@ -23,8 +23,8 @@ usage:
 function(set_std_filesystem_library)
     set(binary_dir ${PROJECT_CMAKE_BINARY_DIR}/std_filesystem_library)
     set(src_dir    ${PROJECT_CMAKE_SRC_DIR}/std_filesystem_library)
-    set(library_candidates "" stdc++fs c++fs)
-    foreach(library ${library_candidates})
+    set(library_candidates "" "stdc++fs" "c++fs")
+    foreach(library IN LISTS library_candidates)
         try_compile(
             library_compiled
             ${binary_dir}
@@ -39,7 +39,7 @@ function(set_std_filesystem_library)
     endforeach()
 
     if(library_compiled)
-        if(supported_library)
+        if(NOT supported_library)
             set(found_library "<NONE REQUIRED>")
         else()
             set(found_library "-l${supported_library}")

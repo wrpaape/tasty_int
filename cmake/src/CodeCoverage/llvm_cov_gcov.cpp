@@ -7,8 +7,7 @@
  * `--gcov-tool` be specified with a single argument.
  */
 
-#include <cstring>
-
+#include <algorithm>
 #include <memory>
 
 #ifndef TASTY_INT_LLVM_COV_PATH
@@ -35,9 +34,9 @@ make_child_argv(int   argc,
     static char GCOV_ARG[]     = "gcov";
     child_argv[0] = LLVM_COV_ARG;
     child_argv[1] = GCOV_ARG;
-    (void) std::memcpy(&child_argv[2],
-                       &argv[1],
-                       size_argv - 1); // exclude argv[0]
+    std::copy(&argv[1], // exclude argv[0]
+              &argv[size_argv],
+              &child_argv[2]);
 
     return child_argv;
 }

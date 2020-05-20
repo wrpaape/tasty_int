@@ -156,9 +156,15 @@ function(setup_coverage_environ_for_clang)
         RUNTIME_OUTPUT_DIRECTORY ${PROJECT_CMAKE_BIN_DIR}
     )
 
+    set(coverage_flags -fprofile-instr-generate -fcoverage-mapping)
     set(
         COVERAGE_COMPILER_FLAGS
-        -fprofile-instr-generate -fcoverage-mapping
+        ${coverage_flags}
+        PARENT_SCOPE
+    )
+    set(
+        COVERAGE_LINKER_FLAGS
+        ${coverage_flags}
         PARENT_SCOPE
     )
     set(GCOV_TOOL_PATH $<TARGET_FILE:llvm-cov-gcov> PARENT_SCOPE)
@@ -170,8 +176,7 @@ function(setup_coverage_environ_for_gnu)
         message(FATAL_ERROR "gcov not found! Aborting...")
     endif()
 
-    link_libraries(gcov) 
-
+    set(COVERAGE_LIBRARIES gcov PARENT_SCOPE)
     set(GCOV_TOOL_PATH ${GCOV_PATH} PARENT_SCOPE)
 endfunction()
 
@@ -198,18 +203,23 @@ set(CMAKE_C_FLAGS_COVERAGE
     CACHE STRING "Flags used by the C compiler during coverage builds."
     FORCE )
 set(CMAKE_EXE_LINKER_FLAGS_COVERAGE
-    ""
+    "${COVERAGE_LINKER_FLAGS}"
     CACHE STRING "Flags used for linking binaries during coverage builds."
     FORCE )
 set(CMAKE_SHARED_LINKER_FLAGS_COVERAGE
-    ""
+    "${COVERAGE_LINKER_FLAGS}"
     CACHE STRING "Flags used by the shared libraries linker during coverage builds."
+    FORCE )
+set(CMAKE_LIBRARIES_COVERAGE
+    "${COVERAGE_LIBRARIES}"
+    CACHE STRING "Required libraries for coverage builds."
     FORCE )
 mark_as_advanced(
     CMAKE_CXX_FLAGS_COVERAGE
     CMAKE_C_FLAGS_COVERAGE
     CMAKE_EXE_LINKER_FLAGS_COVERAGE
-    CMAKE_SHARED_LINKER_FLAGS_COVERAGE )
+    CMAKE_SHARED_LINKER_FLAGS_COVERAGE
+    CMAKE_LIBRARIES_COVERAGE )
 
 if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     message(WARNING "Code coverage results with an optimised (non-Debug) build may be misleading")

@@ -1,6 +1,11 @@
 #ifndef TASTY_INT_TASTY_INT_TEST_NONNEGATIVE_ARITHMETIC_VALUES_HPP
 #define TASTY_INT_TASTY_INT_TEST_NONNEGATIVE_ARITHMETIC_VALUES_HPP
 
+#include <array>
+#include <limits>
+#include <type_traits>
+
+
 namespace tasty_int_test {
 
 /**

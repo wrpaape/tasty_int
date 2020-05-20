@@ -11,6 +11,7 @@
 #include "tasty_int/detail/is_zero.hpp"
 #include "tasty_int/detail/trailing_zero.hpp"
 #include "tasty_int/detail/split_digits.hpp"
+#include "tasty_int/detail/next_power_of_two.hpp"
 #include "tasty_int/detail/digits_comparison.hpp"
 #include "tasty_int/detail/digits_addition.hpp"
 #include "tasty_int/detail/digits_subtraction.hpp"
@@ -330,6 +331,19 @@ long_divide(const std::vector<digit_type> &dividend,
 // divide_and_conquer_divide(const std::vector<digit_type> &dividend,
 //                           const std::vector<digit_type> &divisor)
 // {
+//     /// @todo: TODO: tune
+//     constexpr std::vector<digit_type>::size_type
+//         LONG_DIVIDE_THRESHOLD_SPLIT_SIZE = 100;
+
+//     if (divisor.size() < LONG_DIVIDE_THRESHOLD_SPLIT_SIZE)
+//         return long_divide(dividend, divisor);
+
+//     auto count_divisor_pieces =
+//         next_power_of_two(divisor.size() / LONG_DIVIDE_THRESHOLD_SPLIT_SIZE);
+//     auto divisor_piece_mag = divisor.size() / count_divisor_pieces;
+//     auto padded_mag = divisor_piece_mag * count_divisor_pieces;
+//     (void) padded_mag;
+
 //     (void) dividend;
 //     (void) divisor;
 //     return {}; // TODO
@@ -392,11 +406,8 @@ divide(const std::vector<digit_type> &dividend,
 
     if (divisor <= dividend) {
         result = long_divide(dividend, divisor);
-        // result = (divisor.size() > 1)
-        //        ? divide_and_conquer_divide(dividend,
-        //                                    divisor)
-        //        : long_divide_digit(dividend,
-        //                            divisor.front());
+        // result = divide_and_conquer_divide(dividend,
+        //                                    divisor);
     } else {
         result.quotient  = { 0 };
         result.remainder = dividend;

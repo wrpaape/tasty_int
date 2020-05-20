@@ -1,4 +1,4 @@
-include(set_have_type)
+include(set_have_char8_t)
 
 find_package(GTest REQUIRED)
 
@@ -24,12 +24,7 @@ target_include_directories(
     INTERFACE
     ${GTEST_INCLUDE_DIRS}
 )
-set_have_type(char8_t)
-target_compile_definitions(
-    tasty_int_test
-    INTERFACE
-    COMPILE_DEFINITIONS -DHAVE_CHAR8_T=${HAVE_CHAR8_T}
-)
+set_have_char8_t(tasty_int_test)
 
 if(BUILD_TESTING)
     add_subdirectory(test)

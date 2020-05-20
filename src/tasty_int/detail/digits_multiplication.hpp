@@ -80,6 +80,22 @@ multiply_digit_base_power_in_place(
     std::vector<digit_type>            &multiplicand
 );
 
+/// @todo: TODO
+// struct MultiplierPowers
+// {
+//     std::vector<digit_type>::size_type digit_base;
+//     std::vector<digit_type>::size_type two;
+// }; // struct MultiplierPowers
+// /**
+//  * @brief Multiply @p multiplicand by `2^exponent`.
+//  *
+//  * @param[in] exponent         the desired power of `DIGIT_BASE`
+//  * @param[in,out] multiplicand the digits to be multiplied
+//  */
+// std::vector<digit_type>::size_type
+// multiply_powers(const std::vector<digit_type> &multiplicand,
+//                 MultiplierPowers               powers);
+
 
 /**
  * @defgroup DigitsMultiplicationAlgorithms Digits Multiplication Algorithms

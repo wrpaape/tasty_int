@@ -381,7 +381,7 @@ TEST(MultiplyDigitBasePowerInPlaceTest, ZeroWithZeroExponent)
     EXPECT_EQ(expected_result, multiplicand);
 }
 
-TEST(MultiplyDigitBasePoweInPlaceTest, ZeroWithNonzeroExponent)
+TEST(MultiplyDigitBasePowerInPlaceTest, ZeroWithNonzeroExponent)
 {
     std::vector<digit_type> multiplicand = { 0 };
     std::vector<digit_type>::size_type exponent = 7;
@@ -403,7 +403,7 @@ TEST(MultiplyDigitBasePowerInPlaceTest, NonzeroWithZeroExponent)
     EXPECT_EQ(expected_result, multiplicand);
 }
 
-TEST(MultiplyDigitBasePoweInPlaceTest, NonzeroWithNonzeroExponent)
+TEST(MultiplyDigitBasePowerInPlaceTest, NonzeroWithNonzeroExponent)
 {
     std::vector<digit_type> multiplicand = { 1, 2, 3 };
     std::vector<digit_type>::size_type exponent = 5;
@@ -412,6 +412,11 @@ TEST(MultiplyDigitBasePoweInPlaceTest, NonzeroWithNonzeroExponent)
     multiply_digit_base_power_in_place(exponent, multiplicand);
 
     EXPECT_EQ(expected_result, multiplicand);
+}
+
+TEST(MultiplyPowersTest, NonzeroWithNonzeroExponent)
+{
+    SUCCEED(); // TODO
 }
 
 } // namespace

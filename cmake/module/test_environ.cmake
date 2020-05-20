@@ -50,7 +50,7 @@ if(BUILD_COVERAGE)
     setup_target_for_coverage_lcov(
         NAME       coverage
         EXECUTABLE ${CMAKE_CTEST_COMMAND}
-        EXCLUDE    "/usr/*"                # system headers
+        EXCLUDE    "*/usr/*"               # system headers
                    "*/third_party/*"       # third party code
                    "*/gtest/*" "*/gmock/*" # testing framework
                    "*/test/*"              # unit tests

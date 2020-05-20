@@ -5,9 +5,11 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_LIB_DIR})
 # build internal implementation
 add_subdirectory(detail)
 
-add_library(
+add_library(tasty_int INTERFACE)
+
+target_sources(
     tasty_int
-    STATIC
+    INTERFACE
     ${PROJECT_INCLUDE_DIR}/tasty_int/tasty_int.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/integer_from_floating_point.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/integer_from_signed_integral.hpp
@@ -20,6 +22,7 @@ add_library(
 )
 target_link_libraries(
     tasty_int
+    INTERFACE
     tasty_int-detail-integer
     tasty_int-detail-conversions-integer_from_floating_point
     tasty_int-detail-conversions-integer_from_signed_integral

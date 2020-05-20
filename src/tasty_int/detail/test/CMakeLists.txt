@@ -101,6 +101,12 @@ add_google_test(
 )
 
 add_google_test(
+    NAME      tasty_int-detail-count_leading_zero_bits_test
+    SOURCES   count_leading_zero_bits_test.cpp
+    LIBRARIES tasty_int-detail-count_leading_zero_bits
+)
+
+add_google_test(
     NAME      tasty_int-detail-next_power_of_two_test
     SOURCES   next_power_of_two_test.cpp
     LIBRARIES tasty_int-detail-next_power_of_two
