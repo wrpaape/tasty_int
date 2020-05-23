@@ -3,7 +3,7 @@ dist: bionic
 notifications:
   email: false
 
-matrix:
+jobs:
   include:
     - os: linux
       addons:

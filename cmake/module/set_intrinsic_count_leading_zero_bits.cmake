@@ -20,7 +20,7 @@ which adds the following compile definitions to <target>:
     [-DINTRINSIC_COUNT_LEADING_ZERO_BITS=<intrinsic function>]
     If -DHAVE_INTRINSIC_COUNT_LEADING_ZERO_BITS=1, this macro will expand to
         the intrinsic "count leading zero bits" function.
-        
+
     [-DINTRINSIC_COUNT_LEADING_ZERO_BITS_HEADER=<path/to/required/header>]
     If -DHAVE_INTRINSIC_COUNT_LEADING_ZERO_BITS=1, and the intrinsic "count
         leading zero bits" function requires a header, this macro will expand

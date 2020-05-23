@@ -73,10 +73,7 @@
 # 2. Add the following line to your CMakeLists.txt:
 #      include(CodeCoverage)
 #
-# 3. Append necessary compiler flags:
-#      append_coverage_compiler_flags()
-#
-# 3.a (OPTIONAL) Set appropriate optimization flags, e.g. -O0, -O1 or -Og
+# 3. (OPTIONAL) Set appropriate optimization flags, e.g. -O0, -O1 or -Og
 #
 # 4. If you need to exclude additional directories from the report, specify them
 #    using full paths in the COVERAGE_EXCLUDES variable before calling
