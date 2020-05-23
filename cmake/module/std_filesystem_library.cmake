@@ -25,20 +25,22 @@ function(set_std_filesystem_library)
     set(src_dir    ${PROJECT_CMAKE_SRC_DIR}/std_filesystem_library)
     set(library_candidates "" "stdc++fs" "c++fs")
     foreach(library IN LISTS library_candidates)
-        try_compile(
-            library_compiled
+        try_run(
+            test_exit_status
+            test_compiled
             ${binary_dir}
             ${src_dir}/test_std_filesystem_library.cpp
             LINK_LIBRARIES ${library}
         )
 
-        if(library_compiled)
+        if(test_exit_status EQUAL 0)
+            set(test_succeeded TRUE)
             set(supported_library ${library})
             break()
         endif()
     endforeach()
 
-    if(library_compiled)
+    if(test_succeeded)
         if(NOT supported_library)
             set(found_library "<NONE REQUIRED>")
         else()

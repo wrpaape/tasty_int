@@ -13,8 +13,7 @@ namespace {
 bool
 exists(const char *path)
 {
-    return path
-        && std::filesystem::exists(std::filesystem::path(path));
+    return std::filesystem::exists(std::filesystem::path(path));
 }
 
 } // namespace
@@ -24,6 +23,8 @@ main(int argc,
      char *argv[])
 {
     (void) argc; // unused
-    return argv
-        && static_cast<int>(exists(argv[0]));
+    int success = argv
+               && argv[0]
+               && static_cast<int>(exists(argv[0]));
+    return !success;
 }
