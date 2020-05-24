@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <iterator>
 
 #include "tasty_int/detail/integral_digits_view.hpp"
 #include "tasty_int/detail/floating_point_digits_iterator.hpp"
@@ -67,12 +68,22 @@ template<template <typename> typename Compare>
 struct StrictSequenceInequality
 {
     bool
+    operator()(std::vector<digit_type>::const_reverse_iterator lhs_rbegin,
+               std::vector<digit_type>::const_reverse_iterator lhs_rend,
+               std::vector<digit_type>::const_reverse_iterator rhs_rbegin,
+               std::vector<digit_type>::const_reverse_iterator rhs_rend)
+    {
+        return std::lexicographical_compare(lhs_rbegin, lhs_rend,
+                                            rhs_rbegin, rhs_rend,
+                                            Compare<digit_type>{});
+    }
+
+    bool
     operator()(const std::vector<digit_type> &lhs,
                const std::vector<digit_type> &rhs)
     {
-        return std::lexicographical_compare(lhs.rbegin(), lhs.rend(),
-                                            rhs.rbegin(), rhs.rend(),
-                                            Compare<digit_type>{});
+        return operator()(lhs.rbegin(), lhs.rend(),
+                          rhs.rbegin(), rhs.rend());
     }
 
     bool
@@ -129,6 +140,25 @@ struct NonStrictSequenceInequality
         return sequence_inequality_compare<Compare>(lhs, rhs, equal_comparison);
     }
 }; // struct StrictSequenceInequality
+
+template<template <typename> typename Compare,
+         template <template <typename> typename> typename SequenceCompare>
+bool
+have_inequality(std::vector<digit_type>::const_iterator lhs_begin,
+                std::vector<digit_type>::const_iterator lhs_end,
+                std::vector<digit_type>::const_iterator rhs_begin,
+                std::vector<digit_type>::const_iterator rhs_end)
+{
+    auto lhs_size = lhs_end - lhs_begin;
+    auto rhs_size = rhs_end - rhs_begin;
+
+    return Compare<std::vector<digit_type>::size_type>{}(lhs_size, rhs_size)
+        || ((lhs_size == rhs_size) &&
+            SequenceCompare<Compare>{}(std::make_reverse_iterator(lhs_end),
+                                       std::make_reverse_iterator(lhs_begin),
+                                       std::make_reverse_iterator(rhs_end),
+                                       std::make_reverse_iterator(rhs_begin)));
+}
 
 template<template <typename> typename Compare,
          template <template <typename> typename> typename SequenceCompare>
@@ -428,6 +458,18 @@ operator>=(long double                    lhs,
            const std::vector<digit_type> &rhs)
 {
     return rhs <= lhs;
+}
+
+bool
+less_than(std::vector<digit_type>::const_iterator lhs_begin,
+          std::vector<digit_type>::const_iterator lhs_end,
+          std::vector<digit_type>::const_iterator rhs_begin,
+          std::vector<digit_type>::const_iterator rhs_end)
+{
+    return have_inequality<std::less, StrictSequenceInequality>(lhs_begin,
+                                                                lhs_end,
+                                                                rhs_begin,
+                                                                rhs_end);
 }
 
 } // namespace detail

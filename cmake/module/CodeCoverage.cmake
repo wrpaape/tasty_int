@@ -73,7 +73,10 @@
 # 2. Add the following line to your CMakeLists.txt:
 #      include(CodeCoverage)
 #
-# 3. (OPTIONAL) Set appropriate optimization flags, e.g. -O0, -O1 or -Og
+# 3. Append necessary compiler flags and link necessary libraries:
+#      setup_coverage_environ()
+#
+# 3.a (OPTIONAL) Set appropriate optimization flags, e.g. -O0, -O1 or -Og
 #
 # 4. If you need to exclude additional directories from the report, specify them
 #    using full paths in the COVERAGE_EXCLUDES variable before calling
@@ -159,9 +162,10 @@ function(setup_coverage_environ_for_clang)
         ${coverage_flags}
         PARENT_SCOPE
     )
+    string(REPLACE ";" " " coverage_flags "${coverage_flags}")
     set(
         COVERAGE_LINKER_FLAGS
-        ${coverage_flags}
+        "${coverage_flags}"
         PARENT_SCOPE
     )
     set(GCOV_TOOL_PATH $<TARGET_FILE:llvm-cov-gcov> PARENT_SCOPE)
@@ -173,8 +177,9 @@ function(setup_coverage_environ_for_gnu)
         message(FATAL_ERROR "gcov not found! Aborting...")
     endif()
 
-    set(COVERAGE_LIBRARIES gcov PARENT_SCOPE)
-    set(GCOV_TOOL_PATH ${GCOV_PATH} PARENT_SCOPE)
+    set(COVERAGE_LIBRARIES    gcov         PARENT_SCOPE)
+    set(COVERAGE_LINKER_FLAGS --coverage   PARENT_SCOPE)
+    set(GCOV_TOOL_PATH        ${GCOV_PATH} PARENT_SCOPE)
 endfunction()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -186,6 +191,11 @@ else()
 endif()
 
 list(APPEND COVERAGE_COMPILER_FLAGS -g -fprofile-arcs -ftest-coverage)
+if(MSVC)
+    list(APPEND COVERAGE_COMPILER_FLAGS /O0)
+else()
+    list(APPEND COVERAGE_COMPILER_FLAGS -O0)
+endif()
 
 set(GCOV_TOOL
     "${GCOV_TOOL_PATH}"
@@ -471,3 +481,34 @@ function(setup_target_for_coverage_gcovr_html)
     )
 
 endfunction() # setup_target_for_coverage_gcovr_html
+
+function(setup_coverage_environ)
+    if(COVERAGE_COMPILER_FLAGS)
+        message(STATUS "Appending code coverage compile options: "
+                       "'${COVERAGE_COMPILER_FLAGS}'.")
+        add_compile_options(${COVERAGE_COMPILER_FLAGS})
+    endif()
+    if(COVERAGE_LINKER_FLAGS)
+        message(STATUS "Appending code coverage link options: "
+                       "'${COVERAGE_LINKER_FLAGS}'.")
+        # @todo TODO: replace the following set()s with
+        #     add_link_options(${COVERAGE_LINKER_FLAGS})
+        # once upgraded to cmake 3.13
+        set(CMAKE_EXE_LINKER_FLAGS
+            "${CMAKE_EXE_LINKER_FLAGS} ${COVERAGE_LINKER_FLAGS}"
+            PARENT_SCOPE)
+        set(CMAKE_SHARED_LINKER_FLAGS
+            "${CMAKE_SHARED_LINKER_FLAGS} ${COVERAGE_LINKER_FLAGS}"
+            PARENT_SCOPE)
+    endif()
+    if(COVERAGE_LIBRARIES)
+        message(STATUS "Linking code coverage libraries: "
+                       "'${COVERAGE_LIBRARIES}'.")
+        link_libraries(${COVERAGE_LIBRARIES})
+    endif()
+    if(NOT COVERAGE_COMPILER_FLAGS AND
+       NOT COVERAGE_LINKER_FLAGS AND
+       NOT COVERAGE_LIBRARIES)
+        message(STATUS "No code coverage environment setup required.")
+    endif()
+endfunction()

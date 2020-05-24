@@ -1,5 +1,6 @@
 #include "tasty_int/detail/digits_comparison.hpp"
 
+#include <array>
 #include <limits>
 
 #include "gtest/gtest.h"
@@ -19,6 +20,7 @@ using tasty_int::detail::operator<;
 using tasty_int::detail::operator>;
 using tasty_int::detail::operator<=;
 using tasty_int::detail::operator>=;
+using tasty_int::detail::less_than;
 using tasty_int::detail::digit_type;
 using tasty_int::detail::DIGIT_TYPE_MAX;
 using tasty_int::detail::DIGIT_BASE;
@@ -296,6 +298,149 @@ INSTANTIATE_TEST_SUITE_P(
             {
                 .smaller = 1.0e20L,
                 .larger = digits_from_floating_point(1.00000001e20L)
+            }
+        }
+    )
+);
+
+
+
+struct DigitsSequenceTestParam
+{
+    std::vector<digit_type>             digits;
+    std::vector<digit_type>::size_type  begin_offset;
+    std::vector<digit_type>::size_type  end_offset;
+}; // struct DigitsSequenceTestParam
+
+std::ostream &
+operator<<(std::ostream                  &output,
+           const DigitsSequenceTestParam &test_param)
+{
+    return output << "{ digits=" << ::testing::PrintToString(test_param.digits)
+                  << ", begin_offset=" << test_param.begin_offset
+                  << ", end_offset=" << test_param.end_offset
+                  << " }";
+}
+
+struct DigitsSequenceComparisonTestParam
+{
+    DigitsSequenceTestParam lhs;
+    DigitsSequenceTestParam rhs;
+}; // struct DigitsSequenceComparisonTestParam
+
+std::ostream &
+operator<<(std::ostream                            &output,
+           const DigitsSequenceComparisonTestParam &test_param)
+{
+    return output << "{ lhs=" << test_param.lhs
+                  << ", rhs=" << test_param.rhs
+                  << " }";
+}
+
+std::array<std::vector<digit_type>::const_iterator, 4>
+unpack(const DigitsSequenceComparisonTestParam& test_param)
+{
+    auto&& [ lhs, rhs ] = test_param;
+
+    auto lhs_begin = lhs.digits.begin() + lhs.begin_offset;
+    auto lhs_end   = lhs.digits.begin() + lhs.end_offset;
+    auto rhs_begin = rhs.digits.begin() + rhs.begin_offset;
+    auto rhs_end   = rhs.digits.begin() + rhs.end_offset;
+
+    return { lhs_begin, lhs_end, rhs_begin, rhs_end };
+}
+
+class DigitsSequenceLessThanInequalityTest
+    : public ::testing::TestWithParam<DigitsSequenceComparisonTestParam>
+{
+protected:
+    static void
+    expect_unequal(std::vector<digit_type>::const_iterator lhs_begin,
+                   std::vector<digit_type>::const_iterator lhs_end,
+                   std::vector<digit_type>::const_iterator rhs_begin,
+                   std::vector<digit_type>::const_iterator rhs_end)
+    {
+        EXPECT_TRUE(less_than(lhs_begin, lhs_end,
+                              rhs_begin, rhs_end));
+
+        EXPECT_FALSE(less_than(rhs_begin, rhs_end,
+                               lhs_begin, lhs_end));
+    }
+}; // class DigitsSequenceLessThanInequalityTest
+
+TEST_P(DigitsSequenceLessThanInequalityTest, LhsLessThanRhs)
+{
+    auto [lhs_begin, lhs_end, rhs_begin, rhs_end] = unpack(GetParam());
+
+    expect_unequal(lhs_begin, lhs_end,
+                   rhs_begin, rhs_end);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    DigitsComparisonTest,
+    DigitsSequenceLessThanInequalityTest,
+    ::testing::ValuesIn(
+        std::vector<DigitsSequenceComparisonTestParam> {
+            { 
+                .lhs = { {},    0, 0 },
+                .rhs = { { 0 }, 0, 1 }
+            },
+            { 
+                .lhs = { { 1, 2, 3 },    0, 3 },
+                .rhs = { { 1, 2, 3, 4 }, 0, 4 }
+            },
+            { 
+                .lhs = { { 1, 2, 3 },    0, 3 },
+                .rhs = { { 1, 2, 3, 4 }, 1, 4 }
+            },
+            { 
+                .lhs = { { 1, 2, 3, 4 }, 0, 2 },
+                .rhs = { { 1, 2, 3 },    1, 3 }
+            },
+            { 
+                .lhs = { { 1, 2, 3, 4 }, 2, 4 },
+                .rhs = { { 1, 2, 3 },    0, 3 }
+            },
+            { 
+                .lhs = { { 1, 2, 3, 4 }, 4, 4 },
+                .rhs = { { 1, 2, 3 },    0, 1 }
+            }
+        }
+    )
+);
+
+class DigitsSequenceLessThanEqualityTest
+    : public ::testing::TestWithParam<DigitsSequenceComparisonTestParam>
+{}; // class DigitsSequenceLessThanEqualityTest
+
+TEST_P(DigitsSequenceLessThanEqualityTest, LhsEqualToRhs)
+{
+    auto [lhs_begin, lhs_end, rhs_begin, rhs_end] = unpack(GetParam());
+
+    EXPECT_FALSE(less_than(lhs_begin, lhs_end,
+                           rhs_begin, rhs_end));
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    DigitsComparisonTest,
+    DigitsSequenceLessThanEqualityTest,
+    ::testing::ValuesIn(
+        std::vector<DigitsSequenceComparisonTestParam> {
+            { 
+                .lhs = { {}, 0, 0 },
+                .rhs = { {}, 0, 0 }
+            },
+            { 
+                .lhs = { { 1, 2, 3 },    0, 3 },
+                .rhs = { { 1, 2, 3, 4 }, 0, 3 }
+            },
+            { 
+                .lhs = { { 2, 3, 1 },    0, 2 },
+                .rhs = { { 0, 2, 3, 7 }, 1, 3 }
+            },
+            { 
+                .lhs = { { 1, 2, 3, 4 }, 3, 4 },
+                .rhs = { { 1, 4, 3 },    1, 2 }
             }
         }
     )

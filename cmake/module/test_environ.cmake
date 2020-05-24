@@ -58,4 +58,6 @@ if(BUILD_COVERAGE)
                    "*/benchmark/*"         # benchmark framework, benchmarks
                    "*/generate_*.cpp"      # code generators
     )
+    
+    setup_coverage_environ()
 endif()

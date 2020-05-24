@@ -13,7 +13,7 @@
 namespace tasty_int {
 namespace detail {
 
-std::uintmax_t
+unsigned int
 count_leading_zero_bits(std::uintmax_t value)
 {
     assert(value != 0);
@@ -21,7 +21,7 @@ count_leading_zero_bits(std::uintmax_t value)
 #if HAVE_INTRINSIC_COUNT_LEADING_ZERO_BITS
     return INTRINSIC_COUNT_LEADING_ZERO_BITS(value);
 #else
-    constexpr std::uintmax_t MAX_EXPONENT =
+    constexpr unsigned int MAX_EXPONENT =
         std::numeric_limits<std::uintmax_t>::digits - 1;
 
     auto index_of_most_significant_bit = MAX_EXPONENT;

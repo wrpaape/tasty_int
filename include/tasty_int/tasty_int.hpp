@@ -40,7 +40,7 @@ prepare_operand(TastyInt &operand);
  * The following define concepts for primitive types that are operable with
  * tasty_int::TastyInt.
  *
- * @todo: TODO: replace with std:: <concepts> when avaialable
+ * @todo TODO: replace with std:: <concepts> when avaialable
  */
 /// @{
 template<typename T>

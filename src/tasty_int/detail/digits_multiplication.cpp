@@ -1,6 +1,7 @@
 #include "tasty_int/detail/digits_multiplication.hpp"
 
 #include <cassert>
+#include <cmath>
 
 #include <algorithm>
 #include <utility>
@@ -11,6 +12,7 @@
 #include "tasty_int/detail/order_by_size.hpp"
 #include "tasty_int/detail/split_digits.hpp"
 #include "tasty_int/detail/integral_digits_view.hpp"
+#include "tasty_int/detail/digits_bitwise.hpp"
 #include "tasty_int/detail/digits_addition.hpp"
 #include "tasty_int/detail/digits_subtraction.hpp"
 #include "tasty_int/detail/conversions/digits_from_floating_point.hpp"
@@ -50,8 +52,8 @@ long_multiply_digit(const std::vector<digit_type>    &lhs,
 }
 
 std::vector<digit_type>
-long_multiply_digit(const std::vector<digit_type>    &lhs,
-                    digit_type                        rhs_digit)
+long_multiply_digit(const std::vector<digit_type> &lhs,
+                    digit_type                    rhs_digit)
 {
     auto result = allocate_result(lhs.size(), 1);
 
@@ -141,11 +143,11 @@ karatsuba_merge(KaratsubaPartiion                  &partition,
     [[maybe_unused]] auto sign2 = subtract_in_place(low_product, result);
     assert(sign2 >= Sign::ZERO);
 
-    multiply_digit_base_power_in_place(split_size, result);
+    result <<= split_size;
 
     result += low_product;
 
-    multiply_digit_base_power_in_place(split_size * 2, high_product);
+    high_product <<= (split_size * 2);
 
     result += high_product;
 
@@ -245,45 +247,6 @@ operator*(long double                    lhs,
 {
     return rhs * lhs;
 }
-
-/// @todo: TODO: remove if not required by digits_division
-std::vector<digit_type>
-multiply_digit_base(const std::vector<digit_type> &multiplicand)
-{
-    assert(!is_zero(multiplicand));
-
-    std::vector<digit_type> result;
-
-    result.reserve(multiplicand.size() + 1);
-
-    result.emplace_back(0);
-
-    result.insert(result.end(),
-                  multiplicand.begin(),
-                  multiplicand.end());
-
-    return result;
-}
-
-void
-multiply_digit_base_power_in_place(
-    std::vector<digit_type>::size_type  exponent,
-    std::vector<digit_type>            &multiplicand
-)
-{
-    if (is_zero(multiplicand))
-        return;
-
-    auto initial_size = multiplicand.size();
-    multiplicand.resize(initial_size + exponent);
-
-    auto initial_end = multiplicand.rbegin() + exponent;
-
-    std::swap_ranges(initial_end,
-                     multiplicand.rend(),
-                     multiplicand.rbegin());
-}
-
 
 std::vector<digit_type>
 long_multiply(const std::vector<digit_type> &lhs,

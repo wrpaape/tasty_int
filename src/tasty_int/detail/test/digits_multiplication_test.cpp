@@ -14,13 +14,12 @@ namespace {
 
 using tasty_int::detail::operator*=;
 using tasty_int::detail::operator*;
-using tasty_int::detail::multiply_digit_base;
-using tasty_int::detail::multiply_digit_base_power_in_place;
 using tasty_int::detail::digit_type;
 using tasty_int::detail::DIGIT_TYPE_MAX;
 using tasty_int::detail::DIGIT_BASE;
 using tasty_int::detail::IntegralDigitsView;
 using tasty_int::detail::conversions::digits_from_string;
+
 
 TEST(DigitsAndDigitsMultiplicationTest,
      DigitsTimesEqualsDigitsRegerenceReferenceToLhs)
@@ -347,76 +346,6 @@ TEST(DigitsAndFloatingPointMultiplicationTest, MultipleDigitsTimesMultipleDigits
     expected_result.back()                      = DIGIT_TYPE_MAX;
 
     test_multiplication(digits1, digits2, expected_result);
-}
-
-
-TEST(MultiplyDigitBaseTest, SingleDigit)
-{
-    std::vector<digit_type> multiplicand    = { 1 };
-    std::vector<digit_type> expected_result = { 0, 1 };
-
-    auto result = multiply_digit_base(multiplicand);
-
-    EXPECT_EQ(expected_result, result);
-}
-
-TEST(MultiplyDigitBaseTest, MutlipleDigits)
-{
-    std::vector<digit_type> multiplicand    = { 1, 2, 3, 4 };
-    std::vector<digit_type> expected_result = { 0, 1, 2, 3, 4 };
-
-    auto result = multiply_digit_base(multiplicand);
-
-    EXPECT_EQ(expected_result, result);
-}
-
-TEST(MultiplyDigitBasePowerInPlaceTest, ZeroWithZeroExponent)
-{
-    std::vector<digit_type> multiplicand = { 0 };
-    std::vector<digit_type>::size_type ZERO = 0;
-    std::vector<digit_type> expected_result = multiplicand;
-
-    multiply_digit_base_power_in_place(ZERO, multiplicand);
-
-    EXPECT_EQ(expected_result, multiplicand);
-}
-
-TEST(MultiplyDigitBasePowerInPlaceTest, ZeroWithNonzeroExponent)
-{
-    std::vector<digit_type> multiplicand = { 0 };
-    std::vector<digit_type>::size_type exponent = 7;
-    std::vector<digit_type> expected_result = multiplicand;
-
-    multiply_digit_base_power_in_place(exponent, multiplicand);
-
-    EXPECT_EQ(expected_result, multiplicand);
-}
-
-TEST(MultiplyDigitBasePowerInPlaceTest, NonzeroWithZeroExponent)
-{
-    std::vector<digit_type> multiplicand = { 1, 2, 3 };
-    std::vector<digit_type>::size_type ZERO = 0;
-    std::vector<digit_type> expected_result = multiplicand;
-
-    multiply_digit_base_power_in_place(ZERO, multiplicand);
-
-    EXPECT_EQ(expected_result, multiplicand);
-}
-
-TEST(MultiplyDigitBasePowerInPlaceTest, NonzeroWithNonzeroExponent)
-{
-    std::vector<digit_type> multiplicand = { 1, 2, 3 };
-    std::vector<digit_type>::size_type exponent = 5;
-    std::vector<digit_type> expected_result = { 0, 0, 0, 0, 0, 1, 2, 3 };
-
-    multiply_digit_base_power_in_place(exponent, multiplicand);
-
-    EXPECT_EQ(expected_result, multiplicand);
-}
-
-TEST(MultiplyPowersTest, NonzeroWithNonzeroExponent)
-{
-    SUCCEED(); // TODO
 }
 
 } // namespace
