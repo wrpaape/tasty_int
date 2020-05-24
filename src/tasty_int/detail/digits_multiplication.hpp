@@ -71,7 +71,7 @@ multiply_digit_base(const std::vector<digit_type> &multiplicand);
 /**
  * @brief Multiply @p multiplicand by `DIGIT_BASE^exponent`.
  *
- * @param[in] exponent         the desired power of `DIGIT_BASE`
+ * @param[in]     exponent     the desired power of `DIGIT_BASE`
  * @param[in,out] multiplicand the digits to be multiplied
  */
 void
@@ -80,22 +80,28 @@ multiply_digit_base_power_in_place(
     std::vector<digit_type>            &multiplicand
 );
 
-/// @todo: TODO
-// struct MultiplierPowers
-// {
-//     std::vector<digit_type>::size_type digit_base;
-//     std::vector<digit_type>::size_type two;
-// }; // struct MultiplierPowers
-// /**
-//  * @brief Multiply @p multiplicand by `2^exponent`.
-//  *
-//  * @param[in] exponent         the desired power of `DIGIT_BASE`
-//  * @param[in,out] multiplicand the digits to be multiplied
-//  */
-// std::vector<digit_type>::size_type
-// multiply_powers(const std::vector<digit_type> &multiplicand,
-//                 MultiplierPowers               powers);
-
+/**
+ * A pair of exponents that describe the multiplier:
+ *
+ *     DIGIT_BASE^power.digit_base * 2^powers.two
+ */
+struct MultiplierExponents
+{
+    std::vector<digit_type>::size_type digit_base;
+    unsigned int                       two;
+}; // struct MultiplierExponents
+/**
+ * @brief Multiply @p multiplicand by `DIGIT_BASE^power.digit_base *
+ *    2^powers.two`.
+ *
+ * @param[in]     exponents    the desired power components of the multiplier
+ * @param[in,out] multiplicand the digits to be multiplied
+ *
+ * @pre `exponents.two <= DIGIT_TYPE_BITS`
+ */
+void
+multiply_powers_in_place(MultiplierExponents      exponents,
+                         std::vector<digit_type> &multiplicand);
 
 /**
  * @defgroup DigitsMultiplicationAlgorithms Digits Multiplication Algorithms

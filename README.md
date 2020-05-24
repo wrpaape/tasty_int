@@ -64,15 +64,15 @@ benchmark](https://github.com/google/benchmark).
 ## Build
 ```
 cd build
-cmake --build . [build-options] [--target <tasty_int-targets>]
+cmake --build . [options] [--target <targets>]
 ```
-where suggested `build-options` are:
+where suggested `options` are:
 
 #### `--parallel [<jobs>], -j [<jobs>]`
 The maximum number of concurrent processes to use when building.  If `<jobs>`
 is omitted the native build tool's default number is used.
 
-and `tasty_int-targets` is a space-separated list of the following build targets:
+and `targets` is a space-separated list of the following build targets:
 
 #### `all`
 Build all [configured](#configure) targets
@@ -170,7 +170,7 @@ num = -123;
 num = 10.0e100;
 ...
 // base is interpretted...
-num = TastyInt("010101011010111110000001110011b"); // binary
+num = TastyInt("0b010101011010111110000001110011"); // binary
 num = TastyInt("12345678901234567890123456789012345678901234567890"); // decimal
 num = TastyInt("0012345670123456701234567012345670123456701234567"); // octal
 num = TastyInt("0xFACEFEEDDEADBEEFDECAFBADBABEFACEFEEDDEADBEEF"); // hexidecimal
@@ -234,7 +234,7 @@ num %= 42;
 ...
 auto [quotient, remainder] = num.div(13);
 ...
-auto result = 010101010101b + num;
+auto result = 0b010101010101 + num;
 ...
 result = num - 1.0e111;
 ...
@@ -277,7 +277,7 @@ See documentation of `to_string()` and `operator<<` at their definitions in
 
 ## Implementation
 At the heart of `TastyInt` is a [simple data
-structure](tasty_int/include/tasty_int/detail/integer.hpp) which consists of a
+structure](include/tasty_int/detail/integer.hpp) which consists of a
 dynamic array of (usually-)half-word-base `digits` along with an enumerated
 `sign` field to indicate `POSTIVE`, `NEGATIVE`, or `ZERO`.  `digits` are stored
 in little-endian order of significance.  For example, the base-10 number

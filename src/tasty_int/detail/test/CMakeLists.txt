@@ -231,6 +231,7 @@ add_google_test(
     SOURCES   digits_multiplication_test.cpp
     LIBRARIES tasty_int-detail-digits_multiplication
               tasty_int-detail-integral_digits_view
+              tasty_int-detail-digit_from_nonnegative_value
               tasty_int-detail-conversions-digits_from_string
 )
 
