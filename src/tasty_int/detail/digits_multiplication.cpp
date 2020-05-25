@@ -165,6 +165,24 @@ times_equals(std::vector<digit_type> &lhs,
     return lhs;
 }
 
+std::vector<digit_type>
+allocate_multiply_powers_product(const std::vector<digit_type> &multiplicand,
+                                 MultiplierExponents            exponents)
+{
+    auto have_leading_digit_overflow =
+       multiplicand.back() > (DIGIT_TYPE_MAX >> exponents.two);
+
+    auto shift_offset = exponents.digit_base
+                      + have_leading_digit_overflow;
+
+    auto product_size = multiplicand.size() + shift_offset;
+
+    std::vector<digit_type> product;
+    product.reserve(product_size);
+
+    return product;
+}
+
 } // namespace
 
 
@@ -285,53 +303,35 @@ multiply_digit_base_power_in_place(
                      multiplicand.rbegin());
 }
 
-void
-multiply_powers_in_place(MultiplierExponents      exponents,
-                         std::vector<digit_type> &multiplicand)
+std::vector<digit_type>
+multiply_powers(const std::vector<digit_type> &multiplicand,
+                MultiplierExponents            exponents)
 {
-    assert(!is_zero(multiplicand)); // TODO
-
     assert(exponents.two <= DIGIT_TYPE_BITS);
+    assert(!is_zero(multiplicand));
     assert(!multiplicand.empty());
 
-    auto two_shift_overflows_leading_digit =
-       multiplicand.back() > (DIGIT_TYPE_MAX >> exponents.two);
+    auto product = allocate_multiply_powers_product(multiplicand, exponents);
 
-    auto shift_offset = exponents.digit_base
-                      + two_shift_overflows_leading_digit;
+    product.resize(exponents.digit_base);
 
-    auto initial_size = multiplicand.size();
-    auto new_size     = initial_size + shift_offset;
-    multiplicand.resize(new_size);
+    const auto overflow_shift = DIGIT_TYPE_BITS - exponents.two;
 
-    auto dest_cursor = multiplicand.rbegin();
-    auto src_cursor = dest_cursor + shift_offset;
+    digit_accumulator_type overflow = 0;
 
-    auto overflow_shift = DIGIT_TYPE_BITS - exponents.two;
-    digit_accumulator_type accumulator = 0;
+    for (auto digit : multiplicand) {
+        auto accumulator = (digit_accumulator_type(digit) << exponents.two)
+                         | overflow;
 
-    if (two_shift_overflows_leading_digit)
-        goto overflow_start;
+        product.emplace_back(digit_from_nonnegative_value(accumulator));
 
-    while (true) {
-        accumulator = *src_cursor;
-        accumulator <<= exponents.two;
-
-        if (++src_cursor == multiplicand.rend())
-            break;
-
-overflow_start:
-        digit_accumulator_type overflow = *src_cursor;
-        overflow >>= overflow_shift;
-
-        accumulator |= overflow;
-
-        *dest_cursor++ = digit_from_nonnegative_value(accumulator);
+        overflow = digit_accumulator_type(digit) >> overflow_shift;
     }
 
-    *dest_cursor++ = digit_from_nonnegative_value(accumulator);
+    if (overflow > 0)
+        product.emplace_back(static_cast<digit_type>(overflow));
 
-    std::fill(dest_cursor, multiplicand.rend(), 0);
+    return product;
 }
 
 std::vector<digit_type>

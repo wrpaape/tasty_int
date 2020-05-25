@@ -12,6 +12,7 @@
 #include "tasty_int/detail/trailing_zero.hpp"
 #include "tasty_int/detail/split_digits.hpp"
 #include "tasty_int/detail/next_power_of_two.hpp"
+#include "tasty_int/detail/count_leading_zero_bits.hpp"
 #include "tasty_int/detail/digits_comparison.hpp"
 #include "tasty_int/detail/digits_addition.hpp"
 #include "tasty_int/detail/digits_subtraction.hpp"
@@ -266,88 +267,164 @@ long_divide(const std::vector<digit_type> &dividend,
     return result;
 }
 
-// bool
-// is_odd(std::vector<digit_type>::size_type value)
-// {
-//     return (value & 1) != 0;
-// }
+bool
+is_odd(std::vector<digit_type>::size_type value)
+{
+    return (value & 1) != 0;
+}
 
-// bool
-// is_divide_and_conquer_divide_base_case(
-//     std::vector<digit_type>::size_type split_size
-// )
-// {
-//     /// @todo TODO: tune
-//     constexpr std::vector<digit_type>::size_type
-//         LONG_DIVIDE_THRESHOLD_SPLIT_SIZE = 100;
+bool
+is_divide_and_conquer_divide_base_case(
+    std::vector<digit_type>::size_type divisor_size
+)
+{
+    /// @todo TODO: tune
+    constexpr std::vector<digit_type>::size_type
+        LONG_DIVIDE_THRESHOLD_SPLIT_SIZE = 100;
 
-//     return is_odd(split_size)
-//         || (split_size <= LONG_DIVIDE_THRESHOLD_SPLIT_SIZE);
-// }
+    return is_odd(divisor_size)
+        || (divisor_size <= LONG_DIVIDE_THRESHOLD_SPLIT_SIZE);
+}
 
-// DigitsDivisionResult
-// divide_and_conquer_divide_2_to_1_split(const std::vector<digit_type> &dividend,
-//                                        const std::vector<digit_type> &divisor)
-// {
-//     assert(dividend.size() >= divisor.size());
+DigitsDivisionResult
+divide_and_conquer_divide_2_to_1_split(const std::vector<digit_type> &dividend,
+                                       const std::vector<digit_type> &divisor)
+{
+    assert(!divisor.empty());
+    assert(dividend.size() >= (divisor.size() * 2));
 
-//     auto split_size = std::max(dividend.size() + 1 - divisor.size(),
-//                                divisor.size());
+    if (is_divide_and_conquer_divide_base_case(divisor.size()))
+        return long_divide(dividend, divisor);
 
-//     if (is_divide_and_conquer_divide_base_case(split_size))
-//         return long_divide(dividend, divisor);
+    auto split_size = divisor.size() / 2;
+    auto [dividend_low, dividend_high] = split_digits<2>(dividend, split_size);
 
-//     return {}; // TODO
-// }
+    DigitsDivisionResult
+    divide_and_conquer_divide_3_to_2_split(
+        const std::vector<digit_type> &dividend,
+        const std::vector<digit_type> &divisor
+    );
 
-// #ifndef NDEBUG
-// bool
-// split_size_correct(std::vector<digit_type>::size_type digits_size,
-//                    std::vector<digit_type>::size_type split_size,
-//                    std::vector<digit_type>::size_type num_splits)
+    auto high_result =
+        divide_and_conquer_divide_3_to_2_split(dividend_high, divisor);
 
-// {
-//     auto [smaller, larger] = std::minmax(digits_size, split_size * num_splits);
-//     return (larger - smaller) <= 1;
-// }
-// #endif // ifndef NDEBUG
+    auto& high_remainder = high_result.remainder;
+    dividend_low.insert(dividend_low.end(),
+                        high_remainder.begin(),
+                        high_remainder.end());
 
-// DigitsDivisionResult
-// divide_and_conquer_divide_3_to_2_split(const std::vector<digit_type> &dividend,
-//                                        const std::vector<digit_type> &divisor)
-// {
-//     assert(dividend.size() < (divisor.size() * 3 / 2));
+    auto result =
+        divide_and_conquer_divide_3_to_2_split(dividend_low, divisor);
 
-//     auto split_size = divisor.size() / 2;
-//     auto [dividend_low, dividend_mid, dividend_high]
-//         = split_digits<3>(dividend, split_size);
+    auto& quotient            = result.quotient;
+    const auto& high_quotient = high_result.quotient;
+    quotient.insert(quotient.end(),
+                    high_quotient.begin(),
+                    high_quotient.end());
 
-//     auto [divisor_low, divisor_high] = split_digits<2>(divisor, split_size);
+    return result;
+}
 
-//     return {}; // TODO
-// }
+DigitsDivisionResult
+divide_and_conquer_divide_3_to_2_split(const std::vector<digit_type> &dividend,
+                                       const std::vector<digit_type> &divisor)
+{
+    assert(dividend.size() <= (divisor.size() * 3 / 2));
 
-// DigitsDivisionResult
-// divide_and_conquer_divide(const std::vector<digit_type> &dividend,
-//                           const std::vector<digit_type> &divisor)
-// {
-//     /// @todo: TODO: tune
-//     constexpr std::vector<digit_type>::size_type
-//         LONG_DIVIDE_THRESHOLD_SPLIT_SIZE = 100;
+    auto split_size = divisor.size() / 2;
 
-//     if (divisor.size() < LONG_DIVIDE_THRESHOLD_SPLIT_SIZE)
-//         return long_divide(dividend, divisor);
+    auto [dividend_low, dividend_upper] =
+        split_digits<2>(dividend, split_size);
 
-//     auto count_divisor_pieces =
-//         next_power_of_two(divisor.size() / LONG_DIVIDE_THRESHOLD_SPLIT_SIZE);
-//     auto divisor_piece_mag = divisor.size() / count_divisor_pieces;
-//     auto padded_mag = divisor_piece_mag * count_divisor_pieces;
-//     (void) padded_mag;
+    auto [divisor_low, divisor_high] =
+        split_digits<2>(divisor, split_size);
 
-//     (void) dividend;
-//     (void) divisor;
-//     return {}; // TODO
-// }
+    std::vector<digit_type> dividend_high(
+        dividend_upper.end() - divisor_high.size(),
+        dividend_upper.end()
+    );
+
+    DigitsDivisionResult result;
+
+    if (dividend_high < divisor_high) {
+        result = divide_and_conquer_divide_2_to_1_split(dividend_upper,
+                                                        divisor_high);
+    } else {
+        auto& quotient = result.quotient;
+        quotient.assign(split_size, DIGIT_TYPE_MAX);
+
+        dividend_upper += divisor_high;
+
+        multiply_digit_base_power_in_place(split_size, divisor_high);
+        auto [sign, remainder] = subtract_in_place(divisor_high, dividend_upper);
+        assert(asign >= Sign::ZERO);
+
+        result.remainder = std::move(remainder);
+    }
+
+    auto& remainder = result.remainder;
+    multiply_digit_base_power_in_place(split_size, remainder);
+    remainder += dividend_low;
+
+    auto remainder_sign = subtract_in_place(result.quotient * divisor_low,
+                                            remainder);
+
+    while (remainder_sign < Sign::ZERO) {
+        [[maybe_unused]] auto quotient_sign =
+            subtract_in_place(std::uintmax_t(1), quotient);
+        assert(quotient_sign >= 0);
+
+        remainder_sign = subtract_in_place(dividend, remainder);
+        remainder_sign = -remainder_sign;
+    }
+
+    return result;
+}
+
+DigitsDivisionResult
+divide_and_conquer_divide(const std::vector<digit_type> &dividend,
+                          const std::vector<digit_type> &divisor)
+{
+    /// @todo: TODO: tune
+    constexpr std::vector<digit_type>::size_type
+        LONG_DIVIDE_THRESHOLD_SPLIT_SIZE = 100;
+
+    if (divisor.size() < LONG_DIVIDE_THRESHOLD_SPLIT_SIZE)
+        return long_divide(dividend, divisor);
+
+    auto count_divisor_pieces =
+        next_power_of_two(divisor.size() / LONG_DIVIDE_THRESHOLD_SPLIT_SIZE);
+    auto divisor_piece_mag = divisor.size() / count_divisor_pieces;
+    auto normalized_divisor_mag = divisor_piece_mag * count_divisor_pieces;
+    (void) normalized_divisor_mag;
+
+    MultiplierExponents normal_exponents = {
+        .digit_base = normalized_divisor_mag - divisor.size(),
+        .two        = count_leading_zero_bits(divisor.back())
+    };
+    auto normalized_dividend = multiply_powers(dividend, normal_exponents);
+    auto normalized_divisor  = multiply_powers(divisor,  normal_exponents);
+    assert(count_leading_zero_bits(normalized_divisor.back()) == 0);
+
+    auto count_dividend_pieces =
+        std::max(2, dividend.size() / normalized_divisor_mag);
+
+    auto padded_dividend_mag = count_dividend_pieces * divisor_piece_mag;
+    if ((padded_dividend_mag == normalized_dividend.size()) &&
+        (count_leading_zero_bits(normalized_dividend.back()) == 0)) {
+        padded_dividend_mag += divisor_piece_mag;
+        ++count_dividend_pieces;
+    }
+    normalized_dividend.resize(padded_dividend_mag);
+    assert(count_leading_zero_bits(normalized_dividend.back()) > 0);
+
+    std::vector<digit_type> remainder(divisor_piece_mag * 2);
+
+
+    (void) dividend;
+    (void) divisor;
+    return {}; // TODO
+}
 
 // DigitsDivisionResult
 // long_divide_digit(const std::vector<digit_type> &dividend,

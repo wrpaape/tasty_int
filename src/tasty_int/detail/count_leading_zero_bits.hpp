@@ -18,7 +18,7 @@ namespace detail {
  *
  * @pre `value > 0`
  */
-std::uintmax_t
+unsigned int
 count_leading_zero_bits(std::uintmax_t value);
 
 } // namespace detail

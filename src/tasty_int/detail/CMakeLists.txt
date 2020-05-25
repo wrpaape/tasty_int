@@ -206,6 +206,7 @@ target_link_libraries(
     tasty_int-detail-split_digits
     tasty_int-detail-trailing_zero
     tasty_int-detail-next_power_of_two
+    tasty_int-detail-count_leading_zero_bits
     tasty_int-detail-digits_comparison
     tasty_int-detail-digits_addition
     tasty_int-detail-digits_subtraction

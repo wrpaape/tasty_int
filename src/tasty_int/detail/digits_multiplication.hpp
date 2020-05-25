@@ -83,7 +83,7 @@ multiply_digit_base_power_in_place(
 /**
  * A pair of exponents that describe the multiplier:
  *
- *     DIGIT_BASE^power.digit_base * 2^powers.two
+ *     DIGIT_BASE^digit_base * 2^two
  */
 struct MultiplierExponents
 {
@@ -91,17 +91,19 @@ struct MultiplierExponents
     unsigned int                       two;
 }; // struct MultiplierExponents
 /**
- * @brief Multiply @p multiplicand by `DIGIT_BASE^power.digit_base *
- *    2^powers.two`.
+ * @brief Multiply @p multiplicand by `DIGIT_BASE^exponents.digit_base *
+ *    2^exponents.two`.
  *
- * @param[in]     exponents    the desired power components of the multiplier
- * @param[in,out] multiplicand the digits to be multiplied
+ * @param[in] multiplicand the digits to be multiplied
+ * @param[in] exponents    the desired power components of the multiplier
+ * @return `multiplicand * DIGIT_BASE^exponents.digit_base * 2^exponents.two`.
  *
- * @pre `exponents.two <= DIGIT_TYPE_BITS`
+ * @pre `exponents.two < DIGIT_TYPE_BITS`
+ * @pre `multiplicand != 0`
  */
-void
-multiply_powers_in_place(MultiplierExponents      exponents,
-                         std::vector<digit_type> &multiplicand);
+std::vector<digit_type>
+multiply_powers(const std::vector<digit_type> &multiplicand,
+                MultiplierExponents           exponents);
 
 /**
  * @defgroup DigitsMultiplicationAlgorithms Digits Multiplication Algorithms

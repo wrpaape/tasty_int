@@ -18,7 +18,7 @@ using tasty_int::detail::operator*;
 using tasty_int::detail::multiply_digit_base;
 using tasty_int::detail::multiply_digit_base_power_in_place;
 using tasty_int::detail::MultiplierExponents;
-using tasty_int::detail::multiply_powers_in_place;
+using tasty_int::detail::multiply_powers;
 using tasty_int::detail::digit_type;
 using tasty_int::detail::DIGIT_TYPE_MAX;
 using tasty_int::detail::DIGIT_BASE;
@@ -375,7 +375,7 @@ TEST(MultiplyDigitBaseTest, MutlipleDigits)
     EXPECT_EQ(expected_result, result);
 }
 
-TEST(MultiplyDigitBasePowerInPlaceTest, ZeroWithZeroExponent)
+TEST(MultiplyDigitBasePowerTest, ZeroWithZeroExponent)
 {
     std::vector<digit_type> multiplicand = { 0 };
     std::vector<digit_type>::size_type ZERO = 0;
@@ -386,7 +386,7 @@ TEST(MultiplyDigitBasePowerInPlaceTest, ZeroWithZeroExponent)
     EXPECT_EQ(expected_result, multiplicand);
 }
 
-TEST(MultiplyDigitBasePowerInPlaceTest, ZeroWithNonzeroExponent)
+TEST(MultiplyDigitBasePowerTest, ZeroWithNonzeroExponent)
 {
     std::vector<digit_type> multiplicand = { 0 };
     std::vector<digit_type>::size_type exponent = 7;
@@ -397,7 +397,7 @@ TEST(MultiplyDigitBasePowerInPlaceTest, ZeroWithNonzeroExponent)
     EXPECT_EQ(expected_result, multiplicand);
 }
 
-TEST(MultiplyDigitBasePowerInPlaceTest, NonzeroWithZeroExponent)
+TEST(MultiplyDigitBasePowerTest, NonzeroWithZeroExponent)
 {
     std::vector<digit_type> multiplicand = { 1, 2, 3 };
     std::vector<digit_type>::size_type ZERO = 0;
@@ -408,7 +408,7 @@ TEST(MultiplyDigitBasePowerInPlaceTest, NonzeroWithZeroExponent)
     EXPECT_EQ(expected_result, multiplicand);
 }
 
-TEST(MultiplyDigitBasePowerInPlaceTest, NonzeroWithNonzeroExponent)
+TEST(MultiplyDigitBasePowerTest, NonzeroWithNonzeroExponent)
 {
     std::vector<digit_type> multiplicand = { 1, 2, 3 };
     std::vector<digit_type>::size_type exponent = 5;
@@ -419,18 +419,18 @@ TEST(MultiplyDigitBasePowerInPlaceTest, NonzeroWithNonzeroExponent)
     EXPECT_EQ(expected_result, multiplicand);
 }
 
-TEST(MultiplyPowersInPlaceTest, NoExponents)
+TEST(MultiplyPowersTest, NoExponents)
 {
-    std::vector<digit_type> multiplicand = { DIGIT_TYPE_MAX };
-    MultiplierExponents exponents        = { .digit_base = 0, .two = 0 };
+    std::vector<digit_type> multiplicand    = { DIGIT_TYPE_MAX };
+    MultiplierExponents exponents           = { .digit_base = 0, .two = 0 };
     std::vector<digit_type> expected_result = multiplicand;
 
-    multiply_powers_in_place(exponents, multiplicand);
+    auto result = multiply_powers(multiplicand, exponents);
 
-    EXPECT_EQ(expected_result, multiplicand);
+    EXPECT_EQ(expected_result, result);
 }
 
-TEST(MultiplyPowersInPlaceTest, OnlyDigitBaseExponent)
+TEST(MultiplyPowersTest, OnlyDigitBaseExponent)
 {
     std::vector<digit_type> multiplicand = { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX };
     MultiplierExponents exponents        = { .digit_base = 3, .two = 0 };
@@ -438,23 +438,23 @@ TEST(MultiplyPowersInPlaceTest, OnlyDigitBaseExponent)
         0, 0, 0, DIGIT_TYPE_MAX, DIGIT_TYPE_MAX
     };
 
-    multiply_powers_in_place(exponents, multiplicand);
+    auto result = multiply_powers(multiplicand, exponents);
 
-    EXPECT_EQ(expected_result, multiplicand);
+    EXPECT_EQ(expected_result, result);
 }
 
-TEST(MultiplyPowersInPlaceTest, OnlyTwoExponentNoOverlap)
+TEST(MultiplyPowersTest, OnlyTwoExponentNoOverlap)
 {
     std::vector<digit_type> multiplicand    = { 0, 1, 2 };
-    MultiplierExponents exponents           = { .digit_base  = 0, .two = 5 };
+    MultiplierExponents exponents           = { .digit_base = 0, .two = 5 };
     std::vector<digit_type> expected_result = { 0, 1 << 5, 2 << 5 };
 
-    multiply_powers_in_place(exponents, multiplicand);
+    auto result = multiply_powers(multiplicand, exponents);
 
-    EXPECT_EQ(expected_result, multiplicand);
+    EXPECT_EQ(expected_result, result);
 }
 
-TEST(MultiplyPowersInPlaceTest, OnlyTwoExponentWithOverlap)
+TEST(MultiplyPowersTest, OnlyTwoExponentWithOverlap)
 {
     std::vector<digit_type> multiplicand = {
         DIGIT_TYPE_MAX / 2, DIGIT_TYPE_MAX / 4, 0b010101, 1
@@ -467,12 +467,12 @@ TEST(MultiplyPowersInPlaceTest, OnlyTwoExponentWithOverlap)
         1 << 4
     };
 
-    multiply_powers_in_place(exponents, multiplicand);
+    auto result = multiply_powers(multiplicand, exponents);
 
-    EXPECT_EQ(expected_result, multiplicand);
+    EXPECT_EQ(expected_result, result);
 }
 
-TEST(MultiplyPowersInPlaceTest, DigitBaseAndTwoExponentsNoOverlap)
+TEST(MultiplyPowersTest, DigitBaseAndTwoExponentsNoOverlap)
 {
     std::vector<digit_type> multiplicand    = { 1, 2, 3, 4 };
     MultiplierExponents exponents           = { .digit_base  = 4, .two = 7 };
@@ -480,12 +480,12 @@ TEST(MultiplyPowersInPlaceTest, DigitBaseAndTwoExponentsNoOverlap)
         0, 0, 0, 0, 1 << 7, 2 << 7, 3 << 7, 4 << 7
     };
 
-    multiply_powers_in_place(exponents, multiplicand);
+    auto result = multiply_powers(multiplicand, exponents);
 
-    EXPECT_EQ(expected_result, multiplicand);
+    EXPECT_EQ(expected_result, result);
 }
 
-TEST(MultiplyPowersInPlaceTest, DigitBaseAndTwoExponentsWithOverlap)
+TEST(MultiplyPowersTest, DigitBaseAndTwoExponentsWithOverlap)
 {
     std::vector<digit_type> multiplicand = {
         DIGIT_TYPE_MAX >> 1,
@@ -506,9 +506,9 @@ TEST(MultiplyPowersInPlaceTest, DigitBaseAndTwoExponentsWithOverlap)
         1
     };
 
-    multiply_powers_in_place(exponents, multiplicand);
+    auto result = multiply_powers(multiplicand, exponents);
 
-    EXPECT_EQ(expected_result, multiplicand);
+    EXPECT_EQ(expected_result, result);
 }
 
 } // namespace
