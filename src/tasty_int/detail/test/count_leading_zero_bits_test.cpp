@@ -10,27 +10,34 @@ namespace {
 using tasty_int::detail::count_leading_zero_bits;
 
 
-TEST(CountLeadingZeroBitsTest, DenseBitPatternTest)
+constexpr auto MAX_EXPONENT = std::numeric_limits<std::uintmax_t>::digits - 1;
+
+class CountLeadingZeroBitsTest : public ::testing::TestWithParam<int>
+{}; // class CountLeadingZeroBitsTest
+
+TEST_P(CountLeadingZeroBitsTest, DenseBitPatternTest)
 {
-    for (std::uintmax_t value = std::numeric_limits<std::uintmax_t>::max(),
-         expected_count       = 0;
-         value > 0;
-         value >>= 1,
-         ++expected_count)
-        EXPECT_EQ(expected_count, count_leading_zero_bits(value));
+    auto shift          = GetParam();
+    auto value          = std::numeric_limits<std::uintmax_t>::max() >> shift;
+    auto expected_count = shift;
+
+    EXPECT_EQ(expected_count, count_leading_zero_bits(value));
 }
 
-TEST(CountLeadingZeroBitsTest, SingleBitTest)
+TEST_P(CountLeadingZeroBitsTest, SingleBitTest)
 {
-    constexpr std::uintmax_t MAX_EXPONENT =
-        std::numeric_limits<std::uintmax_t>::digits - 1;
+    auto shift          = GetParam();
+    auto value          = std::uintmax_t(1) << shift;
+    auto expected_count = MAX_EXPONENT - shift;
 
-    for (std::uintmax_t value = std::uintmax_t(1) << MAX_EXPONENT,
-         expected_count       = 0;
-         value > 0;
-         value >>= 1,
-         ++expected_count)
-        EXPECT_EQ(expected_count, count_leading_zero_bits(value));
+    EXPECT_EQ(expected_count, count_leading_zero_bits(value));
 }
+
+INSTANTIATE_TEST_SUITE_P(
+    CountLeadingZeroBitsTest,
+    CountLeadingZeroBitsTest,
+    ::testing::Range(0, MAX_EXPONENT)
+);
+
 
 } // namespace

@@ -13,9 +13,12 @@ namespace {
 
 using tasty_int::detail::divide;
 using tasty_int::detail::divide_in_place;
+using tasty_int::detail::divide_normalized_3n_2n_split;
+using tasty_int::detail::divide_normalized_2n_1n_split;
 using tasty_int::detail::DigitsDivisionResult;
 using tasty_int::detail::digit_type;
 using tasty_int::detail::DIGIT_TYPE_MAX;
+using tasty_int::detail::DIGIT_BASE;
 using tasty_int::detail::operator+;
 using tasty_int::detail::operator*;
 
@@ -38,6 +41,7 @@ expect_equal(const DigitsDivisionResult &expected_result,
                  actual_result.quotient,
                  actual_result.remainder);
 }
+
 
 template<typename DivisorType>
 void
@@ -136,5 +140,44 @@ INSTANTIATE_TEST_SUITE_P(
         }
     )
 );
+
+
+TEST(DivideNormalized3to2Split, DividendHighEqualToDivisorHighTest)
+{
+    std::vector<digit_type> dividend = {
+        0, 0, DIGIT_TYPE_MAX
+    };
+    std::vector<digit_type> divisor = {
+        DIGIT_TYPE_MAX, DIGIT_TYPE_MAX
+    };
+    DigitsDivisionResult expected_result = {
+        .quotient = { DIGIT_TYPE_MAX }, .remainder = { DIGIT_TYPE_MAX }
+    };
+
+    auto result = divide_normalized_3n_2n_split(dividend, divisor);
+
+    expect_equal(expected_result, result);
+}
+
+
+TEST(DivideNormalized3to2Split, DividendHighGreaterThanDivisorHighTest)
+{
+    std::vector<digit_type> dividend = {
+        DIGIT_TYPE_MAX, DIGIT_TYPE_MAX,
+        DIGIT_TYPE_MAX, DIGIT_TYPE_MAX,
+        0,              (DIGIT_BASE / 2) + 1
+    };
+    std::vector<digit_type> divisor = {
+        0, 0, 1, (DIGIT_BASE / 2) + 1
+    };
+    DigitsDivisionResult expected_result = {
+        .quotient  = { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX },
+        .remainder = { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX, 0, (DIGIT_BASE / 2) + 1 }
+    };
+
+    auto result = divide_normalized_3n_2n_split(dividend, divisor);
+
+    expect_equal(expected_result, result);
+}
 
 } // namespace

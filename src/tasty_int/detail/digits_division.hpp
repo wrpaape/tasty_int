@@ -62,6 +62,39 @@ divide(const std::vector<digit_type> &dividend,
        const std::vector<digit_type> &divisor);
 /// @}
 
+/**
+ * @defgroup DigitsDivisionAlgorithms Digits Division Algorithms
+ *
+ * These algorithms implement the `divide` routines.
+ *
+ * @param[in] dividend the value from which @p divisor is divided
+ * @param[in] divisor  the value by which @p dividend is divided
+ * @return the quotient and remainder
+ */
+/// @{
+DigitsDivisionResult
+long_divide(const std::vector<digit_type> &dividend,
+            const std::vector<digit_type> &divisor);
+
+DigitsDivisionResult
+divide_and_conquer_divide(const std::vector<digit_type> &dividend,
+                          const std::vector<digit_type> &divisor);
+
+DigitsDivisionResult
+divide_normalized_2n_1n_split(const std::vector<digit_type> &dividend,
+                              const std::vector<digit_type> &divisor);
+
+/**
+ * @pre `high digit(divisor) > DIGIT_BASE/2`
+ * @pre `0 <= dividend <= divisor*DIGIT_BASE^x` where `x` is defined as
+ *     `DIGIT_BASE^(x/2) <= upper half digits(divisor) < DIGIT_BASE^x`
+ */
+DigitsDivisionResult
+divide_normalized_3n_2n_split(const std::vector<digit_type> &dividend,
+                              const std::vector<digit_type> &divisor);
+
+/// @}
+
 } // namespace detail
 } // namespace tasty_int
 

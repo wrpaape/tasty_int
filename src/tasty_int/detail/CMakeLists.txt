@@ -201,6 +201,7 @@ add_library(
 )
 target_link_libraries(
     tasty_int-detail-digits_division
+    tasty_int-detail-flip_sign
     tasty_int-detail-digit_from_nonnegative_value
     tasty_int-detail-is_zero
     tasty_int-detail-split_digits
