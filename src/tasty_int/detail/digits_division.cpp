@@ -257,7 +257,8 @@ is_divide_and_conquer_divide_base_case(
 {
     /// @todo TODO: tune
     constexpr std::vector<digit_type>::size_type
-        LONG_DIVIDE_THRESHOLD_SPLIT_SIZE = 100;
+        // LONG_DIVIDE_THRESHOLD_SPLIT_SIZE = 100;
+        LONG_DIVIDE_THRESHOLD_SPLIT_SIZE = 1;
 
     return is_odd(divisor_size)
         || (divisor_size <= LONG_DIVIDE_THRESHOLD_SPLIT_SIZE);
@@ -360,7 +361,8 @@ divide_and_conquer_divide(const std::vector<digit_type> &dividend,
 {
     /// @todo: TODO: tune
     constexpr std::vector<digit_type>::size_type
-        LONG_DIVIDE_THRESHOLD_SPLIT_SIZE = 100;
+        // LONG_DIVIDE_THRESHOLD_SPLIT_SIZE = 100;
+        LONG_DIVIDE_THRESHOLD_SPLIT_SIZE = 4;
 
     if (divisor.size() < LONG_DIVIDE_THRESHOLD_SPLIT_SIZE)
         return long_divide(dividend, divisor);
@@ -404,11 +406,13 @@ DigitsDivisionResult
 divide_normalized_2n_1n_split(const std::vector<digit_type> &dividend,
                               const std::vector<digit_type> &divisor)
 {
+    assert(!dividend.empty());
     assert(!divisor.empty());
-    assert(dividend.size() >= (divisor.size() * 2));
 
     if (is_divide_and_conquer_divide_base_case(divisor.size()))
         return long_divide(dividend, divisor);
+
+    assert(dividend.size() >= (divisor.size() * 2));
 
     auto split_size = divisor.size() / 2;
     auto [dividend_low, dividend_high] = split_digits<2>(dividend, split_size);
@@ -437,6 +441,13 @@ DigitsDivisionResult
 divide_normalized_3n_2n_split(const std::vector<digit_type> &dividend,
                               const std::vector<digit_type> &divisor)
 {
+    assert(!dividend.empty());
+    assert(!divisor.empty());
+    assert(divisor.back() >= (DIGIT_BASE / 2));
+
+    if (is_zero(dividend))
+        return { .quotient = { 0 }, .remainder = divisor };
+
     assert(dividend.size() <= (divisor.size() * 3 / 2));
 
     auto split_size = divisor.size() / 2;

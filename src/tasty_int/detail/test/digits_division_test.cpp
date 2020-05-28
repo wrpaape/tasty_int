@@ -18,6 +18,7 @@ using tasty_int::detail::divide_normalized_2n_1n_split;
 using tasty_int::detail::DigitsDivisionResult;
 using tasty_int::detail::digit_type;
 using tasty_int::detail::DIGIT_TYPE_MAX;
+using tasty_int::detail::DIGIT_TYPE_BITS;
 using tasty_int::detail::DIGIT_BASE;
 using tasty_int::detail::operator+;
 using tasty_int::detail::operator*;
@@ -142,7 +143,7 @@ INSTANTIATE_TEST_SUITE_P(
 );
 
 
-TEST(DivideNormalized3to2Split, DividendHighEqualToDivisorHighTest)
+TEST(DivideNormalized3n2nSplitTest, DividendHighEqualToDivisorHighTest)
 {
     std::vector<digit_type> dividend = {
         0, 0, DIGIT_TYPE_MAX
@@ -159,8 +160,7 @@ TEST(DivideNormalized3to2Split, DividendHighEqualToDivisorHighTest)
     expect_equal(expected_result, result);
 }
 
-
-TEST(DivideNormalized3to2Split, DividendHighGreaterThanDivisorHighTest)
+TEST(DivideNormalized3n2nSplitTest, DividendHighGreaterThanDivisorHighTest)
 {
     std::vector<digit_type> dividend = {
         DIGIT_TYPE_MAX, DIGIT_TYPE_MAX,
@@ -176,6 +176,43 @@ TEST(DivideNormalized3to2Split, DividendHighGreaterThanDivisorHighTest)
     };
 
     auto result = divide_normalized_3n_2n_split(dividend, divisor);
+
+    expect_equal(expected_result, result);
+}
+
+TEST(DivideNormalized2n1nSplitTest, FourDigitDiviend)
+{
+    std::vector<digit_type> dividend = {
+        0, 0, 0, 1
+    };
+    std::vector<digit_type> divisor = {
+        0, digit_type(1) << (DIGIT_TYPE_BITS - 1)
+    };
+    DigitsDivisionResult expected_result = {
+        .quotient = { 0, 2 }, .remainder = { 0 }
+    };
+
+    auto result = divide_normalized_2n_1n_split(dividend, divisor);
+
+    expect_equal(expected_result, result);
+}
+
+TEST(DivideNormalized2n1nSplitTest, SixDigitDiviend)
+{
+    std::vector<digit_type> dividend = {
+        1, DIGIT_TYPE_MAX,
+        2, DIGIT_TYPE_MAX,
+        3, DIGIT_TYPE_MAX
+    };
+    std::vector<digit_type> divisor = {
+        4, 0, DIGIT_TYPE_MAX
+    };
+    DigitsDivisionResult expected_result = {
+        .quotient  = { DIGIT_TYPE_MAX, 3, 0, 1 },
+        .remainder = { 5, DIGIT_TYPE_MAX - 16, 1 }
+    };
+
+    auto result = divide_normalized_2n_1n_split(dividend, divisor);
 
     expect_equal(expected_result, result);
 }

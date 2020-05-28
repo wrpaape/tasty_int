@@ -85,7 +85,7 @@ divide_normalized_2n_1n_split(const std::vector<digit_type> &dividend,
                               const std::vector<digit_type> &divisor);
 
 /**
- * @pre `high digit(divisor) > DIGIT_BASE/2`
+ * @pre `high digit(divisor) >= DIGIT_BASE/2`
  * @pre `0 <= dividend <= divisor*DIGIT_BASE^x` where `x` is defined as
  *     `DIGIT_BASE^(x/2) <= upper half digits(divisor) < DIGIT_BASE^x`
  */
