@@ -16,6 +16,7 @@
 #include "tasty_int/detail/next_power_of_two.hpp"
 #include "tasty_int/detail/count_leading_zero_bits.hpp"
 #include "tasty_int/detail/digits_comparison.hpp"
+#include "tasty_int/detail/digits_bitwise.hpp"
 #include "tasty_int/detail/digits_addition.hpp"
 #include "tasty_int/detail/digits_subtraction.hpp"
 #include "tasty_int/detail/digits_multiplication.hpp"
