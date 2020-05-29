@@ -39,7 +39,7 @@ where suggested `options` are:
 #### `-DCMAKE_BUILD_TYPE:STRING=<Debug|Release|Release|RelWithDebInfo|MinSizeRel>`
 Select the project build type.  Default is `Debug`.
 
-#### `-DCMAKE_INSTALL_PREFIX:STRING=<destination directory>`
+#### `-DCMAKE_INSTALL_PREFIX:PATH=<destination directory>`
 If [`cmake --build . install`](#install) is invoked, this directory is
 prepended onto all install directories. This variable defaults to `/usr/local`
 on UNIX and `c:/Program Files` on Windows.

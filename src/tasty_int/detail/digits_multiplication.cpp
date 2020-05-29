@@ -143,11 +143,11 @@ karatsuba_merge(KaratsubaPartiion                  &partition,
     [[maybe_unused]] auto sign2 = subtract_in_place(low_product, result);
     assert(sign2 >= Sign::ZERO);
 
-    multiply_digit_base_power_in_place(split_size, result);
+    result <<= split_size;
 
     result += low_product;
 
-    multiply_digit_base_power_in_place(split_size * 2, high_product);
+    high_product <<= (split_size * 2);
 
     result += high_product;
 

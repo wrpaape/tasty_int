@@ -60,10 +60,11 @@ function(add_third_party)
     set(configure_cmake_args 
         ${CMAKE_CURRENT_SOURCE_DIR}/third_party
         -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+        -DCMAKE_CXX_COMPILER:FILEPATH=${CMAKE_CXX_COMPILER}
         -DCMAKE_INSTALL_PREFIX:PATH=${THIRD_PARTY_INSTALL_PREFIX})
 
     set(build_prompt     "Building")
-    set(build_cmake_args --build .)
+    set(build_cmake_args --build . --parallel)
 
     set(install_prompt     "Installing")
     set(install_cmake_args --install .)

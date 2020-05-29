@@ -153,7 +153,7 @@ void
 multiply_digit_base_accumulate_in_place(digit_type               addend,
                                         std::vector<digit_type> &result)
 {
-    multiply_digit_base_power_in_place(1, result);
+    result <<= 1;
 
     result.front() = addend;
 }
@@ -384,12 +384,12 @@ divide_and_conquer_divide(const std::vector<digit_type> &dividend,
                            + ((divisor.size() % count_divisor_pieces) > 0);
     auto normalized_divisor_mag = divisor_piece_mag * count_divisor_pieces;
 
-    MultiplierExponents normal_exponents = {
-        .digit_base = normalized_divisor_mag - divisor.size(),
-        .two        = count_leading_zero_bits_for_digit(divisor.back())
+    DigitsShiftOffset normal_shift_offset = {
+        .digits = normalized_divisor_mag - divisor.size(),
+        .bits   = count_leading_zero_bits_for_digit(divisor.back())
     };
-    auto normalized_dividend = multiply_powers(dividend, normal_exponents);
-    auto normalized_divisor  = multiply_powers(divisor,  normal_exponents);
+    auto normalized_dividend = dividend << normal_shift_offset;
+    auto normalized_divisor  = divisor  << normal_shift_offset;
     assert(count_leading_zero_bits_for_digit(normalized_divisor.back()) == 0);
 
     auto count_dividend_pieces =
@@ -521,7 +521,7 @@ divide_normalized_3n_2n_split(const std::vector<digit_type> &dividend,
 
         dividend_upper += divisor_high;
 
-        multiply_digit_base_power_in_place(split_size, divisor_high);
+        divisor_high <<= split_size;
         [[maybe_unused]] auto sign = subtract_in_place(divisor_high,
                                                        dividend_upper);
         assert(sign >= Sign::ZERO);
@@ -532,7 +532,7 @@ divide_normalized_3n_2n_split(const std::vector<digit_type> &dividend,
     auto& remainder = result.remainder;
     auto& quotient  = result.quotient;
 
-    multiply_digit_base_power_in_place(split_size, remainder);
+    remainder <<= split_size;
     remainder += dividend_low;
 
     auto remainder_sign = subtract_in_place(quotient * divisor_low,

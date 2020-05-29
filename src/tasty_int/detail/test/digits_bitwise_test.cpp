@@ -8,9 +8,9 @@
 namespace {
 
 using tasty_int::detail::multiply_digit_base;
-using tasty_int::detail::multiply_digit_base_power_in_place;
-using tasty_int::detail::MultiplierExponents;
-using tasty_int::detail::multiply_powers;
+using tasty_int::detail::DigitsShiftOffset;
+using tasty_int::detail::operator<<;
+using tasty_int::detail::operator<<=;
 using tasty_int::detail::digit_type;
 using tasty_int::detail::DIGIT_TYPE_MAX;
 using tasty_int::detail::digit_from_nonnegative_value;
@@ -36,91 +36,109 @@ TEST(MultiplyDigitBaseTest, MutlipleDigits)
     EXPECT_EQ(expected_result, result);
 }
 
-TEST(MultiplyDigitBasePowerTest, ZeroWithZeroExponent)
+TEST(ShiftLeftInPlaceTest, ReturnsReferenceToDigits)
 {
-    std::vector<digit_type> multiplicand = { 0 };
+    std::vector<digit_type> digits = { 1, 2, 3 };
+
+    EXPECT_EQ(&digits, &(digits <<= 11));
+}
+
+TEST(ShiftLeftInPlaceTest, ZeroWithZeroDigitOffset)
+{
+    std::vector<digit_type> digits          = { 0 };
     std::vector<digit_type>::size_type ZERO = 0;
-    std::vector<digit_type> expected_result = multiplicand;
+    std::vector<digit_type> expected_result = digits;
 
-    multiply_digit_base_power_in_place(ZERO, multiplicand);
+    digits <<= ZERO;
 
-    EXPECT_EQ(expected_result, multiplicand);
+    EXPECT_EQ(expected_result, digits);
 }
 
-TEST(MultiplyDigitBasePowerTest, ZeroWithNonzeroExponent)
+TEST(ShiftLeftInPlaceTest, ZeroWithNonzeroDigitOffset)
 {
-    std::vector<digit_type> multiplicand = { 0 };
-    std::vector<digit_type>::size_type exponent = 7;
-    std::vector<digit_type> expected_result = multiplicand;
+    std::vector<digit_type> digits                  = { 0 };
+    std::vector<digit_type>::size_type digit_offset = 7;
+    std::vector<digit_type> expected_result         = digits;
 
-    multiply_digit_base_power_in_place(exponent, multiplicand);
+    digits <<= digit_offset;
 
-    EXPECT_EQ(expected_result, multiplicand);
+    EXPECT_EQ(expected_result, digits);
 }
 
-TEST(MultiplyDigitBasePowerTest, NonzeroWithZeroExponent)
+TEST(ShiftLeftInPlaceTest, NonzeroWithZeroDigitOffset)
 {
-    std::vector<digit_type> multiplicand = { 1, 2, 3 };
+    std::vector<digit_type> digits          = { 1, 2, 3 };
     std::vector<digit_type>::size_type ZERO = 0;
-    std::vector<digit_type> expected_result = multiplicand;
+    std::vector<digit_type> expected_result = digits;
 
-    multiply_digit_base_power_in_place(ZERO, multiplicand);
+    digits <<= ZERO;
 
-    EXPECT_EQ(expected_result, multiplicand);
+    EXPECT_EQ(expected_result, digits);
 }
 
-TEST(MultiplyDigitBasePowerTest, NonzeroWithNonzeroExponent)
+TEST(ShiftLeftInPlaceTest, NonzeroWithNonzeroDigitOffset)
 {
-    std::vector<digit_type> multiplicand = { 1, 2, 3 };
-    std::vector<digit_type>::size_type exponent = 5;
+    std::vector<digit_type> digits                  = { 1, 2, 3 };
+    std::vector<digit_type>::size_type digit_offset = 5;
     std::vector<digit_type> expected_result = { 0, 0, 0, 0, 0, 1, 2, 3 };
 
-    multiply_digit_base_power_in_place(exponent, multiplicand);
+    digits <<= digit_offset;
 
-    EXPECT_EQ(expected_result, multiplicand);
+    EXPECT_EQ(expected_result, digits);
 }
 
-TEST(MultiplyPowersTest, NoExponents)
+TEST(ShiftLeftTest, Zero)
 {
-    std::vector<digit_type> multiplicand    = { DIGIT_TYPE_MAX };
-    MultiplierExponents exponents           = { .digit_base = 0, .two = 0 };
-    std::vector<digit_type> expected_result = multiplicand;
+    std::vector<digit_type> digits          = { 0 };
+    DigitsShiftOffset offset                = { .digits = 7, .bits = 11 };
+    std::vector<digit_type> expected_result = digits;
 
-    auto result = multiply_powers(multiplicand, exponents);
+    auto result = digits << offset;
 
     EXPECT_EQ(expected_result, result);
 }
 
-TEST(MultiplyPowersTest, OnlyDigitBaseExponent)
+TEST(ShiftLeftTest, NoOffset)
 {
-    std::vector<digit_type> multiplicand = { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX };
-    MultiplierExponents exponents        = { .digit_base = 3, .two = 0 };
+    std::vector<digit_type> digits          = { DIGIT_TYPE_MAX };
+    DigitsShiftOffset offset                = { .digits = 0, .bits = 0 };
+    std::vector<digit_type> expected_result = digits;
+
+    auto result = digits << offset;
+
+    EXPECT_EQ(expected_result, result);
+}
+
+TEST(ShiftLeftTest, DigitsOffset)
+{
+    std::vector<digit_type> digits = { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX };
+    DigitsShiftOffset offset       = { .digits = 3, .bits = 0 };
     std::vector<digit_type> expected_result = {
         0, 0, 0, DIGIT_TYPE_MAX, DIGIT_TYPE_MAX
     };
 
-    auto result = multiply_powers(multiplicand, exponents);
+    auto result = digits << offset;
 
     EXPECT_EQ(expected_result, result);
 }
 
-TEST(MultiplyPowersTest, OnlyTwoExponentNoOverlap)
+TEST(ShiftLeftTest, BitsOffsetWithoutOverlap)
 {
-    std::vector<digit_type> multiplicand    = { 0, 1, 2 };
-    MultiplierExponents exponents           = { .digit_base = 0, .two = 5 };
+    std::vector<digit_type> digits          = { 0, 1, 2 };
+    DigitsShiftOffset offset                = { .digits = 0, .bits = 5 };
     std::vector<digit_type> expected_result = { 0, 1 << 5, 2 << 5 };
 
-    auto result = multiply_powers(multiplicand, exponents);
+    auto result = digits << offset;
 
     EXPECT_EQ(expected_result, result);
 }
 
-TEST(MultiplyPowersTest, OnlyTwoExponentWithOverlap)
+TEST(ShiftLeftTest, BitsOffsetWithOverlap)
 {
-    std::vector<digit_type> multiplicand = {
+    std::vector<digit_type> digits = {
         DIGIT_TYPE_MAX / 2, DIGIT_TYPE_MAX / 4, 0b010101, 1
     };
-    MultiplierExponents exponents = { .digit_base  = 0, .two = 4 };
+    DigitsShiftOffset offset = { .digits  = 0, .bits = 4 };
     std::vector<digit_type> expected_result = { 
         DIGIT_TYPE_MAX ^ 0b1111, // 4 lsb zeros
         DIGIT_TYPE_MAX ^ 0b1000, // 1 zero at bit position 3
@@ -128,34 +146,34 @@ TEST(MultiplyPowersTest, OnlyTwoExponentWithOverlap)
         1 << 4
     };
 
-    auto result = multiply_powers(multiplicand, exponents);
+    auto result = digits << offset;
 
     EXPECT_EQ(expected_result, result);
 }
 
-TEST(MultiplyPowersTest, DigitBaseAndTwoExponentsNoOverlap)
+TEST(ShiftLeftTest, DigitsAndBitsOffsetWithoutOverlap)
 {
-    std::vector<digit_type> multiplicand    = { 1, 2, 3, 4 };
-    MultiplierExponents exponents           = { .digit_base  = 4, .two = 7 };
+    std::vector<digit_type> digits = { 1, 2, 3, 4 };
+    DigitsShiftOffset offset       = { .digits  = 4, .bits = 7 };
     std::vector<digit_type> expected_result = {
         0, 0, 0, 0, 1 << 7, 2 << 7, 3 << 7, 4 << 7
     };
 
-    auto result = multiply_powers(multiplicand, exponents);
+    auto result = digits << offset;
 
     EXPECT_EQ(expected_result, result);
 }
 
-TEST(MultiplyPowersTest, DigitBaseAndTwoExponentsWithOverlap)
+TEST(ShiftLeftTest, DigitsAndBitsOffsetWithOverlap)
 {
-    std::vector<digit_type> multiplicand = {
+    std::vector<digit_type> digits = {
         DIGIT_TYPE_MAX >> 1,
         DIGIT_TYPE_MAX >> 2,
         0,
         DIGIT_TYPE_MAX >> 3,
         DIGIT_TYPE_MAX >> 4
     };
-    MultiplierExponents exponents = { .digit_base = 2, .two = 5 };
+    DigitsShiftOffset offset = { .digits = 2, .bits = 5 };
     std::vector<digit_type> expected_result = {
         0,
         0,
@@ -167,7 +185,7 @@ TEST(MultiplyPowersTest, DigitBaseAndTwoExponentsWithOverlap)
         1
     };
 
-    auto result = multiply_powers(multiplicand, exponents);
+    auto result = digits << offset;
 
     EXPECT_EQ(expected_result, result);
 }
