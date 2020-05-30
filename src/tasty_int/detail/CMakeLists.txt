@@ -145,6 +145,7 @@ add_library(
     digits_bitwise.cpp
     digits_bitwise.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
+    $<TARGET_OBJECTS:tasty_int-detail-count_leading_zero_bits>
 )
 
 target_link_libraries(
@@ -222,7 +223,6 @@ target_link_libraries(
     tasty_int-detail-split_digits
     tasty_int-detail-trailing_zero
     tasty_int-detail-next_power_of_two
-    tasty_int-detail-count_leading_zero_bits
     tasty_int-detail-digits_comparison
     tasty_int-detail-digits_bitwise
     tasty_int-detail-digits_addition

@@ -17,9 +17,17 @@ struct DigitsShiftOffset
 {
     /// number of digits
     std::vector<digit_type>::size_type digits;
-    /// number of leftover bits (< DIGIT_TYPE_BITS)
+    /// number of leftover bits (require < DIGIT_TYPE_BITS)
     unsigned int                       bits;
 }; // struct DigitsShiftOffset
+
+/**
+ * @brief Counts the number of 0-bits beyond the most-significant 1-bit.
+ *
+ * @param[in] digit a positive digit
+ */
+unsigned int
+count_leading_zero_bits_for_digit(digit_type digit);
 
 /**
  * @brief Multiply @p multiplicand by `DIGIT_BASE`.
@@ -48,7 +56,7 @@ operator<<=(std::vector<digit_type>            &digits,
  * @brief Left shift @p digits by @p offset.
  *
  * @details Equivalent to a multiplication of @p digits by
- * `DIGIT_BASE^offset.digits * 2^offset.bits`.
+ *     `DIGIT_BASE^offset.digits * 2^offset.bits`.
  *
  * @param[in] digits the digits to be shifted
  * @param[in] offset the size of the shift
@@ -59,6 +67,22 @@ operator<<=(std::vector<digit_type>            &digits,
 std::vector<digit_type>
 operator<<(const std::vector<digit_type> &digits,
            DigitsShiftOffset              offset);
+
+/**
+ * @brief Right shift @p digits by @p offset.
+ *
+ * @details Equivalent to a division of @p digits by `DIGIT_BASE^offset.digits
+ *     2^offset.bits`.
+ *
+ * @param[in] digits the digits to be shifted
+ * @param[in] offset the size of the shift
+ * @return @p digits shifted left by @p offset
+ *
+ * @pre `offset.bits < DIGIT_TYPE_BITS`
+ */
+std::vector<digit_type> &
+operator>>=(std::vector<digit_type> &digits,
+            DigitsShiftOffset        offset);
 
 } // namespace detail
 } // namespace tasty_int

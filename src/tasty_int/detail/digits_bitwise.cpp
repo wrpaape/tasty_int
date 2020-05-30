@@ -3,7 +3,9 @@
 #include <cassert>
 
 #include <algorithm>
+#include <limits>
 
+#include "tasty_int/detail/count_leading_zero_bits.hpp"
 #include "tasty_int/detail/digit_from_nonnegative_value.hpp"
 #include "tasty_int/detail/is_zero.hpp"
 
@@ -13,7 +15,7 @@ namespace detail {
 namespace {
 
 void
-nonzero_shift_left_in_place(std::vector<digit_type>::size_type digit_offset,
+nonzero_left_shift_in_place(std::vector<digit_type>::size_type digit_offset,
                             std::vector<digit_type> &digits)
 {
     auto initial_size = digits.size();
@@ -26,8 +28,25 @@ nonzero_shift_left_in_place(std::vector<digit_type>::size_type digit_offset,
                      digits.rbegin());
 }
 
+void
+nonzero_right_shift_in_place(DigitsShiftOffset        offset,
+                             std::vector<digit_type>& digits)
+{
+    auto offset_of_leading_one_bit =
+        DIGIT_TYPE_BITS - count_leading_zero_bits_for_digit(digits.back());
+    auto digit_shift = offset.digits
+                     + (offset_of_leading_one_bit <= offset.bits);
+
+    auto new_size = std::max<std::vector<digit_type>::difference_type>(
+        digits.size() - digit_shift, 
+        1
+    );
+
+    // TODO
+}
+
 std::vector<digit_type>
-allocate_nonzero_shift_left_result(const std::vector<digit_type> &digits,
+allocate_nonzero_left_shift_result(const std::vector<digit_type> &digits,
                                    DigitsShiftOffset              offset)
 {
     auto have_leading_digit_overflow =
@@ -45,6 +64,15 @@ allocate_nonzero_shift_left_result(const std::vector<digit_type> &digits,
 }
 
 } // namespace
+
+unsigned int
+count_leading_zero_bits_for_digit(digit_type digit)
+{
+    constexpr auto BIT_DIFFERENCE =
+        std::numeric_limits<std::uintmax_t>::digits - DIGIT_TYPE_BITS;
+
+    return count_leading_zero_bits(digit) - BIT_DIFFERENCE;
+}
 
 /// @todo: TODO: remove if not required by digits_division
 std::vector<digit_type>
@@ -70,7 +98,7 @@ operator<<=(std::vector<digit_type>            &digits,
             std::vector<digit_type>::size_type  digit_offset)
 {
     if (!is_zero(digits))
-        nonzero_shift_left_in_place(digit_offset, digits);
+        nonzero_left_shift_in_place(digit_offset, digits);
 
     return digits;
 }
@@ -85,7 +113,7 @@ operator<<(const std::vector<digit_type> &digits,
     if (is_zero(digits))
         return digits;
 
-    auto result = allocate_nonzero_shift_left_result(digits, offset);
+    auto result = allocate_nonzero_left_shift_result(digits, offset);
 
     result.resize(offset.digits);
 
@@ -106,6 +134,19 @@ operator<<(const std::vector<digit_type> &digits,
         result.emplace_back(static_cast<digit_type>(overflow));
 
     return result;
+}
+
+std::vector<digit_type> &
+operator>>=(std::vector<digit_type> &digits,
+            DigitsShiftOffset        offset)
+{
+    assert(offset.bits <= DIGIT_TYPE_BITS);
+    assert(!digits.empty());
+
+    if (!is_zero(digits))
+        nonzero_right_shift_in_place(offset, digits);
+
+    return digits;
 }
 
 } // namespace detail

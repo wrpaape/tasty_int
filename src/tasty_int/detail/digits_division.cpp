@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <array>
 #include <iterator>
-#include <limits>
 #include <utility>
 
 #include "tasty_int/detail/digit_from_nonnegative_value.hpp"
@@ -14,7 +13,6 @@
 #include "tasty_int/detail/trailing_zero.hpp"
 #include "tasty_int/detail/split_digits.hpp"
 #include "tasty_int/detail/next_power_of_two.hpp"
-#include "tasty_int/detail/count_leading_zero_bits.hpp"
 #include "tasty_int/detail/digits_comparison.hpp"
 #include "tasty_int/detail/digits_bitwise.hpp"
 #include "tasty_int/detail/digits_addition.hpp"
@@ -300,15 +298,6 @@ is_divide_and_conquer_divide_base_case(
 
 //     return result;
 // }
-
-unsigned int
-count_leading_zero_bits_for_digit(digit_type digit)
-{
-    constexpr auto BIT_DIFFERENCE =
-        std::numeric_limits<std::uintmax_t>::digits - DIGIT_TYPE_BITS;
-
-    return count_leading_zero_bits(digit) - BIT_DIFFERENCE;
-}
 
 } // namespace
 
