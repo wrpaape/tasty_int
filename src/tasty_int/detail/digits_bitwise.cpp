@@ -32,17 +32,42 @@ void
 nonzero_right_shift_in_place(DigitsShiftOffset        offset,
                              std::vector<digit_type>& digits)
 {
-    auto offset_of_leading_one_bit =
-        DIGIT_TYPE_BITS - count_leading_zero_bits_for_digit(digits.back());
-    auto digit_shift = offset.digits
-                     + (offset_of_leading_one_bit <= offset.bits);
+    auto leading_digit_bit_size =
+        DIGIT_TYPE_BITS - count_leading_zero_bits_from_digit(digits.back());
+    auto digits_shift = offset.digits
+                      + (leading_digit_bit_size <= offset.bits);
+    std::vector<digit_type>::difference_type post_shift_size =
+        digits.size() - digits_shift;
+    if (post_shift_size <= 0) {
+        digits.front() = 0;
+        digits.resize(1);
+        return;
+    }
 
-    auto new_size = std::max<std::vector<digit_type>::difference_type>(
-        digits.size() - digit_shift, 
-        1
-    );
+    const auto overflow_shift        = DIGIT_TYPE_BITS - offset.bits;
+    const auto overflow_mask         = DIGIT_TYPE_MAX >> overflow_shift;
+    const auto overflow_digits_shift = offset.digits;
 
-    // TODO
+    auto dst_cursor                    = digits.begin();
+    digit_accumulator_type accumulator = 0;
+    while (true) {
+        auto src_cursor = dst_cursor + offset.digits;
+        accumulator     = digit_accumulator_type(*src_cursor) >> offset.bits;
+
+        auto overflow_cursor = src_cursor + 1;
+        if (overflow_cursor == digits.end())
+            break;
+
+        auto overflow =
+            digit_accumulator_type(*overflow_cursor) & overflow_mask;
+        accumulator |= (overflow << overflow_shift);
+
+        *dst_cursor++ = digit_from_nonnegative_value(accumulator);
+    }
+
+    *dst_cursor = digit_from_nonnegative_value(accumulator);
+
+    digits.resize(post_shift_size);
 }
 
 std::vector<digit_type>
@@ -66,7 +91,7 @@ allocate_nonzero_left_shift_result(const std::vector<digit_type> &digits,
 } // namespace
 
 unsigned int
-count_leading_zero_bits_for_digit(digit_type digit)
+count_leading_zero_bits_from_digit(digit_type digit)
 {
     constexpr auto BIT_DIFFERENCE =
         std::numeric_limits<std::uintmax_t>::digits - DIGIT_TYPE_BITS;

@@ -27,7 +27,7 @@ struct DigitsShiftOffset
  * @param[in] digit a positive digit
  */
 unsigned int
-count_leading_zero_bits_for_digit(digit_type digit);
+count_leading_zero_bits_from_digit(digit_type digit);
 
 /**
  * @brief Multiply @p multiplicand by `DIGIT_BASE`.

@@ -8,7 +8,7 @@
 namespace {
 
 using tasty_int::detail::DigitsShiftOffset;
-using tasty_int::detail::count_leading_zero_bits_for_digit;
+using tasty_int::detail::count_leading_zero_bits_from_digit;
 using tasty_int::detail::multiply_digit_base;
 using tasty_int::detail::operator<<;
 using tasty_int::detail::operator<<=;
@@ -18,34 +18,34 @@ using tasty_int::detail::DIGIT_TYPE_BITS;
 using tasty_int::detail::digit_from_nonnegative_value;
 
 
-class CountLeadingZeroBitsForDigitTest : public ::testing::TestWithParam<int>
+class CountLeadingZeroBitsFromDigitTest : public ::testing::TestWithParam<int>
 {
 public:
     static constexpr int MAX_EXPONENT = DIGIT_TYPE_BITS - 1;
-}; // class CountLeadingZeroBitsForDigitTest
+}; // class CountLeadingZeroBitsFromDigitTest
 
-TEST_P(CountLeadingZeroBitsForDigitTest, DenseBitPatternTest)
+TEST_P(CountLeadingZeroBitsFromDigitTest, DenseBitPatternTest)
 {
     auto shift          = GetParam();
     auto value          = DIGIT_TYPE_MAX >> shift;
     auto expected_count = shift;
 
-    EXPECT_EQ(expected_count, count_leading_zero_bits_for_digit(value));
+    EXPECT_EQ(expected_count, count_leading_zero_bits_from_digit(value));
 }
 
-TEST_P(CountLeadingZeroBitsForDigitTest, SingleBitTest)
+TEST_P(CountLeadingZeroBitsFromDigitTest, SingleBitTest)
 {
     auto shift          = GetParam();
     auto value          = digit_type(1) << shift;
     auto expected_count = MAX_EXPONENT - shift;
 
-    EXPECT_EQ(expected_count, count_leading_zero_bits_for_digit(value));
+    EXPECT_EQ(expected_count, count_leading_zero_bits_from_digit(value));
 }
 
 INSTANTIATE_TEST_SUITE_P(
-    CountLeadingZeroBitsForDigitTest,
-    CountLeadingZeroBitsForDigitTest,
-    ::testing::Range(0, CountLeadingZeroBitsForDigitTest::MAX_EXPONENT)
+    CountLeadingZeroBitsFromDigitTest,
+    CountLeadingZeroBitsFromDigitTest,
+    ::testing::Range(0, CountLeadingZeroBitsFromDigitTest::MAX_EXPONENT)
 );
 
 TEST(MultiplyDigitBaseTest, SingleDigit)
@@ -235,6 +235,28 @@ TEST(RightShiftDigitsShiftOffsetInPlaceTest, Zero)
     std::vector<digit_type> digits          = { 0 };
     DigitsShiftOffset offset                = { .digits = 33, .bits = 1 };
     std::vector<digit_type> expected_result = digits;
+
+    digits >>= offset;
+
+    EXPECT_EQ(expected_result, digits);
+}
+
+TEST(RightShiftDigitsShiftOffsetInPlaceTest, NoOffset)
+{
+    std::vector<digit_type> digits          = { DIGIT_TYPE_MAX };
+    DigitsShiftOffset offset                = { .digits = 0, .bits = 0 };
+    std::vector<digit_type> expected_result = digits;
+
+    digits >>= offset;
+
+    EXPECT_EQ(expected_result, digits);
+}
+
+TEST(RightShiftDigitsShiftOffsetInPlaceTest, DigitsOffsetWithoutUnderflow)
+{
+    std::vector<digit_type> digits          = { 1, 2, 3, 4, 5 };
+    DigitsShiftOffset offset                = { .digits = 2, .bits = 0 };
+    std::vector<digit_type> expected_result = { 3, 4, 5 };
 
     digits >>= offset;
 
