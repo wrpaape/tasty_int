@@ -68,7 +68,6 @@ split_digits(const std::vector<digit_type>      &digits,
 {
     static_assert(COUNT_PIECES > 0);
 
-    assert(split_size > 0);
     assert(digits.size() > (split_size * (COUNT_PIECES - 1)));
 
     std::array<std::vector<digit_type>, COUNT_PIECES> result;

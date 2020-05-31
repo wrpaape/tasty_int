@@ -313,6 +313,7 @@ divide_and_conquer_divide(const std::vector<digit_type> &dividend,
         trim_trailing_zeros(remainder);
     }
 
+    // TODO: wrong
     quotient.reserve(quotient_mag);
     for (auto cursor = quotients.rbegin(); cursor != quotients.rend(); ++cursor) {
         cursor->resize(normalized_divisor_mag);
@@ -393,14 +394,13 @@ divide_normalized_3n_2n_split(const std::vector<digit_type> &dividend,
     auto [divisor_low, divisor_high] =
         split_digits<2>(divisor, split_size);
 
-    std::vector<digit_type> dividend_high(
-        dividend.begin() + (split_size * 2),
-        dividend.end()
-    );
-
     DigitsDivisionResult result;
 
-    if (dividend_high < divisor_high) {
+    auto dividend_high_begin = dividend.begin() + divisor.size();
+    if (less_than(dividend_high_begin,
+                  dividend.end(),
+                  divisor_high.begin(),
+                  divisor_high.end())) {
         result = divide_normalized_2n_1n_split(dividend_upper,
                                                divisor_high);
     } else {

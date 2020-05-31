@@ -113,6 +113,12 @@ operator>=(const std::vector<digit_type> &lhs,
 bool
 operator>=(long double                    lhs,
            const std::vector<digit_type> &rhs);
+
+bool
+less_than(std::vector<digit_type>::const_iterator lhs_begin,
+          std::vector<digit_type>::const_iterator lhs_end,
+          std::vector<digit_type>::const_iterator rhs_begin,
+          std::vector<digit_type>::const_iterator rhs_end);
 /// @}
 
 } // namespace detail
