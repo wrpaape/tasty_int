@@ -24,6 +24,14 @@ using tasty_int::detail::operator+;
 using tasty_int::detail::operator*;
 
 
+std::vector<digit_type>
+digit_base_power(std::vector<digit_type>::size_type exponent)
+{
+    std::vector<digit_type> power(exponent + 1);
+    power.back() = 1;
+    return power;
+}
+
 void
 expect_equal(const DigitsDivisionResult    &expected_result,
              const std::vector<digit_type> &quotient,
@@ -96,7 +104,7 @@ TEST_P(DigitsDivisionIdentitiesTest, DigitsDividedByIdenticalDigitsValue)
     test_division(dividend, divisor, expected_result);
 }
 
-TEST_P(DigitsDivisionIdentitiesTest, DISABLED_DigitsSquaredDividedByOriginalDigitsValue)
+TEST_P(DigitsDivisionIdentitiesTest, DigitsSquaredDividedByOriginalDigitsValue)
 {
     std::vector<digit_type> divisor  = GetParam();
     std::vector<digit_type> dividend = divisor * divisor;
@@ -107,7 +115,7 @@ TEST_P(DigitsDivisionIdentitiesTest, DISABLED_DigitsSquaredDividedByOriginalDigi
     test_division(dividend, divisor, expected_result);
 }
 
-TEST_P(DigitsDivisionIdentitiesTest, DISABLED_DigitsDividedByGreaterDigitsValue)
+TEST_P(DigitsDivisionIdentitiesTest, DigitsDividedByGreaterDigitsValue)
 {
     std::vector<digit_type> dividend = GetParam();
     std::vector<digit_type> divisor  = dividend + std::uintmax_t(1);
@@ -123,28 +131,134 @@ INSTANTIATE_TEST_SUITE_P(
     DigitsDivisionIdentitiesTest,
     ::testing::ValuesIn(
         std::vector<std::vector<digit_type>> {
-            // { 1 },
-            // { 2 },
-            // { DIGIT_TYPE_MAX },
-            // { 0, 1 },
-            // { 1, 1 },
-            // { 2, 1 },
-            // { 0, DIGIT_TYPE_MAX },
-            // { 1, DIGIT_TYPE_MAX },
-            // { 2, DIGIT_TYPE_MAX },
-            // { DIGIT_TYPE_MAX, 1 },
-            // { DIGIT_TYPE_MAX, 2 },
-            // { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX },
-            // { 0, 0, 1 },
-            // { 0, 0, 0, 1 },
-            // { 1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 2, 1 },
-            // { DIGIT_TYPE_MAX , DIGIT_TYPE_MAX, DIGIT_TYPE_MAX },
+            { 1 },
+            { 2 },
+            { DIGIT_TYPE_MAX },
+            { 0, 1 },
+            { 1, 1 },
+            { 2, 1 },
+            { 0, DIGIT_TYPE_MAX },
+            { 1, DIGIT_TYPE_MAX },
+            { 2, DIGIT_TYPE_MAX },
+            { DIGIT_TYPE_MAX, 1 },
+            { DIGIT_TYPE_MAX, 2 },
+            { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX },
+            { 0, 0, 1 },
+            { 0, 0, 0, 1 },
+            { 1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 2, 1 },
+            { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX, DIGIT_TYPE_MAX },
+            std::vector<digit_type>(100, 6)
         }
     )
 );
 
 
-TEST(DivideNormalized3n2nSplitTest, DISABLED_DividendHighEqualToDivisorHighTest)
+struct DigitsDivisionArbitraryValuesTestParam
+{
+    std::vector<digit_type> dividend;
+    std::vector<digit_type> divisor;
+    DigitsDivisionResult    expected_result;
+}; // DigitsDivisionArbitraryValuesTestParam
+
+class DigitsDivisionArbitraryValuesTest
+    : public ::testing::TestWithParam<DigitsDivisionArbitraryValuesTestParam>
+{}; // class DigitsDivisionArbitraryValuesTest
+
+TEST_P(DigitsDivisionArbitraryValuesTest, DigitsDividedByIdenticalDigitsValue)
+{
+    auto dividend        = GetParam().dividend;
+    auto divisor         = GetParam().divisor;
+    auto expected_result = GetParam().expected_result;
+
+    test_division(dividend, divisor, expected_result);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    DigitsDivisionTest,
+    DigitsDivisionArbitraryValuesTest,
+    ::testing::ValuesIn(
+        std::vector<DigitsDivisionArbitraryValuesTestParam> {
+            {
+                .dividend        = { 0 },
+                .divisor         = { 1 },
+                .expected_result = {
+                    .quotient  = { 0 },
+                    .remainder = { 0 }
+                }
+            },
+            {
+                .dividend        = { 0 },
+                .divisor         = std::vector<digit_type>(20, DIGIT_TYPE_MAX),
+                .expected_result = {
+                    .quotient  = { 0 },
+                    .remainder = { 0 }
+                }
+            },
+            {
+                .dividend        = {
+                    1,   2,  3,  4,  5,
+                    6,   7,  8,  9, 10,
+                    11, 12, 13, 14, 15,
+                    16, 17, 18, 19, 20,
+                    21, 22, 23, 24, 25
+                },
+                .divisor         = {
+                    15, 14, 13, 12, 11,
+                    10,  9,  8,  7,  6,
+                     5,  4,  3,  2,  1
+                },
+                .expected_result = {
+                    .quotient  = {
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, DIGIT_TYPE_MAX - 25, 24
+                    },
+                    .remainder = {
+                        1, 2, 3, 4, 5, 6, 7, 8, 9, 400
+                    }
+                }
+            },
+            {
+                .dividend        = std::vector<digit_type>(999, DIGIT_TYPE_MAX),
+                .divisor         = std::vector<digit_type>(777, DIGIT_TYPE_MAX),
+                .expected_result = {
+                    .quotient  = []()
+                    {
+                        auto q = std::vector<digit_type>(223);
+                        q.back() = 1;
+                        return q;
+                    }(),
+                    .remainder = std::vector<digit_type>(222, DIGIT_TYPE_MAX)
+                }
+            },
+            {
+                .dividend        = std::vector<digit_type>(999, DIGIT_TYPE_MAX),
+                .divisor         = std::vector<digit_type>(777, DIGIT_TYPE_MAX),
+                .expected_result =  {
+                    .quotient  = digit_base_power(222),
+                    .remainder = std::vector<digit_type>(222, DIGIT_TYPE_MAX)
+                }
+            },
+            {
+                .dividend        = digit_base_power(333) + std::uintmax_t(1),
+                .divisor         = digit_base_power(150),
+                .expected_result = {
+                    .quotient  = digit_base_power(183),
+                    .remainder = { 1 }
+                }
+            },
+            {
+                .dividend        = digit_base_power(999) + std::uintmax_t(12),
+                .divisor         = digit_base_power(2),
+                .expected_result = {
+                    .quotient  = digit_base_power(997),
+                    .remainder = { 12 }
+                }
+            },
+        }
+    )
+);
+
+
+TEST(DivideNormalized3n2nSplitTest, DividendHighEqualToDivisorHighTest)
 {
     std::vector<digit_type> dividend = {
         0, 0, DIGIT_TYPE_MAX
@@ -161,7 +275,7 @@ TEST(DivideNormalized3n2nSplitTest, DISABLED_DividendHighEqualToDivisorHighTest)
     expect_equal(expected_result, result);
 }
 
-TEST(DivideNormalized3n2nSplitTest, DISABLED_DividendHighGreaterThanDivisorHighTest)
+TEST(DivideNormalized3n2nSplitTest, DividendHighGreaterThanDivisorHighTest)
 {
     std::vector<digit_type> dividend = {
         DIGIT_TYPE_MAX, DIGIT_TYPE_MAX,
@@ -197,7 +311,26 @@ TEST(DivideNormalized3n2nSplitTest, EqualValue)
     expect_equal(expected_result, result);
 }
 
-TEST(DivideNormalized2n1nSplitTest, DISABLED_FourDigitDiviend)
+TEST(DivideNormalized3n2nSplitTest, UnevenSplits)
+{
+    std::vector<digit_type> dividend = {
+        0, 0, DIGIT_TYPE_MAX - 1, DIGIT_TYPE_MAX, DIGIT_TYPE_MAX
+    };
+    std::vector<digit_type> divisor = {
+        0, DIGIT_TYPE_MAX, DIGIT_TYPE_MAX, DIGIT_TYPE_MAX
+    };
+
+    DigitsDivisionResult expected_result = {
+        .quotient  = { DIGIT_TYPE_MAX },
+        .remainder = { 0, DIGIT_TYPE_MAX, DIGIT_TYPE_MAX - 1, DIGIT_TYPE_MAX }
+    };
+
+    auto result = divide_normalized_3n_2n_split(dividend, divisor);
+
+    expect_equal(expected_result, result);
+}
+
+TEST(DivideNormalized2n1nSplitTest, FourDigitDiviend)
 {
     std::vector<digit_type> dividend = {
         0, 0, 0, 1
@@ -214,7 +347,7 @@ TEST(DivideNormalized2n1nSplitTest, DISABLED_FourDigitDiviend)
     expect_equal(expected_result, result);
 }
 
-TEST(DivideNormalized2n1nSplitTest, DISABLED_SixDigitDiviend)
+TEST(DivideNormalized2n1nSplitTest, SixDigitDiviend)
 {
     std::vector<digit_type> dividend = {
         1, DIGIT_TYPE_MAX,
@@ -234,20 +367,20 @@ TEST(DivideNormalized2n1nSplitTest, DISABLED_SixDigitDiviend)
     expect_equal(expected_result, result);
 }
 
-// TEST(DivideNormalized2n1nSplitTest, EqualValue)
-// {
-//     std::vector<digit_type> dividend = {
-//         0, 0, 0, digit_type(1) << (DIGIT_TYPE_BITS - 1)
-//     };
-//     std::vector<digit_type> divisor = dividend;
+TEST(DivideNormalized2n1nSplitTest, EqualValue)
+{
+    std::vector<digit_type> dividend = {
+        0, 0, 0, digit_type(1) << (DIGIT_TYPE_BITS - 1)
+    };
+    std::vector<digit_type> divisor = dividend;
 
-//     DigitsDivisionResult expected_result = {
-//         .quotient = { 1 }, .remainder = { 0 }
-//     };
+    DigitsDivisionResult expected_result = {
+        .quotient = { 1 }, .remainder = { 0 }
+    };
 
-//     auto result = divide_normalized_2n_1n_split(dividend, divisor);
+    auto result = divide_normalized_2n_1n_split(dividend, divisor);
 
-//     expect_equal(expected_result, result);
-// }
+    expect_equal(expected_result, result);
+}
 
 } // namespace
