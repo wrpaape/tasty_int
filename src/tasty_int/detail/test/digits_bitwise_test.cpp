@@ -154,7 +154,7 @@ TEST(LeftShiftDigitsShiftOffsetInPlaceTest, DigitsOffset)
     EXPECT_EQ(expected_result, result);
 }
 
-TEST(LeftShiftDigitsShiftOffsetInPlaceTest, BitsOffsetWithoutOverlap)
+TEST(LeftShiftDigitsShiftOffsetInPlaceTest, BitsOffsetNoOverlap)
 {
     std::vector<digit_type> digits          = { 0, 1, 2 };
     DigitsShiftOffset offset                = { .digits = 0, .bits = 5 };
@@ -183,7 +183,7 @@ TEST(LeftShiftDigitsShiftOffsetInPlaceTest, BitsOffsetWithOverlap)
     EXPECT_EQ(expected_result, result);
 }
 
-TEST(LeftShiftDigitsShiftOffsetInPlaceTest, DigitsAndBitsOffsetWithoutOverlap)
+TEST(LeftShiftDigitsShiftOffsetInPlaceTest, DigitsAndBitsOffsetNoOverlap)
 {
     std::vector<digit_type> digits = { 1, 2, 3, 4 };
     DigitsShiftOffset offset       = { .digits  = 4, .bits = 7 };
@@ -252,11 +252,113 @@ TEST(RightShiftDigitsShiftOffsetInPlaceTest, NoOffset)
     EXPECT_EQ(expected_result, digits);
 }
 
-TEST(RightShiftDigitsShiftOffsetInPlaceTest, DigitsOffsetWithoutUnderflow)
+TEST(RightShiftDigitsShiftOffsetInPlaceTest, DigitsOffsetWithUnderflow)
+{
+    std::vector<digit_type> digits          = { 1, 2, 3, 4, 5 };
+    DigitsShiftOffset offset                = { .digits = 5, .bits = 0 };
+    std::vector<digit_type> expected_result = { 0 };
+
+    digits >>= offset;
+
+    EXPECT_EQ(expected_result, digits);
+}
+
+TEST(RightShiftDigitsShiftOffsetInPlaceTest, DigitsOffset)
 {
     std::vector<digit_type> digits          = { 1, 2, 3, 4, 5 };
     DigitsShiftOffset offset                = { .digits = 2, .bits = 0 };
     std::vector<digit_type> expected_result = { 3, 4, 5 };
+
+    digits >>= offset;
+
+    EXPECT_EQ(expected_result, digits);
+}
+
+TEST(RightShiftDigitsShiftOffsetInPlaceTest, BitsOffsetWithUnderflow)
+{
+    std::vector<digit_type> digits = { 7 };
+    DigitsShiftOffset offset       = { .digits = 0, .bits = DIGIT_TYPE_BITS };
+    std::vector<digit_type> expected_result = { 0 };
+
+    digits >>= offset;
+
+    EXPECT_EQ(expected_result, digits);
+}
+
+TEST(RightShiftDigitsShiftOffsetInPlaceTest, BitsOffsetToZero)
+{
+    std::vector<digit_type> digits = { DIGIT_TYPE_MAX };
+    DigitsShiftOffset offset       = { .digits = 0, .bits = DIGIT_TYPE_BITS };
+    std::vector<digit_type> expected_result = { 0 };
+
+    digits >>= offset;
+
+    EXPECT_EQ(expected_result, digits);
+}
+
+TEST(RightShiftDigitsShiftOffsetInPlaceTest, BitsOffsetNoOverlap)
+{
+    std::vector<digit_type> digits = { 2, 2, 2, 2, 2 };
+    DigitsShiftOffset offset       = { .digits = 0, .bits = 1 };
+    std::vector<digit_type> expected_result = { 1, 1, 1, 1, 1 };
+
+    digits >>= offset;
+
+    EXPECT_EQ(expected_result, digits);
+}
+
+TEST(RightShiftDigitsShiftOffsetInPlaceTest, BitsOffsetWithOverlap)
+{
+    std::vector<digit_type> digits = { 1, DIGIT_TYPE_MAX, 2 };
+    DigitsShiftOffset offset       = { .digits = 0, .bits = 5 };
+    std::vector<digit_type> expected_result = {
+        digit_from_nonnegative_value(
+            DIGIT_TYPE_MAX << (DIGIT_TYPE_BITS - 5)
+        ),
+        digit_from_nonnegative_value(
+            (DIGIT_TYPE_MAX >> 5) | (2 << (DIGIT_TYPE_BITS - 5))
+        )
+    };
+
+    digits >>= offset;
+
+    EXPECT_EQ(expected_result, digits);
+}
+
+TEST(RightShiftDigitsShiftOffsetInPlaceTest, DigitsAndBitsOffsetNoOverlap)
+{
+    std::vector<digit_type> digits          = { 1, 2, 4, 8, 16 };
+    DigitsShiftOffset offset                = { .digits = 2, .bits = 2 };
+    std::vector<digit_type> expected_result = { 1, 2, 4 };
+
+    digits >>= offset;
+
+    EXPECT_EQ(expected_result, digits);
+}
+
+TEST(RightShiftDigitsShiftOffsetInPlaceTest, DigitsAndBitsOffsetWithOverlap)
+{
+    std::vector<digit_type> digits = { 0, DIGIT_TYPE_MAX, 16, DIGIT_TYPE_MAX };
+    DigitsShiftOffset offset       = { .digits = 2, .bits = 3 };
+    std::vector<digit_type> expected_result = {
+        digit_from_nonnegative_value(
+            (16 >> 3) | (DIGIT_TYPE_MAX << (DIGIT_TYPE_BITS - 3))
+        ),
+        digit_from_nonnegative_value(
+            DIGIT_TYPE_MAX >> 3
+        )
+    };
+
+    digits >>= offset;
+
+    EXPECT_EQ(expected_result, digits);
+}
+
+TEST(RightShiftDigitsShiftOffsetInPlaceTest, DigitsAndBitsOffsetToZero)
+{
+    std::vector<digit_type> digits = { 0, 1 };
+    DigitsShiftOffset offset       = { .digits = 1, .bits = 1 };
+    std::vector<digit_type> expected_result = { 0 };
 
     digits >>= offset;
 
