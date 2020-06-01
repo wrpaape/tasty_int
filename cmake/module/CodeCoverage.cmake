@@ -73,7 +73,10 @@
 # 2. Add the following line to your CMakeLists.txt:
 #      include(CodeCoverage)
 #
-# 3 (OPTIONAL) Set appropriate optimization flags, e.g. -O0, -O1 or -Og
+# 3. Append necessary compiler flags:
+#      append_coverage_compiler_flags()
+#
+# 3.a (OPTIONAL) Set appropriate optimization flags, e.g. -O0, -O1 or -Og
 #
 # 4. If you need to exclude additional directories from the report, specify them
 #    using full paths in the COVERAGE_EXCLUDES variable before calling
@@ -186,6 +189,11 @@ else()
 endif()
 
 list(APPEND COVERAGE_COMPILER_FLAGS -g -fprofile-arcs -ftest-coverage)
+if(MSVC)
+    list(APPEND COVERAGE_COMPILER_FLAGS /O0)
+else()
+    set(APPEND COVERAGE_COMPILER_FLAGS -O0)
+endif()
 
 set(GCOV_TOOL
     "${GCOV_TOOL_PATH}"
@@ -471,3 +479,19 @@ function(setup_target_for_coverage_gcovr_html)
     )
 
 endfunction() # setup_target_for_coverage_gcovr_html
+
+function(append_coverage_flags)
+    if(COVERAGE_COMPILER_FLAGS)
+        message(STATUS "Appending code coverage compiler flags: "
+                       "'${COVERAGE_COMPILER_FLAGS}'")
+        add_compile_options(${COVERAGE_COMPILER_FLAGS})
+    endif()
+    if(COVERAGE_LINKER_FLAGS)
+        message(STATUS "Appending code coverage linker flags: "
+                       "'${COVERAGE_LINKER_FLAGS}'")
+        add_link_options(${COVERAGE_LINKER_FLAGS})
+    endif()
+    if(NOT COVERAGE_COMPILER_FLAGS AND NOT COVERAGE_LINKER_FLAGS)
+        message(STATUS "No code coverage compiler/linker flags required.")
+    endif()
+endfunction() # append_coverage_compiler_flags

@@ -60,33 +60,6 @@ function(add_custom_test)
     endforeach()
 
     if(BUILD_COVERAGE)
-        if(MSVC)
-            set(no_optimization /O0)
-        else()
-            set(no_optimization -O0)
-        endif()
-        target_compile_options(
-            ${CUSTOM_EXECUTABLE_NAME}
-            PRIVATE
-            $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CXX_FLAGS_COVERAGE}>
-            $<$<COMPILE_LANGUAGE:C>:${CMAKE_C_FLAGS_COVERAGE}>
-            ${no_optimization}
-        )
-        if(CMAKE_LIBRARIES_COVERAGE)
-            target_link_libraries(
-                ${CUSTOM_EXECUTABLE_NAME}
-                PRIVATE
-                ${CMAKE_LIBRARIES_COVERAGE}
-            )
-        endif()
-        if(CMAKE_EXE_LINKER_FLAGS_COVERAGE)
-            target_link_options(
-                ${CUSTOM_EXECUTABLE_NAME}
-                PRIVATE
-                ${CMAKE_EXE_LINKER_FLAGS_COVERAGE}
-            )
-        endif()
-
         add_dependencies(coverage ${CUSTOM_EXECUTABLE_NAME})
     endif()
 endfunction()
