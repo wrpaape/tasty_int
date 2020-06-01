@@ -141,40 +141,32 @@ is_divide_and_conquer_divide_base_case(
         || (divisor_size <= LONG_DIVIDE_THRESHOLD_SPLIT_SIZE);
 }
 
-// DigitsDivisionResult
-// long_divide_digit(const std::vector<digit_type> &dividend,
-//                   digit_type                     divisor)
-// {
-//     assert(divisor != 0);
+DigitsDivisionResult
+divide_normalized_3n_2n_split_upper(
+    std::vector<digit_type> &&dividend_upper,
+    std::vector<digit_type> &&divisor_high
+)
+{
+    DigitsDivisionResult result;
 
-//     DigitsDivisionResult result;
+    result.quotient.assign(divisor_high.size(), DIGIT_TYPE_MAX);
 
-//     auto& quotient = result.quotient;
-//     quotient.reserve(dividend.size());
+    dividend_upper += divisor_high;
 
-//     auto dividend_cursor = dividend.rbegin();
-//     digit_accumulator_type accumulator = 0;
+    divisor_high <<= divisor_high.size();
+    [[maybe_unused]] auto sign = subtract_in_place(divisor_high,
+                                                   dividend_upper);
+    assert(sign >= Sign::ZERO);
 
-//     do {
-//         accumulator <<= DIGIT_TYPE_BITS;
-//         accumulator  |= *dividend_cursor;
+    result.remainder = std::move(dividend_upper);
 
-//         auto next_quotient_digit = accumulator / divisor;
-//         accumulator %= divisor;
+    return result;
+}
 
-//         quotient.emplace_back(
-//             digit_from_nonnegative_value(next_quotient_digit)
-//         );
-//     } while (++dividend_cursor != dividend.rend());
-
-//     std::reverse(quotient.begin(), quotient.end());
-
-//     trim_trailing_zero(quotient);
-
-//     result.remainder = { digit_from_nonnegative_value(accumulator) };
-
-//     return result;
-// }
+void
+complete_divide_normalized_3n_2n_split(DigitsDivisionResult &result)
+{
+}
 
 } // namespace
 
@@ -394,27 +386,17 @@ divide_normalized_3n_2n_split(const std::vector<digit_type> &dividend,
     auto [divisor_low, divisor_high] =
         split_digits<2>(divisor, split_size);
 
-    DigitsDivisionResult result;
 
     auto dividend_high_begin = dividend.begin() + divisor.size();
-    if (less_than(dividend_high_begin,
-                  dividend.end(),
-                  divisor_high.begin(),
-                  divisor_high.end())) {
-        result = divide_normalized_2n_1n_split(dividend_upper,
-                                               divisor_high);
-    } else {
-        auto& quotient = result.quotient;
-        quotient.assign(split_size, DIGIT_TYPE_MAX);
 
-        dividend_upper += divisor_high;
-
-        divisor_high <<= divisor_high.size();
-        [[maybe_unused]] auto sign = subtract_in_place(divisor_high,
-                                                       dividend_upper);
-        assert(sign >= Sign::ZERO);
-        result.remainder = std::move(dividend_upper);
-    }
+    DigitsDivisionResult result = less_than(dividend_high_begin,
+                                            dividend.end(),
+                                            divisor_high.begin(),
+                                            divisor_high.end())
+        ? divide_normalized_2n_1n_split(dividend_upper,
+                                        divisor_high)
+        : divide_normalized_3n_2n_split_upper(std::move(dividend_upper),
+                                              std::move(divisor_high));
 
     auto& remainder = result.remainder;
     auto& quotient  = result.quotient;
