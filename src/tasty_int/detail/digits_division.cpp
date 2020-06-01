@@ -163,9 +163,42 @@ divide_normalized_3n_2n_split_upper(
     return result;
 }
 
-void
-complete_divide_normalized_3n_2n_split(DigitsDivisionResult &result)
+Sign
+divide_normalized_3n_2n_split_lower(
+    const std::vector<digit_type> &dividend_low,
+    const std::vector<digit_type> &divisor_low,
+    DigitsDivisionResult          &result
+)
 {
+    auto& remainder = result.remainder;
+    auto& quotient  = result.quotient;
+
+    remainder <<= divisor_low.size();
+    remainder += dividend_low;
+
+    auto remainder_sign = subtract_in_place(quotient * divisor_low,
+                                            remainder);
+    return remainder_sign;
+}
+
+void
+correct_divide_normalized_3n_2n_split_remainder(
+    Sign                           remainder_sign,
+    const std::vector<digit_type> &divisor,
+    DigitsDivisionResult          &result
+)
+{
+    auto& remainder = result.remainder;
+    auto& quotient  = result.quotient;
+
+    while (remainder_sign < Sign::ZERO) {
+        [[maybe_unused]] auto quotient_sign =
+            subtract_in_place(std::uintmax_t(1), quotient);
+        assert(quotient_sign >= Sign::ZERO);
+
+        remainder_sign = subtract_in_place(divisor, remainder);
+        remainder_sign = flip_sign(remainder_sign);
+    }
 }
 
 } // namespace
@@ -398,24 +431,12 @@ divide_normalized_3n_2n_split(const std::vector<digit_type> &dividend,
         : divide_normalized_3n_2n_split_upper(std::move(dividend_upper),
                                               std::move(divisor_high));
 
-    auto& remainder = result.remainder;
-    auto& quotient  = result.quotient;
-
-    remainder <<= split_size;
-    remainder += dividend_low;
-
-    auto remainder_sign = subtract_in_place(quotient * divisor_low,
-                                            remainder);
-
-    while (remainder_sign < Sign::ZERO) {
-        [[maybe_unused]] auto quotient_sign =
-            subtract_in_place(std::uintmax_t(1), quotient);
-        assert(quotient_sign >= Sign::ZERO);
-
-        remainder_sign = subtract_in_place(divisor, remainder);
-        remainder_sign = flip_sign(remainder_sign);
-    }
-
+    auto remainder_sign = divide_normalized_3n_2n_split_lower(dividend_low,
+                                                              divisor_low,
+                                                              result);
+    correct_divide_normalized_3n_2n_split_remainder(remainder_sign,
+                                                    divisor,
+                                                    result);
     assert(result.remainder < divisor);
 
     return result;

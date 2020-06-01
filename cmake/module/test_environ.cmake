@@ -59,5 +59,5 @@ if(BUILD_COVERAGE)
                    "*/generate_*.cpp"      # code generators
     )
     
-    append_coverage_flags()
+    # append_coverage_flags()
 endif()

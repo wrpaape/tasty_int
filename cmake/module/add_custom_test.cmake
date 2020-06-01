@@ -75,6 +75,7 @@ function(add_custom_test)
         if(CMAKE_LIBRARIES_COVERAGE)
             target_link_libraries(
                 ${CUSTOM_EXECUTABLE_NAME}
+                PRIVATE
                 ${CMAKE_LIBRARIES_COVERAGE}
             )
         endif()
