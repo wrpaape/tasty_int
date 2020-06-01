@@ -143,8 +143,9 @@ is_divide_and_conquer_divide_base_case(
 
 DigitsDivisionResult
 divide_normalized_3n_2n_split_upper(
-    std::vector<digit_type> &&dividend_upper,
-    std::vector<digit_type> &&divisor_high
+    std::vector<digit_type>            &&dividend_upper,
+    std::vector<digit_type>            &&divisor_high,
+    std::vector<digit_type>::size_type   split_size
 )
 {
     DigitsDivisionResult result;
@@ -165,15 +166,16 @@ divide_normalized_3n_2n_split_upper(
 
 Sign
 divide_normalized_3n_2n_split_lower(
-    const std::vector<digit_type> &dividend_low,
-    const std::vector<digit_type> &divisor_low,
-    DigitsDivisionResult          &result
+    const std::vector<digit_type>      &dividend_low,
+    const std::vector<digit_type>      &divisor_low,
+    std::vector<digit_type>::size_type  split_size,
+    DigitsDivisionResult               &result
 )
 {
     auto& remainder = result.remainder;
     auto& quotient  = result.quotient;
 
-    remainder <<= divisor_low.size();
+    remainder <<= split_size;
     remainder += dividend_low;
 
     auto remainder_sign = subtract_in_place(quotient * divisor_low,
@@ -429,10 +431,12 @@ divide_normalized_3n_2n_split(const std::vector<digit_type> &dividend,
         ? divide_normalized_2n_1n_split(dividend_upper,
                                         divisor_high)
         : divide_normalized_3n_2n_split_upper(std::move(dividend_upper),
-                                              std::move(divisor_high));
+                                              std::move(divisor_high),
+                                              split_size);
 
     auto remainder_sign = divide_normalized_3n_2n_split_lower(dividend_low,
                                                               divisor_low,
+                                                              split_size,
                                                               result);
     correct_divide_normalized_3n_2n_split_remainder(remainder_sign,
                                                     divisor,

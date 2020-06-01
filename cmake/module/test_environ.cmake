@@ -58,6 +58,4 @@ if(BUILD_COVERAGE)
                    "*/benchmark/*"         # benchmark framework, benchmarks
                    "*/generate_*.cpp"      # code generators
     )
-    
-    # append_coverage_flags()
 endif()
