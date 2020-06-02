@@ -219,19 +219,6 @@ INSTANTIATE_TEST_SUITE_P(
             {
                 .dividend        = std::vector<digit_type>(999, DIGIT_TYPE_MAX),
                 .divisor         = std::vector<digit_type>(777, DIGIT_TYPE_MAX),
-                .expected_result = {
-                    .quotient  = []()
-                    {
-                        auto q = std::vector<digit_type>(223);
-                        q.back() = 1;
-                        return q;
-                    }(),
-                    .remainder = std::vector<digit_type>(222, DIGIT_TYPE_MAX)
-                }
-            },
-            {
-                .dividend        = std::vector<digit_type>(999, DIGIT_TYPE_MAX),
-                .divisor         = std::vector<digit_type>(777, DIGIT_TYPE_MAX),
                 .expected_result =  {
                     .quotient  = digit_base_power(222),
                     .remainder = std::vector<digit_type>(222, DIGIT_TYPE_MAX)
@@ -253,6 +240,25 @@ INSTANTIATE_TEST_SUITE_P(
                     .remainder = { 12 }
                 }
             },
+            {
+                .dividend        = std::vector<digit_type>(254, DIGIT_TYPE_MAX),
+                .divisor         = std::vector<digit_type>(62,  DIGIT_TYPE_MAX),
+                .expected_result = {
+                    .quotient  = digit_base_power(192)
+                               + digit_base_power(130)
+                               + digit_base_power( 68)
+                               + digit_base_power(  6),
+                    .remainder = std::vector<digit_type>(6, DIGIT_TYPE_MAX)
+                }
+            },
+            {
+                .dividend        = digit_base_power(1022),
+                .divisor         = digit_base_power(126),
+                .expected_result = {
+                    .quotient  = digit_base_power(896),
+                    .remainder = { 0 }
+                }
+            }
         }
     )
 );

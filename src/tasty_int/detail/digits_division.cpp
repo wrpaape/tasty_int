@@ -156,11 +156,8 @@ append_2n_1n_split_piece(
 }
 
 DigitsDivisionResult
-divide_normalized_3n_2n_split_upper(
-    std::vector<digit_type>            &&dividend_upper,
-    std::vector<digit_type>            &&divisor_high,
-    std::vector<digit_type>::size_type   split_size
-)
+divide_normalized_3n_2n_split_upper(std::vector<digit_type> &&dividend_upper,
+                                    std::vector<digit_type> &&divisor_high)
 {
     DigitsDivisionResult result;
 
@@ -478,8 +475,7 @@ divide_normalized_3n_2n_split(const std::vector<digit_type> &dividend,
         ? divide_normalized_2n_1n_split(dividend_upper,
                                         divisor_high)
         : divide_normalized_3n_2n_split_upper(std::move(dividend_upper),
-                                              std::move(divisor_high),
-                                              split_size);
+                                              std::move(divisor_high));
 
     auto remainder_sign = divide_normalized_3n_2n_split_lower(dividend_low,
                                                               divisor_low,
