@@ -11,16 +11,16 @@ using tasty_int::detail::digit_type;
 using digits_benchmark::DigitsBenchmark;
 
 
-class MutliplyDigitsByDigitBaseBenchmark : public DigitsBenchmark
+class LeftShiftBySingleDigitBenchmark : public DigitsBenchmark
 {
 public:
     static constexpr int RANGE_MULTIPLIER           = 2;
     static constexpr int RANGE_FIRST                = 8;
     static constexpr int RANGE_LAST                 = RANGE_FIRST << 11;
     static constexpr benchmark::TimeUnit TIME_UNITS = benchmark::kNanosecond;
-}; // class MutliplyDigitsByDigitBaseBenchmark
+}; // class LeftShiftBySingleDigitBenchmark
 
-BENCHMARK_DEFINE_F(MutliplyDigitsByDigitBaseBenchmark, ResizeThenCopy)(
+BENCHMARK_DEFINE_F(LeftShiftBySingleDigitBenchmark, ResizeThenCopy)(
     benchmark::State &state
 )
 {
@@ -36,13 +36,13 @@ BENCHMARK_DEFINE_F(MutliplyDigitsByDigitBaseBenchmark, ResizeThenCopy)(
         benchmark::ClobberMemory();
     }
 }
-BENCHMARK_REGISTER_F(MutliplyDigitsByDigitBaseBenchmark, ResizeThenCopy)
-    ->RangeMultiplier(MutliplyDigitsByDigitBaseBenchmark::RANGE_MULTIPLIER)
-    ->Range(MutliplyDigitsByDigitBaseBenchmark::RANGE_FIRST,
-            MutliplyDigitsByDigitBaseBenchmark::RANGE_LAST) 
-    ->Unit(MutliplyDigitsByDigitBaseBenchmark::TIME_UNITS);
+BENCHMARK_REGISTER_F(LeftShiftBySingleDigitBenchmark, ResizeThenCopy)
+    ->RangeMultiplier(LeftShiftBySingleDigitBenchmark::RANGE_MULTIPLIER)
+    ->Range(LeftShiftBySingleDigitBenchmark::RANGE_FIRST,
+            LeftShiftBySingleDigitBenchmark::RANGE_LAST) 
+    ->Unit(LeftShiftBySingleDigitBenchmark::TIME_UNITS);
 
-BENCHMARK_DEFINE_F(MutliplyDigitsByDigitBaseBenchmark, ReserveThenInsert)(
+BENCHMARK_DEFINE_F(LeftShiftBySingleDigitBenchmark, ReserveThenInsert)(
     benchmark::State &state
 )
 {
@@ -60,14 +60,14 @@ BENCHMARK_DEFINE_F(MutliplyDigitsByDigitBaseBenchmark, ReserveThenInsert)(
         benchmark::ClobberMemory();
     }
 }
-BENCHMARK_REGISTER_F(MutliplyDigitsByDigitBaseBenchmark, ReserveThenInsert)
-    ->RangeMultiplier(MutliplyDigitsByDigitBaseBenchmark::RANGE_MULTIPLIER)
-    ->Range(MutliplyDigitsByDigitBaseBenchmark::RANGE_FIRST,
-            MutliplyDigitsByDigitBaseBenchmark::RANGE_LAST) 
-    ->Unit(MutliplyDigitsByDigitBaseBenchmark::TIME_UNITS);
+BENCHMARK_REGISTER_F(LeftShiftBySingleDigitBenchmark, ReserveThenInsert)
+    ->RangeMultiplier(LeftShiftBySingleDigitBenchmark::RANGE_MULTIPLIER)
+    ->Range(LeftShiftBySingleDigitBenchmark::RANGE_FIRST,
+            LeftShiftBySingleDigitBenchmark::RANGE_LAST) 
+    ->Unit(LeftShiftBySingleDigitBenchmark::TIME_UNITS);
 
 
-class MutliplyDigitsByDigitBasePowerInPlaceBenchmark : public DigitsBenchmark
+class LeftShiftByMultipleDigitsBenchmark : public DigitsBenchmark
 {
 public:
     static constexpr int RANGE_SIZE_MULTIPLIER      = 8;
@@ -80,22 +80,22 @@ public:
     {
         for (auto size = RANGE_SIZE_FIRST;
              size <= RANGE_SIZE_LAST; size *= RANGE_SIZE_MULTIPLIER) {
-            for (auto exponent : { 1, size / 4, size / 2, size })
-                benchmark->Args({ size, exponent });
+            for (auto shift_offset : { 1, size / 4, size / 2, size })
+                benchmark->Args({ size, shift_offset });
         }
     }
-}; // class MutliplyDigitsByDigitBasePowerInPlaceBenchmark
+}; // class LeftShiftByMultipleDigitsBenchmark
 
-BENCHMARK_DEFINE_F(MutliplyDigitsByDigitBasePowerInPlaceBenchmark,
+BENCHMARK_DEFINE_F(LeftShiftByMultipleDigitsBenchmark,
                    ResizeThenCopyBackwardAndFill) (
     benchmark::State &state
 )
 {
-    auto exponent = state.range(1);
+    auto shift_offset = state.range(1);
 
     for (auto _ : state) {
         auto initial_size = digits.size();
-        digits.resize(initial_size + exponent);
+        digits.resize(initial_size + shift_offset);
 
         benchmark::DoNotOptimize(digits.data());
 
@@ -108,24 +108,24 @@ BENCHMARK_DEFINE_F(MutliplyDigitsByDigitBasePowerInPlaceBenchmark,
         benchmark::ClobberMemory();
     }
 }
-BENCHMARK_REGISTER_F(MutliplyDigitsByDigitBasePowerInPlaceBenchmark,
+BENCHMARK_REGISTER_F(LeftShiftByMultipleDigitsBenchmark,
                      ResizeThenCopyBackwardAndFill)
-    ->Apply(MutliplyDigitsByDigitBasePowerInPlaceBenchmark::make_arguments)
-    ->Unit(MutliplyDigitsByDigitBasePowerInPlaceBenchmark::TIME_UNITS);
+    ->Apply(LeftShiftByMultipleDigitsBenchmark::make_arguments)
+    ->Unit(LeftShiftByMultipleDigitsBenchmark::TIME_UNITS);
 
-BENCHMARK_DEFINE_F(MutliplyDigitsByDigitBasePowerInPlaceBenchmark,
+BENCHMARK_DEFINE_F(LeftShiftByMultipleDigitsBenchmark,
                    ResizeThenSwapRanges) (
     benchmark::State &state
 )
 {
-    auto exponent = state.range(1);
+    auto shift_offset = state.range(1);
 
     for (auto _ : state) {
-        digits.resize(digits.size() + exponent);
+        digits.resize(digits.size() + shift_offset);
 
         benchmark::DoNotOptimize(digits.data());
 
-        auto initial_end = digits.rbegin() + exponent;
+        auto initial_end = digits.rbegin() + shift_offset;
         std::swap_ranges(initial_end,
                          digits.rend(),
                          digits.rbegin());
@@ -133,10 +133,10 @@ BENCHMARK_DEFINE_F(MutliplyDigitsByDigitBasePowerInPlaceBenchmark,
         benchmark::ClobberMemory();
     }
 }
-BENCHMARK_REGISTER_F(MutliplyDigitsByDigitBasePowerInPlaceBenchmark,
+BENCHMARK_REGISTER_F(LeftShiftByMultipleDigitsBenchmark,
                      ResizeThenSwapRanges)
-    ->Apply(MutliplyDigitsByDigitBasePowerInPlaceBenchmark::make_arguments)
-    ->Unit(MutliplyDigitsByDigitBasePowerInPlaceBenchmark::TIME_UNITS);
+    ->Apply(LeftShiftByMultipleDigitsBenchmark::make_arguments)
+    ->Unit(LeftShiftByMultipleDigitsBenchmark::TIME_UNITS);
 
 } // namespace
 

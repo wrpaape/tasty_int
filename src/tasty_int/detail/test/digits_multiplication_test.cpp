@@ -263,15 +263,15 @@ TEST(DigitsAndIntegralMultiplicationTest, DigitsTimesSingleDigitCarry)
 
 TEST(DigitsAndIntegralMultiplicationTest, MultipleDigitsTimesMultipleDigits)
 {
-    std::vector<digit_type> digits1 = {
+    std::vector<digit_type> digits = {
         DIGIT_TYPE_MAX, DIGIT_TYPE_MAX, DIGIT_TYPE_MAX
     };
-    auto digits2 = std::numeric_limits<std::uintmax_t>::max();
+    auto integral = std::numeric_limits<std::uintmax_t>::max();
     std::vector<digit_type> expected_result = {
         1, 0, DIGIT_TYPE_MAX, DIGIT_TYPE_MAX - 1, DIGIT_TYPE_MAX
     };
 
-    test_multiplication(digits1, digits2, expected_result);
+    test_multiplication(digits, integral, expected_result);
 }
 
 
@@ -337,15 +337,15 @@ TEST(DigitsAndFloatingPointMultiplicationTest, DigitsTimesSingleDigitCarry)
 
 TEST(DigitsAndFloatingPointMultiplicationTest, MultipleDigitsTimesMultipleDigits)
 {
-    std::vector<digit_type> digits1 = {
+    std::vector<digit_type> digits = {
         DIGIT_TYPE_MAX, DIGIT_TYPE_MAX
     };
-    auto digits2 = std::pow(DIGIT_BASE, 10.0L);
+    auto floating_point = std::pow(DIGIT_BASE, 10.0L);
     std::vector<digit_type> expected_result(12);
     expected_result[expected_result.size() - 2] = DIGIT_TYPE_MAX;
     expected_result.back()                      = DIGIT_TYPE_MAX;
 
-    test_multiplication(digits1, digits2, expected_result);
+    test_multiplication(digits, floating_point, expected_result);
 }
 
 } // namespace

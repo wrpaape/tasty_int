@@ -16,7 +16,7 @@ namespace binary_digits_operation_test_common {
  * result.
  *
  * @tparam OtherOperandType the type of operand, other_operand, to be operated
- *     on with digits_operand.
+ *     on with `digits_operand`.
  */
 template<typename OtherOperandType>
 struct BinaryDigitsOperationTestParam
@@ -67,9 +67,7 @@ operator<<(std::ostream                                           &output,
 template<typename AnotherOperandType, typename OtherOperandType>
 std::vector<BinaryDigitsOperationTestParam<AnotherOperandType>>
 convert_to(
-    const std::vector<
-        BinaryDigitsOperationTestParam<OtherOperandType>
-    > &input
+    const std::vector<BinaryDigitsOperationTestParam<OtherOperandType>> &input
 )
     requires std::is_convertible_v<OtherOperandType, AnotherOperandType>
 {

@@ -7,6 +7,8 @@
 
 #include "tasty_int/detail/digits_addition.hpp"
 #include "tasty_int/detail/digits_multiplication.hpp"
+#include "tasty_int/detail/conversions/digits_from_integral.hpp"
+#include "tasty_int_test/logarithmic_range.hpp"
 
 
 namespace {
@@ -22,6 +24,7 @@ using tasty_int::detail::DIGIT_TYPE_BITS;
 using tasty_int::detail::DIGIT_BASE;
 using tasty_int::detail::operator+;
 using tasty_int::detail::operator*;
+using tasty_int::detail::conversions::digits_from_integral;
 
 
 std::vector<digit_type>
@@ -387,5 +390,43 @@ TEST(DivideNormalized2n1nSplitTest, EqualValue)
 
     expect_equal(expected_result, result);
 }
+
+
+// class DigitsAndIntegralDivisionTest
+//     : public ::testing::TestWithParam<
+//       std::tuple<std::vector<digit_type>, std::uintmax_t>
+//     >
+// {}; // class DigitsAndIntegralDivisionTest
+
+// TEST_P(DigitsAndIntegralDivisionTest,
+//        DigitsDividedByIntegralIsConsistentWithDigitsDividedByDigits)
+// {
+//     std::vector<digit_type> dividend = std::get<0>(GetParam());
+//     std::uintmax_t divisor           = std::get<1>(GetParam());
+//     auto expected_result             = divide(dividend,
+//                                               digits_from_integral(divisor));
+
+//     test_division(dividend, divisor, expected_result);
+// }
+
+// INSTANTIATE_TEST_SUITE_P(
+//     DigitsDivisionTest,
+//     DigitsAndIntegralDivisionTest,
+//     ::testing::Combine(
+//         ::testing::ValuesIn(
+//             std::vector<std::vector<digit_type>> {
+//                 { 1 },
+//                 { DIGIT_TYPE_MAX },
+//                 { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
+//                 digit_base_power(99),
+//                 std::vector<digit_type>(7, 19),
+//                 std::vector<digit_type>(250, DIGIT_TYPE_MAX)
+//             }
+//         ),
+//         tasty_int_test::logarithmic_range<std::uintmax_t>(
+//             1, std::numeric_limits<std::uintmax_t>::max(), 8
+//         )
+//     )
+// );
 
 } // namespace

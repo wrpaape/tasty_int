@@ -1,6 +1,8 @@
 #ifndef TASTY_INT_TASTY_INT_DETAIL_DIGITS_DIVISION_HPP
 #define TASTY_INT_TASTY_INT_DETAIL_DIGITS_DIVISION_HPP
 
+#include <cstddef>
+
 #include <vector>
 
 #include "tasty_int/detail/digit_type.hpp"
@@ -44,6 +46,10 @@ struct DigitsDivisionResult
 std::vector<digit_type>
 divide_in_place(const std::vector<digit_type> &divisor,
                 std::vector<digit_type>       &dividend);
+
+std::vector<digit_type>
+divide_in_place(std::uintmax_t           divisor,
+                std::vector<digit_type> &dividend);
 /// @}
 
 /**
@@ -60,6 +66,10 @@ divide_in_place(const std::vector<digit_type> &divisor,
 DigitsDivisionResult
 divide(const std::vector<digit_type> &dividend,
        const std::vector<digit_type> &divisor);
+
+DigitsDivisionResult
+divide(const std::vector<digit_type> &dividend,
+       std::uintmax_t                 divisor);
 /// @}
 
 /**
@@ -72,6 +82,7 @@ divide(const std::vector<digit_type> &dividend,
  * @return the quotient and remainder
  */
 /// @{
+/// @pre `dividend > divisor`
 DigitsDivisionResult
 long_divide(const std::vector<digit_type> &dividend,
             const std::vector<digit_type> &divisor);

@@ -256,6 +256,8 @@ add_google_test(
     LIBRARIES tasty_int-detail-digits_division
               tasty_int-detail-digits_addition
               tasty_int-detail-digits_multiplication
+              tasty_int-detail-conversions-digits_from_integral
+              tasty_int_test
 )
 
 add_google_test(

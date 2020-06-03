@@ -27,7 +27,15 @@ std::vector<digit_type> &
 operator*=(std::vector<digit_type> &lhs,
            std::uintmax_t           rhs);
 
-/// @pre `std::isfinite(rhs) && (rhs >= 0.0)`
+/**
+ * @defgroup DigitsMultiplicationFloatingPointOverloads Digits Multiplication Floating Point Overloads
+ *
+ * These operations truncate their operand to the nearest integer before
+ * multiplying.
+ *
+ * @pre floating point operand is finite and nonnegative
+ */
+/// @ingroup DigitsMultiplicationFloatingPointOverloads
 std::vector<digit_type> &
 operator*=(std::vector<digit_type> &lhs,
            long double              rhs);
@@ -44,12 +52,12 @@ std::vector<digit_type>
 operator*(std::uintmax_t                 lhs,
           const std::vector<digit_type> &rhs);
 
-/// @pre `std::isfinite(rhs) && (rhs >= 0.0)`
+/// @ingroup DigitsMultiplicationFloatingPointOverloads
 std::vector<digit_type>
 operator*(const std::vector<digit_type> &lhs,
           long double                    rhs);
 
-/// @pre `std::isfinite(lhs) && (lhs >= 0.0)`
+/// @ingroup DigitsMultiplicationFloatingPointOverloads
 std::vector<digit_type>
 operator*(long double                    lhs,
           const std::vector<digit_type> &rhs);

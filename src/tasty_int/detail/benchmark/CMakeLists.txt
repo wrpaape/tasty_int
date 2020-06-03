@@ -20,3 +20,10 @@ add_google_benchmark(
     LIBRARIES tasty_int-detail-digits_multiplication
               tasty_int-detail-digits_benchmark
 )
+
+add_google_benchmark(
+    NAME      tasty_int-detail-digits_division_benchmark
+    SOURCES   digits_division_benchmark.cpp
+    LIBRARIES tasty_int-detail-digits_division
+              tasty_int-detail-digits_benchmark
+)

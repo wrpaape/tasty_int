@@ -158,12 +158,12 @@ karatsuba_merge(KaratsubaPartiion                  &partition,
 
 template<typename RhsType>
 std::vector<digit_type> &
-times_equals(std::vector<digit_type> &lhs,
-             const RhsType           &rhs)
+times_equals(const RhsType           &multiplier,
+             std::vector<digit_type> &multiplicand)
 {
-    lhs = lhs * rhs;
+    multiplicand = multiplicand * multiplier;
 
-    return lhs;
+    return multiplicand;
 }
 
 } // namespace
@@ -173,21 +173,21 @@ std::vector<digit_type> &
 operator*=(std::vector<digit_type>       &lhs,
            const std::vector<digit_type> &rhs)
 {
-    return times_equals(lhs, rhs);
+    return times_equals(rhs, lhs);
 }
 
 std::vector<digit_type> &
 operator*=(std::vector<digit_type> &lhs,
            std::uintmax_t           rhs)
 {
-    return times_equals(lhs, rhs);
+    return times_equals(rhs, lhs);
 }
 
 std::vector<digit_type> &
 operator*=(std::vector<digit_type> &lhs,
            long double              rhs)
 {
-    return times_equals(lhs, rhs);
+    return times_equals(rhs, lhs);
 }
 
 std::vector<digit_type>
