@@ -284,7 +284,7 @@ bool
 operator!=(const std::vector<digit_type> &lhs,
            const std::vector<digit_type> &rhs)
 {
-    return std::operator!=(lhs, rhs);
+    return !(lhs == rhs);
 }
 
 bool

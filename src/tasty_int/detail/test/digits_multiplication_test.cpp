@@ -218,6 +218,23 @@ TEST(DigitsAndIntegralMultiplicationTest, ZeroTimesZeroEqualsZero)
     test_multiplication(ZERO_DIGITS, ZERO_INTEGRAL, ZERO_DIGITS);
 }
 
+TEST(DigitsAndIntegralMultiplicationTest, ZeroTimesOneEqualsZero)
+{
+    std::vector<digit_type> ZERO_DIGITS  = { 0 };
+    std::uintmax_t          ONE_INTEGRAL = 1;
+
+    test_multiplication(ZERO_DIGITS, ONE_INTEGRAL, ZERO_DIGITS);
+}
+
+TEST(DigitsAndIntegralMultiplicationTest, ZeroTimesMaxIntegralEqualsZero)
+{
+    std::vector<digit_type> ZERO_DIGITS  = { 0 };
+    std::uintmax_t          MAX_INTEGRAL =
+        std::numeric_limits<std::uintmax_t>::max();
+
+    test_multiplication(ZERO_DIGITS, MAX_INTEGRAL, ZERO_DIGITS);
+}
+
 TEST(DigitsAndIntegralMultiplicationTest, OneTimesZeroEqualsZero)
 {
     std::vector<digit_type> ONE           = { 1 };

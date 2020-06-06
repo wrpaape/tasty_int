@@ -3,7 +3,6 @@
 #include <cassert>
 
 #include <algorithm>
-#include <array>
 #include <iterator>
 #include <utility>
 
@@ -14,6 +13,7 @@
 #include "tasty_int/detail/split_digits.hpp"
 #include "tasty_int/detail/next_power_of_two.hpp"
 #include "tasty_int/detail/integral_digits_view.hpp"
+#include "tasty_int/detail/extended_digit_accumulator.hpp"
 #include "tasty_int/detail/digits_comparison.hpp"
 #include "tasty_int/detail/digits_bitwise.hpp"
 #include "tasty_int/detail/digits_addition.hpp"
@@ -23,140 +23,97 @@
 
 namespace tasty_int {
 namespace detail {
+namespace {
 
-/**
- * TODO
- */
-class SmallDigitBuffer : public std::array<digit_accumulator_type, 2>
+DigitsDivisionResult
+make_zero_quotient_result(const std::vector<digit_type> &dividend)
 {
-public:
-    SmallDigitBuffer()
-        : std::array<digit_accumulator_type, 2>{}
-    {}
-
-    digit_type
-    high_digit() const
-    {
-        return digit_from_nonnegative_value(back());
-    }
-
-    digit_type
-    middle_digit() const
-    {
-        return digit_from_nonnegative_value(front() >> DIGIT_TYPE_BITS);
-    }
-
-    digit_type
-    low_digit() const
-    {
-        return digit_from_nonnegative_value(front());
-    }
-
-    std::vector<digit_type>
-    to_digits() const
-    {
-        std::vector<digit_type> digits;
-        digits.reserve(digits_size());
-        digits.emplace_back(low_digit());
-        if (middle_digit() != 0) {
-            digits.emplace_back(middle_digit());
-
-            if (high_digit() != 0)
-                digits.emplace_back(high_digit());
-        }
-
-        return digits;
-    }
-
-    std::size_t
-    digits_size() const
-    {
-        return 1
-             + (middle_digit() != 0)
-             + (high_digit()   != 0);
-    }
-
-    void
-    multiply_digit_base()
-    {
-        back()  <<= DIGIT_TYPE_BITS;
-        back()   |= (front() >> DIGIT_TYPE_BITS);
-        front() <<= DIGIT_TYPE_BITS;
-    }
-
-    void
-    multiply_digit_base_accumulate(digit_type addend)
-    {
-        multiply_digit_base();
-        front() |= addend;
-    }
-}; // class SmallDigitBuffer
-
-
-SmallDigitBuffer
-operator*(IntegralDigitsView lhs,
-          digit_type         rhs)
-{
-    SmallDigitBuffer result;
-    result.front()   = rhs;
-    result.front()  *= lhs.low_digit();
-    result.back()    = lhs.high_digit();
-    result.back()   *= rhs;
-    result.front()  += result.high_digit();
-    result.back()  >>= DIGIT_TYPE_BITS;
-    return result;
+    return { .quotient = { 0 }, .remainder = dividend };
 }
 
-bool
-operator>(SmallDigitBuffer lhs,
-          SmallDigitBuffer rhs)
+template<typename RhsType>
+std::vector<digit_type> &
+operator-=(std::vector<digit_type> &lhs,
+           const RhsType           &rhs)
 {
-    auto lhs_mag = lhs.digits_size();
-    auto rhs_mag = rhs.digits_size();
-    if (lhs_mag != rhs_mag)
-    {
-        return lhs_mag > rhs_mag;
-    }
-
-    if (lhs.back() != rhs.back())
-    {
-        return lhs.back() > rhs.back();
-    }
-
-    if (lhs.front() != rhs.front())
-    {
-        return lhs.front() > rhs.front();
-    }
-
-    return false;
-}
-
-SmallDigitBuffer &
-operator-=(SmallDigitBuffer       &lhs,
-           const SmallDigitBuffer &rhs)
-{
-    digit_accumulator_type accumulator = ~lhs.front() + rhs.front();
-    digit_accumulator_type carry       = (rhs.front() > accumulator);
-    lhs.front() = ~accumulator;
-    accumulator = ~lhs.back() + rhs.back() + carry;
-    lhs.back()  = ~accumulator;
+    [[maybe_unused]] auto sign = subtract_in_place(rhs, lhs);
+    assert(sign >= Sign::ZERO);
 
     return lhs;
 }
 
-namespace { // TODO
+std::vector<digit_type>
+operator*(const std::vector<digit_type> &lhs,
+          digit_type                     rhs)
+{
+    return tasty_int::detail::operator*(lhs, std::uintmax_t(rhs));
+}
+
+template<typename DigitsType>
+auto
+magnitude(DigitsType digits) -> decltype(digits.digits_size())
+{
+    return digits.digits_size();
+}
+
+std::vector<digit_type>::size_type
+magnitude(const std::vector<digit_type>& digits)
+{
+    return digits.size();
+}
+
+digit_type
+most_significant_digit(IntegralDigitsView digits)
+{
+    return digits.most_significant_digit();
+}
+
+digit_type
+most_significant_digit(const std::vector<digit_type>& digits)
+{
+    return digits.back();
+}
+
+template<typename DivisorType>
+DigitsShiftOffset
+long_divide_normal_offset(const DivisorType &divisor)
+{
+    auto sig_divisor_digit = most_significant_digit(divisor);
+    DigitsShiftOffset normal_offset = {
+        .digits = 0,
+        .bits   = count_leading_zero_bits_from_digit(sig_divisor_digit)
+    };
+    return normal_offset;
+}
+
+std::vector<digit_type>
+digits_from_remainder_accumulator(ExtendedDigitAccumulator remainder)
+{
+    assert(remainder.digits_size() <= 2);
+
+    auto have_middle_digit = (remainder.middle_digit() != 0);
+
+    std::vector<digit_type> digits;
+    digits.reserve(1 + have_middle_digit);
+
+    digits.emplace_back(remainder.low_digit());
+    if (have_middle_digit)
+        digits.emplace_back(remainder.middle_digit());
+
+    return digits;
+}
 
 digit_type
 estimate_digit_quotient(digit_accumulator_type sig_dividend,
-                        digit_type             divisor_high_digit)
+                        digit_type             sig_divisor_digit)
 {
-    digit_accumulator_type sig_divisor = divisor_high_digit;
+    digit_accumulator_type sig_divisor = sig_divisor_digit;
 
     auto tentative_quotient = sig_dividend / sig_divisor;
     if (tentative_quotient > DIGIT_TYPE_MAX)
         tentative_quotient = DIGIT_TYPE_MAX;
 
-    return digit_from_nonnegative_value(tentative_quotient);
+    return static_cast<digit_type>(tentative_quotient);
 }
 
 digit_accumulator_type
@@ -172,8 +129,8 @@ significant_dividend_digits(const std::vector<digit_type> &dividend,
 }
 
 digit_accumulator_type
-significant_dividend_digits(SmallDigitBuffer dividend,
-                            std::size_t      divisor_mag)
+significant_dividend_digits(ExtendedDigitAccumulator dividend,
+                            std::size_t              divisor_mag)
 {
     switch (dividend.digits_size())
     {
@@ -195,74 +152,40 @@ template<typename DividendType>
 digit_type
 estimate_digit_quotient(const DividendType &dividend,
                         std::size_t         divisor_mag,
-                        digit_type          divisor_high_digit)
+                        digit_type          sig_divisor_digit)
 {
-
     auto sig_dividend = significant_dividend_digits(dividend, divisor_mag);
 
     return estimate_digit_quotient(sig_dividend,
-                                   divisor_high_digit);
+                                   sig_divisor_digit);
 }
 
+template<typename DivisorType, typename DividendType>
 digit_type
-estimate_digit_quotient(const std::vector<digit_type> &dividend,
-                        const std::vector<digit_type> &divisor)
+estimate_digit_quotient(const DividendType &dividend,
+                        const DivisorType  &divisor)
 {
-    assert((dividend.size() - divisor.size()) <= 1);
+    assert((magnitude(dividend) - magnitude(divisor)) <= 1);
 
     return estimate_digit_quotient(dividend,
-                                   divisor.size(),
-                                   divisor.back());
+                                   magnitude(divisor),
+                                   most_significant_digit(divisor));
 }
 
-digit_type
-estimate_digit_quotient(SmallDigitBuffer   dividend,
-                        IntegralDigitsView divisor)
-{
-    assert((dividend.digits_size() - divisor.digits_size()) <= 1);
-
-    return estimate_digit_quotient(dividend,
-                                   divisor.digits_size(),
-                                   divisor.high_digit());
-}
-
-std::pair<digit_type, std::vector<digit_type>>
-quotient_divisor_product(digit_type                     tentative_quotient,
-                         const std::vector<digit_type> &divisor,
-                         const std::vector<digit_type> &dividend)
-{
-    using ::tasty_int::detail::operator*;
-
-    auto product = divisor * std::uintmax_t(tentative_quotient);
-
-    if (product > dividend) {
-        [[maybe_unused]] auto sign = subtract_in_place(divisor, product);
-        assert(sign >= Sign::ZERO);
-        --tentative_quotient;
-
-        if (product > dividend) {
-            sign = subtract_in_place(divisor, product);
-            assert(sign >= Sign::ZERO);
-            --tentative_quotient;
-        }
-    }
-
-    return { tentative_quotient, std::move(product) };
-}
-
-std::pair<digit_type, SmallDigitBuffer>
-quotient_divisor_product(digit_type         tentative_quotient,
-                         IntegralDigitsView divisor,
-                         SmallDigitBuffer   dividend)
+template<typename DivisorType, typename DividendType>
+std::pair<digit_type, DividendType>
+quotient_divisor_product(digit_type          tentative_quotient,
+                         const DivisorType  &divisor,
+                         const DividendType &dividend)
 {
     auto product = divisor * tentative_quotient;
 
     if (product > dividend) {
-        product -= dividend;
+        product -= divisor;
         --tentative_quotient;
 
         if (product > dividend) {
-            product -= dividend;
+            product -= divisor;
             --tentative_quotient;
         }
     }
@@ -270,39 +193,12 @@ quotient_divisor_product(digit_type         tentative_quotient,
     return { tentative_quotient, std::move(product) };
 }
 
-void
-multiply_digit_base_accumulate_in_place(digit_type               addend,
-                                        std::vector<digit_type> &result)
-{
-    result <<= 1;
-    result.front() = addend;
-}
-
+template<typename DivisorType,typename DividendType>
 digit_type
-divide_similar_magnitude_in_place(const std::vector<digit_type> &divisor,
-                                  std::vector<digit_type>       &dividend)
+divide_similar_magnitude_in_place(const DivisorType &divisor,
+                                  DividendType      &dividend)
 {
-    if (dividend.size() < divisor.size())
-        return 0;
-
-    auto tentative_quotient = estimate_digit_quotient(dividend, divisor);
-
-    auto [quotient, product] = quotient_divisor_product(tentative_quotient,
-                                                        divisor,
-                                                        dividend);
-
-    [[maybe_unused]] auto sign = subtract_in_place(product,
-                                                   dividend);
-    assert(sign >= Sign::ZERO);
-
-    return quotient;
-}
-
-digit_type
-divide_similar_magnitude_in_place(IntegralDigitsView  divisor,
-                                  SmallDigitBuffer   &dividend)
-{
-    if (dividend.digits_size() < divisor.digits_size())
+    if (magnitude(dividend) < magnitude(divisor))
         return 0;
 
     auto tentative_quotient = estimate_digit_quotient(dividend, divisor);
@@ -316,12 +212,50 @@ divide_similar_magnitude_in_place(IntegralDigitsView  divisor,
 }
 
 void
-build_reversed_quotient(const std::vector<digit_type> &dividend,
-                        const std::vector<digit_type> &divisor,
-                        DigitsDivisionResult          &result)
+multiply_digit_base_accumulate_in_place(digit_type               addend,
+                                        std::vector<digit_type> &result)
 {
-    auto &quotient  = result.quotient;
-    auto &remainder = result.remainder;
+    result <<= 1;
+    result.front() = addend;
+}
+
+void
+multiply_digit_base_accumulate_in_place(digit_type                addend,
+                                        ExtendedDigitAccumulator &result)
+{
+    result.multiply_digit_base_accumulate(addend);
+}
+
+template<typename DivisorType>
+std::vector<digit_type>
+allocate_quotient(const std::vector<digit_type> &dividend,
+                  const DivisorType             &divisor)
+{
+    auto max_quotient_mag = magnitude(dividend) + 1
+                          - magnitude(divisor);
+    std::vector<digit_type> quotient;
+    quotient.reserve(max_quotient_mag);
+
+    return quotient;
+}
+
+std::vector<digit_type>
+allocate_remainder(const std::vector<digit_type> &divisor)
+{
+    auto max_remainder_mag = magnitude(divisor) + 1;
+    std::vector<digit_type> remainder;
+    remainder.reserve(max_remainder_mag);
+
+    return remainder;
+}
+
+template<typename DivisorType, typename RemainderType>
+std::vector<digit_type>
+build_reversed_quotient(const std::vector<digit_type> &dividend,
+                        const DivisorType             &divisor,
+                        RemainderType                 &remainder)
+{
+    auto quotient = allocate_quotient(dividend, divisor);
 
     auto dividend_cursor = dividend.rbegin();
     do {
@@ -331,6 +265,8 @@ build_reversed_quotient(const std::vector<digit_type> &dividend,
                                                                 remainder);
         quotient.emplace_back(quotient_digit);
     } while (++dividend_cursor != dividend.rend());
+
+    return quotient;
 }
 
 void
@@ -339,6 +275,19 @@ correct_reversed_quotient(std::vector<digit_type> &quotient)
     std::reverse(quotient.begin(), quotient.end());
 
     trim_trailing_zeros(quotient);
+}
+
+template<typename DivisorType, typename RemainderType>
+std::vector<digit_type>
+normalized_long_divide(const std::vector<digit_type> &dividend,
+                       const DivisorType             &divisor,
+                       RemainderType                 &remainder)
+{
+    auto quotient = build_reversed_quotient(dividend, divisor, remainder);
+
+    correct_reversed_quotient(quotient);
+
+    return quotient;
 }
 
 bool
@@ -386,9 +335,7 @@ divide_normalized_3n_2n_split_upper(std::vector<digit_type> &&dividend_upper,
     dividend_upper += divisor_high;
 
     divisor_high <<= divisor_high.size();
-    [[maybe_unused]] auto sign = subtract_in_place(divisor_high,
-                                                   dividend_upper);
-    assert(sign >= Sign::ZERO);
+    dividend_upper -= divisor_high;
 
     result.remainder = std::move(dividend_upper);
 
@@ -406,9 +353,7 @@ correct_divide_normalized_3n_2n_split_remainder(
     auto& quotient  = result.quotient;
 
     while (remainder_sign < Sign::ZERO) {
-        [[maybe_unused]] auto quotient_sign =
-            subtract_in_place(std::uintmax_t(1), quotient);
-        assert(quotient_sign >= Sign::ZERO);
+        quotient -= std::uintmax_t(1);
 
         remainder_sign = subtract_in_place(divisor, remainder);
         remainder_sign = flip_sign(remainder_sign);
@@ -532,13 +477,6 @@ divide_and_conquer_divide_normalized(const std::vector<digit_type> &dividend,
     return result;
 }
 
-DigitsDivisionResult
-long_divide(const std::vector<digit_type> &dividend,
-            IntegralDigitsView            divisor_view)
-{
-    return {}; // TODO
-}
-
 } // namespace
 
 
@@ -557,7 +495,11 @@ std::vector<digit_type>
 divide_in_place(std::uintmax_t           divisor,
                 std::vector<digit_type> &dividend)
 {
-    return dividend; // TODO
+    auto result = divide(dividend, divisor);
+
+    dividend = std::move(result.quotient);
+
+    return std::move(result.remainder);
 }
 
 DigitsDivisionResult
@@ -566,16 +508,9 @@ divide(const std::vector<digit_type> &dividend,
 {
     assert(!is_zero(divisor));
 
-    DigitsDivisionResult result;
-
-    if (divisor <= dividend) {
-        result = divide_and_conquer_divide(dividend, divisor);
-    } else {
-        result.quotient  = { 0 };
-        result.remainder = dividend;
-    }
-
-    return result;
+    return (divisor <= dividend)
+         ? divide_and_conquer_divide(dividend, divisor)
+         : make_zero_quotient_result(dividend);
 }
 
 DigitsDivisionResult
@@ -584,56 +519,62 @@ divide(const std::vector<digit_type> &dividend,
 {
     assert(divisor != 0);
 
-    IntegralDigitsView divisor_view(divisor);
-
-    DigitsDivisionResult result;
-    auto &quotient  = result.quotient;
-
-    if (divisor > dividend) {
-        result.quotient  = { 0 };
-        result.remainder = dividend;
-        return result;
-    }
-
-    SmallDigitBuffer remainder;
-    auto dividend_cursor = dividend.rbegin();
-    do {
-        remainder.multiply_digit_base_accumulate(*dividend_cursor);
-
-        auto quotient_digit = divide_similar_magnitude_in_place(divisor_view,
-                                                                remainder);
-        quotient.emplace_back(quotient_digit);
-
-    } while (++dividend_cursor != dividend.rend());
-
-    correct_reversed_quotient(quotient);
-
-    return result;
+    return (divisor <= dividend)
+         ? long_divide(dividend, divisor)
+         : make_zero_quotient_result(dividend);
 }
 
 DigitsDivisionResult
 long_divide(const std::vector<digit_type> &dividend,
             const std::vector<digit_type> &divisor)
 {
+    assert(!is_zero(divisor));
     assert(dividend.size() >= divisor.size());
+
+    auto normal_offset = long_divide_normal_offset(divisor);
+
+    auto normalized_dividend = dividend << normal_offset;
+    auto normalized_divisor  = divisor  << normal_offset;
 
     DigitsDivisionResult result;
 
-    auto &quotient = result.quotient;
-    auto max_quotient_mag = dividend.size() + 1 - divisor.size();
-    quotient.reserve(max_quotient_mag);
-
     auto &remainder = result.remainder;
-    auto max_remainder_mag = divisor.size() + 1;
-    remainder.reserve(max_remainder_mag);
+    remainder = allocate_remainder(normalized_divisor);
     remainder.emplace_back(0);
 
-    build_reversed_quotient(dividend, divisor, result);
+    result.quotient = normalized_long_divide(normalized_dividend,
+                                             normalized_divisor,
+                                             remainder);
 
-    correct_reversed_quotient(quotient);
+    remainder >>= normal_offset;
 
     return result;
 }
+
+DigitsDivisionResult
+long_divide(const std::vector<digit_type> &dividend,
+            std::uintmax_t                 divisor)
+{
+
+    auto normal_offset = long_divide_normal_offset(IntegralDigitsView(divisor));
+
+    auto normalized_dividend = dividend << normal_offset;
+    auto normalized_divisor  = divisor  << normal_offset.bits;
+
+    DigitsDivisionResult result;
+    IntegralDigitsView normalized_divisor_view(normalized_divisor);
+    ExtendedDigitAccumulator remainder{};
+    result.quotient = normalized_long_divide(normalized_dividend,
+                                             normalized_divisor_view,
+                                             remainder);
+
+    remainder >>= normal_offset.bits;
+
+    result.remainder = digits_from_remainder_accumulator(remainder);
+
+    return result;
+}
+
 
 DigitsDivisionResult
 divide_and_conquer_divide(const std::vector<digit_type> &dividend,
@@ -675,7 +616,7 @@ divide_normalized_2n_1n_split(const std::vector<digit_type> &dividend,
         return long_divide(dividend, divisor);
 
     if (dividend < divisor)
-        return { .quotient = { 0 }, .remainder = dividend };
+        return make_zero_quotient_result(dividend);
 
     auto split_size = divisor.size() / 2;
 
@@ -704,7 +645,7 @@ divide_normalized_3n_2n_split(const std::vector<digit_type> &dividend,
     assert(have_most_significant_one_bit(divisor));
 
     if (dividend < divisor)
-        return { .quotient = { 0 }, .remainder = dividend };
+        return make_zero_quotient_result(dividend);
 
     auto split_size = divisor.size() / 2;
 

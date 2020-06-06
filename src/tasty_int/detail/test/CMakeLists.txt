@@ -158,6 +158,13 @@ add_google_test(
 )
 
 add_google_test(
+    NAME      tasty_int-detail-extended_digit_accumulator_test
+    SOURCES   extended_digit_accumulator_test
+              $<TARGET_OBJECTS:tasty_int-detail-extended_digit_accumulator>
+    LIBRARIES tasty_int_test
+)
+
+add_google_test(
     NAME      tasty_int-detail-floating_point_digits_iterator_test
     SOURCES   floating_point_digits_iterator_test
     LIBRARIES tasty_int-detail-floating_point_digits_iterator

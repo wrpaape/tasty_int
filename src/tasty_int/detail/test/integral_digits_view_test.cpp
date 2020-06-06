@@ -19,6 +19,15 @@ using tasty_int::detail::DIGIT_TYPE_BITS;
 class IntegralDigitsViewTest : public ::testing::TestWithParam<std::uintmax_t>
 {}; // class IntegralDigitsViewTest
 
+TEST_P(IntegralDigitsViewTest, ValueDigit)
+{
+    std::uintmax_t value = GetParam();
+
+    IntegralDigitsView view(value);
+
+    EXPECT_EQ(value, view.value());
+}
+
 TEST_P(IntegralDigitsViewTest, LowDigit)
 {
     std::uintmax_t value = GetParam();
@@ -36,6 +45,18 @@ TEST_P(IntegralDigitsViewTest, HighDigit)
 
     EXPECT_EQ(digit_from_nonnegative_value(value >> DIGIT_TYPE_BITS),
               view.high_digit());
+}
+
+TEST_P(IntegralDigitsViewTest, MostSignficantDigit)
+{
+    std::uintmax_t value = GetParam();
+    auto expected_digit = value;
+    if (expected_digit > DIGIT_TYPE_MAX)
+        expected_digit >>= DIGIT_TYPE_BITS;
+
+    IntegralDigitsView view(value);
+
+    EXPECT_EQ(expected_digit, view.most_significant_digit());
 }
 
 TEST_P(IntegralDigitsViewTest, DigitsSize)

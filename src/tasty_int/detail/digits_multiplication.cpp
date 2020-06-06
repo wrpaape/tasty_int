@@ -84,7 +84,7 @@ long_multiply_digits(const std::vector<digit_type> &lhs,
 
     long_multiply_digit(lhs, rhs_view.low_digit(), result_cursor);
 
-    if (rhs_view.digits_size() > 1)
+    if (rhs_view.high_digit() != 0)
         long_multiply_digit(lhs, rhs_view.high_digit(), ++result_cursor);
 }
 
@@ -210,7 +210,7 @@ operator*(const std::vector<digit_type> &lhs,
     assert(!lhs.empty());
     assert(!have_trailing_zero(lhs));
 
-    if (rhs == 0)
+    if ((rhs == 0) || is_zero(lhs))
         return { 0 };
 
     IntegralDigitsView rhs_view(rhs);

@@ -41,6 +41,8 @@ struct DigitsDivisionResult
  * @param[in]     divisor  the value by which @p dividend is divided
  * @param[in,out] dividend the value from which @p divisor is divided
  * @return the remainder
+ *
+ * @pre `divisor != 0`
  */
 /// @{
 std::vector<digit_type>
@@ -61,6 +63,8 @@ divide_in_place(std::uintmax_t           divisor,
  * @param[in] dividend the value from which @p divisor is divided
  * @param[in] divisor  the value by which @p dividend is divided
  * @return the quotient and remainder
+ *
+ * @pre `divisor != 0`
  */
 /// @{
 DigitsDivisionResult
@@ -80,12 +84,18 @@ divide(const std::vector<digit_type> &dividend,
  * @param[in] dividend the value from which @p divisor is divided
  * @param[in] divisor  the value by which @p dividend is divided
  * @return the quotient and remainder
+ *
+ * @pre `divisor != 0`
+ * @pre `dividend > divisor`
  */
 /// @{
-/// @pre `dividend > divisor`
 DigitsDivisionResult
 long_divide(const std::vector<digit_type> &dividend,
             const std::vector<digit_type> &divisor);
+
+DigitsDivisionResult
+long_divide(const std::vector<digit_type> &dividend,
+            std::uintmax_t                 divisor);
 
 DigitsDivisionResult
 divide_and_conquer_divide(const std::vector<digit_type> &dividend,

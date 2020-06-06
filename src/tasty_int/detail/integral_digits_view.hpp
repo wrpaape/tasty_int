@@ -26,6 +26,17 @@ public:
     {}
 
     /**
+     * @brief Access the integral value.
+     *
+     * @return the integral value
+     */
+    std::uintmax_t
+    value() const
+    {
+        return integral_value;
+    }
+
+    /**
      * @brief Access the least-significant digit of the integral value.
      *
      * @return the least-significant digit
@@ -37,14 +48,29 @@ public:
     }
 
     /**
-     * @brief Access the most-significant digit of the integral value.
+     * @brief Access the upper digit of the integral value.
      *
-     * @return the most-significant digit
+     * @return the upper digit
      */
     digit_type
     high_digit() const
     {
         return digit_from_nonnegative_value(integral_value >> DIGIT_TYPE_BITS);
+    }
+
+    /**
+     * @brief Access the most-significant (nonzero) digit of the integral value.
+     *
+     * @return the most-significant nonzero digit
+     */
+    digit_type
+    most_significant_digit() const
+    {
+        auto most_significant = high_digit();
+        if (most_significant == 0)
+            most_significant = low_digit();
+
+        return most_significant;
     }
 
     /**

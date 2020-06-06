@@ -166,7 +166,7 @@ class DigitsDivisionArbitraryValuesTest
     : public ::testing::TestWithParam<DigitsDivisionArbitraryValuesTestParam>
 {}; // class DigitsDivisionArbitraryValuesTest
 
-TEST_P(DigitsDivisionArbitraryValuesTest, DigitsDividedByIdenticalDigitsValue)
+TEST_P(DigitsDivisionArbitraryValuesTest, DigitsDividedByArbitraryDigitsValue)
 {
     auto dividend        = GetParam().dividend;
     auto divisor         = GetParam().divisor;
@@ -186,6 +186,14 @@ INSTANTIATE_TEST_SUITE_P(
                 .expected_result = {
                     .quotient  = { 0 },
                     .remainder = { 0 }
+                }
+            },
+            {
+                .dividend        = { 1,              DIGIT_TYPE_MAX },
+                .divisor         = { DIGIT_TYPE_MAX, 1 },
+                .expected_result = {
+                    .quotient  = { DIGIT_TYPE_MAX / 2 },
+                    .remainder = { DIGIT_BASE / 2, 1 }
                 }
             },
             {
@@ -392,41 +400,41 @@ TEST(DivideNormalized2n1nSplitTest, EqualValue)
 }
 
 
-// class DigitsAndIntegralDivisionTest
-//     : public ::testing::TestWithParam<
-//       std::tuple<std::vector<digit_type>, std::uintmax_t>
-//     >
-// {}; // class DigitsAndIntegralDivisionTest
+class DigitsAndIntegralDivisionTest
+    : public ::testing::TestWithParam<
+      std::tuple<std::vector<digit_type>, std::uintmax_t>
+    >
+{}; // class DigitsAndIntegralDivisionTest
 
-// TEST_P(DigitsAndIntegralDivisionTest,
-//        DigitsDividedByIntegralIsConsistentWithDigitsDividedByDigits)
-// {
-//     std::vector<digit_type> dividend = std::get<0>(GetParam());
-//     std::uintmax_t divisor           = std::get<1>(GetParam());
-//     auto expected_result             = divide(dividend,
-//                                               digits_from_integral(divisor));
+TEST_P(DigitsAndIntegralDivisionTest,
+       DigitsDividedByIntegralIsConsistentWithDigitsDividedByDigits)
+{
+    std::vector<digit_type> dividend = std::get<0>(GetParam());
+    std::uintmax_t divisor           = std::get<1>(GetParam());
+    auto expected_result             = divide(dividend,
+                                              digits_from_integral(divisor));
 
-//     test_division(dividend, divisor, expected_result);
-// }
+    test_division(dividend, divisor, expected_result);
+}
 
-// INSTANTIATE_TEST_SUITE_P(
-//     DigitsDivisionTest,
-//     DigitsAndIntegralDivisionTest,
-//     ::testing::Combine(
-//         ::testing::ValuesIn(
-//             std::vector<std::vector<digit_type>> {
-//                 { 1 },
-//                 { DIGIT_TYPE_MAX },
-//                 { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
-//                 digit_base_power(99),
-//                 std::vector<digit_type>(7, 19),
-//                 std::vector<digit_type>(250, DIGIT_TYPE_MAX)
-//             }
-//         ),
-//         tasty_int_test::logarithmic_range<std::uintmax_t>(
-//             1, std::numeric_limits<std::uintmax_t>::max(), 8
-//         )
-//     )
-// );
+INSTANTIATE_TEST_SUITE_P(
+    DigitsDivisionTest,
+    DigitsAndIntegralDivisionTest,
+    ::testing::Combine(
+        ::testing::ValuesIn(
+            std::vector<std::vector<digit_type>> {
+                { 1 },
+                { DIGIT_TYPE_MAX },
+                { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
+                digit_base_power(99),
+                std::vector<digit_type>(7, 19),
+                std::vector<digit_type>(250, DIGIT_TYPE_MAX)
+            }
+        ),
+        tasty_int_test::logarithmic_range<std::uintmax_t>(
+            1, std::numeric_limits<std::uintmax_t>::max(), 3
+        )
+    )
+);
 
 } // namespace

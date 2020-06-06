@@ -26,4 +26,5 @@ add_google_benchmark(
     SOURCES   digits_division_benchmark.cpp
     LIBRARIES tasty_int-detail-digits_division
               tasty_int-detail-digits_benchmark
+              tasty_int-detail-conversions-digits_from_integral
 )

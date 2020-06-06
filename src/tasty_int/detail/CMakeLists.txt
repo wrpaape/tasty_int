@@ -113,6 +113,18 @@ target_link_libraries(
     tasty_int-detail-digit_from_nonnegative_value
 )
 
+add_library(
+    tasty_int-detail-extended_digit_accumulator
+    OBJECT
+    extended_digit_accumulator.cpp
+    extended_digit_accumulator.hpp
+)
+target_link_libraries(
+    tasty_int-detail-extended_digit_accumulator
+    tasty_int-detail-digit_from_nonnegative_value
+    tasty_int-detail-integral_digits_view
+)
+
 add_library(tasty_int-detail-floating_point_digits_iterator INTERFACE)
 target_sources(
     tasty_int-detail-floating_point_digits_iterator
@@ -214,6 +226,7 @@ add_library(
     STATIC
     digits_division.cpp
     digits_division.hpp
+    $<TARGET_OBJECTS:tasty_int-detail-extended_digit_accumulator>
 )
 target_link_libraries(
     tasty_int-detail-digits_division
