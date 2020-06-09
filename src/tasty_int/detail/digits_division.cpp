@@ -19,6 +19,7 @@
 #include "tasty_int/detail/digits_addition.hpp"
 #include "tasty_int/detail/digits_subtraction.hpp"
 #include "tasty_int/detail/digits_multiplication.hpp"
+#include "tasty_int/detail/conversions/digits_from_floating_point.hpp"
 
 
 namespace tasty_int {
@@ -76,7 +77,7 @@ most_significant_digit(const std::vector<digit_type>& digits)
 
 template<typename DivisorType>
 DigitsShiftOffset
-long_divide_normal_offset(const DivisorType &divisor)
+long_divide_normal_shift_offset(const DivisorType &divisor)
 {
     auto sig_divisor_digit = most_significant_digit(divisor);
     DigitsShiftOffset normal_offset = {
@@ -361,8 +362,10 @@ correct_divide_normalized_3n_2n_split_remainder(
 }
 
 DigitsShiftOffset
-normal_shift_offset(const std::vector<digit_type>      &divisor,
-                    std::vector<digit_type>::size_type  divisor_piece_mag)
+divide_and_conquer_normal_shift_offset(
+    const std::vector<digit_type>      &divisor,
+    std::vector<digit_type>::size_type  divisor_piece_mag
+)
 {
     auto count_divisor_pieces =
         next_power_of_two(divisor.size() / divisor_piece_mag);
@@ -477,12 +480,10 @@ divide_and_conquer_divide_normalized(const std::vector<digit_type> &dividend,
     return result;
 }
 
-} // namespace
-
-
+template<typename DivisorType>
 std::vector<digit_type>
-divide_in_place(const std::vector<digit_type> &divisor,
-                std::vector<digit_type>       &dividend)
+divide_replace_dividend(const DivisorType       &divisor,
+                        std::vector<digit_type> &dividend)
 {
     auto result = divide(dividend, divisor);
 
@@ -491,15 +492,28 @@ divide_in_place(const std::vector<digit_type> &divisor,
     return std::move(result.remainder);
 }
 
+} // namespace
+
+
+std::vector<digit_type>
+divide_in_place(const std::vector<digit_type> &divisor,
+                std::vector<digit_type>       &dividend)
+{
+    return divide_replace_dividend(divisor, dividend);
+}
+
 std::vector<digit_type>
 divide_in_place(std::uintmax_t           divisor,
                 std::vector<digit_type> &dividend)
 {
-    auto result = divide(dividend, divisor);
+    return divide_replace_dividend(divisor, dividend);
+}
 
-    dividend = std::move(result.quotient);
-
-    return std::move(result.remainder);
+std::vector<digit_type>
+divide_in_place(long double              divisor,
+                std::vector<digit_type> &dividend)
+{
+    return divide_replace_dividend(divisor, dividend);
 }
 
 DigitsDivisionResult
@@ -517,11 +531,21 @@ DigitsDivisionResult
 divide(const std::vector<digit_type> &dividend,
        std::uintmax_t                 divisor)
 {
-    assert(divisor != 0);
+    assert(divisor > 0);
 
     return (divisor <= dividend)
          ? long_divide(dividend, divisor)
          : make_zero_quotient_result(dividend);
+}
+
+DigitsDivisionResult
+divide(const std::vector<digit_type> &dividend,
+       long double                    divisor)
+{
+    assert(divisor > 0);
+
+    return divide(dividend,
+                  conversions::digits_from_floating_point(divisor));
 }
 
 DigitsDivisionResult
@@ -531,7 +555,7 @@ long_divide(const std::vector<digit_type> &dividend,
     assert(!is_zero(divisor));
     assert(dividend.size() >= divisor.size());
 
-    auto normal_offset = long_divide_normal_offset(divisor);
+    auto normal_offset = long_divide_normal_shift_offset(divisor);
 
     auto normalized_dividend = dividend << normal_offset;
     auto normalized_divisor  = divisor  << normal_offset;
@@ -556,7 +580,8 @@ long_divide(const std::vector<digit_type> &dividend,
             std::uintmax_t                 divisor)
 {
 
-    auto normal_offset = long_divide_normal_offset(IntegralDigitsView(divisor));
+    auto normal_offset =
+        long_divide_normal_shift_offset(IntegralDigitsView(divisor));
 
     auto normalized_dividend = dividend << normal_offset;
     auto normalized_divisor  = divisor  << normal_offset.bits;
@@ -586,7 +611,9 @@ divide_and_conquer_divide(const std::vector<digit_type> &dividend,
     if (divisor.size() < DIVISION_PIECE_MAGNITUDE)
         return long_divide(dividend, divisor);
 
-    auto normal_offset = normal_shift_offset(divisor, DIVISION_PIECE_MAGNITUDE);
+    auto normal_offset =
+        divide_and_conquer_normal_shift_offset(divisor,
+                                               DIVISION_PIECE_MAGNITUDE);
 
     auto normalized_dividend = dividend << normal_offset;
     auto normalized_divisor  = divisor  << normal_offset;

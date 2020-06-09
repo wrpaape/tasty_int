@@ -264,6 +264,7 @@ add_google_test(
               tasty_int-detail-digits_addition
               tasty_int-detail-digits_multiplication
               tasty_int-detail-conversions-digits_from_integral
+              tasty_int-detail-conversions-digits_from_floating_point
               tasty_int_test
 )
 

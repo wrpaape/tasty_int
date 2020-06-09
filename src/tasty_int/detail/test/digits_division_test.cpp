@@ -1,5 +1,7 @@
 #include "tasty_int/detail/digits_division.hpp"
 
+#include <cmath>
+
 #include <type_traits>
 #include <utility>
 
@@ -8,6 +10,7 @@
 #include "tasty_int/detail/digits_addition.hpp"
 #include "tasty_int/detail/digits_multiplication.hpp"
 #include "tasty_int/detail/conversions/digits_from_integral.hpp"
+#include "tasty_int/detail/conversions/digits_from_floating_point.hpp"
 #include "tasty_int_test/logarithmic_range.hpp"
 
 
@@ -25,6 +28,7 @@ using tasty_int::detail::DIGIT_BASE;
 using tasty_int::detail::operator+;
 using tasty_int::detail::operator*;
 using tasty_int::detail::conversions::digits_from_integral;
+using tasty_int::detail::conversions::digits_from_floating_point;
 
 
 std::vector<digit_type>
@@ -90,6 +94,30 @@ test_division(const DividendType         &dividend,
     test_divide(dividend, divisor, expected_result);
 }
 
+const std::vector<std::vector<digit_type>> SAMPLE_DIVIDENDS = {
+    { 1 },
+    { 2 },
+    { DIGIT_TYPE_MAX },
+    { 0, 1 },
+    { 1, 1 },
+    { 2, 1 },
+    { 0, DIGIT_TYPE_MAX },
+    { 1, DIGIT_TYPE_MAX },
+    { 2, DIGIT_TYPE_MAX },
+    { DIGIT_TYPE_MAX, 1 },
+    { DIGIT_TYPE_MAX, 2 },
+    { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX },
+    { 0, 0, 1 },
+    { 0, 0, 0, 1 },
+    { 1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 2, 1 },
+    { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX, DIGIT_TYPE_MAX },
+    std::vector<digit_type>(100, 6),
+    { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
+    digit_base_power(99),
+    std::vector<digit_type>(7, 19),
+    std::vector<digit_type>(250, DIGIT_TYPE_MAX)
+};
+
 
 class DigitsDivisionIdentitiesTest
     : public ::testing::TestWithParam<std::vector<digit_type>>
@@ -131,27 +159,7 @@ TEST_P(DigitsDivisionIdentitiesTest, DigitsDividedByGreaterDigitsValue)
 INSTANTIATE_TEST_SUITE_P(
     DigitsDivisionTest,
     DigitsDivisionIdentitiesTest,
-    ::testing::ValuesIn(
-        std::vector<std::vector<digit_type>> {
-            { 1 },
-            { 2 },
-            { DIGIT_TYPE_MAX },
-            { 0, 1 },
-            { 1, 1 },
-            { 2, 1 },
-            { 0, DIGIT_TYPE_MAX },
-            { 1, DIGIT_TYPE_MAX },
-            { 2, DIGIT_TYPE_MAX },
-            { DIGIT_TYPE_MAX, 1 },
-            { DIGIT_TYPE_MAX, 2 },
-            { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX },
-            { 0, 0, 1 },
-            { 0, 0, 0, 1 },
-            { 1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 2, 1 },
-            { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX, DIGIT_TYPE_MAX },
-            std::vector<digit_type>(100, 6)
-        }
-    )
+    ::testing::ValuesIn(SAMPLE_DIVIDENDS)
 );
 
 
@@ -421,18 +429,45 @@ INSTANTIATE_TEST_SUITE_P(
     DigitsDivisionTest,
     DigitsAndIntegralDivisionTest,
     ::testing::Combine(
-        ::testing::ValuesIn(
-            std::vector<std::vector<digit_type>> {
-                { 1 },
-                { DIGIT_TYPE_MAX },
-                { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
-                digit_base_power(99),
-                std::vector<digit_type>(7, 19),
-                std::vector<digit_type>(250, DIGIT_TYPE_MAX)
-            }
-        ),
+        ::testing::ValuesIn(SAMPLE_DIVIDENDS),
         tasty_int_test::logarithmic_range<std::uintmax_t>(
             1, std::numeric_limits<std::uintmax_t>::max(), 3
+        )
+    )
+);
+
+
+class DigitsAndFloatingPointDivisionTest
+    : public ::testing::TestWithParam<
+      std::tuple<std::vector<digit_type>, long double>
+    >
+{}; // class DigitsAndFloatingPointDivisionTest
+
+TEST_P(DigitsAndFloatingPointDivisionTest,
+       DigitsDividedByFloatingPointIsConsistentWithDigitsDividedByDigits)
+{
+    std::vector<digit_type> dividend = std::get<0>(GetParam());
+    long double divisor              = std::get<1>(GetParam());
+    auto expected_result             = divide(dividend,
+                                              digits_from_floating_point(divisor));
+
+    test_division(dividend, divisor, expected_result);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    DigitsDivisionTest,
+    DigitsAndFloatingPointDivisionTest,
+    ::testing::Combine(
+        ::testing::ValuesIn(SAMPLE_DIVIDENDS),
+        ::testing::Values(
+            1.0L,
+            2.0L,
+            10.0L,
+            std::pow(DIGIT_BASE, 200.0L),
+            1.0e20L,
+            42.0e100L,
+            77.0e300L,
+            std::numeric_limits<long double>::max()
         )
     )
 );

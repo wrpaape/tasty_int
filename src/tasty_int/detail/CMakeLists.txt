@@ -242,6 +242,7 @@ target_link_libraries(
     tasty_int-detail-digits_addition
     tasty_int-detail-digits_subtraction
     tasty_int-detail-digits_multiplication
+    tasty_int-detail-conversions-digits_from_floating_point
 )
 
 add_library(
