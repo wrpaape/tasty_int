@@ -26,6 +26,13 @@ target_link_libraries(
 
 
 add_google_test(
+    NAME    tasty_int-detail-sign_test
+    SOURCES sign_test.cpp
+            ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
+            $<TARGET_OBJECTS:tasty_int-detail-sign_test_common>
+)
+
+add_google_test(
     NAME    tasty_int-detail-digit_type_test
     SOURCES digit_type_test.cpp
             ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
@@ -79,13 +86,6 @@ add_google_test(
     NAME      tasty_int-detail-trailing_zero_test
     SOURCES   trailing_zero_test.cpp
     LIBRARIES tasty_int-detail-trailing_zero
-)
-
-add_google_test(
-    NAME      tasty_int-detail-flip_sign_test
-    SOURCES   flip_sign_test.cpp
-              $<TARGET_OBJECTS:tasty_int-detail-sign_test_common>
-    LIBRARIES tasty_int-detail-flip_sign
 )
 
 add_google_test(
@@ -249,14 +249,13 @@ add_google_test(
               tasty_int-detail-conversions-digits_from_string
 )
 
-# TODO
-# add_google_test(
-#     NAME      tasty_int-detail-integer_multiplication_test
-#     SOURCES   integer_multiplication_test.cpp
-#     LIBRARIES tasty_int-detail-integer
-#               tasty_int-detail-conversions-integer_from_string
-#               tasty_int-detail-integer_test_common
-# )
+add_google_test(
+    NAME      tasty_int-detail-integer_multiplication_test
+    SOURCES   integer_multiplication_test.cpp
+    LIBRARIES tasty_int-detail-integer_multiplication_and_division
+              tasty_int-detail-conversions-integer_from_string
+              tasty_int-detail-integer_test_common
+)
 
 add_google_test(
     NAME      tasty_int-detail-digits_division_test
@@ -267,6 +266,14 @@ add_google_test(
               tasty_int-detail-conversions-digits_from_integral
               tasty_int-detail-conversions-digits_from_floating_point
               tasty_int_test
+)
+
+add_google_test(
+    NAME      tasty_int-detail-integer_division_test
+    SOURCES   integer_division_test.cpp
+    LIBRARIES tasty_int-detail-integer_multiplication_and_division
+              tasty_int-detail-conversions-integer_from_string
+              tasty_int-detail-integer_test_common
 )
 
 add_google_test(

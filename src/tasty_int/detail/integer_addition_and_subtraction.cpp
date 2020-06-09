@@ -11,7 +11,6 @@
 #include "tasty_int/detail/concepts.hpp"
 #include "tasty_int/detail/digits_addition.hpp"
 #include "tasty_int/detail/digits_subtraction.hpp"
-#include "tasty_int/detail/flip_sign.hpp"
 #include "tasty_int/detail/sign_from_signed_arithmetic.hpp"
 #include "tasty_int/detail/sign_from_unsigned_arithmetic.hpp"
 
@@ -41,15 +40,6 @@ larger_of_agreeing_signs(Sign sign1,
     return static_cast<Sign>(sign1 | sign2);
 }
 
-Sign
-sign_difference(Sign base_sign,
-                Sign value_difference_sign)
-{
-    return static_cast<Sign>(
-        base_sign * value_difference_sign
-    );
-}
-
 template<Value ValueType>
 void
 add_agreeing_terms_in_place(Sign             addend_sign,
@@ -68,7 +58,7 @@ subtract_agreeing_terms_in_place(Sign             subtrahend_sign,
 {
     Sign result_sign = subtract_in_place(subtrahend_value, minuend.digits);
     auto larger_sign = larger_of_agreeing_signs(minuend.sign, subtrahend_sign);
-    minuend.sign     = sign_difference(larger_sign, result_sign);
+    minuend.sign     = larger_sign * result_sign;
 }
 
 template<Value ValueType>
@@ -77,7 +67,7 @@ subtract_value_in_place_from_nonzero(const ValueType &subtrahend_value,
                                      Integer         &minuend)
 {
     Sign result_sign = subtract_in_place(subtrahend_value, minuend.digits);
-    minuend.sign     = sign_difference(minuend.sign, result_sign);
+    minuend.sign     = minuend.sign * result_sign;
 }
 
 template<ArithmeticValue  ArithmeticValueType,
@@ -127,7 +117,7 @@ add_signed_arithmetic(const Integer        &lhs,
         result.digits = lhs.digits + rhs_value;
     } else {
         auto [result_sign, result_digits] = subtract(rhs_value, lhs.digits);
-        result.sign   = sign_difference(rhs_sign, result_sign);
+        result.sign   = rhs_sign * result_sign;
         result.digits = std::move(result_digits);
     }
 
@@ -172,7 +162,7 @@ subtract_reverse_operands(const Integer  &lhs,
 {
     Integer result = rhs - lhs;
 
-    result.sign = flip_sign(result.sign);
+    result.sign = -result.sign;
     
     return result;
 }
@@ -188,11 +178,11 @@ subtract_signed_value(Sign             lhs_sign,
     if (signs_agree(lhs_sign, rhs.sign)) {
         Sign larger_sign = larger_of_agreeing_signs(lhs_sign, rhs.sign);
         auto [result_sign, result_digits] = subtract(lhs_value, rhs.digits);
-        result.sign   = sign_difference(larger_sign, result_sign);
+        result.sign   = larger_sign * result_sign;
         result.digits = std::move(result_digits);
     } else {
         result.sign   = larger_of_agreeing_signs(lhs_sign,
-                                                 flip_sign(rhs.sign));
+                                                 -rhs.sign);
         result.digits = lhs_value + rhs.digits;
     }
 
@@ -267,7 +257,7 @@ operator+(const Integer &lhs,
         result.digits = lhs.digits + rhs.digits;
     } else {
         auto [result_sign, result_digits] = subtract(lhs.digits, rhs.digits);
-        result.sign   = sign_difference(lhs.sign, result_sign);
+        result.sign   = lhs.sign * result_sign;
         result.digits = std::move(result_digits);
     }
 

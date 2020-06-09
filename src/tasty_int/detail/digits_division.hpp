@@ -53,6 +53,15 @@ std::vector<digit_type>
 divide_in_place(std::uintmax_t           divisor,
                 std::vector<digit_type> &dividend);
 
+/**
+ * @defgroup DigitsDivisionFloatingPointOverloads Digits Division Floating Point Overloads
+ *
+ * These operations truncate their operand to the nearest integer before
+ * dividing.
+ *
+ * @pre `std::isfinite(divisor) && (divisor >= 1.0)`
+ */
+/// @ingroup DigitsDivisionFloatingPointOverloads
 std::vector<digit_type>
 divide_in_place(long double              divisor,
                 std::vector<digit_type> &dividend);
@@ -79,6 +88,7 @@ DigitsDivisionResult
 divide(const std::vector<digit_type> &dividend,
        std::uintmax_t                 divisor);
 
+/// @ingroup DigitsDivisionFloatingPointOverloads
 DigitsDivisionResult
 divide(const std::vector<digit_type> &dividend,
        long double                    divisor);

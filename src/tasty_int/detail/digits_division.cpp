@@ -1,13 +1,13 @@
 #include "tasty_int/detail/digits_division.hpp"
 
 #include <cassert>
+#include <cmath>
 
 #include <algorithm>
 #include <iterator>
 #include <utility>
 
 #include "tasty_int/detail/digit_from_nonnegative_value.hpp"
-#include "tasty_int/detail/flip_sign.hpp"
 #include "tasty_int/detail/is_zero.hpp"
 #include "tasty_int/detail/trailing_zero.hpp"
 #include "tasty_int/detail/split_digits.hpp"
@@ -357,7 +357,7 @@ correct_divide_normalized_3n_2n_split_remainder(
         quotient -= std::uintmax_t(1);
 
         remainder_sign = subtract_in_place(divisor, remainder);
-        remainder_sign = flip_sign(remainder_sign);
+        remainder_sign = -remainder_sign;
     }
 }
 
@@ -542,10 +542,15 @@ DigitsDivisionResult
 divide(const std::vector<digit_type> &dividend,
        long double                    divisor)
 {
-    assert(divisor > 0);
+    assert(std::isfinite(divisor));
+    assert(divisor >= 1.0L);
 
-    return divide(dividend,
-                  conversions::digits_from_floating_point(divisor));
+    return (divisor <= dividend)
+         ? divide_and_conquer_divide(
+               dividend,
+               conversions::digits_from_floating_point(divisor)
+           )
+         : make_zero_quotient_result(dividend);
 }
 
 DigitsDivisionResult

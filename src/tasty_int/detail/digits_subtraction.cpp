@@ -2,7 +2,6 @@
 
 #include "tasty_int/detail/digit_from_nonnegative_value.hpp"
 #include "tasty_int/detail/digits_addition.hpp"
-#include "tasty_int/detail/flip_sign.hpp"
 #include "tasty_int/detail/floating_point_digits_iterator.hpp"
 #include "tasty_int/detail/integral_digits_view.hpp"
 #include "tasty_int/detail/sign_from_digits.hpp"
@@ -225,7 +224,7 @@ complete_subtract(digit_accumulator_type   carry,
     Sign tentative_sign = carried_sign;
 
     if (carry == 0) {
-        tentative_sign = flip_sign(tentative_sign);
+        tentative_sign = -tentative_sign;
         make_digit_compliment(minuend);
     }
 

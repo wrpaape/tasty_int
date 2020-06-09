@@ -27,9 +27,12 @@ template<typename T>
 constexpr auto
 print_precision()
 {
-    // need 2 extra digits to ensure maximum precision when restoring values
-    // https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html
-    return std::numeric_limits<T>::digits10 + 2;
+    // The value of std::numeric_limits<T>::max_digits10 is the number of
+    // base-10 digits that are necessary to uniquely represent all distinct
+    // values of the type T, such as necessary for
+    // serialization/deserialization to text.
+    // (https://en.cppreference.com/w/cpp/types/numeric_limits/max_digits10)
+    return std::numeric_limits<T>::max_digits10;
 }
 
 void

@@ -8,7 +8,6 @@
 #include <utility>
 
 #include "tasty_int/concepts.hpp"
-#include "tasty_int/detail/flip_sign.hpp"
 #include "tasty_int/detail/integer.hpp"
 #include "tasty_int/detail/integer_addition_and_subtraction.hpp"
 #include "tasty_int/detail/conversions/integer_from_floating_point.hpp"
@@ -254,7 +253,7 @@ public:
     {
         auto copy = *this;
 
-        copy.integer.sign = detail::flip_sign(copy.integer.sign);
+        copy.integer.sign = -copy.integer.sign;
 
         return copy;
     }

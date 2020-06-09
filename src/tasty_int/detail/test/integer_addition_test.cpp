@@ -13,6 +13,7 @@ using tasty_int::detail::Integer;
 using tasty_int::detail::Sign;
 using tasty_int::detail::conversions::integer_from_string;
 
+
 const Integer ZERO_INTEGER = { .sign = Sign::ZERO, .digits = { 0 } };
 
 void
@@ -102,6 +103,15 @@ TEST(IntegerAdditionTest, PositiveIntegerAndZeroInteger)
     test_addition(addend1, addend2, expected_result);
 }
 
+TEST(IntegerAdditionTest, NegativeIntegerAndZeroInteger)
+{
+    Integer addend1         = integer_from_string("-12345678901234567890", 10);
+    Integer addend2         = ZERO_INTEGER;
+    Integer expected_result = addend1;
+
+    test_addition(addend1, addend2, expected_result);
+}
+
 TEST(IntegerAdditionTest, PositiveIntegerAndPositiveInteger)
 {
     Integer addend1         = integer_from_string("+12345678901234567890", 10);
@@ -133,15 +143,6 @@ TEST(IntegerAdditionTest, PositiveIntegerAndLargerNegativeInteger)
     Integer addend1         = integer_from_string( "+2345678901234567890", 10);
     Integer addend2         = integer_from_string("-12345678901234567890", 10);
     Integer expected_result = integer_from_string("-10000000000000000000", 10);
-
-    test_addition(addend1, addend2, expected_result);
-}
-
-TEST(IntegerAdditionTest, NegativeIntegerAndZeroInteger)
-{
-    Integer addend1         = integer_from_string("-12345678901234567890", 10);
-    Integer addend2         = ZERO_INTEGER;
-    Integer expected_result = addend1;
 
     test_addition(addend1, addend2, expected_result);
 }
