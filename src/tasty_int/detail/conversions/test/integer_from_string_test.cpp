@@ -435,14 +435,14 @@ make_zero_test_params()
 
     // start at base 0, skip base 1, then process bases 2 through 64
     for (unsigned int base = 0, step = 2; base <= 64; base += step, step = 1) {
-           const auto& valid_signs = (base <= 62)
+           const auto &valid_signs = (base <= 62)
                                    ? BASE_62_AND_UNDER_VALID_SIGNS
                                    : BASE_63_AND_OVER_VALID_SIGNS;
            char zero_token         = (base <= 36)
                                    ? BASE_36_AND_UNDER_ZERO_TOKEN
                                    : BASE_37_AND_OVER_ZERO_TOKEN;
 
-           for (const auto& valid_sign : valid_signs) {
+           for (const auto &valid_sign : valid_signs) {
                for (unsigned int num_zero_tokens : { 1, 4 }) {
                    zero_test_params.emplace_back(StringConversionTestParam{
                        .base   = base,

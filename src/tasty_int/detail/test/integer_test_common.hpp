@@ -3,11 +3,11 @@
 
 #include <iosfwd>
 
+#include "tasty_int/detail/integer_comparison.hpp"
+
 
 namespace tasty_int {
 namespace detail {
-
-struct Integer;
 
 /**
  * @brief Outputs tasty_int::detail::Integer for diagnostic purposes.

@@ -1,4 +1,4 @@
-#include "tasty_int/detail/integer.hpp"
+#include "tasty_int/detail/integer_output.hpp"
 
 #include "gtest/gtest.h"
 

@@ -18,7 +18,7 @@ std::ostream &
 operator<<(std::ostream                    &output,
            const StringConversionTestParam &test_param)
 {
-    const auto& [base, tokens] = test_param;
+    const auto &[base, tokens] = test_param;
 
     return output << StringViewConversionTestParam{ .base = base, .tokens = tokens };
 }

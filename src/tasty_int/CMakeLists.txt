@@ -11,6 +11,12 @@ target_sources(
     tasty_int
     INTERFACE
     ${PROJECT_INCLUDE_DIR}/tasty_int/tasty_int.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/concepts.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/flip_sign.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_comparison.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_addition_and_subtraction.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_output.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/integer_from_floating_point.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/integer_from_signed_integral.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/integer_from_unsigned_integral.hpp
@@ -23,7 +29,10 @@ target_sources(
 target_link_libraries(
     tasty_int
     INTERFACE
-    tasty_int-detail-integer
+    tast_int-detail-flip_sign
+    tasty_int-detail-integer_comparison
+    tasty_int-detail-integer_addition_and_subtraction
+    tasty_int-detail-integer_output
     tasty_int-detail-conversions-integer_from_floating_point
     tasty_int-detail-conversions-integer_from_signed_integral
     tasty_int-detail-conversions-integer_from_unsigned_integral

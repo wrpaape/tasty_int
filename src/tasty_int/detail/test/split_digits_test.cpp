@@ -27,13 +27,13 @@ protected:
     auto
     split() const
     {
-        const auto& digits = this->GetParam().digits;
+        const auto &digits = this->GetParam().digits;
         auto split_size    = this->GetParam().split_size;
 
         return split_digits<COUNT_PIECES>(digits, split_size);
     }
 
-    const auto&
+    const auto &
     expected_result() const
     {
         return this->GetParam().expected_result;
@@ -46,7 +46,7 @@ class SplitDigitsIdentityTest : public SplitDigitsTest<1>
 
 TEST_P(SplitDigitsIdentityTest, SingleSplitTest)
 {
-    const auto& [ expected ] = expected_result();
+    const auto &[ expected ] = expected_result();
     
     auto [ result ] = split();
 
@@ -89,7 +89,7 @@ class SplitDigitsIntoTwoPiecesTest : public SplitDigitsTest<2>
 
 TEST_P(SplitDigitsIntoTwoPiecesTest, SingleSplitTest)
 {
-    const auto& [ expected_low, expected_high ] = expected_result();
+    const auto &[ expected_low, expected_high ] = expected_result();
     
     auto [ low, high ] = split();
 
@@ -144,7 +144,7 @@ class SplitDigitsIntoThreePiecesTest : public SplitDigitsTest<3>
 
 TEST_P(SplitDigitsIntoThreePiecesTest, SingleSplitTest)
 {
-    const auto& [ expected_low, expected_mid, expected_high ]
+    const auto &[ expected_low, expected_mid, expected_high ]
         = expected_result();
     
     auto [ low, mid, high ] = split();
@@ -205,7 +205,7 @@ class SplitDigitsIntoFourPiecesTest : public SplitDigitsTest<4>
 
 TEST_P(SplitDigitsIntoFourPiecesTest, SingleSplitTest)
 {
-    const auto& [
+    const auto &[
         expected_low, expected_mid_low, expected_mid_high, expected_high
     ] = expected_result();
     

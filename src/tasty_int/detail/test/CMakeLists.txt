@@ -21,7 +21,7 @@ add_library(
 )
 target_link_libraries(
     tasty_int-detail-integer_test_common
-    tasty_int-detail-integer
+    tasty_int-detail-integer_comparison
 )
 
 
@@ -138,7 +138,7 @@ add_google_test(
     NAME      tasty_int-detail-integer_comparison_test
     SOURCES   integer_comparison_test.cpp
               $<TARGET_OBJECTS:tasty_int-detail-sign_from_digits>
-    LIBRARIES tasty_int-detail-integer
+    LIBRARIES tasty_int-detail-integer_comparison
               tasty_int-detail-conversions-digits_from_integral
               tasty_int-detail-conversions-digits_from_floating_point
               tasty_int-detail-conversions-integer_from_signed_integral
@@ -201,7 +201,7 @@ add_google_test(
 add_google_test(
     NAME      tasty_int-detail-integer_addition_test
     SOURCES   integer_addition_test.cpp
-    LIBRARIES tasty_int-detail-integer
+    LIBRARIES tasty_int-detail-integer_addition_and_subtraction
               tasty_int-detail-conversions-integer_from_string
               tasty_int-detail-integer_test_common
 )
@@ -234,7 +234,7 @@ add_google_test(
 add_google_test(
     NAME      tasty_int-detail-integer_subtraction_test
     SOURCES   integer_subtraction_test.cpp
-    LIBRARIES tasty_int-detail-integer
+    LIBRARIES tasty_int-detail-integer_addition_and_subtraction
               tasty_int-detail-conversions-integer_from_floating_point
               tasty_int-detail-conversions-integer_from_string
               tasty_int-detail-integer_test_common
@@ -249,13 +249,14 @@ add_google_test(
               tasty_int-detail-conversions-digits_from_string
 )
 
-add_google_test(
-    NAME      tasty_int-detail-integer_multiplication_test
-    SOURCES   integer_multiplication_test.cpp
-    LIBRARIES tasty_int-detail-integer
-              tasty_int-detail-conversions-integer_from_string
-              tasty_int-detail-integer_test_common
-)
+# TODO
+# add_google_test(
+#     NAME      tasty_int-detail-integer_multiplication_test
+#     SOURCES   integer_multiplication_test.cpp
+#     LIBRARIES tasty_int-detail-integer
+#               tasty_int-detail-conversions-integer_from_string
+#               tasty_int-detail-integer_test_common
+# )
 
 add_google_test(
     NAME      tasty_int-detail-digits_division_test
@@ -271,6 +272,6 @@ add_google_test(
 add_google_test(
     NAME      tasty_int-detail-integer_output_test
     SOURCES   integer_output_test.cpp
-    LIBRARIES tasty_int-detail-integer
+    LIBRARIES tasty_int-detail-integer_output
               tasty_int-detail-conversions-integer_from_signed_integral
 )

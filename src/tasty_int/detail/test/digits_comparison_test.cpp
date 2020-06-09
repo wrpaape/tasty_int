@@ -338,9 +338,9 @@ operator<<(std::ostream                            &output,
 }
 
 std::array<std::vector<digit_type>::const_iterator, 4>
-unpack(const DigitsSequenceComparisonTestParam& test_param)
+unpack(const DigitsSequenceComparisonTestParam &test_param)
 {
-    auto&& [ lhs, rhs ] = test_param;
+    auto &&[ lhs, rhs ] = test_param;
 
     auto lhs_begin = lhs.digits.begin() + lhs.begin_offset;
     auto lhs_end   = lhs.digits.begin() + lhs.end_offset;

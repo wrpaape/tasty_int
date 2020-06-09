@@ -246,20 +246,47 @@ target_link_libraries(
 )
 
 add_library(
-    tasty_int-detail-integer
+    tasty_int-detail-integer_comparison
     STATIC
-    integer.cpp
-    $<TARGET_OBJECTS:tasty_int-detail-conversions-base_prefix_format_from_ios_format>
+    integer_comparison.cpp
+    concepts.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_comparison.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/concepts.hpp
 )
 target_link_libraries(
-    tasty_int-detail-integer
+    tasty_int-detail-integer_comparison
+    tasty_int-detail-digits_comparison
+    tasty_int-detail-sign_from_signed_arithmetic
+)
+add_library(
+    tasty_int-detail-integer_addition_and_subtraction
+    STATIC
+    integer_addition_and_subtraction.cpp
+    concepts.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_addition_and_subtraction.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/concepts.hpp
+)
+target_link_libraries(
+    tasty_int-detail-integer_addition_and_subtraction
     tasty_int-detail-digits_addition
     tasty_int-detail-digits_comparison
     tasty_int-detail-digits_subtraction
     tasty_int-detail-flip_sign
     tasty_int-detail-sign_from_signed_arithmetic
     tasty_int-detail-sign_from_unsigned_arithmetic
+)
+add_library(
+    tasty_int-detail-integer_output
+    STATIC
+    integer_output.cpp
+    $<TARGET_OBJECTS:tasty_int-detail-conversions-base_prefix_format_from_ios_format>
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_output.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
+)
+target_link_libraries(
+    tasty_int-detail-integer_output
     tasty_int-detail-conversions-string_from_integer
 )
 

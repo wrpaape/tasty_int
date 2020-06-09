@@ -87,7 +87,7 @@ make_addition_integration_test_params(
 {
     return make_arithmetic_integration_test_params(
         digits_from_user_type,
-        [](const auto& lhs, const auto& rhs)
+        [](const auto &lhs, const auto &rhs)
         {
             return lhs + rhs;
         }

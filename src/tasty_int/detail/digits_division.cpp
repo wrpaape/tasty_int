@@ -350,8 +350,8 @@ correct_divide_normalized_3n_2n_split_remainder(
     DigitsDivisionResult          &result
 )
 {
-    auto& remainder = result.remainder;
-    auto& quotient  = result.quotient;
+    auto &remainder = result.remainder;
+    auto &quotient  = result.quotient;
 
     while (remainder_sign < Sign::ZERO) {
         quotient -= std::uintmax_t(1);
@@ -446,8 +446,8 @@ divide_and_conquer_divide_normalized(const std::vector<digit_type> &dividend,
                                      const std::vector<digit_type> &divisor)
 {
     DigitsDivisionResult result;
-    auto& quotient  = result.quotient;
-    auto& remainder = result.remainder;
+    auto &quotient  = result.quotient;
+    auto &remainder = result.remainder;
 
     auto dividend_offset =
         padded_dividend_magnitude(dividend, divisor)

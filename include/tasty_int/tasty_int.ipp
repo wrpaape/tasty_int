@@ -3,6 +3,9 @@
 
 #include "tasty_int/tasty_int.hpp"
 
+#include "tasty_int/detail/integer_comparison.hpp"
+#include "tasty_int/detail/integer_output.hpp"
+
 
 namespace tasty_int {
 namespace detail {

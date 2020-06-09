@@ -1,4 +1,4 @@
-#include "tasty_int/detail/integer.hpp"
+#include "tasty_int/detail/integer_comparison.hpp"
 
 #include <vector>
 #include <limits>
@@ -56,17 +56,17 @@ INSTANTIATE_TEST_SUITE_P(
     IntegerAndIntegerEqualityTest,
     ::testing::ValuesIn(
         std::vector<Integer> {
-            { Sign::ZERO,     { 0 } },
-            { Sign::POSITIVE, { 1 } },
-            { Sign::POSITIVE, { 0, 1 } },
-            { Sign::POSITIVE, { 0, 0, 1 } },
-            { Sign::POSITIVE, { 0, 1, 1 } },
-            { Sign::POSITIVE, { 1, 1, 1 } },
-            { Sign::NEGATIVE, { 1 } },
-            { Sign::NEGATIVE, { 0, 1 } },
-            { Sign::NEGATIVE, { 0, 0, 1 } },
-            { Sign::NEGATIVE, { 0, 1, 1 } },
-            { Sign::NEGATIVE, { 1, 1, 1 } }
+            { .sign = Sign::ZERO,     .digits = { 0 } },
+            { .sign = Sign::POSITIVE, .digits = { 1 } },
+            { .sign = Sign::POSITIVE, .digits = { 0, 1 } },
+            { .sign = Sign::POSITIVE, .digits = { 0, 0, 1 } },
+            { .sign = Sign::POSITIVE, .digits = { 0, 1, 1 } },
+            { .sign = Sign::POSITIVE, .digits = { 1, 1, 1 } },
+            { .sign = Sign::NEGATIVE, .digits = { 1 } },
+            { .sign = Sign::NEGATIVE, .digits = { 0, 1 } },
+            { .sign = Sign::NEGATIVE, .digits = { 0, 0, 1 } },
+            { .sign = Sign::NEGATIVE, .digits = { 0, 1, 1 } },
+            { .sign = Sign::NEGATIVE, .digits = { 1, 1, 1 } }
         }
     )
 );

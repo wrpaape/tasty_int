@@ -19,7 +19,7 @@ TEST(TastyIntUnaryOperationsTest, UnaryPlusReturnsCopy)
 {
     TastyInt number(+22222);
 
-    auto&& result = +number;
+    auto &&result = +number;
 
     EXPECT_NE(&number, &result);
 }
@@ -36,7 +36,7 @@ TEST(TastyIntUnaryOperationsTest, UnaryMinusReturnsCopy)
 {
     TastyInt number(+44444);
 
-    auto&& result = -number;
+    auto &&result = -number;
 
     EXPECT_NE(&number, &result);
 }
@@ -55,7 +55,7 @@ TEST(TastyIntUnaryOperationsTest, PostIncrementReturnsReference)
 {
     TastyInt number(+66666);
 
-    auto&& result = ++number;
+    auto &&result = ++number;
 
     EXPECT_EQ(&number, &result);
 }
@@ -74,7 +74,7 @@ TEST(TastyIntUnaryOperationsTest, PreIncrementReturnsCopy)
 {
     TastyInt number(+88888);
 
-    auto&& result = number++;
+    auto &&result = number++;
 
     EXPECT_NE(&number, &result);
 }
@@ -100,7 +100,7 @@ TEST(TastyIntUnaryOperationsTest, PostDecrementReturnsReference)
 {
     TastyInt number(+66666);
 
-    auto&& result = --number;
+    auto &&result = --number;
 
     EXPECT_EQ(&number, &result);
 }
@@ -119,7 +119,7 @@ TEST(TastyIntUnaryOperationsTest, PreDecrementReturnsCopy)
 {
     TastyInt number(+88888);
 
-    auto&& result = number--;
+    auto &&result = number--;
 
     EXPECT_NE(&number, &result);
 }

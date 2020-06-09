@@ -7,8 +7,10 @@
 #include <type_traits>
 #include <utility>
 
-#include "tasty_int/detail/integer.hpp"
+#include "tasty_int/concepts.hpp"
 #include "tasty_int/detail/flip_sign.hpp"
+#include "tasty_int/detail/integer.hpp"
+#include "tasty_int/detail/integer_addition_and_subtraction.hpp"
 #include "tasty_int/detail/conversions/integer_from_floating_point.hpp"
 #include "tasty_int/detail/conversions/integer_from_signed_integral.hpp"
 #include "tasty_int/detail/conversions/integer_from_unsigned_integral.hpp"
@@ -35,28 +37,12 @@ prepare_operand(TastyInt &operand);
 
 
 /**
- * @defgroup TastyIntConcepts TastyInt Concepts
+ * @defgroup TastyIntOperationConcepts TastyInt Operation Concepts
  *
- * The following define concepts for primitive types that are operable with
+ * The following define concepts for types that are operable with
  * tasty_int::TastyInt.
- *
- * @todo TODO: replace with std:: <concepts> when avaialable
  */
 /// @{
-template<typename T>
-concept Arithmetic = std::is_arithmetic_v<T>;
-
-template<typename T>
-concept FloatingPoint = std::is_floating_point_v<T>;
-
-template<typename T>
-concept SignedIntegral = std::is_integral_v<T>
-                      && std::is_signed_v<T>;
-
-template<typename T>
-concept UnsignedIntegral = std::is_integral_v<T>
-                        && std::is_unsigned_v<T>;
-
 template<typename T>
 concept TastyIntOperand = Arithmetic<T>
                        || std::is_same_v<T, TastyInt>;
@@ -66,7 +52,6 @@ template<typename LhsType,
 concept TastyIntOperation =
     (std::is_same_v<LhsType, TastyInt> && TastyIntOperand<RhsType>)
  || (std::is_same_v<RhsType, TastyInt> && TastyIntOperand<LhsType>);
-
 /// @}
 
 /**
@@ -328,7 +313,7 @@ private:
     operator-(const LhsType &lhs,
               const RhsType &rhs);
 
-    TastyInt(detail::Integer&& result)
+    TastyInt(detail::Integer &&result)
         : integer(std::move(result))
     {}
 
