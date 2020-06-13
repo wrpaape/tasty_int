@@ -17,7 +17,8 @@ target_sources(
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_comparison.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_addition.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_subtraction.hpp
-    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_multiplication_and_division.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_multiplication.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_division.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_output.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/integer_from_floating_point.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/integer_from_signed_integral.hpp
@@ -34,7 +35,8 @@ target_link_libraries(
     tasty_int-detail-integer_comparison
     tasty_int-detail-integer_addition
     tasty_int-detail-integer_subtraction
-    tasty_int-detail-integer_multiplication_and_division
+    tasty_int-detail-integer_multiplication
+    tasty_int-detail-integer_division
     tasty_int-detail-integer_output
     tasty_int-detail-conversions-integer_from_floating_point
     tasty_int-detail-conversions-integer_from_signed_integral

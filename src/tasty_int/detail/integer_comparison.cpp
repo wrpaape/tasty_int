@@ -11,8 +11,9 @@ namespace detail {
 namespace {
 
 /// These specializations must be used in place of std::less, std::greater,
-/// etc... to avoid the Koenig lookup of the std::vector operators over the
-/// desired digit comparison semantics of the tasty_int::detail::operators.
+/// etc... to avoid the argument-dependent lookup of the std::vector operators
+/// over the desired digit comparison semantics of the
+/// tasty_int::detail::operators.
 
 struct DigitsLess
 {
@@ -165,6 +166,7 @@ struct DigitsGreaterEqual
         return lhs >= rhs;
     }
 }; // struct DigitsGreaterEqual
+
 
 template<ArithmeticValue  ArithmeticValueType,
          SignedArithmetic SignedArithmeticType>

@@ -1,4 +1,4 @@
-#include "tasty_int/detail/integer_arithmetic_operation.hpp"
+#include "tasty_int/detail/integer_operation.hpp"
 
 #include <utility>
 #include <vector>

@@ -263,7 +263,7 @@ add_google_test(
 add_google_test(
     NAME      tasty_int-detail-integer_multiplication_test
     SOURCES   integer_multiplication_test.cpp
-    LIBRARIES tasty_int-detail-integer_multiplication_and_division
+    LIBRARIES tasty_int-detail-integer_multiplication
               tasty_int-detail-conversions-integer_from_string
               tasty_int-detail-integer_test_common
 )
@@ -282,7 +282,7 @@ add_google_test(
 add_google_test(
     NAME      tasty_int-detail-integer_division_test
     SOURCES   integer_division_test.cpp
-    LIBRARIES tasty_int-detail-integer_multiplication_and_division
+    LIBRARIES tasty_int-detail-integer_division
               tasty_int-detail-conversions-integer_from_string
               tasty_int-detail-integer_test_common
 )

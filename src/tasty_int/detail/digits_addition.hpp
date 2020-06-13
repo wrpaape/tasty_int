@@ -33,8 +33,8 @@ operator+=(std::vector<digit_type> &lhs,
 /**
  * @defgroup DigitsAdditionFloatingPointOverloads Digits Addition Floating Point Overloads
  *
- * These operations truncate their operand to the nearest integer before
- * adding.
+ * These operations truncate their operand towards zero to the nearest integer
+ * before adding.
  *
  * @pre floating point operand is finite
  * @pre floating point operand is nonnegative if the result type is a vector of

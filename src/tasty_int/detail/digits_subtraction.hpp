@@ -19,6 +19,7 @@ namespace detail {
  * These operations operate on little-endian `std::vector`s of `digit_type`.
  * They produce the signed result of `minuend - subtrahend`.
  *
+ * @pre all inputs must be nonnegative
  * @pre input digits vectors must be non-empty
  * @pre input digits may have no leading zeros
  * @pre every element of input digits vectors must be `<= DIGIT_TYPE_MAX`
@@ -42,6 +43,17 @@ subtract_in_place(const std::vector<digit_type> &subtrahend,
 Sign
 subtract_in_place(std::uintmax_t           subtrahend,
                   std::vector<digit_type> &minuend);
+/**
+ * @defgroup DigitsSubtractionFloatingPointOverloads Digits Subtraction Floating Point Overloads
+ *
+ * These operations truncate their operand towards zero to the nearest integer
+ * before subtracting.
+ *
+ * @pre floating point operand is finite
+ * @pre floating point operand is nonnegative if the result type is a vector of
+ *     digits
+ */
+/// @ingroup DigitsSubtractionFloatingPointOverloads
 Sign
 subtract_in_place(long double              subtrahend,
                   std::vector<digit_type> &minuend);
@@ -66,6 +78,7 @@ std::pair<Sign, std::vector<digit_type>>
 subtract(std::uintmax_t                 minuend,
          const std::vector<digit_type> &subtrahend);
 
+/// @ingroup DigitsSubtractionFloatingPointOverloads
 std::pair<Sign, std::vector<digit_type>>
 subtract(long double                    minuend,
          const std::vector<digit_type> &subtrahend);

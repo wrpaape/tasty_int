@@ -22,7 +22,7 @@ struct DigitsDivisionResult
 
 
 /**
- * @defgroup DigitsDivisionOperators Digits Division Operations
+ * @defgroup DigitsDivisionOperations Digits Division Operations
  *
  * These operations operate on little-endian `std::vector`s of `digit_type`.
  * They produce the quotient and remainder of `dividend / divisor`.
@@ -56,8 +56,8 @@ divide_in_place(std::uintmax_t           divisor,
 /**
  * @defgroup DigitsDivisionFloatingPointOverloads Digits Division Floating Point Overloads
  *
- * These operations truncate their operand to the nearest integer before
- * dividing.
+ * These operations truncate their operand toward zero to the nearest integer
+ * before dividing.
  *
  * @pre `std::isfinite(divisor) && (divisor >= 1.0)`
  */

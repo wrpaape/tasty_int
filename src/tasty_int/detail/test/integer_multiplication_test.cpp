@@ -1,4 +1,4 @@
-#include "tasty_int/detail/integer_multiplication_and_division.hpp"
+#include "tasty_int/detail/integer_multiplication.hpp"
 
 #include <type_traits>
 

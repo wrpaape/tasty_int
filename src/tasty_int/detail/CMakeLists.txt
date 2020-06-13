@@ -295,16 +295,28 @@ target_link_libraries(
 )
 
 add_library(
-    tasty_int-detail-integer_multiplication_and_division
+    tasty_int-detail-integer_multiplication
     STATIC
-    integer_multiplication_and_division.cpp
-    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_multiplication_and_division.hpp
+    integer_multiplication.cpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_multiplication.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
 )
 target_link_libraries(
-    tasty_int-detail-integer_multiplication_and_division
+    tasty_int-detail-integer_multiplication
     tasty_int-detail-integer_operation
     tasty_int-detail-digits_multiplication
+)
+
+add_library(
+    tasty_int-detail-integer_division
+    STATIC
+    integer_division.cpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_division.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
+)
+target_link_libraries(
+    tasty_int-detail-integer_division
+    tasty_int-detail-integer_operation
     tasty_int-detail-digits_division
     tasty_int-detail-sign_from_digits
 )

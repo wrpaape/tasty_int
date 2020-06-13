@@ -46,9 +46,14 @@ template<typename T>
 concept IntegerOperand = Arithmetic<T>
                       || std::is_same_v<T, Integer>;
 
+
 /**
  * @brief Check if two signs agree.
  *
+ * @param[in] sign1 a sign
+ * @param[in] sign2 another sign
+ * @return true unless one operand is Sign::POSITIVE and the other
+ *     Sign::NEGATIVE
  */
 inline bool
 signs_agree(Sign sign1,
@@ -58,7 +63,16 @@ signs_agree(Sign sign1,
     return (sign_diff <= 1);
 }
 
-/// @todo: TODO
+
+/**
+ * @brief Produces the larger of two agreeing signs.
+ *
+ * @param[in] sign1 a sign
+ * @param[in] sign2 another sign
+ * @return the nonzero sign if one is present, otherwise Sign::ZERO
+ *
+ * @pre `signs_agree(sign1, sign2)`
+ */
 inline Sign
 larger_of_agreeing_signs(Sign sign1,
                          Sign sign2)
@@ -68,57 +82,79 @@ larger_of_agreeing_signs(Sign sign1,
     return static_cast<Sign>(sign1 | sign2);
 }
 
-/// @todo: TODO
+
+/**
+ * @defgroup SignFromIntegerOperandOverloads sign_from_integer_operand Overloads
+ *
+ * These functions return the sign of the supplied @p operand.
+ *
+ * @param[in] operand a tasty_int::detail::Integer-operable operand
+ * @return the sign of @p operand.
+ */
+/// @{
 inline Sign
 sign_from_integer_operand(const Integer &operand)
 {
     return operand.sign;
 }
 
-/// @todo: TODO
 inline Sign
 sign_from_integer_operand(std::uintmax_t operand)
 {
     return sign_from_unsigned_arithmetic(operand);
 }
 
-/// @todo: TODO
 template<SignedArithmetic SignedArithmeticValueType>
 Sign
 sign_from_integer_operand(SignedArithmeticValueType operand)
 {
     return sign_from_signed_arithmetic(operand);
 }
+/// @}
 
-/// @todo: TODO
+
+/**
+ * @defgroup ValueFromIntegerOperandOverloads value_from_integer_operand Overloads
+ *
+ * These functions return the nonnegative value of the supplied @p operand.
+ *
+ * @param[in] operand a tasty_int::detail::Integer-operable operand
+ * @return the nonnegative value of @p operand.
+ */
+/// @{
 inline const std::vector<digit_type> &
 value_from_integer_operand(const Integer &operand)
 {
     return operand.digits;
 }
 
-/// @todo: TODO
 inline std::uintmax_t
 value_from_integer_operand(std::uintmax_t operand)
 {
     return operand;
 }
 
-/// @todo: TODO
 inline std::uintmax_t
 value_from_integer_operand(std::intmax_t operand)
 {
     return static_cast<std::uintmax_t>(std::abs(operand));
 }
 
-/// @todo: TODO
 inline long double
 value_from_integer_operand(long double operand)
 {
     return std::abs(operand);
 }
+/// @}
 
-/// @todo: TODO
+
+/**
+ * @brief Produces the sign and value of the supplied @p operand.
+ *
+ * @param[in] operand a tasty_int::detail::Integer-operable operand
+ * @return a std::pair consisting of the sign of the @p operand in the `first`
+ *     field and the value of @p operand in the `second` field.
+ */
 template<Arithmetic ArithmeticType>
 auto
 sign_and_value_from_arithmetic(ArithmeticType arithmetic)
