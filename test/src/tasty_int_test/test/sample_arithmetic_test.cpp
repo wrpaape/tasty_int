@@ -2,7 +2,7 @@
 
 #include <limits>
 #include <type_traits>
-#include <unordered_set>
+#include <set>
 
 #include "gtest/gtest.h"
 
@@ -83,18 +83,32 @@ TYPED_TEST(SampleArithmeticTest, One)
 
 TYPED_TEST(SampleArithmeticTest, Values)
 {
-    std::unordered_set<TypeParam> values(
+    std::set<TypeParam> values(
         SampleArithmetic<TypeParam>::VALUES.begin(),
         SampleArithmetic<TypeParam>::VALUES.end()
     );
 
-    EXPECT_TRUE(values.contains(SampleArithmetic<TypeParam>::ZERO));
-    EXPECT_TRUE(values.contains(SampleArithmetic<TypeParam>::ONE));
-    EXPECT_TRUE(values.contains(SampleArithmetic<TypeParam>::MINIMUM));
-    EXPECT_TRUE(values.contains(SampleArithmetic<TypeParam>::LOWER_QUARTILE));
-    EXPECT_TRUE(values.contains(SampleArithmetic<TypeParam>::MEDIAN));
-    EXPECT_TRUE(values.contains(SampleArithmetic<TypeParam>::UPPER_QUARTILE));
-    EXPECT_TRUE(values.contains(SampleArithmetic<TypeParam>::MAXIMUM));
+    EXPECT_TRUE(
+        values.find(SampleArithmetic<TypeParam>::ZERO)           != values.end()
+    );
+    EXPECT_TRUE(
+        values.find(SampleArithmetic<TypeParam>::ONE)            != values.end()
+    );
+    EXPECT_TRUE(
+        values.find(SampleArithmetic<TypeParam>::MINIMUM)        != values.end()
+    );
+    EXPECT_TRUE(
+        values.find(SampleArithmetic<TypeParam>::LOWER_QUARTILE) != values.end()
+    );
+    EXPECT_TRUE(
+        values.find(SampleArithmetic<TypeParam>::MEDIAN)         != values.end()
+    );
+    EXPECT_TRUE(
+        values.find(SampleArithmetic<TypeParam>::UPPER_QUARTILE) != values.end()
+    );
+    EXPECT_TRUE(
+        values.find(SampleArithmetic<TypeParam>::MAXIMUM)        != values.end()
+    );
 }
 
 } // namespace

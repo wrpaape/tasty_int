@@ -26,13 +26,6 @@ const Integer NEGATIVE_ONE_INTEGER = {
     .sign = Sign::NEGATIVE, .digits = { 1 }
 };
 
-const std::uintmax_t ZERO_UNSIGNED_INTEGRAL = 0;
-const std::uintmax_t ONE_UNSIGNED_INTEGRAL  = +1;
-
-const std::intmax_t ZERO_SIGNED_INTEGRAL         = 0;
-const std::intmax_t POSITIVE_ONE_SIGNED_INTEGRAL  = +1;
-const std::intmax_t NEGATIVE_ONE_SIGNED_INTEGRAL = +1;
-
 template<typename DividendType,
          typename DivisorType>
 void
