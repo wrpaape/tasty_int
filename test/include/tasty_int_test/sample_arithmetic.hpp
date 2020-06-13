@@ -1,8 +1,9 @@
 #ifndef TASTY_INT_TASTY_INT_TEST_SAMPLE_ARITHMETIC_TEST_HPP
 #define TASTY_INT_TASTY_INT_TEST_SAMPLE_ARITHMETIC_TEST_HPP
 
-#include <type_traits>
+#include <array>
 #include <limits>
+#include <type_traits>
 
 
 namespace tasty_int_test {
@@ -38,6 +39,17 @@ struct SampleArithmetic
                                  : get_middle(MINIMUM, MAXIMUM);
     static constexpr auto LOWER_QUARTILE = get_middle(MINIMUM, MEDIAN);
     static constexpr auto UPPER_QUARTILE = get_middle(MEDIAN,  MAXIMUM);
+
+    /// a collection of all sampled values
+    static constexpr std::array<ArithmeticType, 7> VALUES = {
+        ZERO,
+        ONE,
+        MINIMUM,
+        LOWER_QUARTILE,
+        MEDIAN,
+        UPPER_QUARTILE,
+        MAXIMUM
+    };
 }; // struct SampleArithmetic
 
 } // namespace tasty_int_test

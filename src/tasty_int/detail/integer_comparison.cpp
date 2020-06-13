@@ -2,10 +2,8 @@
 
 #include <functional>
 
-#include "tasty_int/concepts.hpp"
-#include "tasty_int/detail/concepts.hpp"
+#include "tasty_int/detail/integer_operation.hpp"
 #include "tasty_int/detail/digits_comparison.hpp"
-#include "tasty_int/detail/sign_from_signed_arithmetic.hpp"
 
 
 namespace tasty_int {

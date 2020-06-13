@@ -2,6 +2,7 @@
 
 #include <limits>
 #include <type_traits>
+#include <unordered_set>
 
 #include "gtest/gtest.h"
 
@@ -78,6 +79,22 @@ TYPED_TEST(SampleArithmeticTest, Zero)
 TYPED_TEST(SampleArithmeticTest, One)
 {
     EXPECT_EQ(TypeParam(1), SampleArithmetic<TypeParam>::ONE);
+}
+
+TYPED_TEST(SampleArithmeticTest, Values)
+{
+    std::unordered_set<TypeParam> values(
+        SampleArithmetic<TypeParam>::VALUES.begin(),
+        SampleArithmetic<TypeParam>::VALUES.end()
+    );
+
+    EXPECT_TRUE(values.contains(SampleArithmetic<TypeParam>::ZERO));
+    EXPECT_TRUE(values.contains(SampleArithmetic<TypeParam>::ONE));
+    EXPECT_TRUE(values.contains(SampleArithmetic<TypeParam>::MINIMUM));
+    EXPECT_TRUE(values.contains(SampleArithmetic<TypeParam>::LOWER_QUARTILE));
+    EXPECT_TRUE(values.contains(SampleArithmetic<TypeParam>::MEDIAN));
+    EXPECT_TRUE(values.contains(SampleArithmetic<TypeParam>::UPPER_QUARTILE));
+    EXPECT_TRUE(values.contains(SampleArithmetic<TypeParam>::MAXIMUM));
 }
 
 } // namespace

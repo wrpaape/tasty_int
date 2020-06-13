@@ -9,7 +9,8 @@
 
 #include "tasty_int/concepts.hpp"
 #include "tasty_int/detail/integer.hpp"
-#include "tasty_int/detail/integer_addition_and_subtraction.hpp"
+#include "tasty_int/detail/integer_addition.hpp"
+#include "tasty_int/detail/integer_subtraction.hpp"
 #include "tasty_int/detail/conversions/integer_from_floating_point.hpp"
 #include "tasty_int/detail/conversions/integer_from_signed_integral.hpp"
 #include "tasty_int/detail/conversions/integer_from_unsigned_integral.hpp"

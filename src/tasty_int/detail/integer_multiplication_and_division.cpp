@@ -6,12 +6,9 @@
 #include <type_traits>
 #include <utility>
 
-#include "tasty_int/concepts.hpp"
-#include "tasty_int/detail/concepts.hpp"
+#include "tasty_int/detail/integer_operation.hpp"
 #include "tasty_int/detail/digits_multiplication.hpp"
 #include "tasty_int/detail/digits_division.hpp"
-#include "tasty_int/detail/sign_from_signed_arithmetic.hpp"
-#include "tasty_int/detail/sign_from_unsigned_arithmetic.hpp"
 #include "tasty_int/detail/sign_from_digits.hpp"
 
 
@@ -19,104 +16,52 @@ namespace tasty_int {
 namespace detail {
 namespace {
 
-template<typename T>
-concept Operand = Arithmetic<T>
-               || std::is_same_v<T, Integer>;
-
-Sign
-sign_from_operand(const Integer &operand)
-{
-    return operand.sign;
-}
-
-Sign
-sign_from_operand(std::uintmax_t operand)
-{
-    return sign_from_unsigned_arithmetic(operand);
-}
-
-template<SignedArithmetic SignedArithmeticValueType>
-Sign
-sign_from_operand(SignedArithmeticValueType operand)
-{
-    return sign_from_signed_arithmetic(operand);
-}
-
-const std::vector<digit_type> &
-value_from_operand(const Integer &operand)
-{
-    return operand.digits;
-}
-
-std::uintmax_t
-value_from_operand(std::uintmax_t operand)
-{
-    return operand;
-}
-
-std::uintmax_t
-value_from_operand(std::intmax_t operand)
-{
-    return static_cast<std::uintmax_t>(std::abs(operand));
-}
-
-long double
-value_from_operand(long double operand)
-{
-    return std::abs(operand);
-}
-
-template<Operand OperandType>
-auto
-sign_and_value_from_operand(const OperandType operand)
-{
-    return std::make_pair(sign_from_operand(operand),
-                          value_from_operand(operand));
-}
-
-template<Operand MultiplierType>
+template<IntegerOperand MultiplierType>
 Integer &
 multiply_in_place(const MultiplierType &multiplier,
                   Integer              &multiplicand)
 {
-    multiplicand.sign   *= sign_from_operand(multiplier);
-    multiplicand.digits *= value_from_operand(multiplier);
+    multiplicand.sign   *= sign_from_integer_operand(multiplier);
+    multiplicand.digits *= value_from_integer_operand(multiplier);
 
     return multiplicand;
 }
 
-template<Operand MultiplierType>
+template<IntegerOperand MultiplierType>
 Integer
 multiply(const Integer        &multiplicand,
          const MultiplierType &multiplier)
 {
     Integer result;
-    result.sign   = multiplicand.sign   * sign_from_operand(multiplier);
-    result.digits = multiplicand.digits * value_from_operand(multiplier);
+    result.sign   = multiplicand.sign * sign_from_integer_operand(multiplier);
+    result.digits = multiplicand.digits 
+                  * value_from_integer_operand(multiplier);
 
     return result;
 }
 
-template<Operand DivisorType>
+template<IntegerOperand DivisorType>
 Integer &
 divide_in_place(const DivisorType &divisor,
                 Integer           &dividend)
 {
-    auto nonzero_quotient_sign = dividend.sign * sign_from_operand(divisor);
-    auto &&divisor_value       = value_from_operand(divisor);
+    auto nonzero_quotient_sign = dividend.sign
+                               * sign_from_integer_operand(divisor);
+    auto &&divisor_value       = value_from_integer_operand(divisor);
     (void) tasty_int::detail::divide_in_place(divisor_value, dividend.digits);
     dividend.sign = sign_from_digits(dividend.digits, nonzero_quotient_sign);
 
     return dividend;
 }
 
-template<Operand DivisorType>
+template<IntegerOperand DivisorType>
 Integer
 divide(const Integer     &dividend,
        const DivisorType &divisor)
 {
-    auto nonzero_quotient_sign = dividend.sign * sign_from_operand(divisor);
-    auto &&divisor_value       = value_from_operand(divisor);
+    auto nonzero_quotient_sign = dividend.sign
+                               * sign_from_integer_operand(divisor);
+    auto &&divisor_value       = value_from_integer_operand(divisor);
     Integer result;
     result.digits = tasty_int::detail::divide(dividend.digits,
                                               divisor_value).quotient;
@@ -125,12 +70,12 @@ divide(const Integer     &dividend,
     return result;
 }
 
-template<Operand DivisorType>
+template<IntegerOperand DivisorType>
 Integer
 remainder(const Integer     &dividend,
           const DivisorType &divisor)
 {
-    auto &&divisor_value = value_from_operand(divisor);
+    auto &&divisor_value = value_from_integer_operand(divisor);
 
     Integer result;
     result.digits = tasty_int::detail::divide(dividend.digits,
@@ -140,7 +85,7 @@ remainder(const Integer     &dividend,
     return result;
 }
 
-template<Operand DivisorType>
+template<IntegerOperand DivisorType>
 Integer &
 remainder_in_place(const DivisorType &divisor,
                    Integer           &dividend)
@@ -168,14 +113,15 @@ integer_division_result_from_digits_division_result(
     return result;
 }
 
-template<Operand DivisorType>
+template<IntegerOperand DivisorType>
 IntegerDivisionResult
 divide_and_remainder(const Integer     &dividend,
                      const DivisorType &divisor)
 {
     return integer_division_result_from_digits_division_result(
-        tasty_int::detail::divide(dividend.digits, value_from_operand(divisor)),
-        dividend.sign * sign_from_operand(divisor),
+        tasty_int::detail::divide(dividend.digits,
+                                  value_from_integer_operand(divisor)),
+        dividend.sign * sign_from_integer_operand(divisor),
         dividend.sign
     );
 }
@@ -326,13 +272,13 @@ operator/(const Integer &lhs,
     return divide(lhs, rhs);
 }
 
-std::intmax_t
-operator/(std::intmax_t  lhs,
-          const Integer &rhs)
-{
-    (void) rhs;
-    return lhs; // TODO
-}
+// std::intmax_t
+// operator/(std::intmax_t  lhs,
+//           const Integer &rhs)
+// {
+//     (void) rhs;
+//     return lhs; // TODO
+// }
 
 Integer
 operator/(const Integer &lhs,
@@ -343,13 +289,13 @@ operator/(const Integer &lhs,
     return divide(lhs, rhs);
 }
 
-long double
-operator/(long double    lhs,
-          const Integer &rhs)
-{
-    (void) rhs;
-    return lhs; // TODO
-}
+// long double
+// operator/(long double    lhs,
+//           const Integer &rhs)
+// {
+//     (void) rhs;
+//     return lhs; // TODO
+// }
 
 
 Integer &
@@ -397,13 +343,13 @@ operator%(const Integer  &lhs,
     return remainder(lhs, rhs);
 }
 
-std::uintmax_t
-operator%(std::uintmax_t  lhs,
-          const Integer  &rhs)
-{
-    (void) rhs;
-    return lhs; // TODO
-}
+// std::uintmax_t
+// operator%(std::uintmax_t  lhs,
+//           const Integer  &rhs)
+// {
+//     (void) rhs;
+//     return lhs; // TODO
+// }
 
 Integer
 operator%(const Integer &lhs,
@@ -412,13 +358,13 @@ operator%(const Integer &lhs,
     return remainder(lhs, rhs);
 }
 
-std::intmax_t
-operator%(std::intmax_t  lhs,
-          const Integer &rhs)
-{
-    (void) rhs;
-    return lhs; // TODO
-}
+// std::intmax_t
+// operator%(std::intmax_t  lhs,
+//           const Integer &rhs)
+// {
+//     (void) rhs;
+//     return lhs; // TODO
+// }
 
 Integer
 operator%(const Integer &lhs,
@@ -429,13 +375,13 @@ operator%(const Integer &lhs,
     return remainder(lhs, rhs);
 }
 
-long double
-operator%(long double    lhs,
-          const Integer &rhs)
-{
-    (void) rhs;
-    return lhs; // TODO
-}
+// long double
+// operator%(long double    lhs,
+//           const Integer &rhs)
+// {
+//     (void) rhs;
+//     return lhs; // TODO
+// }
 
 
 IntegerDivisionResult

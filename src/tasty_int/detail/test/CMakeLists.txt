@@ -112,6 +112,17 @@ add_google_test(
     LIBRARIES tasty_int-detail-next_power_of_two
 )
 
+add_google_test(
+    NAME      tasty_int-detail-integer_operation_test
+    SOURCES   integer_operation_test.cpp
+              $<TARGET_OBJECTS:tasty_int-detail-sign_test_common>
+    LIBRARIES tasty_int-detail-integer_operation
+              tasty_int-detail-sign_from_signed_arithmetic
+              tasty_int-detail-sign_from_unsigned_arithmetic
+              tasty_int-detail-integer_test_common
+              tasty_int_test
+)
+
 add_library(tasty_int-detail-comparison_test_common INTERFACE)
 target_sources(
     tasty_int-detail-comparison_test_common
@@ -201,7 +212,7 @@ add_google_test(
 add_google_test(
     NAME      tasty_int-detail-integer_addition_test
     SOURCES   integer_addition_test.cpp
-    LIBRARIES tasty_int-detail-integer_addition_and_subtraction
+    LIBRARIES tasty_int-detail-integer_addition
               tasty_int-detail-conversions-integer_from_string
               tasty_int-detail-integer_test_common
 )
@@ -234,7 +245,7 @@ add_google_test(
 add_google_test(
     NAME      tasty_int-detail-integer_subtraction_test
     SOURCES   integer_subtraction_test.cpp
-    LIBRARIES tasty_int-detail-integer_addition_and_subtraction
+    LIBRARIES tasty_int-detail-integer_subtraction
               tasty_int-detail-conversions-integer_from_floating_point
               tasty_int-detail-conversions-integer_from_string
               tasty_int-detail-integer_test_common

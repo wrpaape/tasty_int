@@ -238,37 +238,60 @@ target_link_libraries(
     tasty_int-detail-digits_multiplication
     tasty_int-detail-conversions-digits_from_floating_point
 )
+add_library(tasty_int-detail-integer_operation INTERFACE)
+target_sources(
+    tasty_int-detail-integer_operation
+    INTERFACE
+    ${PROJECT_INCLUDE_DIR}/tasty_int/concepts.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
+)
+target_link_libraries(
+    tasty_int-detail-integer_operation
+    INTERFACE
+    tasty_int-detail-sign_from_signed_arithmetic
+    tasty_int-detail-sign_from_unsigned_arithmetic
+)
 
 add_library(
     tasty_int-detail-integer_comparison
     STATIC
     integer_comparison.cpp
-    concepts.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_comparison.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/concepts.hpp
 )
 target_link_libraries(
     tasty_int-detail-integer_comparison
+    tasty_int-detail-integer_operation
     tasty_int-detail-digits_comparison
     tasty_int-detail-sign_from_signed_arithmetic
 )
 
 add_library(
-    tasty_int-detail-integer_addition_and_subtraction
+    tasty_int-detail-integer_addition
     STATIC
-    integer_addition_and_subtraction.cpp
-    concepts.hpp
-    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_addition_and_subtraction.hpp
+    integer_addition.cpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_addition.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
-    ${PROJECT_INCLUDE_DIR}/tasty_int/concepts.hpp
 )
 target_link_libraries(
-    tasty_int-detail-integer_addition_and_subtraction
+    tasty_int-detail-integer_addition
+    tasty_int-detail-integer_operation
     tasty_int-detail-digits_addition
     tasty_int-detail-digits_subtraction
-    tasty_int-detail-sign_from_signed_arithmetic
-    tasty_int-detail-sign_from_unsigned_arithmetic
+)
+add_library(
+    tasty_int-detail-integer_subtraction
+    STATIC
+    integer_subtraction.cpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_subtraction.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
+)
+target_link_libraries(
+    tasty_int-detail-integer_subtraction
+    tasty_int-detail-integer_operation
+    tasty_int-detail-digits_addition
+    tasty_int-detail-digits_subtraction
 )
 
 add_library(
@@ -280,10 +303,9 @@ add_library(
 )
 target_link_libraries(
     tasty_int-detail-integer_multiplication_and_division
+    tasty_int-detail-integer_operation
     tasty_int-detail-digits_multiplication
     tasty_int-detail-digits_division
-    tasty_int-detail-sign_from_signed_arithmetic
-    tasty_int-detail-sign_from_unsigned_arithmetic
     tasty_int-detail-sign_from_digits
 )
 
