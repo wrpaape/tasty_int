@@ -12,6 +12,8 @@ target_sources(
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/base_10_integer_string_from_arithmetic.hpp
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/comparison_tests.hpp
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/make_arithmetic_printable.hpp
+    ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/approximately_equal.hpp
+    ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/expect_approx.hpp
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/arithmetic_types.hpp
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/signed_arithmetic_types.hpp
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/unsigned_arithmetic_types.hpp

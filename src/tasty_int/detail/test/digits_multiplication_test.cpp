@@ -10,6 +10,10 @@
 #include "tasty_int/detail/conversions/digits_from_string.hpp"
 
 
+/// @todo TODO:  check for *this *= *this
+/// @todo TODO:  check for primitive *= digits
+
+
 namespace {
 
 using tasty_int::detail::operator*=;

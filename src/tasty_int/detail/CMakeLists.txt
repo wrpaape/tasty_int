@@ -173,6 +173,8 @@ target_link_libraries(
     tasty_int-detail-integral_digits_view
     tasty_int-detail-order_by_size
     tasty_int-detail-trailing_zero
+    tasty_int-detail-conversions-integral_from_digits
+    tasty_int-detail-conversions-floating_point_from_digits
 )
 
 add_library(

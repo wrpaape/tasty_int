@@ -30,7 +30,6 @@ protected:
     }
 }; // class SampleArithmeticTest
 
-
 TYPED_TEST_SUITE(SampleArithmeticTest,
                  tasty_int_test::ArithmeticTypes);
 

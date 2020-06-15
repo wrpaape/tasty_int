@@ -1,5 +1,7 @@
 #include "tasty_int/detail/digits_addition.hpp"
 
+#include <cmath>
+
 #include <array>
 #include <functional>
 #include <type_traits>
@@ -10,8 +12,11 @@
 #include "tasty_int/detail/integral_digits_view.hpp"
 #include "tasty_int/detail/conversions/digits_from_floating_point.hpp"
 #include "tasty_int/detail/conversions/digits_from_integral.hpp"
+#include "tasty_int/detail/conversions/integral_from_digits.hpp"
+#include "tasty_int/detail/conversions/floating_point_from_digits.hpp"
 #include "tasty_int/detail/test/binary_digits_operation_test_common.hpp"
 #include "tasty_int_test/nonnegative_arithmetic_values.hpp"
+#include "tasty_int_test/expect_approx.hpp"
 
 
 namespace {
@@ -27,6 +32,8 @@ using tasty_int::detail::DIGIT_TYPE_MAX;
 using tasty_int::detail::IntegralDigitsView;
 using tasty_int::detail::conversions::digits_from_floating_point;
 using tasty_int::detail::conversions::digits_from_integral;
+using tasty_int::detail::conversions::integral_from_digits;
+using tasty_int::detail::conversions::floating_point_from_digits;
 using binary_digits_operation_test_common::BinaryDigitsOperationTestParam;
 using binary_digits_operation_test_common::convert_to;
 
@@ -217,6 +224,15 @@ TEST(DigitsAndIntegralAdditionTest,
     EXPECT_EQ(&lhs, &(lhs += rhs));
 }
 
+TEST(DigitsAndIntegralAdditionTest,
+     IntegralPlusEqualsDigitsReturnsReferenceToLhs)
+{
+    std::uintmax_t          lhs = 456;
+    std::vector<digit_type> rhs = { 123 };
+
+    EXPECT_EQ(&lhs, &(lhs += rhs));
+}
+
 class DigitsAndIntegralAdditionTest
     : public ::testing::TestWithParam<
           BinaryDigitsOperationTestParam<std::uintmax_t>
@@ -262,6 +278,18 @@ TEST_P(DigitsAndIntegralAdditionTest, DigitsPlusEqualsIntegral)
     std::vector<digit_type>        lhs             = GetParam().digits_operand;
     std::uintmax_t                 rhs             = GetParam().other_operand;
     const std::vector<digit_type> &expected_result = GetParam().expected_result;
+
+    lhs += rhs;
+
+    EXPECT_EQ(expected_result, lhs);
+}
+
+TEST_P(DigitsAndIntegralAdditionTest, IntegralPlusEqualsDigits)
+{
+    std::uintmax_t          lhs             = GetParam().other_operand;
+    std::vector<digit_type> rhs             = GetParam().digits_operand;
+    std::uintmax_t          expected_result =
+        integral_from_digits(GetParam().expected_result);
 
     lhs += rhs;
 
@@ -314,6 +342,15 @@ TEST(DigitsAndFloatingPointAdditionTest,
     EXPECT_EQ(&lhs, &(lhs += rhs));
 }
 
+TEST(DigitsAndFloatingPointAdditionTest,
+     FloatingPointPlusEqualsDigitsReturnsReferenceToLhs)
+{
+    long double             lhs = 456.456;
+    std::vector<digit_type> rhs = { 1, 2, 3 };
+
+    EXPECT_EQ(&lhs, &(lhs += rhs));
+}
+
 class DigitsAndFloatingPointAdditionTest
     : public ::testing::TestWithParam<
           BinaryDigitsOperationTestParam<long double>
@@ -337,6 +374,20 @@ TEST_P(DigitsAndFloatingPointAdditionTest, DigitsPlusEqualsFloatingPoint)
     lhs += rhs;
 
     EXPECT_EQ(expected_result, lhs);
+}
+
+TEST_P(DigitsAndFloatingPointAdditionTest, FloatingPointPlusEqualsDigits)
+{
+    long double             lhs             = GetParam().other_operand;
+    long double             lhs_fraction    = lhs - std::trunc(lhs);
+    std::vector<digit_type> rhs             = GetParam().digits_operand;
+    long double             expected_result =
+        floating_point_from_digits(GetParam().expected_result)
+        + lhs_fraction;
+
+    lhs += rhs;
+
+    EXPECT_APPROX(expected_result, lhs);
 }
 
 TEST_P(DigitsAndFloatingPointAdditionTest, DigitsPlusFloatingPoint)

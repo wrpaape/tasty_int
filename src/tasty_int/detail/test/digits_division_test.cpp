@@ -14,6 +14,10 @@
 #include "tasty_int_test/logarithmic_range.hpp"
 
 
+/// @todo TODO:  check for divide_in_place(*this, *this)
+/// @todo TODO:  check for primitive *= digits
+
+
 namespace {
 
 using tasty_int::detail::divide;

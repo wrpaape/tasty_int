@@ -30,6 +30,10 @@ std::vector<digit_type> &
 operator+=(std::vector<digit_type> &lhs,
            std::uintmax_t           rhs);
 
+std::uintmax_t &
+operator+=(std::uintmax_t                &lhs,
+           const std::vector<digit_type> &rhs);
+
 /**
  * @defgroup DigitsAdditionFloatingPointOverloads Digits Addition Floating Point Overloads
  *
@@ -37,13 +41,26 @@ operator+=(std::vector<digit_type> &lhs,
  * before adding.
  *
  * @pre floating point operand is finite
- * @pre floating point operand is nonnegative if the result type is a vector of
- *     digits
  */
-/// @ingroup DigitsAdditionFloatingPointOverloads
+/**
+ * @ingroup DigitsAdditionFloatingPointOverloads
+ *
+ * /@pre `rhs >= 0.0`
+ */
 std::vector<digit_type> &
 operator+=(std::vector<digit_type> &lhs,
            long double              rhs);
+
+/**
+ * @ingroup DigitsAdditionFloatingPointOverloads
+ *
+ * @note this overload does have the same restrictions on its floating point
+ *     operand, @p lhs, as the other floating point overloads and does not
+ *     truncate it before adding.
+ */
+long double &
+operator+=(long double                   &lhs,
+           const std::vector<digit_type> &rhs);
 
 std::vector<digit_type>
 operator+(const std::vector<digit_type> &lhs,

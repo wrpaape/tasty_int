@@ -205,6 +205,8 @@ add_google_test(
               tasty_int-detail-integral_digits_view
               tasty_int-detail-conversions-digits_from_integral
               tasty_int-detail-conversions-digits_from_floating_point
+              tasty_int-detail-conversions-integral_from_digits
+              tasty_int-detail-conversions-floating_point_from_digits
               tasty_int-detail-binary_digits_operation_test_common
               tasty_int_test
 )
