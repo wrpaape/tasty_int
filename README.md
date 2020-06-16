@@ -125,6 +125,8 @@ target_link_libraries(big_fact TastyInt::TastyInt)
 
 3. Include `TastyInt`.
 ```
+#include <cstdlib>
+
 #include <iostream>
 #include <string>
 
@@ -136,7 +138,7 @@ main(int   argc,
 {
     if (argc != 2) {
         std::cerr << argv[0] << " <N>: calculate N!\n";
-        std::exit(1);
+        std::exit(EXIT_FAILURE);
     }
 
     tasty_int::TastyInt fact(1);
@@ -146,7 +148,7 @@ main(int   argc,
 
     std::cout << fact << '\n';
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 ```
 

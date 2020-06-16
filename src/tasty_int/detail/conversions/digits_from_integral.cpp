@@ -11,7 +11,7 @@ std::vector<digit_type>
 digits_from_integral(std::uintmax_t value)
 {
     std::vector<digit_type> digits;
-    digits.reserve(2);
+    digits.reserve(DIGITS_PER_DIGIT_ACCUMULATOR);
     digits.emplace_back(digit_from_nonnegative_value(value));
     if (value > DIGIT_TYPE_MAX)
         digits.emplace_back(

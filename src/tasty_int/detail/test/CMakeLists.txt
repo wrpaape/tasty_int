@@ -24,6 +24,23 @@ target_link_libraries(
     tasty_int-detail-integer_comparison
 )
 
+add_library(
+    tasty_int-detail-integer_arithmetic_test_common
+    STATIC
+    integer_arithmetic_test_common.cpp
+    integer_arithmetic_test_common.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
+)
+target_link_libraries(
+    tasty_int-detail-integer_arithmetic_test_common
+    tasty_int-detail-integer_test_common
+    tasty_int-detail-conversions-unsigned_integral_from_integer
+    tasty_int-detail-conversions-signed_integral_from_integer
+    tasty_int-detail-conversions-floating_point_from_integer
+    tasty_int_test
+    GTest::GTest
+)
+
 
 add_google_test(
     NAME    tasty_int-detail-sign_test
@@ -104,6 +121,13 @@ add_google_test(
     NAME      tasty_int-detail-count_leading_zero_bits_test
     SOURCES   count_leading_zero_bits_test.cpp
     LIBRARIES tasty_int-detail-count_leading_zero_bits
+)
+
+add_google_test(
+    NAME      tasty_int-detail-intmax_t_from_uintmax_t_test
+    SOURCES   intmax_t_from_uintmax_t_test.cpp
+    LIBRARIES tasty_int-detail-intmax_t_from_uintmax_t
+              tasty_int_test
 )
 
 add_google_test(
@@ -216,6 +240,7 @@ add_google_test(
     SOURCES   integer_addition_test.cpp
     LIBRARIES tasty_int-detail-integer_addition
               tasty_int-detail-conversions-integer_from_string
+              tasty_int-detail-integer_arithmetic_test_common
               tasty_int-detail-integer_test_common
 )
 
@@ -250,6 +275,7 @@ add_google_test(
     LIBRARIES tasty_int-detail-integer_subtraction
               tasty_int-detail-conversions-integer_from_floating_point
               tasty_int-detail-conversions-integer_from_string
+              tasty_int-detail-integer_arithmetic_test_common
               tasty_int-detail-integer_test_common
 )
 

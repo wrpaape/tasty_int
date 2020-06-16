@@ -10,6 +10,7 @@ using tasty_int::detail::Sign;
 using tasty_int::detail::digit_type;
 using tasty_int::detail::DIGIT_BASE;
 using tasty_int::detail::DIGIT_TYPE_MAX;
+using tasty_int::detail::DIGITS_PER_DIGIT_ACCUMULATOR;
 
 
 void
@@ -24,7 +25,7 @@ expect_digits_equal(std::uintmax_t                 expected,
     } else {
         EXPECT_EQ(static_cast<digit_type>(expected / DIGIT_BASE),
                   digits.at(1));
-        EXPECT_EQ(2, digits.size());
+        EXPECT_EQ(DIGITS_PER_DIGIT_ACCUMULATOR, digits.size());
     }
 }
 

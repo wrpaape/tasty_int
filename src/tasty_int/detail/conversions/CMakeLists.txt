@@ -151,6 +151,7 @@ add_library(
 target_link_libraries(
     tasty_int-detail-conversions-signed_integral_from_integer
     tasty_int-detail-conversions-unsigned_integral_from_integer
+    tasty_int-detail-intmax_t_from_uintmax_t
 )
 
 add_library(

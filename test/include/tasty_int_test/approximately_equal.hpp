@@ -42,9 +42,9 @@ approximately_equal(LhsFloatingPointType lhs,
     PromotedFloatingPointType lhs_promoted = lhs;
     PromotedFloatingPointType rhs_promoted = rhs;
 
-    auto abs_error = std::fabs(lhs_promoted - rhs_promoted);
+    auto abs_error = std::abs(lhs_promoted - rhs_promoted);
     auto max_error = std::numeric_limits<float>::epsilon()
-                   * std::fabs(lhs_promoted + rhs_promoted)
+                   * std::abs(lhs_promoted + rhs_promoted)
                    * PromotedFloatingPointType(2.0);
     bool abs_error_is_subnormal =
         std::isless(abs_error, std::numeric_limits<float>::min());

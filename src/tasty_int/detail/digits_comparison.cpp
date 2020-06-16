@@ -17,7 +17,7 @@ bool
 have_unequal_high_digits(const std::vector<digit_type> &lhs,
                          IntegralDigitsView             rhs_view)
 {
-    return (lhs.size() == 2)
+    return (lhs.size() == DIGITS_PER_DIGIT_ACCUMULATOR)
         && (lhs.back() != rhs_view.high_digit());
 }
 

@@ -6,6 +6,13 @@ add_library(
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 
+add_library(tasty_int-detail-intmax_t_from_uintmax_t INTERFACE)
+target_sources(
+    tasty_int-detail-intmax_t_from_uintmax_t
+    INTERFACE
+    ${PROJECT_SRC_DIR}/tasty_int/detail/intmax_t_from_uintmax_t.hpp
+)
+
 add_subdirectory(conversions)
 
 add_library(tasty_int-detail-digit_from_nonnegative_value INTERFACE)
@@ -281,6 +288,9 @@ target_link_libraries(
     tasty_int-detail-integer_operation
     tasty_int-detail-digits_addition
     tasty_int-detail-digits_subtraction
+    tasty_int-detail-intmax_t_from_uintmax_t
+    tasty_int-detail-conversions-unsigned_integral_from_integer
+    tasty_int-detail-conversions-floating_point_from_integer
 )
 add_library(
     tasty_int-detail-integer_subtraction
@@ -294,6 +304,9 @@ target_link_libraries(
     tasty_int-detail-integer_operation
     tasty_int-detail-digits_addition
     tasty_int-detail-digits_subtraction
+    tasty_int-detail-intmax_t_from_uintmax_t
+    tasty_int-detail-conversions-unsigned_integral_from_integer
+    tasty_int-detail-conversions-floating_point_from_integer
 )
 
 add_library(

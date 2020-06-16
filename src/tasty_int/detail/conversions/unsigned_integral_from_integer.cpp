@@ -19,12 +19,10 @@ unsigned_integral_from_integer(const Integer &integer)
 
     std::uintmax_t value = integral_from_digits(integer.digits);
 
-    if (integer.sign < Sign::ZERO) {
-        // unsigned cannot occur - modulo wrapping is well-defined behavior:
-        //     C11 standard (ISO/IEC 9899:2011)
-        //     section 6.3 Conversions (p: 50-56)
-        value = -value;
-    }
+    // unsigned overflow cannot occur - modulo wrapping is well-defined
+    // behavior: C11 standard (ISO/IEC 9899:2011) section 6.3 Conversions (p:
+    // 50-56)
+    value *= integer.sign;
 
     return value;
 }

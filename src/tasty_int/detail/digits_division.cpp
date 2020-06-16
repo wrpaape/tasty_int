@@ -90,7 +90,7 @@ long_divide_normal_shift_offset(const DivisorType &divisor)
 std::vector<digit_type>
 digits_from_remainder_accumulator(ExtendedDigitAccumulator remainder)
 {
-    assert(remainder.digits_size() <= 2);
+    assert(remainder.digits_size() <= DIGITS_PER_DIGIT_ACCUMULATOR);
 
     auto have_middle_digit = (remainder.middle_digit() != 0);
 
@@ -138,8 +138,8 @@ significant_dividend_digits(ExtendedDigitAccumulator dividend,
     case 1:
         return dividend.low_digit();
 
-    case 2:
-        return (divisor_mag < 2)
+    case DIGITS_PER_DIGIT_ACCUMULATOR:
+        return (divisor_mag < DIGITS_PER_DIGIT_ACCUMULATOR)
              ? dividend.front()
              : dividend.middle_digit();
 

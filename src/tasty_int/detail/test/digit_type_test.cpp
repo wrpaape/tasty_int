@@ -13,6 +13,7 @@ namespace {
 using tasty_int::detail::DIGIT_BASE;
 using tasty_int::detail::DIGIT_TYPE_BITS;
 using tasty_int::detail::DIGIT_TYPE_MAX;
+using tasty_int::detail::DIGITS_PER_DIGIT_ACCUMULATOR;
 using tasty_int::detail::digit_accumulator_type;
 using tasty_int::detail::signed_digit_accumulator_type;
 using tasty_int::detail::digit_type;
@@ -63,10 +64,14 @@ TEST(DigitTypeTest, DigitTypeBitsIsLessThanOrEqualToDigitTypeNumericLimit)
     EXPECT_LE(DIGIT_TYPE_BITS, std::numeric_limits<digit_type>::digits);
 }
 
-TEST(DigitTypeTest, DigitTypeBitsIsOneHalfofDigitAccumulatorTypeNumericLimit)
+TEST(DigitTypeTest,
+     DigitTypeBitsEqualsDigitAccumulatorBitsDividedByDigitsPerAccumulator)
 {
-    EXPECT_EQ(std::numeric_limits<digit_accumulator_type>::digits / 2,
-              DIGIT_TYPE_BITS);
+    EXPECT_EQ(
+        std::numeric_limits<digit_accumulator_type>::digits /
+        DIGITS_PER_DIGIT_ACCUMULATOR,
+        DIGIT_TYPE_BITS
+    );
 }
 
 TEST(DigitTypeTest, DigitTypeMaxCanBeHeldInDigitType)

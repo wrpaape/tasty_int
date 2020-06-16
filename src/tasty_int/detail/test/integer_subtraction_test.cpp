@@ -1,45 +1,46 @@
 #include "tasty_int/detail/integer_subtraction.hpp"
 
-#include <type_traits>
-
 #include "gtest/gtest.h"
 
 #include "tasty_int/detail/conversions/integer_from_floating_point.hpp"
 #include "tasty_int/detail/conversions/integer_from_string.hpp"
+#include "tasty_int/detail/test/integer_arithmetic_test_common.hpp"
 #include "tasty_int/detail/test/integer_test_common.hpp"
 
 namespace {
 
 using tasty_int::detail::Integer;
 using tasty_int::detail::Sign;
+using tasty_int::detail::DIGIT_BASE;
+using tasty_int::detail::DIGIT_TYPE_MAX;
 using tasty_int::detail::conversions::integer_from_floating_point;
 using tasty_int::detail::conversions::integer_from_string;
+using integer_arithmetic_test_common::check_expected_integer_result;
 
 
 Integer ZERO_INTEGER = { .sign = Sign::ZERO, .digits = { 0 } };
 
+template<typename ResultType>
 void
-check_subtract_in_place_result(const Integer &expected_result,
-                               const Integer &minuend,
-                               const Integer &result)
+check_subtract_in_place_result(const Integer    &expected_result,
+                               const ResultType &minuend,
+                               const ResultType &result)
 {
     EXPECT_EQ(&minuend, &result)
         << "-= did not return reference to minuend";
 
-    EXPECT_EQ(expected_result, minuend)
-        << "-= did not produce the expected result";
-
+    check_expected_integer_result(expected_result, minuend);
 }
 
-template<typename SubtrahendType>
+template<typename MinuendType, typename SubtrahendType>
 void
-test_subtract_in_place(const Integer        &original_minuend,
+test_subtract_in_place(const MinuendType    &original_minuend,
                        const SubtrahendType &subtrahend,
                        const Integer        &expected_result)
 {
-    Integer minuend = original_minuend;
+    auto minuend = original_minuend;
 
-    const Integer &result = (minuend -= subtrahend);
+    auto &&result = (minuend -= subtrahend);
 
     check_subtract_in_place_result(expected_result, minuend, result);
 }
@@ -62,8 +63,7 @@ test_subtraction(const MinuendType    &minuend,
                  const SubtrahendType &subtrahend,
                  const Integer        &expected_result)
 {
-    if constexpr (std::is_same_v<MinuendType, Integer>)
-        test_subtract_in_place(minuend, subtrahend, expected_result);
+    test_subtract_in_place(minuend, subtrahend, expected_result);
 
     test_subtract(minuend, subtrahend, expected_result);
 }
@@ -256,6 +256,50 @@ TEST(IntegerSubtractionTest, ZeroUnsignedIntegralAndZeroInteger)
     test_subtraction(std::uintmax_t(0), ZERO_INTEGER, ZERO_INTEGER);
 }
 
+TEST(IntegerSubtractionTest, ZeroUnsignedIntegralAndPositiveInteger)
+{
+    Integer subtrahend      = integer_from_string("+54321", 10);
+    Integer expected_result = integer_from_string("-54321", 10);
+
+    test_subtraction(std::uintmax_t(0), subtrahend, expected_result);
+}
+
+TEST(IntegerSubtractionTest, ZeroUnsignedIntegralAndPositiveIntegerWithWrap)
+{
+    Integer subtrahend      = {
+        .sign   = Sign::POSITIVE,
+        .digits = { 1, 1, 1 }
+    };
+    Integer expected_result = {
+        .sign   = -subtrahend.sign,
+        .digits = subtrahend.digits
+    };
+
+    test_subtraction(std::uintmax_t(0), subtrahend, expected_result);
+}
+
+TEST(IntegerSubtractionTest, ZeroUnsignedIntegralAndNegativeInteger)
+{
+    Integer subtrahend       = integer_from_string("-54321", 10);
+    Integer expected_result  = integer_from_string("+54321", 10);
+
+    test_subtraction(std::uintmax_t(0), subtrahend, expected_result);
+}
+
+TEST(IntegerSubtractionTest, ZeroUnsignedIntegralAndNegativeIntegerWithWrap)
+{
+    Integer subtrahend      = {
+        .sign   = Sign::NEGATIVE,
+        .digits = { 2, 2, 2 }
+    };
+    Integer expected_result = {
+        .sign   = -subtrahend.sign,
+        .digits = subtrahend.digits
+    };
+
+    test_subtraction(std::uintmax_t(0), subtrahend, expected_result);
+}
+
 TEST(IntegerSubtractionTest, PositiveUnsignedIntegralAndZeroInteger)
 {
     std::uintmax_t minuend  =                      +54321;
@@ -288,6 +332,22 @@ TEST(IntegerSubtractionTest, PositiveUnsignedIntegralAndLargerPositiveInteger)
     std::uintmax_t minuend  =                      +54321;
     Integer subtrahend      = integer_from_string("+65432", 10);
     Integer expected_result = integer_from_string("-11111", 10);
+
+    test_subtraction(minuend, subtrahend, expected_result);
+}
+
+TEST(IntegerSubtractionTest,
+     PositiveUnsignedIntegralAndLargerPositiveIntegerWithWrap)
+{
+    std::uintmax_t minuend  =  +54321;
+    Integer subtrahend      =  {
+        .sign   = Sign::POSITIVE,
+        .digits = { 0, 0, 2 }
+    };
+    Integer expected_result =  {
+        .sign   = Sign::NEGATIVE,
+        .digits = { DIGIT_BASE - 54321, DIGIT_TYPE_MAX, 1 }
+    };
 
     test_subtraction(minuend, subtrahend, expected_result);
 }
@@ -411,6 +471,50 @@ TEST(IntegerSubtractionTest, ZeroSignedIntegralAndZeroInteger)
     test_subtraction(std::intmax_t(0), ZERO_INTEGER, ZERO_INTEGER);
 }
 
+TEST(IntegerSubtractionTest, ZeroSignedIntegralAndPositiveInteger)
+{
+    Integer subtrahend      = integer_from_string("+54321", 10);
+    Integer expected_result = integer_from_string("-54321", 10);
+
+    test_subtraction(std::intmax_t(0), subtrahend, expected_result);
+}
+
+TEST(IntegerSubtractionTest, ZeroSignedIntegralAndPositiveIntegerWithWrap)
+{
+    Integer subtrahend      = {
+        .sign   = Sign::POSITIVE,
+        .digits = { 3, 3, 3 }
+    };
+    Integer expected_result = {
+        .sign   = -subtrahend.sign,
+        .digits = subtrahend.digits
+    };
+
+    test_subtraction(std::intmax_t(0), subtrahend, expected_result);
+}
+
+TEST(IntegerSubtractionTest, ZeroSignedIntegralAndNegativeInteger)
+{
+    Integer subtrahend       = integer_from_string("-54321", 10);
+    Integer expected_result  = integer_from_string("+54321", 10);
+
+    test_subtraction(std::intmax_t(0), subtrahend, expected_result);
+}
+
+TEST(IntegerSubtractionTest, ZeroSignedIntegralAndNegativeIntegerWithWrap)
+{
+    Integer subtrahend      = {
+        .sign   = Sign::NEGATIVE,
+        .digits = { 4, 4, 4 }
+    };
+    Integer expected_result = {
+        .sign   = -subtrahend.sign,
+        .digits = subtrahend.digits
+    };
+
+    test_subtraction(std::intmax_t(0), subtrahend, expected_result);
+}
+
 TEST(IntegerSubtractionTest, PositiveSignedIntegralAndZeroInteger)
 {
     std::intmax_t minuend   =                      +32123;
@@ -447,11 +551,41 @@ TEST(IntegerSubtractionTest, PositiveSignedIntegralAndLargerPositiveInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
+TEST(IntegerSubtractionTest, PositiveSignedIntegralAndPositiveIntegerWithWrap)
+{
+    std::intmax_t minuend   =  +32123;
+    Integer subtrahend      =  {
+        .sign   = Sign::POSITIVE,
+        .digits = { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX, DIGIT_TYPE_MAX }
+    };
+    Integer expected_result =  {
+        .sign   = Sign::NEGATIVE,
+        .digits = { DIGIT_TYPE_MAX - 32123, DIGIT_TYPE_MAX, DIGIT_TYPE_MAX }
+    };
+
+    test_subtraction(minuend, subtrahend, expected_result);
+}
+
 TEST(IntegerSubtractionTest, PositiveSignedIntegralAndNegativeInteger)
 {
     std::intmax_t minuend   =                      +32123;
     Integer subtrahend      = integer_from_string("-32123", 10);
     Integer expected_result = integer_from_string("+64246", 10);
+
+    test_subtraction(minuend, subtrahend, expected_result);
+}
+
+TEST(IntegerSubtractionTest, PositiveSignedIntegralAndNegativeIntegerWithWrap)
+{
+    std::intmax_t minuend   =  +32123;
+    Integer subtrahend      =  {
+        .sign   = Sign::NEGATIVE,
+        .digits = { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX, 1 }
+    };
+    Integer expected_result =  {
+        .sign   = Sign::POSITIVE,
+        .digits = { 32122, 0, 2 }
+    };
 
     test_subtraction(minuend, subtrahend, expected_result);
 }
@@ -492,6 +626,19 @@ TEST(IntegerSubtractionTest, NegativeSignedIntegralAndLargerNegativeInteger)
     test_subtraction(minuend, subtrahend, expected_result);
 }
 
+TEST(IntegerSubtractionTest, NegativeSignedIntegralAndNegativeIntegerWithWrap)
+{
+    std::intmax_t minuend   =  -11111;
+    Integer subtrahend      =  {
+        .sign   = Sign::NEGATIVE,
+        .digits = { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX, DIGIT_TYPE_MAX }
+    };
+    Integer expected_result =  {
+        .sign   = Sign::NEGATIVE,
+        .digits = { DIGIT_TYPE_MAX - 11111, DIGIT_TYPE_MAX, DIGIT_TYPE_MAX }
+    };
+}
+
 TEST(IntegerSubtractionTest, NegativeSignedIntegralAndPositiveInteger)
 {
     std::intmax_t minuend   =                      -32123;
@@ -499,6 +646,19 @@ TEST(IntegerSubtractionTest, NegativeSignedIntegralAndPositiveInteger)
     Integer expected_result = integer_from_string("-64246", 10);
 
     test_subtraction(minuend, subtrahend, expected_result);
+}
+
+TEST(IntegerSubtractionTest, NegativeSignedIntegralAndPositiveIntegerWithWrap)
+{
+    std::intmax_t minuend   =  -11111;
+    Integer subtrahend      =  {
+        .sign   = Sign::POSITIVE,
+        .digits = { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX, 1 }
+    };
+    Integer expected_result =  {
+        .sign   = Sign::NEGATIVE,
+        .digits = { 11110, 0, 2 }
+    };
 }
 
 

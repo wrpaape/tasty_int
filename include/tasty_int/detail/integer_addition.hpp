@@ -23,12 +23,24 @@ operator+=(Integer       &lhs,
 Integer &
 operator+=(Integer        &lhs,
            std::uintmax_t  rhs);
+std::uintmax_t &
+operator+=(std::uintmax_t &lhs,
+           const Integer  &rhs);
 Integer &
 operator+=(Integer       &lhs,
            std::intmax_t  rhs);
+std::intmax_t &
+operator+=(std::intmax_t &lhs,
+           const Integer &rhs);
 Integer &
 operator+=(Integer     &lhs,
            long double  rhs);
+/**
+ * @note This floating point overload does *not* truncate @p lhs before addtion.
+ */
+long double &
+operator+=(long double   &lhs,
+           const Integer &rhs);
 
 Integer
 operator+(const Integer &lhs,
