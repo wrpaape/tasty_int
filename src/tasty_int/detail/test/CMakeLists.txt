@@ -293,6 +293,7 @@ add_google_test(
     SOURCES   integer_multiplication_test.cpp
     LIBRARIES tasty_int-detail-integer_multiplication
               tasty_int-detail-conversions-integer_from_string
+              tasty_int-detail-integer_arithmetic_test_common
               tasty_int-detail-integer_test_common
 )
 

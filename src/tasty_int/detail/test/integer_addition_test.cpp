@@ -19,11 +19,11 @@ using integer_arithmetic_test_common::check_expected_integer_result;
 
 const Integer ZERO_INTEGER = { .sign = Sign::ZERO, .digits = { 0 } };
 
-template<typename ResultType>
+template<typename AugendType>
 void
 check_add_in_place_result(const Integer    &expected_result,
-                          const ResultType &augend,
-                          const ResultType &result)
+                          const AugendType &augend,
+                          const AugendType &result)
 {
     EXPECT_EQ(&augend, &result)
         << "+= did not return reference to augend";

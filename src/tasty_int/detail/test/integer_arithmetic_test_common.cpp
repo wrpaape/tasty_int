@@ -44,7 +44,7 @@ check_expected_integer_result(const tasty_int::detail::Integer &expected_result,
                               long double                       result)
 {
     EXPECT_APPROX(floating_point_from_integer(expected_result),
-                  std::trunc(result));
+                  result);
 }
 
 } // namespace integer_arithmetic_test_common

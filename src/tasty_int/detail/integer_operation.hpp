@@ -137,7 +137,13 @@ value_from_integer_operand(std::uintmax_t operand)
 inline std::uintmax_t
 value_from_integer_operand(std::intmax_t operand)
 {
-    return static_cast<std::uintmax_t>(std::abs(operand));
+    // avoid potential overflow of
+    // std::abs(std::numeric_limits<std::intmax_t>::lowest())
+    auto unsigned_operand = static_cast<std::uintmax_t>(operand);
+    if (operand < 0)
+        unsigned_operand = -unsigned_operand;
+
+    return unsigned_operand;
 }
 
 inline long double

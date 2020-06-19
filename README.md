@@ -45,12 +45,13 @@ prepended onto all install directories. This variable defaults to `/usr/local`
 on UNIX and `c:/Program Files` on Windows.
 
 #### `-DBUILD_TESTING:BOOL=<ON|OFF>`
+Enable units tests (see [`[build-]test[-verbose]`](#build-test-verbose)
+build targets).
 Requires `git` and configure-time internet access for cloning [google
 test](https://github.com/google/googletest).
 
 #### `-DBUILD_COVERAGE:BOOL=<ON|OFF>`
-Enable units tests (see [`[build-]test[-verbose]`](#build-test-verbose)
-build targets).
+Enable test coverage analysis.
 Requires `lcov` and `-DBUILD_TESTING:BOOL=ON`.
 Suggest `-DCMAKE_BUILD_TYPE:STRING=Debug` for a coverage report that
 corresponds intuitively to the source code.

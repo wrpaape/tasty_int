@@ -35,9 +35,6 @@ operator+=(std::intmax_t &lhs,
 Integer &
 operator+=(Integer     &lhs,
            long double  rhs);
-/**
- * @note This floating point overload does *not* truncate @p lhs before addtion.
- */
 long double &
 operator+=(long double   &lhs,
            const Integer &rhs);

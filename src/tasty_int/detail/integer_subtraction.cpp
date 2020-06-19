@@ -160,6 +160,8 @@ long double &
 operator-=(long double   &lhs,
            const Integer &rhs)
 {
+    lhs = std::trunc(lhs);
+
     return lhs -= conversions::floating_point_from_integer(rhs);
 }
 

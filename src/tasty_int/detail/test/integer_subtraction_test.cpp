@@ -20,11 +20,11 @@ using integer_arithmetic_test_common::check_expected_integer_result;
 
 Integer ZERO_INTEGER = { .sign = Sign::ZERO, .digits = { 0 } };
 
-template<typename ResultType>
+template<typename MinuendType>
 void
-check_subtract_in_place_result(const Integer    &expected_result,
-                               const ResultType &minuend,
-                               const ResultType &result)
+check_subtract_in_place_result(const Integer     &expected_result,
+                               const MinuendType &minuend,
+                               const MinuendType &result)
 {
     EXPECT_EQ(&minuend, &result)
         << "-= did not return reference to minuend";
@@ -634,9 +634,11 @@ TEST(IntegerSubtractionTest, NegativeSignedIntegralAndNegativeIntegerWithWrap)
         .digits = { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX, DIGIT_TYPE_MAX }
     };
     Integer expected_result =  {
-        .sign   = Sign::NEGATIVE,
+        .sign   = Sign::POSITIVE,
         .digits = { DIGIT_TYPE_MAX - 11111, DIGIT_TYPE_MAX, DIGIT_TYPE_MAX }
     };
+
+    test_subtraction(minuend, subtrahend, expected_result);
 }
 
 TEST(IntegerSubtractionTest, NegativeSignedIntegralAndPositiveInteger)
@@ -659,6 +661,8 @@ TEST(IntegerSubtractionTest, NegativeSignedIntegralAndPositiveIntegerWithWrap)
         .sign   = Sign::NEGATIVE,
         .digits = { 11110, 0, 2 }
     };
+
+    test_subtraction(minuend, subtrahend, expected_result);
 }
 
 

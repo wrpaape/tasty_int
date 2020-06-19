@@ -24,17 +24,9 @@
  * @param[in] actual   the actual floating point value
  */
 #define EXPECT_APPROX(expected, actual)                               \
-do {                                                                  \
-    auto &&_expected = (expected);                                    \
-    auto &&_actual   = (actual);                                      \
-    auto _both_nan = std::isnan(_expected) && std::isnan(_actual);    \
-    auto _both_same_sign_infinity =                                   \
-        (std::signbit(_expected) == std::signbit(_actual)) &&         \
-        std::isinf(_expected) &&                                      \
-        std::isinf(_actual);                                          \
+    if (auto &&_expected = (expected); true)                          \
+    if (auto &&_actual   = (actual);   true)                          \
     EXPECT_TRUE(                                                      \
-        _both_nan ||                                                  \
-        _both_same_sign_infinity ||                                   \
         tasty_int_test::approximately_equal(_expected, _actual)       \
     )                                                                 \
         << "    Expected: "                                           \
@@ -44,7 +36,6 @@ do {                                                                  \
         << "      Actual: "                                           \
         << std::setprecision(                                         \
                std::numeric_limits<decltype(_actual)>::max_digits10   \
-           ) << _actual << " (" #actual ")\n";                        \
-} while (0)
+           ) << _actual << " (" #actual ")\n"
 
 #endif // ifndef TASTY_INT_TEST_EXPECT_APPROX_HPP

@@ -5,6 +5,9 @@
 
 #include "tasty_int/detail/integer_operation.hpp"
 #include "tasty_int/detail/digits_multiplication.hpp"
+#include "tasty_int/detail/intmax_t_from_uintmax_t.hpp"
+#include "tasty_int/detail/conversions/unsigned_integral_from_integer.hpp"
+#include "tasty_int/detail/conversions/floating_point_from_integer.hpp"
 
 
 namespace tasty_int {
@@ -52,11 +55,31 @@ operator*=(Integer        &lhs,
     return multiply_in_place(rhs, lhs);
 }
 
+std::uintmax_t &
+operator*=(std::uintmax_t &lhs,
+           const Integer  &rhs)
+{
+    return lhs *= conversions::unsigned_integral_from_integer(rhs);
+}
+
 Integer &
 operator*=(Integer       &lhs,
            std::intmax_t  rhs)
 {
     return multiply_in_place(rhs, lhs);
+}
+
+std::intmax_t &
+operator*=(std::intmax_t &lhs,
+           const Integer &rhs)
+{
+    auto unsigned_lhs = static_cast<std::uintmax_t>(lhs);
+
+    unsigned_lhs *= rhs;
+
+    lhs = intmax_t_from_uintmax_t(unsigned_lhs);
+
+    return lhs;
 }
 
 Integer &
@@ -66,6 +89,15 @@ operator*=(Integer     &lhs,
     assert(std::isfinite(rhs));
 
     return multiply_in_place(rhs, lhs);
+}
+
+long double &
+operator*=(long double   &lhs,
+           const Integer &rhs)
+{
+    lhs = std::trunc(lhs);
+
+    return lhs *= conversions::floating_point_from_integer(rhs);
 }
 
 

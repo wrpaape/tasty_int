@@ -1,10 +1,9 @@
 #include "tasty_int/detail/integer_multiplication.hpp"
 
-#include <type_traits>
-
 #include "gtest/gtest.h"
 
 #include "tasty_int/detail/conversions/integer_from_string.hpp"
+#include "tasty_int/detail/test/integer_arithmetic_test_common.hpp"
 #include "tasty_int/detail/test/integer_test_common.hpp"
 
 
@@ -13,31 +12,32 @@ namespace {
 using tasty_int::detail::Integer;
 using tasty_int::detail::Sign;
 using tasty_int::detail::conversions::integer_from_string;
+using integer_arithmetic_test_common::check_expected_integer_result;
 
 
 const Integer ZERO_INTEGER = { .sign = Sign::ZERO, .digits = { 0 } };
 
+template<typename MultiplicandType>
 void
-check_multiply_in_place_result(const Integer &expected_result,
-                               const Integer &multiplicand,
-                               const Integer &result)
+check_multiply_in_place_result(const Integer          &expected_result,
+                               const MultiplicandType &multiplicand,
+                               const MultiplicandType &result)
 {
     EXPECT_EQ(&multiplicand, &result)
         << "*= did not return reference to multiplicand";
 
-    EXPECT_EQ(expected_result, multiplicand)
-        << "*= did not produce the expected result";
+    check_expected_integer_result(expected_result, multiplicand);
 }
 
-template<typename RhsType>
+template<typename LhsType, typename RhsType>
 void
-test_multiply_in_place(const Integer &lhs,
+test_multiply_in_place(const LhsType &lhs,
                        const RhsType &rhs,
                        const Integer &expected_result)
 {
-    Integer multiplicand = lhs;
+    auto multiplicand = lhs;
 
-    const Integer &result = (multiplicand *= rhs);
+    auto &&result = (multiplicand *= rhs);
 
     check_multiply_in_place_result(expected_result, multiplicand, result);
 }
@@ -62,8 +62,7 @@ test_multiplication(const Integer         &multiplier1,
 {
     test_multiply_in_place(multiplier1, multiplier2, expected_result);
 
-    if constexpr (std::is_same_v<Multiplier2Type, Integer>)
-        test_multiply_in_place(multiplier2, multiplier1, expected_result);
+    test_multiply_in_place(multiplier2, multiplier1, expected_result);
 
     test_multiply(multiplier1, multiplier2, expected_result);
 

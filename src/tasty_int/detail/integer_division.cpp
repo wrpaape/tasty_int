@@ -8,6 +8,10 @@
 #include "tasty_int/detail/integer_operation.hpp"
 #include "tasty_int/detail/digits_division.hpp"
 #include "tasty_int/detail/sign_from_digits.hpp"
+#include "tasty_int/detail/intmax_t_from_uintmax_t.hpp"
+#include "tasty_int/detail/conversions/integral_from_digits.hpp"
+#include "tasty_int/detail/conversions/unsigned_integral_from_integer.hpp"
+#include "tasty_int/detail/conversions/floating_point_from_integer.hpp"
 
 
 namespace tasty_int {
@@ -69,14 +73,14 @@ remainder_in_place(const DivisorType &divisor,
     return dividend;
 }
 
-IntegerDivisionResult
+IntegerDivisionResult<Integer>
 integer_division_result_from_digits_division_result(
     DigitsDivisionResult &&digits_result,
     Sign                   quotient_sign,
     Sign                   remainder_sign
 )
 {
-    IntegerDivisionResult result;
+    IntegerDivisionResult<Integer> result;
     result.quotient.sign    = sign_from_digits(digits_result.quotient,
                                                quotient_sign);
     result.quotient.digits  = std::move(digits_result.quotient);
@@ -88,7 +92,7 @@ integer_division_result_from_digits_division_result(
 }
 
 template<IntegerOperand DivisorType>
-IntegerDivisionResult
+IntegerDivisionResult<Integer>
 divide_and_remainder(const Integer     &dividend,
                      const DivisorType &divisor)
 {
@@ -117,11 +121,25 @@ operator/=(Integer        &lhs,
     return divide_in_place(rhs, lhs);
 }
 
+std::uintmax_t &
+operator/=(std::uintmax_t &lhs,
+           const Integer  &rhs)
+{
+    return lhs = (lhs / rhs);
+}
+
 Integer &
 operator/=(Integer       &lhs,
            std::intmax_t  rhs)
 {
     return divide_in_place(rhs, lhs);
+}
+
+std::intmax_t &
+operator/=(std::intmax_t &lhs,
+           const Integer &rhs)
+{
+    return lhs = (lhs / rhs);
 }
 
 Integer &
@@ -131,6 +149,13 @@ operator/=(Integer     &lhs,
     assert(std::isfinite(rhs));
 
     return divide_in_place(rhs, lhs);
+}
+
+long double &
+operator/=(long double   &lhs,
+           const Integer &rhs)
+{
+    return lhs = (lhs / rhs);
 }
 
 
@@ -148,13 +173,12 @@ operator/(const Integer  &lhs,
     return divide(lhs, rhs);
 }
 
-// std::uintmax_t
-// operator/(std::uintmax_t  lhs,
-//           const Integer  &rhs)
-// {
-//     (void) rhs;
-//     return lhs; // TODO
-// }
+std::uintmax_t
+operator/(std::uintmax_t  lhs,
+          const Integer  &rhs)
+{
+    return lhs / conversions::unsigned_integral_from_integer(rhs);
+}
 
 Integer
 operator/(const Integer &lhs,
@@ -163,13 +187,18 @@ operator/(const Integer &lhs,
     return divide(lhs, rhs);
 }
 
-// std::intmax_t
-// operator/(std::intmax_t  lhs,
-//           const Integer &rhs)
-// {
-//     (void) rhs;
-//     return lhs; // TODO
-// }
+std::intmax_t
+operator/(std::intmax_t  lhs,
+          const Integer &rhs)
+{
+    auto [lhs_sign, lhs_value] = sign_and_value_from_arithmetic(lhs);
+    auto result_sign           = lhs_sign * rhs.sign;
+    auto rhs_value             = conversions::integral_from_digits(rhs.digits);
+    auto result_value          = lhs_value / rhs_value;
+    auto unsigned_result       = result_value * result_sign;
+
+    return intmax_t_from_uintmax_t(unsigned_result);
+}
 
 Integer
 operator/(const Integer &lhs,
@@ -180,13 +209,12 @@ operator/(const Integer &lhs,
     return divide(lhs, rhs);
 }
 
-// long double
-// operator/(long double    lhs,
-//           const Integer &rhs)
-// {
-//     (void) rhs;
-//     return lhs; // TODO
-// }
+long double
+operator/(long double    lhs,
+          const Integer &rhs)
+{
+    return std::trunc(lhs) / conversions::floating_point_from_integer(rhs);
+}
 
 
 Integer &
@@ -203,11 +231,25 @@ operator%=(Integer        &lhs,
     return remainder_in_place(rhs, lhs);
 }
 
+std::uintmax_t &
+operator%=(std::uintmax_t &lhs,
+           const Integer  &rhs)
+{
+    return lhs = (lhs % rhs);
+}
+
 Integer &
 operator%=(Integer       &lhs,
            std::intmax_t  rhs)
 {
     return remainder_in_place(rhs, lhs);
+}
+
+std::intmax_t &
+operator%=(std::intmax_t &lhs,
+           const Integer &rhs)
+{
+    return lhs = (lhs % rhs);
 }
 
 Integer &
@@ -217,6 +259,13 @@ operator%=(Integer     &lhs,
     assert(std::isfinite(rhs));
 
     return remainder_in_place(rhs, lhs);
+}
+
+long double &
+operator%=(long double   &lhs,
+           const Integer &rhs)
+{
+    return lhs = (lhs % rhs);
 }
 
 
@@ -234,13 +283,12 @@ operator%(const Integer  &lhs,
     return remainder(lhs, rhs);
 }
 
-// std::uintmax_t
-// operator%(std::uintmax_t  lhs,
-//           const Integer  &rhs)
-// {
-//     (void) rhs;
-//     return lhs; // TODO
-// }
+std::uintmax_t
+operator%(std::uintmax_t  lhs,
+          const Integer  &rhs)
+{
+    return lhs % conversions::unsigned_integral_from_integer(rhs);
+}
 
 Integer
 operator%(const Integer &lhs,
@@ -249,13 +297,17 @@ operator%(const Integer &lhs,
     return remainder(lhs, rhs);
 }
 
-// std::intmax_t
-// operator%(std::intmax_t  lhs,
-//           const Integer &rhs)
-// {
-//     (void) rhs;
-//     return lhs; // TODO
-// }
+std::intmax_t
+operator%(std::intmax_t  lhs,
+          const Integer &rhs)
+{
+    auto [lhs_sign, lhs_value] = sign_and_value_from_arithmetic(lhs);
+    auto rhs_value             = conversions::integral_from_digits(rhs.digits);
+    auto result_value          = (lhs_value % rhs_value);
+    auto unsigned_result       = result_value * lhs_sign;
+
+    return intmax_t_from_uintmax_t(unsigned_result);
+}
 
 Integer
 operator%(const Integer &lhs,
@@ -266,41 +318,83 @@ operator%(const Integer &lhs,
     return remainder(lhs, rhs);
 }
 
-// long double
-// operator%(long double    lhs,
-//           const Integer &rhs)
-// {
-//     (void) rhs;
-//     return lhs; // TODO
-// }
+long double
+operator%(long double    lhs,
+          const Integer &rhs)
+{
+    return std::fmod(std::trunc(lhs),
+                     conversions::floating_point_from_integer(rhs));
+}
 
 
-IntegerDivisionResult
+IntegerDivisionResult<Integer>
 div(const Integer &lhs,
     const Integer &rhs)
 {
     return divide_and_remainder(lhs, rhs);
 }
 
-IntegerDivisionResult
+IntegerDivisionResult<Integer>
 div(const Integer  &lhs,
     std::uintmax_t  rhs)
 {
     return divide_and_remainder(lhs, rhs);
 }
 
-IntegerDivisionResult
+IntegerDivisionResult<std::uintmax_t>
+div(std::uintmax_t  lhs,
+    const Integer  &rhs)
+{
+    auto unsigned_integral_rhs =
+        conversions::unsigned_integral_from_integer(rhs);
+
+    return {
+        .quotient  = lhs / unsigned_integral_rhs,
+        .remainder = lhs % unsigned_integral_rhs
+    };
+}
+
+IntegerDivisionResult<Integer>
 div(const Integer &lhs,
     std::intmax_t  rhs)
 {
     return divide_and_remainder(lhs, rhs);
 }
 
-IntegerDivisionResult
+IntegerDivisionResult<std::intmax_t>
+div(std::intmax_t  lhs,
+    const Integer &rhs)
+{
+    auto [lhs_sign, lhs_value] = sign_and_value_from_arithmetic(lhs);
+    auto quotient_sign         = lhs_sign * rhs.sign;
+    auto rhs_value             = conversions::integral_from_digits(rhs.digits);
+    auto quotient_value        = (lhs_value / rhs_value);
+    auto remainder_value       = (lhs_value % rhs_value);
+
+    return {
+        .quotient  = intmax_t_from_uintmax_t(quotient_value  * quotient_sign),
+        .remainder = intmax_t_from_uintmax_t(remainder_value * lhs_sign)
+    };
+}
+
+IntegerDivisionResult<Integer>
 div(const Integer &lhs,
-    long double  rhs)
+    long double    rhs)
 {
     return divide_and_remainder(lhs, rhs);
+}
+
+IntegerDivisionResult<long double>
+div(long double    lhs,
+    const Integer &rhs)
+{
+    auto truncated_lhs      = std::trunc(lhs);
+    auto floating_point_rhs = conversions::floating_point_from_integer(rhs);
+
+    return {
+        .quotient  = truncated_lhs / floating_point_rhs,
+        .remainder = std::fmod(truncated_lhs, floating_point_rhs)
+    };
 }
 
 } // namespace detail

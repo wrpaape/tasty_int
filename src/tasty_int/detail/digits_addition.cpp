@@ -11,10 +11,8 @@
 #include "tasty_int/detail/floating_point_digits_iterator.hpp"
 #include "tasty_int/detail/integral_digits_view.hpp"
 #include "tasty_int/detail/size_digits_from_nonnegative_floating_point.hpp"
-#include "tasty_int/detail/trailing_zero.hpp"
 #include "tasty_int/detail/order_by_size.hpp"
-#include "tasty_int/detail/conversions/integral_from_digits.hpp"
-#include "tasty_int/detail/conversions/floating_point_from_digits.hpp"
+#include "tasty_int/detail/trailing_zero.hpp"
 
 
 namespace tasty_int {
@@ -178,13 +176,6 @@ operator+=(std::vector<digit_type> &lhs,
     return lhs;
 }
 
-std::uintmax_t &
-operator+=(std::uintmax_t                &lhs,
-           const std::vector<digit_type> &rhs)
-{
-    return lhs += conversions::integral_from_digits(rhs);
-}
-
 std::vector<digit_type> &
 operator+=(std::vector<digit_type> &lhs,
            long double              rhs)
@@ -199,13 +190,6 @@ operator+=(std::vector<digit_type> &lhs,
     add_in_place(rhs, lhs);
 
     return lhs;
-}
-
-long double &
-operator+=(long double                   &lhs,
-           const std::vector<digit_type> &rhs)
-{
-    return lhs += conversions::floating_point_from_digits(rhs);
 }
 
 std::vector<digit_type>

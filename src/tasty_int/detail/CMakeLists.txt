@@ -180,8 +180,6 @@ target_link_libraries(
     tasty_int-detail-integral_digits_view
     tasty_int-detail-order_by_size
     tasty_int-detail-trailing_zero
-    tasty_int-detail-conversions-integral_from_digits
-    tasty_int-detail-conversions-floating_point_from_digits
 )
 
 add_library(
@@ -320,6 +318,9 @@ target_link_libraries(
     tasty_int-detail-integer_multiplication
     tasty_int-detail-integer_operation
     tasty_int-detail-digits_multiplication
+    tasty_int-detail-intmax_t_from_uintmax_t
+    tasty_int-detail-conversions-unsigned_integral_from_integer
+    tasty_int-detail-conversions-floating_point_from_integer
 )
 
 add_library(
@@ -334,6 +335,10 @@ target_link_libraries(
     tasty_int-detail-integer_operation
     tasty_int-detail-digits_division
     tasty_int-detail-sign_from_digits
+    tasty_int-detail-intmax_t_from_uintmax_t
+    tasty_int-detail-conversions-integral_from_digits
+    tasty_int-detail-conversions-unsigned_integral_from_integer
+    tasty_int-detail-conversions-floating_point_from_integer
 )
 
 add_library(

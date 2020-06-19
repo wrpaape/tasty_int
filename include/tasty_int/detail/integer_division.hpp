@@ -23,10 +23,16 @@ operator/=(Integer       &lhs,
 Integer &
 operator/=(Integer        &lhs,
            std::uintmax_t  rhs);
+std::uintmax_t &
+operator/=(std::uintmax_t &lhs,
+           const Integer  &rhs);
 
 Integer &
 operator/=(Integer       &lhs,
            std::intmax_t  rhs);
+std::intmax_t &
+operator/=(std::intmax_t &lhs,
+           const Integer &rhs);
 
 /**
  * @defgroup IntegerDivisionFloatingPointOverloads Integer Division Floating Point Overloads
@@ -40,6 +46,10 @@ operator/=(Integer       &lhs,
 Integer &
 operator/=(Integer     &lhs,
            long double  rhs);
+/// @ingroup IntegerDivisionFloatingPointOverloads
+long double &
+operator/=(long double   &lhs,
+           const Integer &rhs);
 
 
 Integer
@@ -49,27 +59,25 @@ operator/(const Integer &lhs,
 Integer
 operator/(const Integer  &lhs,
           std::uintmax_t  rhs);
-
-// std::uintmax_t
-// operator/(std::uintmax_t  lhs,
-//           const Integer  &rhs); // TODO
+std::uintmax_t
+operator/(std::uintmax_t  lhs,
+          const Integer  &rhs);
 
 Integer
 operator/(const Integer &lhs,
           std::intmax_t  rhs);
-
-// std::intmax_t
-// operator/(std::intmax_t  lhs,
-//           const Integer &rhs); // TODO
+std::intmax_t
+operator/(std::intmax_t  lhs,
+          const Integer &rhs);
 
 /// @ingroup IntegerDivisionFloatingPointOverloads
 Integer
 operator/(const Integer &lhs,
           long double    rhs);
-
-// long double
-// operator/(long double    lhs,
-//           const Integer &rhs); // TODO
+/// @ingroup IntegerDivisionFloatingPointOverloads
+long double
+operator/(long double    lhs,
+          const Integer &rhs);
 /// @}
 
 
@@ -96,15 +104,25 @@ operator%=(Integer       &lhs,
 Integer &
 operator%=(Integer        &lhs,
            std::uintmax_t  rhs);
+std::uintmax_t &
+operator%=(std::uintmax_t &lhs,
+           const Integer  &rhs);
 
 Integer &
 operator%=(Integer       &lhs,
            std::intmax_t  rhs);
+std::intmax_t &
+operator%=(std::intmax_t &lhs,
+           const Integer &rhs);
 
 /// @ingroup IntegerDivisionFloatingPointOverloads
 Integer &
 operator%=(Integer     &lhs,
            long double  rhs);
+/// @ingroup IntegerDivisionFloatingPointOverloads
+long double &
+operator%=(long double   &lhs,
+           const Integer &rhs);
 
 
 Integer
@@ -114,27 +132,24 @@ operator%(const Integer &lhs,
 Integer
 operator%(const Integer  &lhs,
           std::uintmax_t  rhs);
-
-// std::uintmax_t
-// operator%(std::uintmax_t  lhs,
-//           const Integer  &rhs); // TODO
+std::uintmax_t
+operator%(std::uintmax_t  lhs,
+          const Integer  &rhs);
 
 Integer
 operator%(const Integer &lhs,
           std::intmax_t  rhs);
-
-// std::intmax_t
-// operator%(std::intmax_t  lhs,
-//           const Integer &rhs); // TODO
+std::intmax_t
+operator%(std::intmax_t lhs,
+          const Integer &rhs);
 
 /// @ingroup IntegerDivisionFloatingPointOverloads
 Integer
 operator%(const Integer &lhs,
           long double    rhs);
-
-// long double
-// operator%(long double    lhs,
-//           const Integer &rhs); // TODO
+long double
+operator%(long double    lhs,
+          const Integer &rhs);
 /// @}
 
 
@@ -142,10 +157,11 @@ operator%(const Integer &lhs,
  * The result of an immutable division operation involving a
  * tasty_int::detail::Integer.
  */
+template<typename DividendType>
 struct IntegerDivisionResult
 {
-    Integer quotient;  ///< the division quotient
-    Integer remainder; ///< the division remainder
+    DividendType quotient;  ///< the division quotient
+    DividendType remainder; ///< the division remainder
 }; // struct IntegerDivisionResult
 
 
@@ -155,22 +171,32 @@ struct IntegerDivisionResult
  * These functions return the quotient and remainder from division.
  */
 /// @{
-IntegerDivisionResult
+IntegerDivisionResult<Integer>
 div(const Integer &lhs,
     const Integer &rhs);
 
-IntegerDivisionResult
+IntegerDivisionResult<Integer>
 div(const Integer  &lhs,
     std::uintmax_t  rhs);
+IntegerDivisionResult<std::uintmax_t>
+div(std::uintmax_t  rhs,
+    const Integer  &lhs);
 
-IntegerDivisionResult
+IntegerDivisionResult<Integer>
 div(const Integer &lhs,
     std::intmax_t  rhs);
+IntegerDivisionResult<std::intmax_t>
+div(std::intmax_t  lhs,
+    const Integer &rhs);
 
 /// @ingroup IntegerDivisionFloatingPointOverloads
-IntegerDivisionResult
+IntegerDivisionResult<Integer>
 div(const Integer &lhs,
     long double  rhs);
+/// @ingroup IntegerDivisionFloatingPointOverloads
+IntegerDivisionResult<long double>
+div(long double    rhs,
+    const Integer &lhs);
 /// @}
 
 } // namespace detail

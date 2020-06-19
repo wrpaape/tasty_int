@@ -24,9 +24,17 @@ Integer &
 operator*=(Integer        &lhs,
            std::uintmax_t  rhs);
 
+std::uintmax_t &
+operator*=(std::uintmax_t &lhs,
+           const Integer  &rhs);
+
 Integer &
 operator*=(Integer       &lhs,
            std::intmax_t  rhs);
+
+std::intmax_t &
+operator*=(std::intmax_t &lhs,
+           const Integer &rhs);
 
 /**
  * @defgroup IntegerMultiplicationFloatingPointOverloads Integer Multiplication Floating Point Overloads
@@ -40,6 +48,11 @@ operator*=(Integer       &lhs,
 Integer &
 operator*=(Integer     &lhs,
            long double  rhs);
+
+/// @ingroup IntegerMultiplicationFloatingPointOverloads
+long double &
+operator*=(long double   &lhs,
+           const Integer &rhs);
 
 
 Integer

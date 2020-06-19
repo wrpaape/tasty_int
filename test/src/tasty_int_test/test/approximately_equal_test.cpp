@@ -121,4 +121,32 @@ TYPED_TEST(ApproximatelyEqualTest, DemotionCastIsApproximatelyEqual)
     );
 }
 
+TYPED_TEST(ApproximatelyEqualTest, PositiveInfinitiesAreApproximatelyEqual)
+{
+    constexpr auto POSITIVE_INFINITY =
+        +std::numeric_limits<TypeParam>::infinity();
+
+    EXPECT_TRUE(approximately_equal(POSITIVE_INFINITY, POSITIVE_INFINITY));
+}
+
+TYPED_TEST(ApproximatelyEqualTest, NegativeInfinitiesAreApproximatelyEqual)
+{
+    constexpr auto NEGATIVE_INFINITY =
+        -std::numeric_limits<TypeParam>::infinity();
+
+    EXPECT_TRUE(approximately_equal(NEGATIVE_INFINITY, NEGATIVE_INFINITY));
+}
+
+TYPED_TEST(ApproximatelyEqualTest,
+           OppositeSignInfinitiesAreNotApproximatelyEqual)
+{
+    constexpr auto POSITIVE_INFINITY =
+        +std::numeric_limits<TypeParam>::infinity();
+    constexpr auto NEGATIVE_INFINITY =
+        -std::numeric_limits<TypeParam>::infinity();
+
+    EXPECT_FALSE(approximately_equal(NEGATIVE_INFINITY, POSITIVE_INFINITY));
+    EXPECT_FALSE(approximately_equal(POSITIVE_INFINITY, NEGATIVE_INFINITY));
+}
+
 } // namespace
