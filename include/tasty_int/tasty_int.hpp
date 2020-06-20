@@ -312,6 +312,11 @@ private:
     friend TastyInt
     operator-(const LhsType &lhs,
               const RhsType &rhs);
+    template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+        requires TastyIntOperation<LhsType, RhsType>
+    friend TastyInt
+    operator*(const LhsType &lhs,
+              const RhsType &rhs);
 
     TastyInt(detail::Integer &&result)
         : integer(std::move(result))

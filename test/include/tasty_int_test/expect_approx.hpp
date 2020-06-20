@@ -20,12 +20,16 @@
  *     2. @p expected and @p actual are both nans
  *     3. tasty_int_test::approximately_equal(expected, actual)
  *
+ * @details A failure message may be provided as an optional third parameter as
+ *     output arguments joined by the output stream `<<` operator.
+ *
  * @param[in] expected the expected floating point value
  * @param[in] actual   the actual floating point value
  */
-#define EXPECT_APPROX(expected, actual)                               \
-    if (auto &&_expected = (expected); true)                          \
-    if (auto &&_actual   = (actual);   true)                          \
+#define EXPECT_APPROX(expected, actual, ...)                          \
+do {                                                                  \
+    auto &&_expected = (expected);                                    \
+    auto &&_actual   = (actual);                                      \
     EXPECT_TRUE(                                                      \
         tasty_int_test::approximately_equal(_expected, _actual)       \
     )                                                                 \
@@ -36,6 +40,8 @@
         << "      Actual: "                                           \
         << std::setprecision(                                         \
                std::numeric_limits<decltype(_actual)>::max_digits10   \
-           ) << _actual << " (" #actual ")\n"
+           ) << _actual << " (" #actual ")\n"                         \
+        __VA_OPT__(<<) __VA_ARGS__;                                   \
+} while (0)
 
 #endif // ifndef TASTY_INT_TEST_EXPECT_APPROX_HPP

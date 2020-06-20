@@ -32,9 +32,11 @@ check_result(long double  expected_result,
              long double  actual_result,
              const char  *operation)
 {
-    EXPECT_APPROX(std::trunc(expected_result),
-                  std::trunc(actual_result))
-        << operation << " did not produce expected result";
+    EXPECT_APPROX(
+        std::trunc(expected_result),
+        std::trunc(actual_result),
+        operation << " did not produce expected result"
+    );
 }
 
 template<typename ResultType>

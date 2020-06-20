@@ -28,3 +28,9 @@ add_google_benchmark(
               tasty_int-detail-digits_benchmark
               tasty_int-detail-conversions-digits_from_integral
 )
+
+add_google_benchmark(
+    NAME    tasty_int-detail-sign_benchmark
+    SOURCES sign_benchmark.cpp
+            ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
+)

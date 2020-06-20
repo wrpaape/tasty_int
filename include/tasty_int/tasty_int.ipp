@@ -4,6 +4,7 @@
 #include "tasty_int/tasty_int.hpp"
 
 #include "tasty_int/detail/integer_comparison.hpp"
+#include "tasty_int/detail/integer_multiplication.hpp"
 #include "tasty_int/detail/integer_output.hpp"
 
 
@@ -132,12 +133,18 @@ operator>=(const LhsType &lhs,
  * truncated toward zero before addition.
  */
 /// @{
-template<TastyIntOperand RhsType>
-TastyInt &
-operator+=(TastyInt      &lhs,
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+LhsType &
+operator+=(LhsType       &lhs,
            const RhsType &rhs)
 {
-    detail::prepare_operand(lhs) += detail::prepare_operand(rhs);
+    auto &&lhs_operand = detail::prepare_operand(lhs);
+
+    lhs_operand += detail::prepare_operand(rhs);
+
+    if constexpr (Arithmetic<LhsType>)
+        lhs = static_cast<LhsType>(lhs_operand);
 
     return lhs;
 }
@@ -161,12 +168,18 @@ operator+(const LhsType &lhs,
  * truncated toward zero before subtraction.
  */
 /// @{
-template<TastyIntOperand RhsType>
-TastyInt &
-operator-=(TastyInt      &lhs,
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+LhsType &
+operator-=(LhsType       &lhs,
            const RhsType &rhs)
 {
-    detail::prepare_operand(lhs) -= detail::prepare_operand(rhs);
+    auto &&lhs_operand = detail::prepare_operand(lhs);
+
+    lhs_operand -= detail::prepare_operand(rhs);
+
+    if constexpr (Arithmetic<LhsType>)
+        lhs = static_cast<LhsType>(lhs_operand);
 
     return lhs;
 }
@@ -178,6 +191,41 @@ operator-(const LhsType &lhs,
           const RhsType &rhs)
 {
     return detail::prepare_operand(lhs) - detail::prepare_operand(rhs);
+}
+/// @}
+
+
+/**
+ * @defgroup TastyIntMultiplicationOperators TastyInt Multiplication Operators
+ *
+ * These operators apply multiplication to tasty_int::detail::TastyInt and the
+ * supported arithmetic types.  Note that floating point values are effectively
+ * truncated toward zero before multiplication.
+ */
+/// @{
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+LhsType &
+operator*=(LhsType       &lhs,
+           const RhsType &rhs)
+{
+    auto &&lhs_operand = detail::prepare_operand(lhs);
+
+    lhs_operand *= detail::prepare_operand(rhs);
+
+    if constexpr (Arithmetic<LhsType>)
+        lhs = static_cast<LhsType>(lhs_operand);
+
+    return lhs;
+}
+
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+TastyInt
+operator*(const LhsType &lhs,
+          const RhsType &rhs)
+{
+    return detail::prepare_operand(lhs) * detail::prepare_operand(rhs);
 }
 /// @}
 

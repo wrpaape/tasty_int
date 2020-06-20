@@ -87,6 +87,6 @@ approximately_equal(LhsFloatingPointType lhs,
         || detail::absolute_error_is_negligible(lhs, rhs);
 }
 
-} // namespace tasty_int_test {
+} // namespace tasty_int_test
 
 #endif // ifndef TASTY_INT_TEST_APPROXIMATELY_EQUAL_HPP

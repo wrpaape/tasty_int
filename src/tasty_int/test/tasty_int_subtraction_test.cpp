@@ -4,6 +4,7 @@
 
 #include "gtest/gtest.h"
 
+#include "tasty_int/test/tasty_int_arithmetic_test_common.hpp"
 #include "tasty_int_test/arithmetic_types.hpp"
 #include "tasty_int_test/signed_arithmetic_types.hpp"
 #include "tasty_int_test/sample_arithmetic.hpp"
@@ -12,44 +13,60 @@
 namespace {
 
 using tasty_int::TastyInt;
+using tasty_int_arithmetic_test_common::check_tasty_int_result;
 using tasty_int_test::SampleArithmetic;
 
 
-template<tasty_int::TastyIntOperand DifferenceType>
+
+template<tasty_int::TastyIntOperand DifferenceType,
+         tasty_int::TastyIntOperand MinuendType>
 void
-check_subtract_in_place_result(DifferenceType  expected_difference,
-                               const TastyInt &result,
-                               const TastyInt &minuend)
+check_subtract_in_place_result(const DifferenceType &expected_difference,
+                               const MinuendType    &result,
+                               const MinuendType    &minuend)
 {
     EXPECT_EQ(&minuend, &result)
         << "-= did not return reference to minuend";
 
-    EXPECT_EQ(expected_difference, minuend)
-        << "-= did not produce the expected result";
+    check_tasty_int_result(expected_difference, minuend, "-=");
 }
 
 template<tasty_int::TastyIntOperand LhsType,
          tasty_int::TastyIntOperand RhsType,
          tasty_int::TastyIntOperand DifferenceType>
 void
-test_subtract_in_place(LhsType        lhs,
-                       RhsType        rhs,
-                       DifferenceType expected_difference)
+run_test_subtract_in_place(LhsType              &&lhs,
+                           const RhsType         &rhs,
+                           const DifferenceType  &expected_difference)
 {
-    TastyInt minuend(lhs);
+    const auto &result = (lhs -= rhs);
 
-    const TastyInt &result = (minuend -= rhs);
-
-    check_subtract_in_place_result(expected_difference, minuend, result);
+    check_subtract_in_place_result(expected_difference, lhs, result);
 }
 
 template<tasty_int::TastyIntOperand LhsType,
          tasty_int::TastyIntOperand RhsType,
          tasty_int::TastyIntOperand DifferenceType>
 void
-test_subtract(LhsType        lhs,
-              RhsType        rhs,
-              DifferenceType expected_difference)
+test_subtract_in_place(const LhsType        &lhs,
+                       const RhsType        &rhs,
+                       const DifferenceType &expected_difference)
+{
+    run_test_subtract_in_place(TastyInt(lhs),
+                               rhs,
+                               expected_difference);
+    run_test_subtract_in_place(LhsType(lhs),
+                               TastyInt(rhs),
+                               LhsType(expected_difference));
+}
+
+template<tasty_int::TastyIntOperand LhsType,
+         tasty_int::TastyIntOperand RhsType,
+         tasty_int::TastyIntOperand DifferenceType>
+void
+test_subtract(const LhsType        &lhs,
+              const RhsType        &rhs,
+              const DifferenceType &expected_difference)
 {
     EXPECT_EQ(expected_difference, TastyInt(lhs) - rhs          );
     EXPECT_EQ(expected_difference, lhs           - TastyInt(rhs));
@@ -59,9 +76,9 @@ template<tasty_int::TastyIntOperand LhsType,
          tasty_int::TastyIntOperand RhsType,
          tasty_int::TastyIntOperand DifferenceType>
 void
-test_subtraction(LhsType        lhs,
-                 RhsType        rhs,
-                 DifferenceType expected_difference)
+test_subtraction(const LhsType        &lhs,
+                 const RhsType        &rhs,
+                 const DifferenceType &expected_difference)
 {
     test_subtract_in_place(lhs, rhs, expected_difference);
 

@@ -22,7 +22,8 @@ unsigned_integral_from_integer(const Integer &integer)
     // unsigned overflow cannot occur - modulo wrapping is well-defined
     // behavior: C11 standard (ISO/IEC 9899:2011) section 6.3 Conversions (p:
     // 50-56)
-    value *= integer.sign;
+    if (integer.sign < Sign::ZERO)
+        value = -value;
 
     return value;
 }

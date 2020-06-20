@@ -4,6 +4,7 @@
 
 #include "gtest/gtest.h"
 
+#include "tasty_int/test/tasty_int_arithmetic_test_common.hpp"
 #include "tasty_int_test/arithmetic_types.hpp"
 #include "tasty_int_test/sample_arithmetic.hpp"
 
@@ -11,44 +12,55 @@
 namespace {
 
 using tasty_int::TastyInt;
+using tasty_int_arithmetic_test_common::check_tasty_int_result;
 using tasty_int_test::SampleArithmetic;
 
 
-template<tasty_int::TastyIntOperand SumType>
+template<tasty_int::TastyIntOperand SumType,
+         tasty_int::TastyIntOperand AugendType>
 void
-check_add_in_place_result(SumType         expected_sum,
-                          const TastyInt &result,
-                          const TastyInt &augend)
+check_add_in_place_result(const SumType    &expected_sum,
+                          const AugendType &result,
+                          const AugendType &augend)
 {
     EXPECT_EQ(&augend, &result)
         << "+= did not return reference to augend";
 
-    EXPECT_EQ(expected_sum, augend)
-        << "+= did not produce the expected result";
+    check_tasty_int_result(expected_sum, augend, "+=");
 }
 
 template<tasty_int::TastyIntOperand LhsType,
          tasty_int::TastyIntOperand RhsType,
          tasty_int::TastyIntOperand SumType>
 void
-test_add_in_place(LhsType lhs,
-                  RhsType rhs,
-                  SumType expected_sum)
+run_test_add_in_place(LhsType       &&lhs,
+                      const RhsType  &rhs,
+                      const SumType  &expected_sum)
 {
-    TastyInt augend(lhs);
+    const auto &result = (lhs += rhs);
 
-    const TastyInt &result = (augend += rhs);
-
-    check_add_in_place_result(expected_sum, augend, result);
+    check_add_in_place_result(expected_sum, lhs, result);
 }
 
 template<tasty_int::TastyIntOperand LhsType,
          tasty_int::TastyIntOperand RhsType,
          tasty_int::TastyIntOperand SumType>
 void
-test_add(LhsType lhs,
-         RhsType rhs,
-         SumType expected_sum)
+test_add_in_place(const LhsType &lhs,
+                  const RhsType &rhs,
+                  const SumType &expected_sum)
+{
+    run_test_add_in_place(TastyInt(lhs), rhs,           expected_sum);
+    run_test_add_in_place(LhsType(lhs),  TastyInt(rhs), LhsType(expected_sum));
+}
+
+template<tasty_int::TastyIntOperand LhsType,
+         tasty_int::TastyIntOperand RhsType,
+         tasty_int::TastyIntOperand SumType>
+void
+test_add(const LhsType &lhs,
+         const RhsType &rhs,
+         const SumType &expected_sum)
 {
     EXPECT_EQ(expected_sum, TastyInt(lhs) + rhs          );
     EXPECT_EQ(expected_sum, lhs           + TastyInt(rhs));
@@ -58,9 +70,9 @@ template<tasty_int::TastyIntOperand LhsType,
          tasty_int::TastyIntOperand RhsType,
          tasty_int::TastyIntOperand SumType>
 void
-test_addition(LhsType lhs,
-              RhsType rhs,
-              SumType expected_sum)
+test_addition(const LhsType &lhs,
+              const RhsType &rhs,
+              const SumType &expected_sum)
 {
     test_add_in_place(lhs, rhs, expected_sum);
     test_add_in_place(rhs, lhs, expected_sum);
@@ -154,9 +166,9 @@ TEST(TastyIntAndTastyIntAdditionTest, ZeroAndZero)
 TEST(TastyIntAndTastyIntAdditionTest, PositiveAndPositive)
 {
     test_addition(
-        TastyInt("+787878787878787878787878787878787878787878787878787878787878"),
-        TastyInt("+212121212121212121212121212121212121212121212121212121212121"),
-        TastyInt("+999999999999999999999999999999999999999999999999999999999999")
+        TastyInt("+7878787878787878787878787878787878787878787878787878787878"),
+        TastyInt("+2121212121212121212121212121212121212121212121212121212121"),
+        TastyInt("+9999999999999999999999999999999999999999999999999999999999")
     );
 }
 
