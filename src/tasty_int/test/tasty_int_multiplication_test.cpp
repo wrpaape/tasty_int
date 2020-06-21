@@ -1,18 +1,19 @@
 #include "tasty_int/tasty_int.hpp"
 
+#include <cmath>
+
 #include <limits>
 
 #include "gtest/gtest.h"
-
-#include "tasty_int/test/tasty_int_arithmetic_test_common.hpp"
 #include "tasty_int_test/arithmetic_types.hpp"
+#include "tasty_int_test/check_integer_result.hpp"
 #include "tasty_int_test/sample_arithmetic.hpp"
 
 
 namespace {
 
 using tasty_int::TastyInt;
-using tasty_int_arithmetic_test_common::check_tasty_int_result;
+using tasty_int_test::check_integer_result;
 using tasty_int_test::SampleArithmetic;
 
 
@@ -26,7 +27,7 @@ check_multiply_in_place_result(const ProductType      &expected_product,
     EXPECT_EQ(&multiplicand, &result)
         << "+= did not return reference to multiplicand";
 
-    check_tasty_int_result(expected_product, multiplicand, "+=");
+    check_integer_result(expected_product, multiplicand, "+=");
 }
 
 template<tasty_int::TastyIntOperand LhsType,
@@ -74,9 +75,9 @@ template<tasty_int::TastyIntOperand LhsType,
          tasty_int::TastyIntOperand RhsType,
          tasty_int::TastyIntOperand ProductType>
 void
-test_multiplication(const LhsType &lhs,
-              const RhsType &rhs,
-              const ProductType &expected_product)
+test_multiplication(const LhsType     &lhs,
+                    const RhsType     &rhs,
+                    const ProductType &expected_product)
 {
     test_multiply_in_place(lhs, rhs, expected_product);
     test_multiply_in_place(rhs, lhs, expected_product);
@@ -163,8 +164,10 @@ TYPED_TEST(TastyIntAndArithmeticTypeMultiplicationTest, OneAndMedian)
 
 TYPED_TEST(TastyIntAndArithmeticTypeMultiplicationTest, OneAndUpperQuartile)
 {
-    TestFixture::test_multiplication(SampleArithmetic<TypeParam>::ONE,
-                                     SampleArithmetic<TypeParam>::UPPER_QUARTILE);
+    TestFixture::test_multiplication(
+        SampleArithmetic<TypeParam>::ONE,
+        SampleArithmetic<TypeParam>::UPPER_QUARTILE
+    );
 }
 
 TYPED_TEST(TastyIntAndArithmeticTypeMultiplicationTest, OneAndMaximum)

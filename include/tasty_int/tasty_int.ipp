@@ -5,6 +5,7 @@
 
 #include "tasty_int/detail/integer_comparison.hpp"
 #include "tasty_int/detail/integer_multiplication.hpp"
+#include "tasty_int/detail/integer_division.hpp"
 #include "tasty_int/detail/integer_input.hpp"
 #include "tasty_int/detail/integer_output.hpp"
 
@@ -232,19 +233,130 @@ operator*(const LhsType &lhs,
 
 
 /**
+ * @defgroup TastyIntDivisionOperators TastyInt Division Operators
+ *
+ * These operators apply division to tasty_int::detail::TastyInt and the
+ * supported arithmetic types.  Note that floating point values are effectively
+ * truncated toward zero before division.
+ */
+/// @{
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+LhsType &
+operator/=(LhsType       &lhs,
+           const RhsType &rhs)
+{
+    auto &&lhs_operand = detail::prepare_operand(lhs);
+
+    lhs_operand /= detail::prepare_operand(rhs);
+
+    if constexpr (Arithmetic<LhsType>)
+        lhs = static_cast<LhsType>(lhs_operand);
+
+    return lhs;
+}
+
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+TastyInt
+operator/(const LhsType &lhs,
+          const RhsType &rhs)
+{
+    return detail::prepare_operand(lhs) / detail::prepare_operand(rhs);
+}
+
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+LhsType &
+operator%=(LhsType       &lhs,
+           const RhsType &rhs)
+{
+    auto &&lhs_operand = detail::prepare_operand(lhs);
+
+    lhs_operand %= detail::prepare_operand(rhs);
+
+    if constexpr (Arithmetic<LhsType>)
+        lhs = static_cast<LhsType>(lhs_operand);
+
+    return lhs;
+}
+
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+TastyInt
+operator%(const LhsType &lhs,
+          const RhsType &rhs)
+{
+    return detail::prepare_operand(lhs) % detail::prepare_operand(rhs);
+}
+
+
+/**
+ * The result of an immutable division operation involving a
+ * tasty_int::TastyInt (tasty_int::div).
+ */
+template<TastyIntOperand DividendType>
+struct TastyIntDivisionResult
+{
+    DividendType quotient;  ///< the division quotient
+    DividendType remainder; ///< the division remainder
+}; // struct TastyIntDivisionResult
+
+/**
+ * @brief Computes the quotient and remainder of an integer division.
+ *
+ * @details The type of the resulting quotient and remainder matches the type
+ *     of @p dividend, @p DividendType.
+ *
+ * @tparam DividendType the type of the dividend
+ * @tparam DivisorType  the type of the divisor
+ * @param[in] dividend the dividend
+ * @param[in] divisor  the divisor
+ * @return the quotient and remainder of `dividend / divisor`
+ */
+template<TastyIntOperand DividendType, TastyIntOperand DivisorType>
+    requires TastyIntOperation<DividendType, DivisorType>
+TastyIntDivisionResult<DividendType>
+div(const DividendType &dividend,
+    const DivisorType  &divisor)
+{
+    auto integer_division_result =
+        detail::div(detail::prepare_operand(dividend),
+                    detail::prepare_operand(divisor));
+
+    if constexpr (Arithmetic<DividendType>)
+        return {
+            .quotient  =
+                static_cast<DividendType>(integer_division_result.quotient),
+            .remainder =
+                static_cast<DividendType>(integer_division_result.remainder)
+        };
+    else
+        return {
+            .quotient  = std::move(integer_division_result.quotient),
+            .remainder = std::move(integer_division_result.remainder)
+        };
+}
+/// @}
+
+
+/**
  * @brief Integer input operator.
  *
  * @details Input is a string of ASCII tokens interpretted in the base
- *     according to the input flags:
+ *     according to the input basefield flag:
  *
- *     | input flag         | interpretted base         |
- *     | ------------------ | --------------------------|
- *     | <none>             | depends on numeric prefix |
- *     | std::dec           | 10                        |
- *     | std::hex           | 16                        |
- *     | std::oct           | 8                         |
+ *     | input basefield flag | interpretted base         |
+ *     | -------------------- | --------------------------|
+ *     | <none>               | depends on numeric prefix |
+ *     | std::dec             | 10                        |
+ *     | std::hex             | 16                        |
+ *     | std::oct             | 8                         |
  *
  * @details @p input's failbit will be set if a parse error is encountered.
+ *
+ * @note For standard streams, the basefield flag is set to `dec` on
+ *     initialization.
  *
  * @param[in,out] intput  the input stream
  * @param[out]    tasty_int an arbitrary-precision integer

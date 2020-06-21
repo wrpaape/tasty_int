@@ -4,16 +4,16 @@
 
 #include "gtest/gtest.h"
 
-#include "tasty_int/test/tasty_int_arithmetic_test_common.hpp"
 #include "tasty_int_test/arithmetic_types.hpp"
-#include "tasty_int_test/signed_arithmetic_types.hpp"
+#include "tasty_int_test/check_integer_result.hpp"
 #include "tasty_int_test/sample_arithmetic.hpp"
+#include "tasty_int_test/signed_arithmetic_types.hpp"
 
 
 namespace {
 
 using tasty_int::TastyInt;
-using tasty_int_arithmetic_test_common::check_tasty_int_result;
+using tasty_int_test::check_integer_result;
 using tasty_int_test::SampleArithmetic;
 
 
@@ -28,7 +28,7 @@ check_subtract_in_place_result(const DifferenceType &expected_difference,
     EXPECT_EQ(&minuend, &result)
         << "-= did not return reference to minuend";
 
-    check_tasty_int_result(expected_difference, minuend, "-=");
+    check_integer_result(expected_difference, minuend, "-=");
 }
 
 template<tasty_int::TastyIntOperand LhsType,

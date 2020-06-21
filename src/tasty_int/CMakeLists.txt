@@ -30,6 +30,7 @@ target_sources(
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/unsigned_integral_from_integer.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/conversions/string_from_integer.hpp
 )
+# @todo TODO: collapse libraries
 target_link_libraries(
     tasty_int
     INTERFACE

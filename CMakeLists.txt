@@ -28,6 +28,9 @@ cmake_dependent_option(
 )
 option(BUILD_BENCHMARKING "Enable micro benchmarks." ON)
 # @todo TODO: https://svn.boost.org/trac10/wiki/BestPracticeHandbook
+# @todo TODO: add option for LTO
+# @todo TODO: offer coverage as a build type and remove BUILD_COVERAGE
+# @todo TODO: remove in-source 'bin' and 'lib' directories
 
 # config defines
 set(TASTY_INT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR})

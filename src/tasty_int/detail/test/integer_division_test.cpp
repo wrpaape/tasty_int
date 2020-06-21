@@ -6,7 +6,7 @@
 
 #include "tasty_int/detail/conversions/integer_from_string.hpp"
 #include "tasty_int/detail/test/integer_test_common.hpp"
-#include "tasty_int_test/expect_approx.hpp"
+#include "tasty_int_test/check_integer_result.hpp"
 
 
 namespace {
@@ -15,6 +15,7 @@ using tasty_int::detail::Integer;
 using tasty_int::detail::Sign;
 using tasty_int::detail::IntegerDivisionResult;
 using tasty_int::detail::conversions::integer_from_string;
+using tasty_int_test::check_integer_result;
 
 
 const Integer ZERO_INTEGER         = {
@@ -26,28 +27,6 @@ const Integer POSITIVE_ONE_INTEGER = {
 const Integer NEGATIVE_ONE_INTEGER = {
     .sign = Sign::NEGATIVE, .digits = { 1 }
 };
-
-void
-check_result(long double  expected_result,
-             long double  actual_result,
-             const char  *operation)
-{
-    EXPECT_APPROX(
-        std::trunc(expected_result),
-        std::trunc(actual_result),
-        operation << " did not produce expected result"
-    );
-}
-
-template<typename ResultType>
-void
-check_result(ResultType  expected_result,
-             ResultType  actual_result,
-             const char *operation)
-{
-    EXPECT_EQ(expected_result, actual_result)
-        << operation << " did not produce expected result";
-}
 
 template<typename DividendType,
          typename DivisorType>
@@ -63,7 +42,7 @@ test_divide_in_place(const DividendType &lhs,
     EXPECT_EQ(&dividend, &quotient)
         << "/= did not return reference to dividend";
 
-    check_result(expected_result, dividend, "/=");
+    check_integer_result(expected_result, dividend, "/=");
 }
 
 template<typename DividendType,
@@ -75,7 +54,7 @@ test_divide(const DividendType &dividend,
 {
     auto &&quotient = dividend / divisor;
 
-    check_result(expected_result, quotient, "/");
+    check_integer_result(expected_result, quotient, "/");
 }
 
 template<typename DividendType,
@@ -92,7 +71,7 @@ test_modulo_in_place(const DividendType &lhs,
     EXPECT_EQ(&dividend, &remainder)
         << "%= did not return reference to dividend";
 
-    check_result(expected_result, dividend, "%=");
+    check_integer_result(expected_result, dividend, "%=");
 }
 
 template<typename DividendType,
@@ -104,7 +83,7 @@ test_modulo(const DividendType &dividend,
 {
     auto &&remainder = dividend % divisor;
 
-    check_result(expected_result, remainder, "%");
+    check_integer_result(expected_result, remainder, "%");
 }
 
 template<typename DividendType,
@@ -116,12 +95,12 @@ test_div(const DividendType                        &dividend,
 {
     auto &&result = tasty_int::detail::div(dividend, divisor);
 
-    check_result(expected_result.quotient,
-                 result.quotient,
-                 "div (quotient)");
-    check_result(expected_result.remainder,
-                 result.remainder,
-                 "div (remainder)");
+    check_integer_result(expected_result.quotient,
+                         result.quotient,
+                         "div (quotient)");
+    check_integer_result(expected_result.remainder,
+                         result.remainder,
+                         "div (remainder)");
 }
 
 template<typename DividendType,

@@ -54,6 +54,11 @@ concept TastyIntOperation =
  || (std::is_same_v<RhsType, TastyInt> && TastyIntOperand<LhsType>);
 /// @}
 
+
+template<TastyIntOperand DividendType>
+struct TastyIntDivisionResult;
+
+
 /**
  * This class represents an arbitary-precision signed integer.  A
  * tasty_int::TastyInt instance may be intialized from any primitive arithmetic
@@ -317,6 +322,21 @@ private:
     friend TastyInt
     operator*(const LhsType &lhs,
               const RhsType &rhs);
+    template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+        requires TastyIntOperation<LhsType, RhsType>
+    friend TastyInt
+    operator/(const LhsType &lhs,
+              const RhsType &rhs);
+    template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+        requires TastyIntOperation<LhsType, RhsType>
+    friend TastyInt
+    operator%(const LhsType &lhs,
+              const RhsType &rhs);
+    template<TastyIntOperand DividendType, TastyIntOperand DivisorType>
+        requires TastyIntOperation<DividendType, DivisorType>
+    friend TastyIntDivisionResult<DividendType>
+    div(const DividendType &dividend,
+        const DivisorType  &divisor);
 
     TastyInt(detail::Integer &&result)
         : integer(std::move(result))

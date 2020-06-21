@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <sstream>
 #include <type_traits>
+#include <utility>
 
 #include "tasty_int_test/make_arithmetic_printable.hpp"
 
@@ -31,7 +32,7 @@ base_10_integer_string_from_arithmetic(ArithmeticType value)
                    << std::setprecision(0)
                    << make_arithmetic_printable(value);
 
-    return base_10_string.str();
+    return std::move(base_10_string).str();
 }
 
 } // namespace tasty_int_test

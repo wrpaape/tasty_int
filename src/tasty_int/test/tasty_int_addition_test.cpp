@@ -4,15 +4,15 @@
 
 #include "gtest/gtest.h"
 
-#include "tasty_int/test/tasty_int_arithmetic_test_common.hpp"
 #include "tasty_int_test/arithmetic_types.hpp"
+#include "tasty_int_test/check_integer_result.hpp"
 #include "tasty_int_test/sample_arithmetic.hpp"
 
 
 namespace {
 
 using tasty_int::TastyInt;
-using tasty_int_arithmetic_test_common::check_tasty_int_result;
+using tasty_int_test::check_integer_result;
 using tasty_int_test::SampleArithmetic;
 
 
@@ -26,7 +26,7 @@ check_add_in_place_result(const SumType    &expected_sum,
     EXPECT_EQ(&augend, &result)
         << "+= did not return reference to augend";
 
-    check_tasty_int_result(expected_sum, augend, "+=");
+    check_integer_result(expected_sum, augend, "+=");
 }
 
 template<tasty_int::TastyIntOperand LhsType,

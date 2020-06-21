@@ -13,16 +13,19 @@ namespace detail {
  * @brief Integer input operator.
  *
  * @details Input is a string of ASCII tokens interpretted in the base
- *     according to the input flags:
+ *     according to the input basefield flag:
  *
- *     | input flag         | interpretted base         |
- *     | ------------------ | --------------------------|
- *     | <none>             | depends on numeric prefix |
- *     | std::dec           | 10                        |
- *     | std::hex           | 16                        |
- *     | std::oct           | 8                         |
+ *     | input basefield flag | interpretted base         |
+ *     | -------------------- | --------------------------|
+ *     | <none>               | depends on numeric prefix |
+ *     | std::dec             | 10                        |
+ *     | std::hex             | 16                        |
+ *     | std::oct             | 8                         |
  *
  * @details @p input's failbit will be set if a parse error is encountered.
+ *
+ * @note For standard streams, the basefield flag is set to `dec` on
+ *     initialization.
  *
  * @param[in,out] intput  the input stream
  * @param[out]    integer an arbitrary-precision integer

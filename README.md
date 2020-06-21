@@ -159,6 +159,7 @@ main(int   argc,
 - [Construction](#construction)
 - [Comparison](#comparison)
 - [Arithmetic](#arithmetic)
+- [Input](#input)
 - [Output](#output)
 
 
@@ -235,8 +236,6 @@ num /= TastyInt("07777777777777777777777777777777777777777777777777");
 ...
 num %= 42;
 ...
-auto [quotient, remainder] = num.div(13);
-...
 auto result = 0b010101010101 + num;
 ...
 result = num - 1.0e111;
@@ -252,6 +251,41 @@ auto [quotient, remainder] = tasty_int::div(result, num);
 ```
 See the `TastyInt <Addition|Subtraction|Multiplication|Division|Modulo>`
 sections of [tasty_int.ipp](include/tasty_int/tasty_int.ipp) for more details.
+
+### Input
+`TastyInt` instances may be read from a `std::istream`.
+```
+#include <cassert>
+
+#include <algorithm>
+#include <array>
+#include <functional>
+#include <iomanip>
+#include <sstream>
+...
+using tasty_int::TastyInt;
+...
+std::istringstream input(
+    " 12345678901234567890"
+   " 012345678901234567890"
+  " 0xab54a98ceb1f0ad2"
+    " ab54a98ceb1f0ad2"
+    " 1255245230635307605322"
+);
+...
+std::array<TastyInt, 5> nums;
+input >> nums[0]
+      >> std::dec >> nums[1]
+      >> nums[2]
+      >> std::hex >> nums[3]
+      >> std::oct >> nums[4];
+...
+bool all_nums_equal = std::adjacent_find(nums.begin(), nums.end(),
+                                         std::not_equal_to{}) == nums.end();
+assert(all_nums_equal);
+```
+See documentation of `operator>>` at its definition in
+[tasty_int.ipp](include/tasty_int/tasty_int.ipp) for more details.
 
 ### Output
 `TastyInt` instances may be written to a `std::ostream` or converted to an

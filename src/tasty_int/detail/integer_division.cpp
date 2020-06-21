@@ -76,19 +76,24 @@ remainder_in_place(const DivisorType &divisor,
 IntegerDivisionResult<Integer>
 integer_division_result_from_digits_division_result(
     DigitsDivisionResult &&digits_result,
-    Sign                   quotient_sign,
-    Sign                   remainder_sign
+    Sign                   nonzero_quotient_sign,
+    Sign                   nonzero_remainder_sign
 )
 {
-    IntegerDivisionResult<Integer> result;
-    result.quotient.sign    = sign_from_digits(digits_result.quotient,
-                                               quotient_sign);
-    result.quotient.digits  = std::move(digits_result.quotient);
-    result.remainder.sign   = sign_from_digits(digits_result.remainder,
-                                               remainder_sign);
-    result.remainder.digits = std::move(digits_result.remainder);
-
-    return result;
+    auto quotient_sign  = sign_from_digits(digits_result.quotient,
+                                           nonzero_quotient_sign);
+    auto remainder_sign = sign_from_digits(digits_result.remainder,
+                                           nonzero_remainder_sign);
+    return {
+        .quotient = {
+            .sign   = quotient_sign,
+            .digits = std::move(digits_result.quotient)
+        },
+        .remainder = {
+            .sign   = remainder_sign,
+            .digits = std::move(digits_result.remainder)
+        }
+    };
 }
 
 template<IntegerOperand DivisorType>
@@ -328,72 +333,74 @@ operator%(long double    lhs,
 
 
 IntegerDivisionResult<Integer>
-div(const Integer &lhs,
-    const Integer &rhs)
+div(const Integer &dividend,
+    const Integer &divisor)
 {
-    return divide_and_remainder(lhs, rhs);
+    return divide_and_remainder(dividend, divisor);
 }
 
 IntegerDivisionResult<Integer>
-div(const Integer  &lhs,
-    std::uintmax_t  rhs)
+div(const Integer  &dividend,
+    std::uintmax_t  divisor)
 {
-    return divide_and_remainder(lhs, rhs);
+    return divide_and_remainder(dividend, divisor);
 }
 
 IntegerDivisionResult<std::uintmax_t>
-div(std::uintmax_t  lhs,
-    const Integer  &rhs)
+div(std::uintmax_t  dividend,
+    const Integer  &divisor)
 {
-    auto unsigned_integral_rhs =
-        conversions::unsigned_integral_from_integer(rhs);
+    auto unsigned_integral_divisor =
+        conversions::unsigned_integral_from_integer(divisor);
 
     return {
-        .quotient  = lhs / unsigned_integral_rhs,
-        .remainder = lhs % unsigned_integral_rhs
+        .quotient  = dividend / unsigned_integral_divisor,
+        .remainder = dividend % unsigned_integral_divisor
     };
 }
 
 IntegerDivisionResult<Integer>
-div(const Integer &lhs,
-    std::intmax_t  rhs)
+div(const Integer &dividend,
+    std::intmax_t  divisor)
 {
-    return divide_and_remainder(lhs, rhs);
+    return divide_and_remainder(dividend, divisor);
 }
 
 IntegerDivisionResult<std::intmax_t>
-div(std::intmax_t  lhs,
-    const Integer &rhs)
+div(std::intmax_t  dividend,
+    const Integer &divisor)
 {
-    auto [lhs_sign, lhs_value] = sign_and_value_from_arithmetic(lhs);
-    auto quotient_sign         = lhs_sign * rhs.sign;
-    auto rhs_value             = conversions::integral_from_digits(rhs.digits);
-    auto quotient_value        = (lhs_value / rhs_value);
-    auto remainder_value       = (lhs_value % rhs_value);
+    auto [dividend_sign, dividend_value] =
+        sign_and_value_from_arithmetic(dividend);
+    auto quotient_sign   = dividend_sign * divisor.sign;
+    auto divisor_value   = conversions::integral_from_digits(divisor.digits);
+    auto quotient_value  = (dividend_value / divisor_value);
+    auto remainder_value = (dividend_value % divisor_value);
 
     return {
         .quotient  = intmax_t_from_uintmax_t(quotient_value  * quotient_sign),
-        .remainder = intmax_t_from_uintmax_t(remainder_value * lhs_sign)
+        .remainder = intmax_t_from_uintmax_t(remainder_value * dividend_sign)
     };
 }
 
 IntegerDivisionResult<Integer>
-div(const Integer &lhs,
-    long double    rhs)
+div(const Integer &dividend,
+    long double    divisor)
 {
-    return divide_and_remainder(lhs, rhs);
+    return divide_and_remainder(dividend, divisor);
 }
 
 IntegerDivisionResult<long double>
-div(long double    lhs,
-    const Integer &rhs)
+div(long double    dividend,
+    const Integer &divisor)
 {
-    auto truncated_lhs      = std::trunc(lhs);
-    auto floating_point_rhs = conversions::floating_point_from_integer(rhs);
+    auto truncated_dividend     = std::trunc(dividend);
+    auto floating_point_divisor =
+        conversions::floating_point_from_integer(divisor);
 
     return {
-        .quotient  = truncated_lhs / floating_point_rhs,
-        .remainder = std::fmod(truncated_lhs, floating_point_rhs)
+        .quotient  = truncated_dividend / floating_point_divisor,
+        .remainder = std::fmod(truncated_dividend, floating_point_divisor)
     };
 }
 

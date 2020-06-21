@@ -172,31 +172,31 @@ struct IntegerDivisionResult
  */
 /// @{
 IntegerDivisionResult<Integer>
-div(const Integer &lhs,
-    const Integer &rhs);
+div(const Integer &dividend,
+    const Integer &divisor);
 
 IntegerDivisionResult<Integer>
-div(const Integer  &lhs,
-    std::uintmax_t  rhs);
+div(const Integer  &dividend,
+    std::uintmax_t  divisor);
 IntegerDivisionResult<std::uintmax_t>
-div(std::uintmax_t  rhs,
-    const Integer  &lhs);
+div(std::uintmax_t  divisor,
+    const Integer  &dividend);
 
 IntegerDivisionResult<Integer>
-div(const Integer &lhs,
-    std::intmax_t  rhs);
+div(const Integer &dividend,
+    std::intmax_t  divisor);
 IntegerDivisionResult<std::intmax_t>
-div(std::intmax_t  lhs,
-    const Integer &rhs);
+div(std::intmax_t  dividend,
+    const Integer &divisor);
 
 /// @ingroup IntegerDivisionFloatingPointOverloads
 IntegerDivisionResult<Integer>
-div(const Integer &lhs,
-    long double  rhs);
+div(const Integer &dividend,
+    long double    divisor);
 /// @ingroup IntegerDivisionFloatingPointOverloads
 IntegerDivisionResult<long double>
-div(long double    rhs,
-    const Integer &lhs);
+div(long double    dividend,
+    const Integer &divisor);
 /// @}
 
 } // namespace detail

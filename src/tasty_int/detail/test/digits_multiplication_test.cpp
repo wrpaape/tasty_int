@@ -10,10 +10,6 @@
 #include "tasty_int/detail/conversions/digits_from_string.hpp"
 
 
-/// @todo TODO:  check for *this *= *this
-/// @todo TODO:  check for primitive *= digits
-
-
 namespace {
 
 using tasty_int::detail::operator*=;
@@ -202,6 +198,32 @@ TEST(DigitsAndDigitsMultiplicationTest, SparseManyDigitsTimeManyDigits)
     expected_result.back() = 1;
 
     test_multiplication(digits1, digits2, expected_result);
+}
+
+TEST(DigitsAndDigitsMultiplicationTest, FewDigitsTimesSelfInPlace)
+{
+    std::vector<digit_type> digits = {
+        4, 3, 2, 1
+    };
+    std::vector<digit_type> expected_result = {
+        16, 24, 25, 20, 10, 4, 1
+    };
+
+    digits *= digits;
+
+    EXPECT_EQ(expected_result, digits);
+}
+
+TEST(DigitsAndDigitsMultiplicationTest, ManyDigitsTimesSelfInPlace)
+{
+    std::vector<digit_type> digits(500);
+    digits.back() = 1;
+    std::vector<digit_type> expected_result((digits.size() * 2) - 1);
+    expected_result.back() = 1;
+
+    digits *= digits;
+
+    EXPECT_EQ(expected_result, digits);
 }
 
 

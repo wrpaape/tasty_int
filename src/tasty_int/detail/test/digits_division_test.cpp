@@ -14,10 +14,6 @@
 #include "tasty_int_test/logarithmic_range.hpp"
 
 
-/// @todo TODO:  check for divide_in_place(*this, *this)
-/// @todo TODO:  check for primitive *= digits
-
-
 namespace {
 
 using tasty_int::detail::divide;
@@ -136,6 +132,19 @@ TEST_P(DigitsDivisionIdentitiesTest, DigitsDividedByIdenticalDigitsValue)
     };
 
     test_division(dividend, divisor, expected_result);
+}
+
+TEST_P(DigitsDivisionIdentitiesTest, DigitsDividedBySelfInPlace)
+{
+    std::vector<digit_type> dividend = GetParam();
+    const auto &divisor              = dividend;
+    DigitsDivisionResult expected_result = {
+        .quotient = { 1 }, .remainder = { 0 }
+    };
+
+    auto remainder = divide_in_place(divisor, dividend);
+
+    expect_equal(expected_result, dividend, remainder);
 }
 
 TEST_P(DigitsDivisionIdentitiesTest, DigitsSquaredDividedByOriginalDigitsValue)
