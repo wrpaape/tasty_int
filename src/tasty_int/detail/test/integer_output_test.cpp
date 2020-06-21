@@ -2,8 +2,8 @@
 
 #include "gtest/gtest.h"
 
-#include <sstream>
 #include <iomanip>
+#include <sstream>
 
 #include "tasty_int/detail/conversions/integer_from_signed_integral.hpp"
 

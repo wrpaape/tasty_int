@@ -342,11 +342,23 @@ target_link_libraries(
 )
 
 add_library(
+    tasty_int-detail-integer_input
+    STATIC
+    integer_input.cpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_input.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
+)
+target_link_libraries(
+    tasty_int-detail-integer_input
+    tasty_int-detail-conversions-integer_from_string
+)
+
+add_library(
     tasty_int-detail-integer_output
     STATIC
     integer_output.cpp
-    $<TARGET_OBJECTS:tasty_int-detail-conversions-base_prefix_format_from_ios_format>
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer_output.hpp
+    $<TARGET_OBJECTS:tasty_int-detail-conversions-base_prefix_format_from_ios_format>
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/integer.hpp
 )
 target_link_libraries(

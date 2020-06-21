@@ -5,6 +5,7 @@
 
 #include "tasty_int/detail/integer_comparison.hpp"
 #include "tasty_int/detail/integer_multiplication.hpp"
+#include "tasty_int/detail/integer_input.hpp"
 #include "tasty_int/detail/integer_output.hpp"
 
 
@@ -231,6 +232,33 @@ operator*(const LhsType &lhs,
 
 
 /**
+ * @brief Integer input operator.
+ *
+ * @details Input is a string of ASCII tokens interpretted in the base
+ *     according to the input flags:
+ *
+ *     | input flag         | interpretted base         |
+ *     | ------------------ | --------------------------|
+ *     | <none>             | depends on numeric prefix |
+ *     | std::dec           | 10                        |
+ *     | std::hex           | 16                        |
+ *     | std::oct           | 8                         |
+ *
+ * @details @p input's failbit will be set if a parse error is encountered.
+ *
+ * @param[in,out] intput  the input stream
+ * @param[out]    tasty_int an arbitrary-precision integer
+ * @return a reference to @p input
+ */
+inline std::istream &
+operator>>(std::istream &input,
+           TastyInt     &tasty_int)
+{
+    return input >> detail::prepare_operand(tasty_int);
+}
+
+
+/**
  * @brief TastyInt output operator.
  *
  * @details Output is formatted as follows:
@@ -247,8 +275,8 @@ operator*(const LhsType &lhs,
  *     digits := the string representation of the numerical portion of
  *               tasty_int
  *
- *aram[in,out] output the output stream
- *aram[in]     tasty_int an arbitrary-precision integer
+ * @param[in,out] output the output stream
+ * @param[in]     tasty_int an arbitrary-precision integer
  * @return a reference to output
  */
 inline std::ostream &

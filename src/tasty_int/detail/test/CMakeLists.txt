@@ -317,6 +317,13 @@ add_google_test(
 )
 
 add_google_test(
+    NAME      tasty_int-detail-integer_input_test
+    SOURCES   integer_input_test.cpp
+    LIBRARIES tasty_int-detail-integer_input
+              tasty_int-detail-integer_test_common
+)
+
+add_google_test(
     NAME      tasty_int-detail-integer_output_test
     SOURCES   integer_output_test.cpp
     LIBRARIES tasty_int-detail-integer_output

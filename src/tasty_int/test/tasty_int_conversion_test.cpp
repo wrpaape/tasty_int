@@ -265,6 +265,173 @@ TEST_F(TastyIntStringConversionTest, ToStringBaseDefaultsToBase10)
 }
 
 
+TEST(TastyIntInputTest, InputReturnsReferenceToSelf)
+{
+    std::istringstream input("0");
+    TastyInt tasty_int;
+
+    EXPECT_EQ(&input, &(input >> tasty_int));
+}
+
+TEST(TastyIntInputTest, InvalidInputSetsFailbit)
+{
+    std::istringstream input("InvalidInput!");
+    TastyInt tasty_int;
+
+    input >> tasty_int;
+
+    EXPECT_TRUE(input.fail());
+}
+
+TEST(TastyIntInputTest, NonnegativeNoPrefixNoFormat)
+{
+    std::istringstream input("9876543210");
+    input.unsetf(std::ios_base::dec);
+    TastyInt tasty_int;
+
+    input >> tasty_int;
+
+    EXPECT_EQ(9876543210, tasty_int);
+}
+
+TEST(TastyIntInputTest, NonnegativeHexPrefixNoFormat)
+{
+    std::istringstream input("0xFED321");
+    input.unsetf(std::ios_base::dec);
+    TastyInt tasty_int;
+
+    input >> tasty_int;
+
+    EXPECT_EQ(0xFED321, tasty_int);
+}
+
+TEST(TastyIntInputTest, NonnegativeOctPrefixNoFormat)
+{
+    std::istringstream input("076543210");
+    input.unsetf(std::ios_base::dec);
+    TastyInt tasty_int;
+
+    input >> tasty_int;
+
+    EXPECT_EQ(076543210, tasty_int);
+}
+
+TEST(TastyIntInputTest, NonnegativeBinaryPrefixNoFormat)
+{
+    std::istringstream input("0b111111");
+    input.unsetf(std::ios_base::dec);
+    TastyInt tasty_int;
+
+    input >> tasty_int;
+
+    EXPECT_EQ(0b111111, tasty_int);
+}
+
+TEST(TastyIntInputTest, NonnegativeHex)
+{
+    std::istringstream input("deadf00");
+    TastyInt tasty_int;
+
+    input >> std::hex >> tasty_int;
+
+    EXPECT_EQ(0xdeadf00, tasty_int);
+}
+
+TEST(TastyIntInputTest, NonnegativeDec)
+{
+    std::istringstream input("123");
+    TastyInt tasty_int;
+
+    input >> std::dec >> tasty_int;
+
+    EXPECT_EQ(123, tasty_int);
+}
+
+TEST(TastyIntInputTest, NonnegativeOct)
+{
+    std::istringstream input("777");
+    TastyInt tasty_int;
+
+    input >> std::oct >> tasty_int;
+
+    EXPECT_EQ(0777, tasty_int);
+}
+
+TEST(TastyIntInputTest, NegativeNoPrefixNoFormat)
+{
+    std::istringstream input("-9876543210");
+    input.unsetf(std::ios_base::dec);
+    TastyInt tasty_int;
+
+    input >> tasty_int;
+
+    EXPECT_EQ(-9876543210, tasty_int);
+}
+
+TEST(TastyIntInputTest, NegativeHexPrefixNoFormat)
+{
+    std::istringstream input("-0xFED321");
+    input.unsetf(std::ios_base::dec);
+    TastyInt tasty_int;
+
+    input >> tasty_int;
+
+    EXPECT_EQ(-0xFED321, tasty_int);
+}
+
+TEST(TastyIntInputTest, NegativeOctPrefixNoFormat)
+{
+    std::istringstream input("-076543210");
+    input.unsetf(std::ios_base::dec);
+    TastyInt tasty_int;
+
+    input >> tasty_int;
+
+    EXPECT_EQ(-076543210, tasty_int);
+}
+
+TEST(TastyIntInputTest, NegativeBinaryPrefixNoFormat)
+{
+    std::istringstream input("-0b111111");
+    input.unsetf(std::ios_base::dec);
+    TastyInt tasty_int;
+
+    input >> tasty_int;
+
+    EXPECT_EQ(-0b111111, tasty_int);
+}
+
+TEST(TastyIntInputTest, NegativeHex)
+{
+    std::istringstream input("-deadf00");
+    TastyInt tasty_int;
+
+    input >> std::hex >> tasty_int;
+
+    EXPECT_EQ(-0xdeadf00, tasty_int);
+}
+
+TEST(TastyIntInputTest, NegativeDec)
+{
+    std::istringstream input("-123");
+    TastyInt tasty_int;
+
+    input >> std::dec >> tasty_int;
+
+    EXPECT_EQ(-123, tasty_int);
+}
+
+TEST(TastyIntInputTest, NegativeOct)
+{
+    std::istringstream input("-777");
+    TastyInt tasty_int;
+
+    input >> std::oct >> tasty_int;
+
+    EXPECT_EQ(-0777, tasty_int);
+}
+
+
 TEST(TastyIntOutputTest, OutputReturnsReferenceToSelf)
 {
     std::ostringstream output;
