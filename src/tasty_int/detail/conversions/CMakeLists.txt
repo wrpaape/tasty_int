@@ -37,6 +37,10 @@ foreach(kind signed unsigned)
         tasty_int-detail-conversions-digits_from_integral
     )
 endforeach()
+target_link_libraries(
+    tasty_int-detail-conversions-integer_from_signed_integral
+    tasty_int-detail-absolute_value_from_arithmetic
+)
 
 add_library(
     tasty_int-detail-conversions-digits_from_floating_point

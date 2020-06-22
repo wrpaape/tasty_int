@@ -107,12 +107,15 @@ operator-=(ExtendedDigitAccumulator &lhs,
     return lhs -= ExtendedDigitAccumulator{{ rhs.value() }};
 }
 
-
 ExtendedDigitAccumulator &
 operator>>=(ExtendedDigitAccumulator &lhs,
             unsigned int              bit_offset)
 {
-    assert(bit_offset < DIGIT_TYPE_BITS);
+    // If this check is removed, 'overflow' will be shifted
+    // 'std::numeric_limits<digit_accumulator_type>::digits' bits, which will
+    // produce undefined behavior.
+    if (bit_offset == 0)
+        return lhs;
 
     auto overflow_mask  =  (digit_accumulator_type(1) << bit_offset) - 1;
     auto overflow       = lhs.back() & overflow_mask;

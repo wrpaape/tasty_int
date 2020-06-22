@@ -18,7 +18,8 @@ if(NOT CMAKE_BUILD_TYPE)
   )
 endif()
 set(BUILD_DEBUG OFF)
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_LOWER)
+if(CMAKE_BUILD_TYPE_LOWER STREQUAL "debug")
     set(BUILD_DEBUG ON)
 endif()
 option(BUILD_TESTING "Enable unit testing." ${BUILD_DEBUG})
@@ -28,7 +29,6 @@ cmake_dependent_option(
 )
 option(BUILD_BENCHMARKING "Enable micro benchmarks." ON)
 # @todo TODO: https://svn.boost.org/trac10/wiki/BestPracticeHandbook
-# @todo TODO: add option for LTO
 # @todo TODO: offer coverage as a build type and remove BUILD_COVERAGE
 # @todo TODO: remove in-source 'bin' and 'lib' directories
 

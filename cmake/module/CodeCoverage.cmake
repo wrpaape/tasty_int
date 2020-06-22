@@ -228,9 +228,10 @@ mark_as_advanced(
     CMAKE_SHARED_LINKER_FLAGS_COVERAGE
     CMAKE_LIBRARIES_COVERAGE )
 
-if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+string(TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_LOWER)
+if(NOT CMAKE_BUILD_TYPE_LOWER STREQUAL "debug")
     message(WARNING "Code coverage results with an optimised (non-Debug) build may be misleading")
-endif() # NOT CMAKE_BUILD_TYPE STREQUAL "Debug"
+endif()
 
 # Defines a target for running and collection code coverage information
 # Builds dependencies, runs the given executable and outputs reports.

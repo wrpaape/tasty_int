@@ -20,6 +20,7 @@ target_sources(
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/signed_arithmetic_types.hpp
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/unsigned_arithmetic_types.hpp
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/integral_types.hpp
+    ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/signed_integral_types.hpp
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/floating_point_types.hpp
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/detail/filter_types.hpp
 )

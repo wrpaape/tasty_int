@@ -10,7 +10,15 @@ add_library(tasty_int-detail-intmax_t_from_uintmax_t INTERFACE)
 target_sources(
     tasty_int-detail-intmax_t_from_uintmax_t
     INTERFACE
-    ${PROJECT_SRC_DIR}/tasty_int/detail/intmax_t_from_uintmax_t.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/intmax_t_from_uintmax_t.hpp
+)
+
+add_library(tasty_int-detail-absolute_value_from_arithmetic INTERFACE)
+target_sources(
+    tasty_int-detail-absolute_value_from_arithmetic
+    INTERFACE
+    ${CMAKE_CURRENT_LIST_DIR}/absolute_value_from_arithmetic.hpp
+    ${PROJECT_INCLUDE_DIR}/tasty_int/concepts.hpp
 )
 
 add_subdirectory(conversions)
@@ -19,7 +27,7 @@ add_library(tasty_int-detail-digit_from_nonnegative_value INTERFACE)
 target_sources(
     tasty_int-detail-digit_from_nonnegative_value
     INTERFACE
-    ${PROJECT_SRC_DIR}/tasty_int/detail/digit_from_nonnegative_value.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/digit_from_nonnegative_value.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 
@@ -36,7 +44,7 @@ foreach(kind signed unsigned)
     target_sources(
         tasty_int-detail-sign_from_${kind}_arithmetic
         INTERFACE
-        ${PROJECT_SRC_DIR}/tasty_int/detail/sign_from_${kind}_arithmetic.hpp
+        ${CMAKE_CURRENT_LIST_DIR}/sign_from_${kind}_arithmetic.hpp
         ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
     )
 endforeach()
@@ -45,7 +53,7 @@ add_library(tasty_int-detail-is_zero INTERFACE)
 target_sources(
     tasty_int-detail-is_zero
     INTERFACE
-    ${PROJECT_SRC_DIR}/tasty_int/detail/is_zero.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/is_zero.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 
@@ -67,7 +75,7 @@ add_library(tasty_int-detail-order_by_size INTERFACE)
 target_sources(
     tasty_int-detail-order_by_size
     INTERFACE
-    ${PROJECT_SRC_DIR}/tasty_int/detail/order_by_size.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/order_by_size.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
 
@@ -75,7 +83,7 @@ add_library(tasty_int-detail-split_digits INTERFACE)
 target_sources(
     tasty_int-detail-split_digits
     INTERFACE
-    ${PROJECT_SRC_DIR}/tasty_int/detail/split_digits.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/split_digits.hpp
 )
 target_link_libraries(
     tasty_int-detail-split_digits
@@ -104,7 +112,7 @@ add_library(tasty_int-detail-integral_digits_view INTERFACE)
 target_sources(
     tasty_int-detail-integral_digits_view
     INTERFACE
-    ${PROJECT_SRC_DIR}/tasty_int/detail/integral_digits_view.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/integral_digits_view.hpp
 )
 target_link_libraries(
     tasty_int-detail-integral_digits_view
@@ -128,7 +136,7 @@ add_library(tasty_int-detail-floating_point_digits_iterator INTERFACE)
 target_sources(
     tasty_int-detail-floating_point_digits_iterator
     INTERFACE
-    ${PROJECT_SRC_DIR}/tasty_int/detail/floating_point_digits_iterator.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/floating_point_digits_iterator.hpp
 )
 target_link_libraries(
     tasty_int-detail-floating_point_digits_iterator
@@ -257,6 +265,7 @@ target_link_libraries(
     INTERFACE
     tasty_int-detail-sign_from_signed_arithmetic
     tasty_int-detail-sign_from_unsigned_arithmetic
+    tasty_int-detail-absolute_value_from_arithmetic
 )
 
 add_library(

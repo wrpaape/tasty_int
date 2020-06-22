@@ -87,6 +87,13 @@ foreach(kind signed unsigned)
 endforeach()
 
 add_google_test(
+    NAME      tasty_int-detail-absolute_value_from_arithmetic_test
+    SOURCES   absolute_value_from_arithmetic_test.cpp
+    LIBRARIES tasty_int-detail-absolute_value_from_arithmetic
+              tasty_int_test
+)
+
+add_google_test(
     NAME      tasty_int-detail-is_zero_test
     SOURCES   is_zero_test.cpp
     LIBRARIES tasty_int-detail-is_zero

@@ -38,9 +38,9 @@ BENCHMARK_DEFINE_F(ApplySignBenchmark, NegateConditionally) (
         if (sign < 0)
             value = -value;
 
-        benchmark::ClobberMemory();
-
         sign = -sign;
+
+        benchmark::ClobberMemory();
     }
 }
 BENCHMARK_REGISTER_F(ApplySignBenchmark, NegateConditionally)
@@ -57,9 +57,9 @@ BENCHMARK_DEFINE_F(ApplySignBenchmark, MultiplyUnconditionally) (
 
         value *= sign;
 
-        benchmark::ClobberMemory();
-
         sign = -sign;
+
+        benchmark::ClobberMemory();
     }
 }
 BENCHMARK_REGISTER_F(ApplySignBenchmark, MultiplyUnconditionally)

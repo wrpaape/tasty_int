@@ -11,6 +11,7 @@
 #include "tasty_int/detail/integer.hpp"
 #include "tasty_int/detail/sign_from_signed_arithmetic.hpp"
 #include "tasty_int/detail/sign_from_unsigned_arithmetic.hpp"
+#include "tasty_int/detail/absolute_value_from_arithmetic.hpp"
 
 
 namespace tasty_int {
@@ -128,28 +129,11 @@ value_from_integer_operand(const Integer &operand)
     return operand.digits;
 }
 
-inline std::uintmax_t
-value_from_integer_operand(std::uintmax_t operand)
+template<tasty_int::Arithmetic ArithmeticType>
+auto
+value_from_integer_operand(ArithmeticType operand)
 {
-    return operand;
-}
-
-inline std::uintmax_t
-value_from_integer_operand(std::intmax_t operand)
-{
-    // avoid potential overflow of
-    // std::abs(std::numeric_limits<std::intmax_t>::lowest())
-    auto unsigned_operand = static_cast<std::uintmax_t>(operand);
-    if (operand < 0)
-        unsigned_operand = -unsigned_operand;
-
-    return unsigned_operand;
-}
-
-inline long double
-value_from_integer_operand(long double operand)
-{
-    return std::abs(operand);
+    return absolute_value_from_arithmetic(operand);
 }
 /// @}
 

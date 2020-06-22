@@ -34,3 +34,9 @@ add_google_benchmark(
     SOURCES sign_benchmark.cpp
             ${PROJECT_INCLUDE_DIR}/tasty_int/detail/sign.hpp
 )
+
+add_google_benchmark(
+    NAME      tasty_int-detail-extended_digit_accumulator_benchmark
+    SOURCES   extended_digit_accumulator_benchmark.cpp
+    LIBRARIES tasty_int-detail-extended_digit_accumulator
+)

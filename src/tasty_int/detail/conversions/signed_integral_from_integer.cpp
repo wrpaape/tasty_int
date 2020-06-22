@@ -4,8 +4,8 @@
 
 #include <limits>
 
-#include "tasty_int/detail/conversions/unsigned_integral_from_integer.hpp"
 #include "tasty_int/detail/intmax_t_from_uintmax_t.hpp"
+#include "tasty_int/detail/conversions/unsigned_integral_from_integer.hpp"
 
 
 namespace tasty_int {
