@@ -113,11 +113,9 @@ cmake --build . --parallel --target build-test
 cmake --build . --parallel --target install
 ```
 
-2. Add `TastyInt` to your C++20 project.
+2. Add `TastyInt` to your project.
 ```
 project(big_fact)
-...
-set(CMAKE_CXX_STANDARD 20)
 ...
 find_package(TastyInt REQUIRED)
 ...
@@ -127,10 +125,7 @@ target_link_libraries(big_fact TastyInt::TastyInt)
 3. Include `TastyInt`.
 ```
 #include <cstdlib>
-
 #include <iostream>
-#include <string>
-
 #include <tasty_int/tasty_int.hpp>
 
 int
@@ -144,7 +139,7 @@ main(int   argc,
 
     tasty_int::TastyInt fact(1);
 
-    for (auto n = std::stoll(argv[1]); n > 1; --n)
+    for (tasty_int::TastyInt n(argv[1]); n > 1; --n)
         fact *= n;
 
     std::cout << fact << '\n';

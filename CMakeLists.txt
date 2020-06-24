@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.12 FATAL_ERROR) # CMAKE_CXX_STANDARD 20
 
 project(
-    tasty_int
-    VERSION 0.1.0
+    TastyInt
+    VERSION 1.0.0
     LANGUAGES CXX
 )
+set(CMAKE_CXX_STANDARD 20)
 
 # cmake options
 include(CMakeDependentOption)
-set(CMAKE_CXX_STANDARD 20)
 if(NOT CMAKE_BUILD_TYPE)
   set(
       CMAKE_BUILD_TYPE "Debug"

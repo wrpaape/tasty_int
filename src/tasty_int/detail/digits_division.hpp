@@ -115,6 +115,14 @@ DigitsDivisionResult
 long_divide(const std::vector<digit_type> &dividend,
             std::uintmax_t                 divisor);
 
+/**
+ * Implements "Division of arbitrary integers" outlined in section 2.3 of
+ * Burnikel and Ziegler's publication:
+ *
+ *     Christoph Burnikel and Joachim Ziegler. Fast Recursive Division.
+ *     Research Report MPI-I-98-1-022, Max-Planck-Institut für Informatik, Im
+ *     Stadtwald, D66123 Saarbrücken, Germany, October 1998.
+ */
 DigitsDivisionResult
 divide_and_conquer_divide(const std::vector<digit_type> &dividend,
                           const std::vector<digit_type> &divisor);

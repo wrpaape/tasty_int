@@ -27,10 +27,10 @@ protected:
         bit_offset = static_cast<unsigned int>(state.range(0));
     }
 
-    ExtendedDigitAccumulator accumulator = {
+    ExtendedDigitAccumulator accumulator = {{
         std::numeric_limits<digit_accumulator_type>::max(),
         std::numeric_limits<digit_accumulator_type>::max()
-    };
+    }};
     unsigned int bit_offset = 0;
 
 }; // class ApplySignBenchmark

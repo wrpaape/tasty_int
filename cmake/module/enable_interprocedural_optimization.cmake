@@ -22,11 +22,18 @@ include(CheckIPOSupported)
 # External API
 # ------------------------------------------------------------------------------
 function(enable_interprocedural_optimization)
-    check_ipo_supported(RESULT have_ipo_support)
+    check_ipo_supported(
+        RESULT have_ipo_support
+        OUTPUT ipo_unsupported_error
+    )
     if(have_ipo_support)
         message(STATUS "Have interprocedural optimization; enabling.")
         set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE PARENT_SCOPE)
     else()
-        message(STATUS "Do not have interprocedural optimization; skipping.")
+        message(
+            STATUS
+            "Do not have interprocedural optimization: "
+            "${ipo_unsupported_error}; skipping."
+        )
     endif()
 endfunction()

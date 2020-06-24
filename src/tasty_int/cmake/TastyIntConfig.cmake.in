@@ -1,0 +1,30 @@
+@PACKAGE_INIT@
+
+function(import_tasty_int_library)
+    set(library_install_directory @PACKAGE_CMAKE_INSTALL_LIBDIR@)
+    find_library(
+        tasty_int_library
+        tasty_int
+        PATHS ${library_install_directory}
+        DOC "The @CMAKE_PROJECT_NAME@::@CMAKE_PROJECT_NAME@ library."
+        NO_DEFAULT_PATH
+    )
+    if(NOT tasty_int_library)
+        message(
+            FATAL_ERROR
+            "Failed to find required library `tasty_int` at expected install "
+            "directory: \"${library_install_directory}\"."
+        )
+    endif()
+    add_library(tasty_int STATIC IMPORTED)
+    set_target_properties(
+        tasty_int
+        PROPERTIES 
+        IMPORTED_LOCATION            ${tasty_int_library}
+        INTERPROCEDURAL_OPTIMIZATION @TASTY_INT_INTERPROCEDURAL_OPTIMIZATION@
+    )
+endfunction()
+
+import_tasty_int_library()
+
+include("${CMAKE_CURRENT_LIST_DIR}/TastyIntTargets.cmake")

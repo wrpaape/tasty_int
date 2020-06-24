@@ -14,6 +14,7 @@ ExternalProject_Add(
     CMAKE_ARGS     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
                    -DCMAKE_BUILD_TYPE:STRING=Release
                    -DBENCHMARK_ENABLE_GTEST_TESTS:BOOL=OFF
+                   -DBENCHMARK_ENABLE_LTO:BOOL=${CMAKE_INTERPROCEDURAL_OPTIMIZATION}
                    # Make sure toolchain is the same
                    -DCMAKE_CXX_COMPILER:FILEPATH=${CMAKE_CXX_COMPILER}
 )
