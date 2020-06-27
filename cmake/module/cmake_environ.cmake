@@ -25,6 +25,7 @@ enable_strict_compile_options()
 try_link_libcxxabi()
 string(TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_LOWER)
 if((CMAKE_BUILD_TYPE_LOWER STREQUAL "release") OR
-   (CMAKE_BUILD_TYPE_LOWER STREQUAL "relwithdebinfo"))
+   (CMAKE_BUILD_TYPE_LOWER STREQUAL "relwithdebinfo") OR
+   (CMAKE_BUILD_TYPE_LOWER STREQUAL "minsizerel"))
    enable_interprocedural_optimization()
 endif()

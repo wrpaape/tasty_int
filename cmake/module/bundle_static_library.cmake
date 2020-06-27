@@ -85,32 +85,34 @@ function(bundle_static_library bundled_tgt_name)
     ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}${bundled_tgt_name}${CMAKE_STATIC_LIBRARY_SUFFIX})
 
   if (CMAKE_CXX_COMPILER_ID MATCHES "^(Clang|GNU)$")
-    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${bundled_tgt_name}.ar.in
-      "CREATE ${bundled_tgt_full_name}\n" )
-        
-    foreach(tgt IN LISTS static_libs)
-      file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/${bundled_tgt_name}.ar.in
-        "ADDLIB $<TARGET_FILE:${tgt}>\n")
-    endforeach()
-    
-    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/${bundled_tgt_name}.ar.in "SAVE\n")
-    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/${bundled_tgt_name}.ar.in "END\n")
-
-    file(GENERATE
-      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${bundled_tgt_name}.ar
-      INPUT ${CMAKE_CURRENT_BINARY_DIR}/${bundled_tgt_name}.ar.in)
+    set(obj_dir ${CMAKE_CURRENT_BINARY_DIR}/${bundled_tgt_name}-objects)
+    file(MAKE_DIRECTORY ${obj_dir})
 
     set(ar_tool ${CMAKE_AR})
     if (CMAKE_INTERPROCEDURAL_OPTIMIZATION)
       set(ar_tool ${CMAKE_CXX_COMPILER_AR})
     endif()
 
+    set(unpack_static_libs)
+    set(tgt_obj_globs)
+    foreach(tgt IN LISTS static_libs)
+      set(tgt_obj_dir ${obj_dir}/${tgt})
+      add_custom_target(
+        unpack-${tgt}
+        COMMAND ${CMAKE_COMMAND} -E remove_directory ${tgt_obj_dir}
+        COMMAND ${CMAKE_COMMAND} -E make_directory   ${tgt_obj_dir}
+        COMMAND ${CMAKE_COMMAND} -E chdir ${tgt_obj_dir} ${ar_tool} -x $<TARGET_FILE:${tgt}>
+        COMMENT "Unpacking ${tgt}"
+        VERBATIM)
+      list(APPEND unpack_static_libs unpack-${tgt})
+      list(APPEND tgt_obj_globs ${tgt_obj_dir}/*${CMAKE_CXX_OUTPUT_EXTENSION})
+    endforeach()
+
     add_custom_command(
-      COMMAND ${ar_tool} -M < ${CMAKE_CURRENT_BINARY_DIR}/${bundled_tgt_name}.ar
-      OUTPUT ${bundled_tgt_full_name}
-      DEPENDS ${static_libs}
-      COMMENT "Bundling ${bundled_tgt_name}"
-      VERBATIM)
+      COMMAND ${ar_tool} -crs ${bundled_tgt_full_name} ${tgt_obj_globs}
+      OUTPUT  ${bundled_tgt_full_name}
+      DEPENDS ${unpack_static_libs}
+      COMMENT "Bundling ${bundled_tgt_name}")
   elseif(MSVC)
     find_program(lib_tool lib)
 

@@ -36,7 +36,7 @@ cmake [options] ..
 ```
 where suggested `options` are:
 
-#### `-DCMAKE_BUILD_TYPE:STRING=<Debug|Release|Release|RelWithDebInfo|MinSizeRel>`
+#### `-DCMAKE_BUILD_TYPE:STRING=<Debug|Release|RelWithDebInfo|MinSizeRel>`
 Select the project build type.  Default is `Debug`.
 
 #### `-DCMAKE_INSTALL_PREFIX:PATH=<destination directory>`
