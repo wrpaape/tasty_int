@@ -16,8 +16,9 @@ using tasty_int_test::check_integer_result;
 using tasty_int_test::SampleArithmetic;
 
 
-template<tasty_int::TastyIntOperand SumType,
-         tasty_int::TastyIntOperand AugendType>
+/// @todo: TODO: apply tasty_int::TastyIntOperand constraint
+template<typename SumType,
+         typename AugendType>
 void
 check_add_in_place_result(const SumType    &expected_sum,
                           const AugendType &result,
@@ -29,9 +30,10 @@ check_add_in_place_result(const SumType    &expected_sum,
     check_integer_result(expected_sum, augend, "+=");
 }
 
-template<tasty_int::TastyIntOperand LhsType,
-         tasty_int::TastyIntOperand RhsType,
-         tasty_int::TastyIntOperand SumType>
+/// @todo: TODO: apply tasty_int::TastyIntOperand constraint
+template<typename LhsType,
+         typename RhsType,
+         typename SumType>
 void
 run_test_add_in_place(LhsType       &&lhs,
                       const RhsType  &rhs,

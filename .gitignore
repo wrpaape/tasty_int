@@ -1,2 +1,13 @@
+# Visual Studio artifacts
+.vs
+CMakeSettings.json
+output
+
+# llvm-cov raw profile
+default.profraw
+
+# cscope databases
 cscope.*
+
+# ctags tagfile
 tags

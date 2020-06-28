@@ -1,6 +1,8 @@
 #ifndef TASTY_INT_TEST_MAKE_ARITHMETIC_PRINTABLE_HPP
 #define TASTY_INT_TEST_MAKE_ARITHMETIC_PRINTABLE_HPP
 
+#include <cstdint>
+
 #include <type_traits>
 
 
@@ -17,7 +19,12 @@ auto
 make_arithmetic_printable(T value)
     requires std::is_arithmetic_v<T>
 {
-    return +value; // promote to int if char
+    if constexpr (std::is_floating_point_v<T>)
+        return static_cast<long double>(value);
+    else if constexpr (std::is_signed_v<T>)
+        return static_cast<std::intmax_t>(value);
+    else
+        return static_cast<std::uintmax_t>(value);
 }
 
 } // namespace tasty_int_test

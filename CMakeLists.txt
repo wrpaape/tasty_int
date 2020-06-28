@@ -23,9 +23,15 @@ if(CMAKE_BUILD_TYPE_LOWER STREQUAL "debug")
     set(BUILD_DEBUG ON)
 endif()
 option(BUILD_TESTING "Enable unit testing." ${BUILD_DEBUG})
+set(have_coverage_supported_compiler FALSE)
+if((CMAKE_CXX_COMPILER_ID MATCHES "Clang") OR
+   (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
+   set(have_coverage_supported_compiler TRUE)
+endif()
 cmake_dependent_option(
-    BUILD_COVERAGE "Generate code coverage report." ${BUILD_DEBUG}
-    BUILD_TESTING OFF
+    BUILD_COVERAGE "Generate code coverage report." ${BUILD_TESTING}
+    BUILD_DEBUG BUILD_TESTING have_coverage_supported_compiler
+    OFF
 )
 option(BUILD_BENCHMARKING "Enable micro benchmarks." ON)
 # @todo TODO: https://svn.boost.org/trac10/wiki/BestPracticeHandbook

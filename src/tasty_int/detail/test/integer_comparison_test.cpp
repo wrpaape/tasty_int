@@ -836,16 +836,21 @@ INSTANTIATE_TEST_SUITE_P(
     NonnegativeFloatingPointSmallerThanDigitsTest,
     ::testing::ValuesIn(
         std::vector<NonnegativeFloatingPointSmallerThanDigitsTestParam> {
-            { .smaller = 0.0,            .larger = { 1 } },
-            { .smaller = 0.9,            .larger = { 1 } },
-            { .smaller = 1.0,            .larger = { 0, 1 } },
-            { .smaller = DIGIT_TYPE_MAX, .larger = { 0, 1 } },
+            { .smaller = 0.0,                         .larger = { 1 } },
+            { .smaller = 0.9,                         .larger = { 1 } },
+            { .smaller = 1.0,                         .larger = { 0, 1 } },
             {
-                .smaller = DIGIT_BASE,
+                .smaller = static_cast<long double>(DIGIT_TYPE_MAX),
+                .larger  = { 0, 1 }
+            },
+            {
+                .smaller = static_cast<long double>(DIGIT_BASE),
                 .larger  = { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX }
             },
             {
-                .smaller = std::numeric_limits<std::uintmax_t>::max(),
+                .smaller = static_cast<long double>(
+                    std::numeric_limits<std::uintmax_t>::max()
+                ),
                 .larger  = { 0, 0, 1 }
             }
         }

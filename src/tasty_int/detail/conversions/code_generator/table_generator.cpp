@@ -19,7 +19,7 @@ to_uppercase(std::string_view input)
     std::string uppercase;
     uppercase.reserve(input.size());
     for (char c : input)
-        uppercase.push_back(std::toupper(c));
+        uppercase.push_back(char(std::toupper(c)));
 
     return uppercase;
 }
@@ -108,7 +108,21 @@ TableGenerator::put_close_header_guard(std::ostream &output) const
 void
 TableGenerator::put_generated_header(std::ostream &output) const
 {
-    auto time_now  = std::chrono::system_clock::now();
+    output <<
+        "// " << description << "\n"
+        "//\n"
+        "// generated on: ";
+
+    put_timestamp(output);
+
+    output <<
+        "// =============================================================================\n";
+}
+
+void
+TableGenerator::put_timestamp(std::ostream &output)
+{
+    auto time_now = std::chrono::system_clock::now();
     auto timestamp = std::chrono::system_clock::to_time_t(time_now);
 
 #if HAVE_CTIME_S || HAVE_CTIME_R
@@ -123,11 +137,7 @@ TableGenerator::put_generated_header(std::ostream &output) const
     const char *timestamp_string = std::ctime(&timestamp);
 #endif // if HAVE_CTIME_S || HAVE_CTIME_R
 
-    output <<
-        "// " << description << "\n"
-        "//\n"
-        "// generated on: " << timestamp_string // terminated with \n
-     << "// =============================================================================\n";
+    output << timestamp_string; // terminated with \n
 }
 
 void

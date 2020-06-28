@@ -63,16 +63,16 @@ std::vector<FloatingPointType>
 DigitFromNonNegativeFloatingPointTest<FloatingPointType>::test_values()
 {
     auto values = tasty_int_test::logarithmic_range_values<FloatingPointType>(
-            0.0,
+            FloatingPointType(0.0),
             FloatingPointType(std::numeric_limits<uintmax_t>::max()) - 1.0,
-            2.0
+            FloatingPointType(2.0)
         );
 
     auto uinteger_max_to_floating_point_max =
         tasty_int_test::logarithmic_range_values<FloatingPointType>(
             FloatingPointType(std::numeric_limits<uintmax_t>::max()),
             std::numeric_limits<FloatingPointType>::max(),
-            2.0
+            FloatingPointType(2.0)
         );
 
     values.insert(values.end(),

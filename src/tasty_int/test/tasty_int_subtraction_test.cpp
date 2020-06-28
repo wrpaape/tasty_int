@@ -31,9 +31,10 @@ check_subtract_in_place_result(const DifferenceType &expected_difference,
     check_integer_result(expected_difference, minuend, "-=");
 }
 
-template<tasty_int::TastyIntOperand LhsType,
-         tasty_int::TastyIntOperand RhsType,
-         tasty_int::TastyIntOperand DifferenceType>
+/// @todo: TODO: apply tasty_int::TastyIntOperand constraint
+template<typename LhsType,
+         typename RhsType,
+         typename DifferenceType>
 void
 run_test_subtract_in_place(LhsType              &&lhs,
                            const RhsType         &rhs,
@@ -44,9 +45,10 @@ run_test_subtract_in_place(LhsType              &&lhs,
     check_subtract_in_place_result(expected_difference, lhs, result);
 }
 
-template<tasty_int::TastyIntOperand LhsType,
-         tasty_int::TastyIntOperand RhsType,
-         tasty_int::TastyIntOperand DifferenceType>
+/// @todo: TODO: apply tasty_int::TastyIntOperand constraint
+template<typename LhsType,
+         typename RhsType,
+         typename DifferenceType>
 void
 test_subtract_in_place(const LhsType        &lhs,
                        const RhsType        &rhs,

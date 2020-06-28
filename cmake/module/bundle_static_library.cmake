@@ -114,7 +114,11 @@ function(bundle_static_library bundled_tgt_name)
       DEPENDS ${unpack_static_libs}
       COMMENT "Bundling ${bundled_tgt_name}")
   elseif(MSVC)
-    find_program(lib_tool lib)
+    get_filename_component(bin_path ${CMAKE_LINKER} DIRECTORY)
+    find_program(lib_tool lib PATHS ${bin_path})
+    if(NOT lib_tool)
+        message(FATAL_ERROR "Cannot find lib.exe; aborting.")
+    endif()
 
     foreach(tgt IN LISTS static_libs)
       list(APPEND static_libs_full_names $<TARGET_FILE:${tgt}>)

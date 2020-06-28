@@ -99,8 +99,8 @@ TEST(DigitTypeTest,
 TEST(DigitTypeTest, DigitTypeMaxIsRoughlyTheSquareRootOfDigitAccumulatorTypeMax)
 {
     EXPECT_NEAR(SQUARE_ROOT_OF_DIGIT_ACCUMLATOR_TYPE_MAX,
-                DIGIT_TYPE_MAX,
-                1);
+                static_cast<double>(DIGIT_TYPE_MAX),
+                1.0);
 }
 
 TEST(DigitTypeTest, DigitBaseIsOneGreaterThanDigitTypeMax)

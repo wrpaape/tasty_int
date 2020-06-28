@@ -35,7 +35,7 @@ check_integer_result(FloatingPointType  expected_result,
     EXPECT_APPROX(
         std::trunc(expected_result),
         std::trunc(result),
-        operation << " did not produce expected result"
+        << operation << " did not produce expected result"
     );
 }
 

@@ -30,9 +30,10 @@ check_multiply_in_place_result(const ProductType      &expected_product,
     check_integer_result(expected_product, multiplicand, "+=");
 }
 
-template<tasty_int::TastyIntOperand LhsType,
-         tasty_int::TastyIntOperand RhsType,
-         tasty_int::TastyIntOperand ProductType>
+/// @todo: TODO: apply tasty_int::TastyIntOperand constraint
+template<typename LhsType,
+         typename RhsType,
+         typename ProductType>
 void
 run_test_multiply_in_place(LhsType           &&lhs,
                            const RhsType      &rhs,
@@ -43,9 +44,10 @@ run_test_multiply_in_place(LhsType           &&lhs,
     check_multiply_in_place_result(expected_product, lhs, result);
 }
 
-template<tasty_int::TastyIntOperand LhsType,
-         tasty_int::TastyIntOperand RhsType,
-         tasty_int::TastyIntOperand ProductType>
+/// @todo: TODO: apply tasty_int::TastyIntOperand constraint
+template<typename LhsType,
+         typename RhsType,
+         typename ProductType>
 void
 test_multiply_in_place(const LhsType     &lhs,
                        const RhsType     &rhs,

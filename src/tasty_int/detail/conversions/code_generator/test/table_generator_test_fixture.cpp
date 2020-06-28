@@ -195,7 +195,7 @@ TableGeneratorTestFixture::to_uppercase(std::string_view input)
     std::string uppercase;
     uppercase.reserve(input.size());
     for (char c : input)
-        uppercase.push_back(std::toupper(c));
+        uppercase.push_back(char(std::toupper(c)));
 
     return uppercase;
 }

@@ -111,6 +111,9 @@ private:
     void
     put_generated_header(std::ostream &output) const;
 
+    static void
+    put_timestamp(std::ostream &output);
+
     void
     put_include_header(std::ostream &output) const;
 

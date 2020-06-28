@@ -40,11 +40,14 @@ print_digits_per_token_base(float         digits_per_token_base,
                             std::ostream &output)
 {
     auto original_precision = output.precision();
+    auto original_flags     = output.flags();
 
     output.precision(print_precision<decltype(digits_per_token_base)>());
+    output.flags(original_flags | std::ios_base::showpoint);
 
-    output << digits_per_token_base;
+    output << digits_per_token_base << 'f';
 
+    output.flags(original_flags);
     output.precision(original_precision);
 }
 

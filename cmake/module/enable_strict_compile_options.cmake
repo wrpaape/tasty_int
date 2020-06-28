@@ -18,7 +18,17 @@ constraints to the compile options in the current scope.  Typical usage:
 function(enable_strict_compile_options)
     unset(supported_flags)
     if(MSVC)
-        set(options /W4 /WX)
+        if(CMAKE_VERSION VERSION_LESS 3.15)
+            # /W3 flag removed from default CMAKE_CXX_FLAGS in version 3.15
+            # if left as is, appending '/W4' will generate a warning:
+            #     Command line warning D9025 : overriding '/W3' with '/W4
+            string(REGEX REPLACE "/W[0-4]" ""
+                   CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" CACHE STRING
+                "Flags used by the CXX compiler during all build types.")
+        endif()
+        # @todo: TODO: reenable after resolving warnings
+        # set(options /W4 /WX)
     elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         set(options -W -Wall -Werror)
     elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")

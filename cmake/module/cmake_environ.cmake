@@ -29,3 +29,8 @@ if((CMAKE_BUILD_TYPE_LOWER STREQUAL "release") OR
    (CMAKE_BUILD_TYPE_LOWER STREQUAL "minsizerel"))
    enable_interprocedural_optimization()
 endif()
+if(MSVC)
+    # disable warning C4146: unary minus operator applied to unsigned type,
+    # result still unsigned
+    add_compile_options(/wd4146) 
+endif()

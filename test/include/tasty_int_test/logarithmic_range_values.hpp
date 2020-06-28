@@ -36,7 +36,7 @@ append_intermediate_logarithmic_values(T first, T scale, T last_mult,
     requires std::is_arithmetic_v<T>
           && std::is_signed_v<T>
 {
-    for (T mult = std::copysign(scale, last_mult);
+    for (T mult = static_cast<T>(std::copysign(scale, last_mult));
          std::abs(mult) <= std::abs(last_mult); mult *= scale)
         values.emplace_back(first + mult);
 }
