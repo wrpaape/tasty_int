@@ -1,3 +1,4 @@
+include(set_have_std_ctime_variants)
 include(std_filesystem_library)
 
 
@@ -7,6 +8,10 @@ add_library(
     table_generator.cpp
     table_generator.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
+)
+set_have_std_ctime_variants(
+    tasty_int-detail-conversions-code_generator-table_generator
+    PRIVATE
 )
 
 add_library(

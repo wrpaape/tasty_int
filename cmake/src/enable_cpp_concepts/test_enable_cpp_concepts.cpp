@@ -21,7 +21,7 @@ square(T value)
 } // namespace
 
 int
-main(int argc,
+main(int   argc,
      char *argv[])
 {
     (void) argv; // unused

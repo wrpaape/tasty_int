@@ -1,6 +1,7 @@
 #include "tasty_int/detail/conversions/code_generator/table_generator.hpp"
 
 #include <cctype>
+#include <ctime>
 
 #include <chrono>
 #include <ostream>
@@ -110,10 +111,22 @@ TableGenerator::put_generated_header(std::ostream &output) const
     auto time_now  = std::chrono::system_clock::now();
     auto timestamp = std::chrono::system_clock::to_time_t(time_now);
 
+#if HAVE_CTIME_S || HAVE_CTIME_R
+    constexpr std::size_t TIMESTAMP_BUFFER_SIZE = 26;
+    char timestamp_string[TIMESTAMP_BUFFER_SIZE]{};
+#   if HAVE_CTIME_S
+    (void) ::ctime_s(timestamp_string, sizeof(timestamp_string), &timestamp);
+#   else
+    (void) ::ctime_r(&timestamp, timestamp_string);
+#   endif // if HAVE_CTIME_S
+#else
+    const char *timestamp_string = std::ctime(&timestamp);
+#endif // if HAVE_CTIME_S || HAVE_CTIME_R
+
     output <<
         "// " << description << "\n"
         "//\n"
-        "// generated on: " << std::ctime(&timestamp) // terminated with \n
+        "// generated on: " << timestamp_string // terminated with \n
      << "// =============================================================================\n";
 }
 

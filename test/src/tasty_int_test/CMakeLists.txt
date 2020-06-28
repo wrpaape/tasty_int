@@ -24,7 +24,7 @@ target_sources(
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/floating_point_types.hpp
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/detail/filter_types.hpp
 )
-set_have_char8_t(tasty_int_test)
+set_have_char8_t(tasty_int_test INTERFACE)
 target_link_libraries(
     tasty_int_test
     INTERFACE

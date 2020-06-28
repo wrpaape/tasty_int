@@ -9,9 +9,9 @@ set_have_char8_t
 This Module defines set_have_type():
 
 ::
-    set_have_char8_t(<target>)
+set_have_char8_t(<target> <INTERFACE|PUBLIC|PRIVATE>)
 
-which adds the following INTERFACE compile definitions/options to <target>:
+which adds the following compile definitions/options to <target>:
 
     -DHAVE_CHAR8_T=<1|0>
         1 if char8_t is available, 0 otherwise.
@@ -27,7 +27,7 @@ include(set_have_type)
 #]=======================================================================]
 # External API
 # ------------------------------------------------------------------------------
-function(set_have_char8_t target)
+function(set_have_char8_t target scope)
     set(initial_required_flags ${CMAKE_REQUIRED_FLAGS})
     set(candidate_compile_options "" "-fchar8_t")
     foreach(compile_option IN LISTS candidate_compile_options)
@@ -51,7 +51,7 @@ function(set_have_char8_t target)
             )
             target_compile_options(
                 ${target}
-                INTERFACE
+                ${scope}
                 ${enable_char8_t_option}
             )
         endif()
@@ -65,7 +65,7 @@ function(set_have_char8_t target)
 
     target_compile_definitions(
         ${target}
-        INTERFACE
+        ${scope}
         -DHAVE_CHAR8_T=${HAVE_CHAR8_T}
     )
 endfunction()

@@ -19,7 +19,7 @@ exists(const char *path)
 } // namespace
 
 int
-main(int argc,
+main(int   argc,
      char *argv[])
 {
     (void) argc; // unused
