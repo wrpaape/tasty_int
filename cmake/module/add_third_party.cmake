@@ -50,6 +50,35 @@ function(add_third_party)
         set(THIRD_PARTY_NAME "third party dependencies")
     endif()
 
+    # cmake fails to find the GIT_EXECUTABLE required for ExternalProject()
+    # from the Visual Studio 2019 community edition git extension:
+    #
+    #     C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\Git\cmd
+    # 
+    # Use the CMAKE_COMMAND:
+    #
+    #     C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe
+    # 
+    # to attempt to reconstruct the path to the GIT_EXECUTABLE.
+    unset(check_git_paths)
+    if(MSVC)
+        set(ms_common_ext_path ${CMAKE_COMMAND})
+        
+        while(TRUE)
+            get_filename_component(basename ${ms_common_ext_path} NAME)
+            if(basename STREQUAL "Microsoft")
+                set(check_git_paths
+                    PATHS "${ms_common_ext_path}/TeamFoundation/Team Explorer/Git/cmd")
+            endif()
+            set(prev_path ${ms_common_ext_path})
+            get_filename_component(ms_common_ext_path ${ms_common_ext_path} DIRECTORY)
+            if(ms_common_ext_path STREQUAL prev_path)
+                break()
+            endif()
+        endwhile()
+    endif()
+    find_program(GIT_EXECUTABLE git ${check_git_paths} REQUIRED)
+
     # avoid collisions with existing CMakeCache.txt's
     file(RELATIVE_PATH relative_root
         ${PROJECT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
@@ -61,7 +90,8 @@ function(add_third_party)
         ${CMAKE_CURRENT_SOURCE_DIR}/third_party
         -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
         -DCMAKE_CXX_COMPILER:FILEPATH=${CMAKE_CXX_COMPILER}
-        -DCMAKE_INSTALL_PREFIX:PATH=${THIRD_PARTY_INSTALL_PREFIX})
+        -DCMAKE_INSTALL_PREFIX:PATH=${THIRD_PARTY_INSTALL_PREFIX}
+        -DGIT_EXECUTABLE:FILEPATH=${GIT_EXECUTABLE})
 
     set(build_prompt     "Building")
     set(build_cmake_args --build . --parallel)

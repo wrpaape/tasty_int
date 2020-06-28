@@ -30,7 +30,7 @@ if((CMAKE_CXX_COMPILER_ID MATCHES "Clang") OR
 endif()
 cmake_dependent_option(
     BUILD_COVERAGE "Generate code coverage report." ${BUILD_TESTING}
-    BUILD_DEBUG BUILD_TESTING have_coverage_supported_compiler
+    "BUILD_DEBUG;BUILD_TESTING;have_coverage_supported_compiler"
     OFF
 )
 option(BUILD_BENCHMARKING "Enable micro benchmarks." ON)
