@@ -1,7 +1,7 @@
 # Visual Studio artifacts
 .vs
 CMakeSettings.json
-output
+out
 
 # llvm-cov raw profile
 default.profraw
