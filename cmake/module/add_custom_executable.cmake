@@ -6,9 +6,10 @@ set(PROJECT_CMAKE_ADD_CUSTOM_EXECUTABLE_CMAKE_INCLUDED TRUE)
 add_custom_executable
 ---------------------
 
-This Module defines add_custom_executable():
+This Module defines ``add_custom_executable``:
 
 ::
+
     add_custom_executable(
         <NAME                          <name>>
         <SOURCES                       <srcs>>

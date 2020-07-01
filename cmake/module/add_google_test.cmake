@@ -6,9 +6,10 @@ set(PROJECT_CMAKE_ADD_GOOGLE_TEST_CMAKE_INCLUDED TRUE)
 add_google_test
 ---------------
 
-This Module defines add_google_test():
+This Module defines ``add_google_test``:
 
 ::
+
     add_google_test(
         <NAME                <name>>
         <SOURCES             <srcs>>

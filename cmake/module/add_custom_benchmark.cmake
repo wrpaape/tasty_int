@@ -6,9 +6,10 @@ set(PROJECT_CMAKE_ADD_CUSTOM_BENCHMARK_CMAKE_INCLUDED TRUE)
 add_custom_benchmark
 --------------------
 
-This Module defines add_custom_benchmark():
+This Module defines ``add_custom_benchmark``:
 
 ::
+
     add_custom_benchmark(
         <NAME                          <name>>
         <SOURCES                       <srcs>>

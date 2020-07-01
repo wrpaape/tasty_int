@@ -9,6 +9,7 @@ set_intrinsic_count_leading_zero_bits
 This Module defines set_intrinsic_count_leading_zero_bits():
 
 ::
+
     set_intrinsic_count_leading_zero_bits(<target>)
 
 which adds the following compile definitions to <target>:

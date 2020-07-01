@@ -6,9 +6,10 @@ set(PROJECT_CMAKE_ADD_CUSTOM_TEST_CMAKE_INCLUDED TRUE)
 add_custom_test
 ---------------
 
-This Module defines add_custom_test():
+This Module defines ``add_custom_test``:
 
 ::
+
     add_custom_test(
         <NAME                          <name>>
         <SOURCES                       <srcs>>

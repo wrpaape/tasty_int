@@ -27,6 +27,7 @@ bundle_static_library
 This Module defines bundle_static_library():
 
 ::
+
     bundle_static_library(<bundled_tgt_name> [<static_lib>...])
 
 which adds a new imported STATIC library, <bundled_tgt_name>, by bundling the

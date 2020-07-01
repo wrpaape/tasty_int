@@ -1,6 +1,10 @@
+include(bundle_static_library)
+include(namespaces)
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
-include(bundle_static_library)
+
+
+push_namespace(tasty_int)
 
 # static and shared libraries are output to root 'lib' directory
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_LIB_DIR})
@@ -12,21 +16,21 @@ add_subdirectory(detail)
 # collect modules into single static library
 bundle_static_library(
     tasty_int
-    tasty_int-detail-integer_comparison
-    tasty_int-detail-integer_addition
-    tasty_int-detail-integer_subtraction
-    tasty_int-detail-integer_multiplication
-    tasty_int-detail-integer_division
-    tasty_int-detail-integer_input
-    tasty_int-detail-integer_output
-    tasty_int-detail-conversions-integer_from_floating_point
-    tasty_int-detail-conversions-integer_from_signed_integral
-    tasty_int-detail-conversions-integer_from_unsigned_integral
-    tasty_int-detail-conversions-integer_from_string
-    tasty_int-detail-conversions-floating_point_from_integer
-    tasty_int-detail-conversions-signed_integral_from_integer
-    tasty_int-detail-conversions-unsigned_integral_from_integer
-    tasty_int-detail-conversions-string_from_integer
+    ${tasty_int-detail-}integer_comparison
+    ${tasty_int-detail-}integer_addition
+    ${tasty_int-detail-}integer_subtraction
+    ${tasty_int-detail-}integer_multiplication
+    ${tasty_int-detail-}integer_division
+    ${tasty_int-detail-}integer_input
+    ${tasty_int-detail-}integer_output
+    ${tasty_int-detail-conversions-}integer_from_floating_point
+    ${tasty_int-detail-conversions-}integer_from_signed_integral
+    ${tasty_int-detail-conversions-}integer_from_unsigned_integral
+    ${tasty_int-detail-conversions-}integer_from_string
+    ${tasty_int-detail-conversions-}floating_point_from_integer
+    ${tasty_int-detail-conversions-}signed_integral_from_integer
+    ${tasty_int-detail-conversions-}unsigned_integral_from_integer
+    ${tasty_int-detail-conversions-}string_from_integer
 )
 
 # build unit tests

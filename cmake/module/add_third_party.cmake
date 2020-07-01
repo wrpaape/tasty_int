@@ -9,6 +9,7 @@ add_third_party
 This Module defines add_third_party():
 
 ::
+
     add_third_party(
         <INSTALL_PREFIX <dir> >
         [NAME           <name>]

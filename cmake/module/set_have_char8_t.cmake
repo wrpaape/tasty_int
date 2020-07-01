@@ -9,7 +9,8 @@ set_have_char8_t
 This Module defines set_have_type():
 
 ::
-set_have_char8_t(<target> <INTERFACE|PUBLIC|PRIVATE>)
+
+    set_have_char8_t(<target> <INTERFACE|PUBLIC|PRIVATE>)
 
 which adds the following compile definitions/options to <target>:
 

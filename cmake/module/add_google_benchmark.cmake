@@ -6,9 +6,10 @@ set(PROJECT_CMAKE_ADD_GOOGLE_BENCHMARK_CMAKE_INCLUDED TRUE)
 add_google_benchmark
 --------------------
 
-This Module defines add_google_benchmark():
+This Module defines ``add_google_benchmark``:
 
 ::
+
     add_google_benchmark(
         <NAME                <name>>
         <SOURCES             <srcs>>

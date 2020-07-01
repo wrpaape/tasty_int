@@ -7,6 +7,7 @@
 #include <type_traits>
 #include <utility>
 
+/// @todo: TODO: GenerateExportHeader
 #include "tasty_int/concepts.hpp"
 #include "tasty_int/detail/integer.hpp"
 #include "tasty_int/detail/integer_addition.hpp"
@@ -302,6 +303,7 @@ public:
     /// @}
 
 private:
+    /// @todo: TODO: make all hidden friends
     friend const detail::Integer &
     detail::prepare_operand(const TastyInt &operand);
     friend detail::Integer &
