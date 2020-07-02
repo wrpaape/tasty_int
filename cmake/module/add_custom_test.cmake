@@ -51,7 +51,7 @@ function(add_custom_test)
 
     add_test(
         NAME              ${CUSTOM_EXECUTABLE_NAME}
-        COMMAND           ${CUSTOM_EXECUTABLE_NAME}
+        COMMAND           $<TARGET_FILE:${CUSTOM_EXECUTABLE_NAME}>
         WORKING_DIRECTORY ${PROJECT_TEST_BIN_DIR}
     )
 

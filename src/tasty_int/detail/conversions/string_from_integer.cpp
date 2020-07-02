@@ -161,7 +161,9 @@ void
 StringConverter::emplace_digit_tokens(std::string::iterator left_cursor,
                                       std::string::iterator right_cursor) const
 {
-    while (left_cursor <= --right_cursor) {
+    while (left_cursor < right_cursor) {
+        --right_cursor;
+
         char left_token  = token_from_value(*right_cursor);
         char right_token = token_from_value(*left_cursor);
 

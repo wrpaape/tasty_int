@@ -116,9 +116,8 @@ DigitsParser::parse_digits(std::string_view tokens) const
 
     // ensure the initial sizing was correct
     assert(
-        (size_digits(tokens.end() + 1 -
-                     find_most_significant_value(tokens).first) - digits.size())
-        <= 1
+        (size_digits(tokens.end() - find_most_significant_value(tokens).first)
+         + 1 - digits.size()) <= 1
     );
 
     return digits;

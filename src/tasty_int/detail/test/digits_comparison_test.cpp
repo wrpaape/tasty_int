@@ -246,6 +246,7 @@ INSTANTIATE_TEST_SUITE_P(
             { .smaller = { 0 },              .larger = 1.0L  },
             { .smaller = { 0 },              .larger = 1.5L  },
             { .smaller = { 1 },              .larger = 2.1L  },
+            { .smaller = { 123 },            .larger = DIGIT_BASE + 123.0L },
             { .smaller = { DIGIT_TYPE_MAX }, .larger = DIGIT_BASE },
             { .smaller = { 0, 1 },           .larger = DIGIT_BASE + 1.1L },
             {

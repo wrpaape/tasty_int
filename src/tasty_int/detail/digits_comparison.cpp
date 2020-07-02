@@ -268,8 +268,11 @@ bool
 operator==(const std::vector<digit_type> &lhs,
            long double                    rhs)
 {
-    return std::equal(lhs.begin(), lhs.end(),
-                      FloatingPointDigitsIterator(rhs));
+    auto mismatch = std::mismatch(lhs.begin(), lhs.end(),
+                                  FloatingPointDigitsIterator(rhs));
+
+    return (mismatch.first == lhs.end())
+        && (mismatch.second.remaining_value() < 1.0L);
 }
 
 bool
