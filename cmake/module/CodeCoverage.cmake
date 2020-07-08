@@ -112,6 +112,7 @@
 #
 
 include(CMakeParseArguments)
+include(add_link_options)
 
 # Check prereqs
 find_program( LCOV_PATH  NAMES lcov lcov.bat lcov.exe lcov.perl)
@@ -162,10 +163,9 @@ function(setup_coverage_environ_for_clang)
         ${coverage_flags}
         PARENT_SCOPE
     )
-    string(REPLACE ";" " " coverage_flags "${coverage_flags}")
     set(
         COVERAGE_LINKER_FLAGS
-        "${coverage_flags}"
+        ${coverage_flags}
         PARENT_SCOPE
     )
     set(GCOV_TOOL_PATH $<TARGET_FILE:llvm-cov-gcov> PARENT_SCOPE)
@@ -196,25 +196,27 @@ if(MSVC)
 else()
     list(APPEND COVERAGE_COMPILER_FLAGS -O0)
 endif()
+string(REPLACE ";" " " _coverage_compiler_flags "${COVERAGE_COMPILER_FLAGS}")
+string(REPLACE ";" " " _coverage_linker_flags   "${COVERAGE_LINKER_FLAGS}")
 
 set(GCOV_TOOL
     "${GCOV_TOOL_PATH}"
     CACHE FILEPATH "Path to the tool used by the coverage report generator lcov."
     FORCE )
 set(CMAKE_CXX_FLAGS_COVERAGE
-    "${COVERAGE_COMPILER_FLAGS}"
+    "${_coverage_compiler_flags}"
     CACHE STRING "Flags used by the C++ compiler during coverage builds."
     FORCE )
 set(CMAKE_C_FLAGS_COVERAGE
-    "${COVERAGE_COMPILER_FLAGS}"
+    "${_coverage_compiler_flags}"
     CACHE STRING "Flags used by the C compiler during coverage builds."
     FORCE )
 set(CMAKE_EXE_LINKER_FLAGS_COVERAGE
-    "${COVERAGE_LINKER_FLAGS}"
+    "${_coverage_linker_flags}"
     CACHE STRING "Flags used for linking binaries during coverage builds."
     FORCE )
 set(CMAKE_SHARED_LINKER_FLAGS_COVERAGE
-    "${COVERAGE_LINKER_FLAGS}"
+    "${_coverage_linker_flags}"
     CACHE STRING "Flags used by the shared libraries linker during coverage builds."
     FORCE )
 set(CMAKE_LIBRARIES_COVERAGE
@@ -492,15 +494,7 @@ function(setup_coverage_environ)
     if(COVERAGE_LINKER_FLAGS)
         message(STATUS "Appending code coverage link options: "
                        "'${COVERAGE_LINKER_FLAGS}'.")
-        # @todo TODO: replace the following set()s with
-        #     add_link_options(${COVERAGE_LINKER_FLAGS})
-        # once upgraded to cmake 3.13
-        set(CMAKE_EXE_LINKER_FLAGS
-            "${CMAKE_EXE_LINKER_FLAGS} ${COVERAGE_LINKER_FLAGS}"
-            PARENT_SCOPE)
-        set(CMAKE_SHARED_LINKER_FLAGS
-            "${CMAKE_SHARED_LINKER_FLAGS} ${COVERAGE_LINKER_FLAGS}"
-            PARENT_SCOPE)
+        add_link_options(${COVERAGE_LINKER_FLAGS})
     endif()
     if(COVERAGE_LIBRARIES)
         message(STATUS "Linking code coverage libraries: "

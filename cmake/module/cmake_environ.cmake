@@ -11,6 +11,7 @@ include(enable_cpp_concepts)
 include(enable_strict_compile_options)
 include(try_link_libcxxabi)
 include(enable_interprocedural_optimization)
+include(add_link_options)
 
 # Exported Variables
 # ------------------------------------------------------------------------------
@@ -28,6 +29,21 @@ if((CMAKE_BUILD_TYPE_LOWER STREQUAL "release") OR
    (CMAKE_BUILD_TYPE_LOWER STREQUAL "relwithdebinfo") OR
    (CMAKE_BUILD_TYPE_LOWER STREQUAL "minsizerel"))
    enable_interprocedural_optimization()
+endif()
+if(ENABLE_ADDRESS_SANITIZER AND ENABLE_UNDEFINED_BEHAVIOR_SANITIZER)
+    message(
+        FATAL_ERROR
+        "Cannot enable AddressSanitizer and UndefinedBehaviorSanitizer at the "
+        "same time."
+    )
+elseif(ENABLE_ADDRESS_SANITIZER)
+    message(STATUS "Enabling AddressSanitizer.")
+    add_compile_options(-fsanitize=address)
+    add_link_options(   -fsanitize=address)
+elseif(ENABLE_UNDEFINED_BEHAVIOR_SANITIZER)
+    message(STATUS "Enabling UndefinedBehaviorSanitizer.")
+    add_compile_options(-fsanitize=undefined)
+    add_link_options(   -fsanitize=undefined)
 endif()
 if(MSVC)
     # Disable warning C4146: unary minus operator applied to unsigned type,

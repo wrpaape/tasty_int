@@ -22,18 +22,34 @@ string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_LOWER)
 if(CMAKE_BUILD_TYPE_LOWER STREQUAL "debug")
     set(BUILD_DEBUG ON)
 endif()
-option(BUILD_TESTING "Enable unit testing." ${BUILD_DEBUG})
-set(have_coverage_supported_compiler FALSE)
+set(have_coverage_supported_compiler  FALSE)
+set(have_sanitizer_supported_compiler FALSE)
 if((CMAKE_CXX_COMPILER_ID MATCHES "Clang") OR
    (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
-   set(have_coverage_supported_compiler TRUE)
+   set(have_coverage_supported_compiler  TRUE)
+   set(have_sanitizer_supported_compiler TRUE)
 endif()
+option(BUILD_TESTING "Enable unit testing." ${BUILD_DEBUG})
 cmake_dependent_option(
     BUILD_COVERAGE "Generate code coverage report." ${BUILD_TESTING}
     "BUILD_DEBUG;BUILD_TESTING;have_coverage_supported_compiler"
     OFF
 )
 option(BUILD_BENCHMARKING "Enable micro benchmarks." ON)
+cmake_dependent_option(
+    ENABLE_ADDRESS_SANITIZER
+    "Enable AddressSanitizer, a fast memory error detector."
+    ${BUILD_DEBUG}
+    "have_sanitizer_supported_compiler;NOT ENABLE_UNDEFINED_BEHAVIOR_SANITIZER"
+    OFF
+)
+cmake_dependent_option(
+    ENABLE_UNDEFINED_BEHAVIOR_SANITIZER
+    "Enable UndefinedBehaviorSanitizer, a fast undefined behavior detector."
+    ${BUILD_DEBUG}
+    "have_sanitizer_supported_compiler;NOT ENABLE_ADDRESS_SANITIZER"
+    OFF
+)
 # @todo TODO: https://svn.boost.org/trac10/wiki/BestPracticeHandbook
 # @todo TODO: offer coverage as a build type and remove BUILD_COVERAGE
 # @todo TODO: remove in-source 'bin' and 'lib' directories
