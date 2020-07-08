@@ -15,6 +15,9 @@ target_sources(
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/make_arithmetic_printable.hpp
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/approximately_equal.hpp
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/expect_approx.hpp
+    ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/floating_point_integral_limits.hpp
+    ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/cartesian_product.hpp
+    ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/combine_types.hpp
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/arithmetic_types.hpp
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/non_boolean_arithmetic_types.hpp
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/signed_arithmetic_types.hpp
@@ -23,6 +26,7 @@ target_sources(
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/signed_integral_types.hpp
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/floating_point_types.hpp
     ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/detail/filter_types.hpp
+    ${PROJECT_TEST_INCLUDE_DIR}/tasty_int_test/detail/testing_types.hpp
 )
 set_have_char8_t(tasty_int_test INTERFACE)
 target_link_libraries(

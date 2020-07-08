@@ -3,22 +3,14 @@
 
 #include <tuple>
 #include <type_traits>
+#include <utility>
+
+#include "tasty_int_test/detail/testing_types.hpp"
 
 
 namespace tasty_int_test {
 namespace detail {
 namespace filter_types {
-
-template<typename>
-struct IsTestingTypes : public std::false_type
-{}; // struct IsTestingTypes
-
-template<typename... Types>
-struct IsTestingTypes<::testing::Types<Types...>> : public std::true_type
-{}; // struct IsTestingTypes
-
-template<typename TestingTypes>
-constexpr bool is_testing_types = IsTestingTypes<TestingTypes>::value;
 
 template<template <typename> typename Filter>
 struct HasFilter : public std::is_convertible<bool, decltype(Filter<void>::value)>
@@ -27,7 +19,7 @@ struct HasFilter : public std::is_convertible<bool, decltype(Filter<void>::value
 template<template <typename> typename Filter>
 constexpr bool is_filter = HasFilter<Filter>::value;
 
-template<template<typename> typename Filter, typename... NextType>
+template<template<typename> typename Filter, typename ...NextType>
 constexpr auto
 collect_types(std::tuple<NextType...> rem_types)
 {
@@ -41,14 +33,7 @@ collect_types(std::tuple<NextType...> rem_types)
     }, rem_types);
 }
 
-template<typename... Types>
-constexpr auto
-testing_types_from_tuple(std::tuple<Types...>)
-{
-    return ::testing::Types<Types...>();
-}
-
-template<template<typename> typename Filter, typename... Types>
+template<template<typename> typename Filter, typename ...Types>
 constexpr auto
 extract_types(::testing::Types<Types...>)
 {
@@ -74,7 +59,7 @@ extract_types(::testing::Types<Types...>)
  *     parameter list, @p Filter must not filter out all of @p TestingTypes.
  */
 template<typename TestingTypes, template<typename> typename Filter>
-    requires filter_types::is_testing_types<TestingTypes>
+    requires detail::is_testing_types<TestingTypes>
           && filter_types::is_filter<Filter>
 using FilterTypes = decltype(
     filter_types::extract_types<Filter>(TestingTypes())

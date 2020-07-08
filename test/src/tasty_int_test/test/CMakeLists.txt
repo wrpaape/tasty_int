@@ -34,3 +34,21 @@ add_google_test(
     SOURCES   approximately_equal_test.cpp
     LIBRARIES tasty_int_test
 )
+
+add_google_test(
+    NAME      ${CURRENT_NAMESPACE}cartesian_product_test
+    SOURCES   cartesian_product_test.cpp
+    LIBRARIES tasty_int_test
+)
+
+add_google_test(
+    NAME      ${CURRENT_NAMESPACE}combine_types_test
+    SOURCES   combine_types_test.cpp
+    LIBRARIES tasty_int_test
+)
+
+add_google_test(
+    NAME      ${CURRENT_NAMESPACE}floating_point_integral_limits_test
+    SOURCES   floating_point_integral_limits_test.cpp
+    LIBRARIES tasty_int_test
+)
