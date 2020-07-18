@@ -23,6 +23,7 @@ Simple Big Integer library.
 - an adequately C++20-compliant compiler:
     - `gcc >= 8`
     - `clang >= 10`
+    - `visual studio 2019 >= 16.6.2`
 ### Documentation
 - `doxygen >= 1.8`
 - `graphviz (dot) >= 1.5`
@@ -61,6 +62,11 @@ Enable development benchmarks (see the [`benchmark`](#benchmark) build target).
 Requires `git` and configure-time internet access for cloning [google
 benchmark](https://github.com/google/benchmark).
 
+#### `-DENABLE_ADDRESS_SANITIZER:BOOL=<TRUE|FALSE>`
+Enable AddressSanitizer, a fast memory error detector.
+
+#### `-DENABLE_UNDEFINED_BEHAVIOR_SANITIZER:BOOL=<TRUE|FALSE>`
+Enable UndefinedBehaviorSanitizer, a fast undefined behavior detector.
 
 ## Build
 ```

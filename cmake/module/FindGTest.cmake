@@ -97,7 +97,7 @@ function(__gtest_find_library _name)
 endfunction()
 
 macro(__gtest_determine_windows_library_type _var)
-    if(EXISTS "${${_var}}")
+    if("${_var}" AND EXISTS "${${_var}}")
         file(TO_NATIVE_PATH "${${_var}}" _lib_path)
         get_filename_component(_name "${${_var}}" NAME_WE)
         file(STRINGS "${${_var}}" _match REGEX "${_name}\\.dll" LIMIT_COUNT 1)
