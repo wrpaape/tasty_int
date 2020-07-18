@@ -2,6 +2,7 @@
 
 #include <cmath>
 
+#include <algorithm>
 #include <array>
 #include <functional>
 #include <type_traits>
@@ -15,6 +16,7 @@
 #include "tasty_int/detail/conversions/integral_from_digits.hpp"
 #include "tasty_int/detail/conversions/floating_point_from_digits.hpp"
 #include "tasty_int/detail/test/binary_digits_operation_test_common.hpp"
+#include "tasty_int_test/floating_point_integral_limits.hpp"
 #include "tasty_int_test/nonnegative_arithmetic_values.hpp"
 
 
@@ -36,6 +38,28 @@ using tasty_int::detail::conversions::floating_point_from_digits;
 using binary_digits_operation_test_common::BinaryDigitsOperationTestParam;
 using binary_digits_operation_test_common::convert_to;
 
+
+// must use SFINAE here since pre-v16.0 VS 2019 incorrectly instantiates
+// discarded branches of constexpr ifs, which would trigger a compiler error
+// due to FloatingPointIntegralLimits's constraints
+template<typename IntegralType>
+    requires std::is_integral_v<IntegralType>
+auto
+clamp_arithmetic_value(IntegralType value)
+{
+    using Limits = tasty_int_test::FloatingPointIntegralLimits<
+        long double, IntegralType
+    >;
+    return std::clamp(value, Limits::minimum(), Limits::maximum());
+}
+
+template<typename FloatingPointType>
+    requires std::is_floating_point_v<FloatingPointType>
+auto
+clamp_arithmetic_value(FloatingPointType value)
+{
+    return value;
+}
 
 /**
  * @brief Creates a set of test parameters that may be used to check the consistency
@@ -68,16 +92,21 @@ make_arithmetic_integration_test_params(
 
     for (ArithmeticType digits_value
          : tasty_int_test::NONNEGATIVE_ARITHMETIC_VALUES<ArithmeticType>) {
-        auto digits_operand = digits_from_arithmetic(digits_value);
+        auto digits_operand = digits_from_arithmetic(
+            clamp_arithmetic_value(digits_value)
+        );
+
         for (ArithmeticType arithmetic_value
-             : tasty_int_test::NONNEGATIVE_ARITHMETIC_VALUES<ArithmeticType>)
+             : tasty_int_test::NONNEGATIVE_ARITHMETIC_VALUES<ArithmeticType>) {
+            arithmetic_value = clamp_arithmetic_value(arithmetic_value);
+
             test_params.push_back({
                 .digits_operand  = digits_operand,
                 .other_operand   = arithmetic_value,
-                .expected_result =
-                    operation(digits_operand,
-                              digits_from_arithmetic(arithmetic_value))
+                .expected_result = operation(digits_operand,
+                                             digits_from_arithmetic(arithmetic_value))
             });
+        }
     }
         
     return test_params;

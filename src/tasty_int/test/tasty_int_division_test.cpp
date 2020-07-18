@@ -191,7 +191,7 @@ protected:
     test_division(ArithmeticType lhs,
                   ArithmeticType rhs)
     {
-        auto promoted_lhs = tasty_int::detail::prepare_operand(lhs);
+        auto promoted_lhs = tasty_int::prepare_operand(lhs);
 
         auto expected_quotient = static_cast<ArithmeticType>(
              promoted_lhs / rhs

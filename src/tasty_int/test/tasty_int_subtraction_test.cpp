@@ -17,7 +17,6 @@ using tasty_int_test::check_integer_result;
 using tasty_int_test::SampleArithmetic;
 
 
-
 template<tasty_int::TastyIntOperand DifferenceType,
          tasty_int::TastyIntOperand MinuendType>
 void

@@ -2,6 +2,13 @@ include(add_google_test)
 
 
 add_google_test(
+    NAME      ${CURRENT_NAMESPACE}tasty_int_prepare_operand_test
+    SOURCES   tasty_int_prepare_operand_test.cpp
+    LIBRARIES tasty_int
+              tasty_int_test
+)
+
+add_google_test(
     NAME      ${CURRENT_NAMESPACE}tasty_int_conversion_test
     SOURCES   tasty_int_conversion_test.cpp
     LIBRARIES tasty_int

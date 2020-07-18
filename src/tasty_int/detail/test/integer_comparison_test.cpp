@@ -14,6 +14,7 @@
 #include "tasty_int/detail/test/comparison_test_common.hpp"
 #include "tasty_int/detail/test/integer_test_common.hpp"
 #include "tasty_int_test/comparison_tests.hpp"
+#include "tasty_int_test/floating_point_integral_limits.hpp"
 #include "tasty_int_test/logarithmic_range.hpp"
 
 
@@ -831,14 +832,19 @@ TEST_P(NonnegativeFloatingPointSmallerThanDigitsTest,
     tasty_int_test::expect_unequal(lesser, greater);
 }
 
+constexpr auto FLOATING_POINT_INTEGRAL_MAX =
+    tasty_int_test::FloatingPointIntegralLimits<
+        long double, std::uintmax_t
+    >::maximum();
+
 INSTANTIATE_TEST_SUITE_P(
     IntegerComparisonTest,
     NonnegativeFloatingPointSmallerThanDigitsTest,
     ::testing::ValuesIn(
         std::vector<NonnegativeFloatingPointSmallerThanDigitsTestParam> {
-            { .smaller = 0.0,                         .larger = { 1 } },
-            { .smaller = 0.9,                         .larger = { 1 } },
-            { .smaller = 1.0,                         .larger = { 0, 1 } },
+            { .smaller = 0.0, .larger = { 1 } },
+            { .smaller = 0.9, .larger = { 1 } },
+            { .smaller = 1.0, .larger = { 0, 1 } },
             {
                 .smaller = static_cast<long double>(DIGIT_TYPE_MAX),
                 .larger  = { 0, 1 }
@@ -848,10 +854,8 @@ INSTANTIATE_TEST_SUITE_P(
                 .larger  = { DIGIT_TYPE_MAX, DIGIT_TYPE_MAX }
             },
             {
-                .smaller = static_cast<long double>(
-                    std::numeric_limits<std::uintmax_t>::max()
-                ),
-                .larger  = { 0, 0, 1 }
+                .smaller = FLOATING_POINT_INTEGRAL_MAX - 1.0L,
+                .larger  = digits_from_integral(FLOATING_POINT_INTEGRAL_MAX)
             }
         }
     )

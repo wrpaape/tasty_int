@@ -567,8 +567,8 @@ TEST(IntegerDivisionTest, ZeroIntegerAndNegativeFloatingPoint)
 
 TEST(IntegerDivisionTest, PositiveIntegerAndSamePositiveFloatingPoint)
 {
-    Integer dividend    = integer_from_string("+1000000000000000000000000", 10);
-    long double divisor =                      +1.0e24L;
+    Integer dividend    = integer_from_string("+10000000000000000", 10);
+    long double divisor =                      +1.0e16L;
     IntegerDivisionResult<Integer> expected_result = {
         .quotient  = POSITIVE_ONE_INTEGER,
         .remainder = ZERO_INTEGER
@@ -579,8 +579,8 @@ TEST(IntegerDivisionTest, PositiveIntegerAndSamePositiveFloatingPoint)
 
 TEST(IntegerDivisionTest, PositiveIntegerAndSameNegativeFloatingPoint)
 {
-    Integer dividend    = integer_from_string("+1000000000000000000000000", 10);
-    long double divisor =                      -1.0e24L;
+    Integer dividend    = integer_from_string("+10000000000000000", 10);
+    long double divisor =                      -1.0e16L;
     IntegerDivisionResult<Integer> expected_result = {
         .quotient  = NEGATIVE_ONE_INTEGER,
         .remainder = ZERO_INTEGER
@@ -640,8 +640,8 @@ TEST(IntegerDivisionTest, SmallerPositiveIntegerAndLargerNegativeFloatingPoint)
 
 TEST(IntegerDivisionTest, NegativeIntegerAndSamePositiveFloatingPoint)
 {
-    Integer dividend    = integer_from_string("-1234567890987654321", 10);
-    long double divisor =                      +1234567890987654321.0L;;
+    Integer dividend    = integer_from_string("-12345678909876", 10);
+    long double divisor =                      +12345678909876.0L;;
     IntegerDivisionResult<Integer> expected_result = {
         .quotient  = NEGATIVE_ONE_INTEGER,
         .remainder = ZERO_INTEGER
@@ -652,8 +652,8 @@ TEST(IntegerDivisionTest, NegativeIntegerAndSamePositiveFloatingPoint)
 
 TEST(IntegerDivisionTest, NegativeIntegerAndSameNegativeFloatingPoint)
 {
-    Integer dividend    = integer_from_string("-1234567890987654321", 10);
-    long double divisor =                      -1234567890987654321.0L;;
+    Integer dividend    = integer_from_string("-12345678909876", 10);
+    long double divisor =                      -12345678909876.0L;;
     IntegerDivisionResult<Integer> expected_result = {
         .quotient  = POSITIVE_ONE_INTEGER,
         .remainder = ZERO_INTEGER
@@ -1075,8 +1075,8 @@ TEST(IntegerDivisionTest, NegativeFloatingPointAndSameNegativeInteger)
 
 TEST(IntegerDivisionTest, LargerNegativeFloatingPointAndSmallerPositiveInteger)
 {
-    long double dividend =                -999999999999999999.0L;
-    Integer divisor      = integer_from_string("+888888888888", 10);
+    long double dividend =                -999999999999999.0L;
+    Integer divisor      = integer_from_string("+888888888", 10);
     IntegerDivisionResult<long double> expected_result = {
         .quotient  = -1125000.0,
         .remainder = -999999.0
@@ -1087,8 +1087,8 @@ TEST(IntegerDivisionTest, LargerNegativeFloatingPointAndSmallerPositiveInteger)
 
 TEST(IntegerDivisionTest, LargerNegativeFloatingPointAndSmallerNegativeInteger)
 {
-    long double dividend =                -999999999999999999.0L;
-    Integer divisor      = integer_from_string("-888888888888", 10);
+    long double dividend =                -999999999999999.0L;
+    Integer divisor      = integer_from_string("-888888888", 10);
     IntegerDivisionResult<long double> expected_result = {
         .quotient  = +1125000.0,
         .remainder = -999999.0

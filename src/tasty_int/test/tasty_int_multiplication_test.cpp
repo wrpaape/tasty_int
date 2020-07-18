@@ -97,7 +97,7 @@ protected:
     test_multiplication(ArithmeticType lhs,
                         ArithmeticType rhs)
     {
-        auto expected_product = tasty_int::detail::prepare_operand(lhs) * rhs;
+        auto expected_product = tasty_int::prepare_operand(lhs) * rhs;
 
         ::test_multiplication(lhs, rhs, expected_product);
     }

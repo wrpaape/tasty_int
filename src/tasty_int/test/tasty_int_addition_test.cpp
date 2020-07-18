@@ -92,7 +92,7 @@ protected:
     test_addition(ArithmeticType lhs,
                   ArithmeticType rhs)
     {
-        auto expected_sum = tasty_int::detail::prepare_operand(lhs) + rhs;
+        auto expected_sum = tasty_int::prepare_operand(lhs) + rhs;
 
         ::test_addition(lhs, rhs, expected_sum);
     }

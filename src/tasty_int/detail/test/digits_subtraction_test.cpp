@@ -439,14 +439,9 @@ DigitsMinusIntegralNegativeResultSubtractionTest::BASE_TEST_PARAMS = {
     { { 1 }, DIGIT_TYPE_MAX, { DIGIT_TYPE_MAX - 1 } },
     { { 2 }, 7, { 5 } },
     { { 2 }, DIGIT_TYPE_MAX, { DIGIT_TYPE_MAX - 2 } },
-
-
     { { 0 }, DIGIT_BASE, { 0, 1 } },
-
-
     { { 1 }, DIGIT_BASE, { DIGIT_TYPE_MAX } },
     { { DIGIT_TYPE_MAX }, DIGIT_BASE, { 1 } },
-
     {
         {                                          0                 },
           std::numeric_limits<std::uintmax_t>::max(),

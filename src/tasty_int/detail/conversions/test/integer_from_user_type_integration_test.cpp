@@ -7,6 +7,7 @@
 
 #include "tasty_int/detail/test/integer_test_common.hpp"
 #include "tasty_int_test/base_10_integer_string_from_arithmetic.hpp"
+#include "tasty_int_test/floating_point_integral_limits.hpp"
 #include "tasty_int_test/logarithmic_range.hpp"
 
 
@@ -17,6 +18,7 @@ using tasty_int::detail::conversions::integer_from_signed_integral;
 using tasty_int::detail::conversions::integer_from_string;
 using tasty_int::detail::conversions::integer_from_unsigned_integral;
 using tasty_int_test::base_10_integer_string_from_arithmetic;
+using tasty_int_test::FloatingPointIntegralLimits;
 
 
 class SameNegativeIntegralValueTest
@@ -48,7 +50,9 @@ INSTANTIATE_TEST_SUITE_P(
     IntegerFromUserTypeIntegrationTest,
     SameNegativeIntegralValueTest,
     tasty_int_test::logarithmic_range<std::intmax_t>(
-        -1, std::numeric_limits<std::intmax_t>::lowest(), 2
+        -1,
+        FloatingPointIntegralLimits<long double, std::intmax_t>::minimum(),
+        2
     )
 );
 
@@ -122,7 +126,9 @@ INSTANTIATE_TEST_SUITE_P(
     IntegerFromUserTypeIntegrationTest,
     SameNonnegativeIntegralTest,
     tasty_int_test::logarithmic_range<std::uintmax_t>(
-        0, std::numeric_limits<std::intmax_t>::max(), 2
+        0,
+        FloatingPointIntegralLimits<long double, std::intmax_t>::maximum(),
+        2
     )
 );
 

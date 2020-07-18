@@ -476,10 +476,10 @@ INSTANTIATE_TEST_SUITE_P(
             1.0L,
             2.0L,
             10.0L,
-            std::pow(DIGIT_BASE, 200.0L),
+            std::pow(DIGIT_BASE, 15.0L),
             1.0e20L,
             42.0e100L,
-            77.0e300L,
+            77.0e150L,
             std::numeric_limits<long double>::max()
         )
     )

@@ -221,6 +221,11 @@ target_sources(
     ${CMAKE_CURRENT_LIST_DIR}/binary_digits_operation_test_common.hpp
     ${PROJECT_INCLUDE_DIR}/tasty_int/detail/digit_type.hpp
 )
+target_link_libraries(
+    ${CURRENT_NAMESPACE}binary_digits_operation_test_common
+    INTERFACE
+    tasty_int_test
+)
 
 add_google_test(
     NAME      ${CURRENT_NAMESPACE}digits_bitwise_test

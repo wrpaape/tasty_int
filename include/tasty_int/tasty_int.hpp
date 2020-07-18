@@ -10,8 +10,13 @@
 /// @todo: TODO: GenerateExportHeader
 #include "tasty_int/concepts.hpp"
 #include "tasty_int/detail/integer.hpp"
+#include "tasty_int/detail/integer_comparison.hpp"
 #include "tasty_int/detail/integer_addition.hpp"
 #include "tasty_int/detail/integer_subtraction.hpp"
+#include "tasty_int/detail/integer_multiplication.hpp"
+#include "tasty_int/detail/integer_division.hpp"
+#include "tasty_int/detail/integer_input.hpp"
+#include "tasty_int/detail/integer_output.hpp"
 #include "tasty_int/detail/conversions/integer_from_floating_point.hpp"
 #include "tasty_int/detail/conversions/integer_from_signed_integral.hpp"
 #include "tasty_int/detail/conversions/integer_from_unsigned_integral.hpp"
@@ -25,17 +30,6 @@
 namespace tasty_int {
 
 class TastyInt;
-
-namespace detail {
-
-const detail::Integer &
-prepare_operand(const TastyInt &operand);
-
-detail::Integer &
-prepare_operand(TastyInt &operand);
-
-} // namespace detail
-
 
 /**
  * @defgroup TastyIntOperationConcepts TastyInt Operation Concepts
@@ -56,8 +50,48 @@ concept TastyIntOperation =
 /// @}
 
 
+/**
+ * The result of an immutable division operation involving a
+ * tasty_int::TastyInt (tasty_int::div).
+ */
+/// @ingroup TastyIntDivisionOperators
 template<TastyIntOperand DividendType>
-struct TastyIntDivisionResult;
+struct TastyIntDivisionResult
+{
+    DividendType quotient;  ///< the division quotient
+    DividendType remainder; ///< the division remainder
+}; // struct TastyIntDivisionResult
+
+
+/**
+ * @defgroup TastyIntPrepareOperand tasty_int::prepare_operand
+ *
+ * Distills tasty_int::TastyIntOperands into types that are operable with
+ * tasty_int::detail::Integer.  These are called implicitly on operands
+ * before each arithmetic operation.
+ */
+/// @{
+template<FloatingPoint FloatingPointType>
+auto
+prepare_operand(FloatingPointType operand)
+{
+    return static_cast<long double>(operand);
+}
+
+template<SignedIntegral SignedIntegralType>
+auto
+prepare_operand(SignedIntegralType operand)
+{
+    return static_cast<std::intmax_t>(operand);
+}
+
+template<UnsignedIntegral UnsignedIntegralType>
+auto
+prepare_operand(UnsignedIntegralType operand)
+{
+    return static_cast<std::uintmax_t>(operand);
+}
+/// @}
 
 
 /**
@@ -303,42 +337,173 @@ public:
     /// @}
 
 private:
-    /// @todo: TODO: make all hidden friends
+    /// @ingroup TastyIntPrepareOperand
     friend const detail::Integer &
-    detail::prepare_operand(const TastyInt &operand);
-    friend detail::Integer &
-    detail::prepare_operand(TastyInt &operand);
+    prepare_operand(const TastyInt &operand)
+    {
+        return operand.integer;
+    }
 
+    /// @ingroup TastyIntPrepareOperand
+    friend detail::Integer &
+    prepare_operand(TastyInt &operand)
+    {
+        return operand.integer;
+    }
+
+    /**
+     * @defgroup TastyIntAdditionOperators TastyInt Addition Operators
+     *
+     * These operators apply addition to tasty_int::TastyInt and the supported
+     * arithmetic types.  Note that floating point values are effectively
+     * truncated toward zero before addition.
+     */
+    /// @ingroup TastyIntAdditionOperators
     template<TastyIntOperand LhsType, TastyIntOperand RhsType>
         requires TastyIntOperation<LhsType, RhsType>
     friend TastyInt
     operator+(const LhsType &lhs,
-              const RhsType &rhs);
+              const RhsType &rhs)
+    {
+        return prepare_operand(lhs) + prepare_operand(rhs);
+    }
+
+    /**
+     * @defgroup TastyIntSubtractionOperators TastyInt Subtraction Operators
+     *
+     * These operators apply subtraction to tasty_int::TastyInt and the
+     * supported arithmetic types.  Note that floating point values are
+     * effectively truncated toward zero before subtraction.
+     */
+    /// @ingroup TastyIntSubtractionOperators
     template<TastyIntOperand LhsType, TastyIntOperand RhsType>
         requires TastyIntOperation<LhsType, RhsType>
     friend TastyInt
     operator-(const LhsType &lhs,
-              const RhsType &rhs);
+              const RhsType &rhs)
+    {
+        return prepare_operand(lhs) - prepare_operand(rhs);
+    }
+
+    /**
+     * @defgroup TastyIntMultiplicationOperators TastyInt Multiplication Operators
+     *
+     * These operators apply multiplication to tasty_int::TastyInt and the
+     * supported arithmetic types.  Note that floating point values are
+     * effectively truncated toward zero before multiplication.
+     */
+    /// @ingroup TastyIntMultiplicationOperators
     template<TastyIntOperand LhsType, TastyIntOperand RhsType>
         requires TastyIntOperation<LhsType, RhsType>
     friend TastyInt
     operator*(const LhsType &lhs,
-              const RhsType &rhs);
+              const RhsType &rhs)
+    {
+        return prepare_operand(lhs) * prepare_operand(rhs);
+    }
+
+    /**
+     * @defgroup TastyIntDivisionOperators TastyInt Division Operators
+     *
+     * These operators apply division to tasty_int::TastyInt and the supported
+     * arithmetic types.  Note that floating point values are effectively
+     * truncated toward zero before division.
+     */
+    /// @ingroup TastyIntDivisionOperators
     template<TastyIntOperand LhsType, TastyIntOperand RhsType>
         requires TastyIntOperation<LhsType, RhsType>
     friend TastyInt
     operator/(const LhsType &lhs,
-              const RhsType &rhs);
+              const RhsType &rhs)
+    {
+        return prepare_operand(lhs) / prepare_operand(rhs);
+    }
+
+    /// @ingroup TastyIntDivisionOperators
     template<TastyIntOperand LhsType, TastyIntOperand RhsType>
         requires TastyIntOperation<LhsType, RhsType>
     friend TastyInt
     operator%(const LhsType &lhs,
-              const RhsType &rhs);
+              const RhsType &rhs)
+    {
+        return prepare_operand(lhs) % prepare_operand(rhs);
+    }
+
+    /**
+     * @brief Computes the quotient and remainder of an integer division.
+     *
+     * @details The type of the resulting quotient and remainder matches the
+     *     type of @p dividend, @p DividendType.
+     *
+     * @tparam DividendType the type of the dividend
+     * @tparam DivisorType  the type of the divisor
+     * @param[in] dividend the dividend
+     * @param[in] divisor  the divisor
+     * @return the quotient and remainder of `dividend / divisor`
+     */
+    /// @ingroup TastyIntDivisionOperators
     template<TastyIntOperand DividendType, TastyIntOperand DivisorType>
         requires TastyIntOperation<DividendType, DivisorType>
     friend TastyIntDivisionResult<DividendType>
     div(const DividendType &dividend,
         const DivisorType  &divisor);
+
+    /**
+     * @brief TastyInt input operator.
+     *
+     * @details Input is a string of ASCII tokens interpretted in the base
+     *     according to the input basefield flag:
+     *
+     *     | input basefield flag | interpretted base         |
+     *     | -------------------- | --------------------------|
+     *     | <none>               | depends on numeric prefix |
+     *     | std::dec             | 10                        |
+     *     | std::hex             | 16                        |
+     *     | std::oct             | 8                         |
+     *
+     * @details @p input's failbit will be set if a parse error is encountered.
+     *
+     * @note For standard streams, the basefield flag is set to `dec` on
+     *     initialization.
+     *
+     * @param[in,out] intput  the input stream
+     * @param[out]    tasty_int an arbitrary-precision integer
+     * @return a reference to @p input
+     */
+    friend std::istream &
+    operator>>(std::istream &input,
+               TastyInt     &tasty_int)
+    {
+        return input >> prepare_operand(tasty_int);
+    }
+
+    /**
+     * @brief TastyInt output operator.
+     *
+     * @details Output is formatted as follows:
+     *
+     *     [sign][prefix][digits]
+     *
+     * where
+     *
+     *     sign   := - if tasty_int is negative, + if tasty_int is nonnegative
+     *               and output has been modified with std::showpos, otherwise
+     *               the empty string
+     *     prefix := 0x or 0 if output has been modified with std::hex or
+     *               std::oct respectively, otherwise the empty string
+     *     digits := the string representation of the numerical portion of
+     *               tasty_int
+     *
+     * @param[in,out] output the output stream
+     * @param[in]     tasty_int an arbitrary-precision integer
+     * @return a reference to output
+     */
+    friend std::ostream &
+    operator<<(std::ostream   &output,
+               const TastyInt &tasty_int)
+    {
+        return output << prepare_operand(tasty_int);
+    }
 
     TastyInt(detail::Integer &&result)
         : integer(std::move(result))
@@ -347,9 +512,186 @@ private:
     detail::Integer integer;
 }; // class TastyInt
 
+
+/**
+ * @defgroup TastyIntComparisonOperators TastyInt Comparison Operators
+ *
+ * These operators compare tasty_int::TastyInt and another arithmetic operand
+ * or tasty_int::TastyInt like ordinary ints:
+ *     
+ *     - positive values are greater than zero
+ *     - positive values compare greater as their magnitude increases
+ *     - negative values are less than zero
+ *     - negative values compare lesser as their magnitude increases
+ *
+ * with the exception that floating point values are truncated toward zero.
+ */
+/// @{
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+bool
+operator==(const LhsType &lhs,
+           const RhsType &rhs)
+{
+    return prepare_operand(lhs) == prepare_operand(rhs);
+}
+
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+bool
+operator!=(const LhsType &lhs,
+           const RhsType &rhs)
+{
+    return prepare_operand(lhs) != prepare_operand(rhs);
+}
+
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+bool
+operator<(const LhsType &lhs,
+          const RhsType &rhs)
+{
+    return prepare_operand(lhs) < prepare_operand(rhs);
+}
+
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+bool
+operator>(const LhsType &lhs,
+          const RhsType &rhs)
+{
+    return prepare_operand(lhs) > prepare_operand(rhs);
+}
+
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+bool
+operator<=(const LhsType &lhs,
+           const RhsType &rhs)
+{
+    return prepare_operand(lhs) <= prepare_operand(rhs);
+}
+
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+bool
+operator>=(const LhsType &lhs,
+           const RhsType &rhs)
+{
+    return prepare_operand(lhs) >= prepare_operand(rhs);
+}
+/// @}
+
+
+/// @ingroup TastyIntAdditionOperators
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+LhsType &
+operator+=(LhsType       &lhs,
+           const RhsType &rhs)
+{
+    auto &&lhs_operand = prepare_operand(lhs);
+
+    lhs_operand += prepare_operand(rhs);
+
+    if constexpr (Arithmetic<LhsType>)
+        lhs = static_cast<LhsType>(lhs_operand);
+
+    return lhs;
+}
+
+/// @ingroup TastyIntSubtractionOperators
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+LhsType &
+operator-=(LhsType       &lhs,
+           const RhsType &rhs)
+{
+    auto &&lhs_operand = prepare_operand(lhs);
+
+    lhs_operand -= prepare_operand(rhs);
+
+    if constexpr (Arithmetic<LhsType>)
+        lhs = static_cast<LhsType>(lhs_operand);
+
+    return lhs;
+}
+
+/// @ingroup TastyIntMultiplicationOperators
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+LhsType &
+operator*=(LhsType       &lhs,
+           const RhsType &rhs)
+{
+    auto &&lhs_operand = prepare_operand(lhs);
+
+    lhs_operand *= prepare_operand(rhs);
+
+    if constexpr (Arithmetic<LhsType>)
+        lhs = static_cast<LhsType>(lhs_operand);
+
+    return lhs;
+}
+
+/// @ingroup TastyIntDivisionOperators
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+LhsType &
+operator/=(LhsType       &lhs,
+           const RhsType &rhs)
+{
+    auto &&lhs_operand = prepare_operand(lhs);
+
+    lhs_operand /= prepare_operand(rhs);
+
+    if constexpr (Arithmetic<LhsType>)
+        lhs = static_cast<LhsType>(lhs_operand);
+
+    return lhs;
+}
+
+/// @ingroup TastyIntDivisionOperators
+template<TastyIntOperand LhsType, TastyIntOperand RhsType>
+    requires TastyIntOperation<LhsType, RhsType>
+LhsType &
+operator%=(LhsType       &lhs,
+           const RhsType &rhs)
+{
+    auto &&lhs_operand = prepare_operand(lhs);
+
+    lhs_operand %= prepare_operand(rhs);
+
+    if constexpr (Arithmetic<LhsType>)
+        lhs = static_cast<LhsType>(lhs_operand);
+
+    return lhs;
+}
+
+template<TastyIntOperand DividendType, TastyIntOperand DivisorType>
+    requires TastyIntOperation<DividendType, DivisorType>
+TastyIntDivisionResult<DividendType>
+div(const DividendType &dividend,
+    const DivisorType  &divisor)
+{
+    auto integer_division_result =
+        detail::div(prepare_operand(dividend),
+                    prepare_operand(divisor));
+
+    if constexpr (Arithmetic<DividendType>)
+        return {
+            .quotient  =
+                static_cast<DividendType>(integer_division_result.quotient),
+            .remainder =
+                static_cast<DividendType>(integer_division_result.remainder)
+        };
+    else
+        return {
+            .quotient  = std::move(integer_division_result.quotient),
+            .remainder = std::move(integer_division_result.remainder)
+        };
+}
+
 } // namespace tasty_int
-
-
-#include "tasty_int/tasty_int.ipp"
 
 #endif // ifndef TASTY_INT_TASTY_INT_HPP

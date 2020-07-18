@@ -5,6 +5,7 @@
 #include "gtest/gtest.h"
 
 #include "tasty_int_test/base_10_integer_string_from_arithmetic.hpp"
+#include "tasty_int_test/floating_point_integral_limits.hpp"
 #include "tasty_int_test/logarithmic_range.hpp"
 
 
@@ -14,6 +15,7 @@ using tasty_int::detail::conversions::digits_from_integral;
 using tasty_int::detail::conversions::digits_from_floating_point;
 using tasty_int::detail::conversions::digits_from_string;
 using tasty_int_test::base_10_integer_string_from_arithmetic;
+using tasty_int_test::FloatingPointIntegralLimits;
 
 
 class SameIntegralValueTest : public ::testing::TestWithParam<std::uintmax_t>
@@ -42,7 +44,9 @@ INSTANTIATE_TEST_SUITE_P(
     DigitsFromUserTypeIntegrationTest,
     SameIntegralValueTest,
     tasty_int_test::logarithmic_range<std::uintmax_t>(
-        0, std::numeric_limits<std::uintmax_t>::max(), 2
+        0,
+        FloatingPointIntegralLimits<long double, std::uintmax_t>::maximum(),
+        2
     )
 );
 
@@ -67,7 +71,5 @@ INSTANTIATE_TEST_SUITE_P(
         0.0, std::numeric_limits<long double>::max(), 1.0e80L
     )
 );
-
-
 
 } // namespace
