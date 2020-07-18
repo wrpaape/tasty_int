@@ -35,9 +35,9 @@ template<typename LhsType,
          typename RhsType,
          typename ProductType>
 void
-run_test_multiply_in_place(LhsType           &&lhs,
-                           const RhsType      &rhs,
-                           const ProductType  &expected_product)
+run_test_multiply_in_place(LhsType            lhs,
+                           const RhsType     &rhs,
+                           const ProductType &expected_product)
 {
     const auto &result = (lhs *= rhs);
 

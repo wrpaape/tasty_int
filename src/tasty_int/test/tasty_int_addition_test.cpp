@@ -35,9 +35,9 @@ template<typename LhsType,
          typename RhsType,
          typename SumType>
 void
-run_test_add_in_place(LhsType       &&lhs,
-                      const RhsType  &rhs,
-                      const SumType  &expected_sum)
+run_test_add_in_place(LhsType        lhs,
+                      const RhsType &rhs,
+                      const SumType &expected_sum)
 {
     const auto &result = (lhs += rhs);
 
@@ -53,7 +53,7 @@ test_add_in_place(const LhsType &lhs,
                   const SumType &expected_sum)
 {
     run_test_add_in_place(TastyInt(lhs), rhs,           expected_sum);
-    run_test_add_in_place(LhsType(lhs),  TastyInt(rhs), LhsType(expected_sum));
+    run_test_add_in_place(lhs,           TastyInt(rhs), LhsType(expected_sum));
 }
 
 template<tasty_int::TastyIntOperand LhsType,
@@ -107,16 +107,10 @@ TYPED_TEST(TastyIntAndArithmeticTypeAdditionTest, LowerQuartileAndLowerQuartile)
                                SampleArithmetic<TypeParam>::LOWER_QUARTILE);
 }
 
-TYPED_TEST(TastyIntAndArithmeticTypeAdditionTest, MedianAndMedian)
-{
-    TestFixture::test_addition(SampleArithmetic<TypeParam>::MEDIAN,
-                               SampleArithmetic<TypeParam>::MEDIAN);
-}
-
-TYPED_TEST(TastyIntAndArithmeticTypeAdditionTest, LowerQuartileAndUpperQuartile)
+TYPED_TEST(TastyIntAndArithmeticTypeAdditionTest, LowerQuartileAndMedian)
 {
     TestFixture::test_addition(SampleArithmetic<TypeParam>::LOWER_QUARTILE,
-                               SampleArithmetic<TypeParam>::UPPER_QUARTILE);
+                               SampleArithmetic<TypeParam>::MEDIAN);
 }
 
 TYPED_TEST(TastyIntAndArithmeticTypeAdditionTest, ZeroAndOne)

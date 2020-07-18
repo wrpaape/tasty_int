@@ -35,9 +35,9 @@ template<typename LhsType,
          typename RhsType,
          typename DifferenceType>
 void
-run_test_subtract_in_place(LhsType              &&lhs,
-                           const RhsType         &rhs,
-                           const DifferenceType  &expected_difference)
+run_test_subtract_in_place(LhsType               lhs,
+                           const RhsType        &rhs,
+                           const DifferenceType &expected_difference)
 {
     const auto &result = (lhs -= rhs);
 
@@ -53,11 +53,8 @@ test_subtract_in_place(const LhsType        &lhs,
                        const RhsType        &rhs,
                        const DifferenceType &expected_difference)
 {
-    run_test_subtract_in_place(TastyInt(lhs),
-                               rhs,
-                               expected_difference);
-    run_test_subtract_in_place(LhsType(lhs),
-                               TastyInt(rhs),
+    run_test_subtract_in_place(TastyInt(lhs), rhs, expected_difference);
+    run_test_subtract_in_place(lhs, TastyInt(rhs),
                                LhsType(expected_difference));
 }
 
@@ -158,12 +155,6 @@ TYPED_TEST(TastyIntAndArithmeticTypeSubtractionTest, UpperQuartileAndMedian)
 {
     test_subtraction(SampleArithmetic<TypeParam>::UPPER_QUARTILE,
                      SampleArithmetic<TypeParam>::MEDIAN);
-}
-
-TYPED_TEST(TastyIntAndArithmeticTypeSubtractionTest, UpperQuartileAndLowerQuartile)
-{
-    test_subtraction(SampleArithmetic<TypeParam>::UPPER_QUARTILE,
-                     SampleArithmetic<TypeParam>::LOWER_QUARTILE);
 }
 
 TYPED_TEST(TastyIntAndArithmeticTypeSubtractionTest, MedianAndLowerQuartile)

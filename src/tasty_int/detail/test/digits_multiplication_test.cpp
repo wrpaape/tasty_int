@@ -321,7 +321,7 @@ TEST(DigitsAndIntegralMultiplicationTest, MultipleDigitsTimesMultipleDigits)
 TEST(DigitsAndFloatingPointMultiplicationTest, DigitsTimesOneEqualsOriginalValue)
 {
     std::vector<digit_type> digits = { 1, 2, 3 };
-    long double          ONE       = 1.0;
+    long double             ONE    = 1.0;
     std::vector<digit_type> expected_result = digits;
 
     test_multiplication(digits, ONE, expected_result);
