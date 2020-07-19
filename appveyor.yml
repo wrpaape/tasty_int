@@ -1,0 +1,20 @@
+environment:
+  matrix:
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    GENERATOR: "Visual Studio 16 2019"
+    CONFIG: Debug
+
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    GENERATOR: "Visual Studio 16 2019"
+    CONFIG: Release
+
+matrix:
+  fast_finish: true
+
+build_script:
+ - cmd: set PATH=C:\Program Files (x86)\CMake\bin;%PATH%
+ - cmd: cd build
+ - cmd: cmake --version
+ - cmd: cmake .. -G"%GENERATOR%" -DCMAKE_BUILD_TYPE=%CONFIG% -DBUILD_TESTING=ON -DBUILD_COVERAGE:BOOL=OFF -DBUILD_BENCHMARKING:BOOL=OFF
+ - cmd: cmake --build . --config %CONFIG% --parallel
+ - cmd: cmake -E env CTEST_OUTPUT_ON_FAILURE=1 cmake --build . --config %CONFIG% --target test

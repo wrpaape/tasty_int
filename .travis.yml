@@ -26,10 +26,10 @@ install:
   - tar zvxf lcov-1.14.tar.gz
   - export PATH=$(pwd)/lcov-1.14/bin/:${PATH}
   - cmake $PARENTDIR -DCMAKE_BUILD_TYPE:STRING=Debug -DBUILD_TESTING:BOOL=ON -DBUILD_COVERAGE:BOOL=ON -DBUILD_BENCHMARKING:BOOL=OFF -DENABLE_ADDRESS_SANITIZER=OFF -DENABLE_UNDEFINED_BEHAVIOR_SANITIZER=OFF -DCMAKE_CXX_COMPILER:FILEPATH=$CXX_COMPILER
-  - cmake --build .
+  - cmake --build . --parallel
 
 script:
-  - cmake --build . --target coverage
+  - cmake -E env CTEST_OUTPUT_ON_FAILURE=1 cmake --build . --target coverage
 
 after_success:
   - cd $PARENTDIR/build
