@@ -16,8 +16,6 @@ include(add_link_options)
 # Exported Variables
 # ------------------------------------------------------------------------------
 set(PROJECT_CMAKE_SRC_DIR    ${PROJECT_CMAKE_DIR}/src)
-set(PROJECT_CMAKE_BIN_DIR    ${PROJECT_CMAKE_DIR}/bin)
-set(PROJECT_CMAKE_BINARY_DIR ${PROJECT_BINARY_DIR}/cmake)
 
 # Enable common compile/link options
 # ------------------------------------------------------------------------------

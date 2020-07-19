@@ -12,9 +12,10 @@ matrix:
   fast_finish: true
 
 build_script:
- - cmd: set PATH=C:\Program Files (x86)\CMake\bin;%PATH%
+ - cmd: mkdir build
  - cmd: cd build
+ - cmd: set PATH=C:\Program Files (x86)\CMake\bin;%PATH%
  - cmd: cmake --version
- - cmd: cmake .. -G"%GENERATOR%" -DCMAKE_BUILD_TYPE=%CONFIG% -DBUILD_TESTING=ON -DBUILD_COVERAGE:BOOL=OFF -DBUILD_BENCHMARKING:BOOL=OFF
+ - cmd: cmake .. -G"%GENERATOR%" -DCMAKE_BUILD_TYPE:STRING=%CONFIG% -DBUILD_TESTING:BOOL=ON -DBUILD_COVERAGE:BOOL=OFF -DBUILD_BENCHMARKING:BOOL=OFF
  - cmd: cmake --build . --config %CONFIG% --parallel
- - cmd: cmake -E env CTEST_OUTPUT_ON_FAILURE=1 cmake --build . --config %CONFIG% --target test
+ - cmd: ctest --build-config %CONFIG% --output-on-failure

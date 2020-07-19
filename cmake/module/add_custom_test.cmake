@@ -38,10 +38,7 @@ include(add_custom_executable)
 # External API
 # ------------------------------------------------------------------------------
 function(add_custom_test)
-    add_custom_executable(
-        ${ARGV}
-        RUNTIME_OUTPUT_DIRECTORY ${PROJECT_TEST_BIN_DIR}
-    )
+    add_custom_executable(${ARGV})
 
     target_include_directories(
         ${CUSTOM_EXECUTABLE_NAME}
@@ -50,9 +47,8 @@ function(add_custom_test)
     )
 
     add_test(
-        NAME              ${CUSTOM_EXECUTABLE_NAME}
-        COMMAND           $<TARGET_FILE:${CUSTOM_EXECUTABLE_NAME}>
-        WORKING_DIRECTORY ${PROJECT_TEST_BIN_DIR}
+        NAME    ${CUSTOM_EXECUTABLE_NAME}
+        COMMAND $<TARGET_FILE:${CUSTOM_EXECUTABLE_NAME}>
     )
 
     # append to dependencies of 'make build-test', etc...

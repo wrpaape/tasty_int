@@ -38,10 +38,7 @@ include(add_custom_executable)
 # External API
 # ------------------------------------------------------------------------------
 function(add_custom_benchmark)
-    add_custom_executable(
-        ${ARGV}
-        RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BENCHMARK_BIN_DIR}
-    )
+    add_custom_executable(${ARGV})
 
     target_include_directories(
         ${CUSTOM_EXECUTABLE_NAME}
@@ -55,13 +52,12 @@ function(add_custom_benchmark)
 
     add_custom_target(
         ${run_custom_benchmark_target}
-        COMMAND           ${echo_command}
-        COMMAND           ${echo_line_command}
-        COMMAND           ${echo_command} "Running Benchmark: ${CUSTOM_EXECUTABLE_NAME}"
-        COMMAND           ${echo_line_command}
-        COMMAND           $<TARGET_FILE:${CUSTOM_EXECUTABLE_NAME}>
-        COMMAND           ${echo_line_command}
-        WORKING_DIRECTORY ${PROJECT_BENCHMARK_BIN_DIR}
+        COMMAND ${echo_command}
+        COMMAND ${echo_line_command}
+        COMMAND ${echo_command} "Running Benchmark: ${CUSTOM_EXECUTABLE_NAME}"
+        COMMAND ${echo_line_command}
+        COMMAND $<TARGET_FILE:${CUSTOM_EXECUTABLE_NAME}>
+        COMMAND ${echo_line_command}
     )
 
     # append to dependencies of 'make benchmark'

@@ -27,7 +27,7 @@ which adds the following compile definitions to <target>:
 # ------------------------------------------------------------------------------
 function(set_have_std_ctime_variants target scope)
     if(NOT CHECKED_STD_CTIME_VARIANTS)
-        set(binary_dir ${PROJECT_CMAKE_BINARY_DIR}/set_have_std_ctime_variants)
+        set(binary_dir ${CMAKE_CURRENT_BINARY_DIR}/set_have_std_ctime_variants)
         set(src_dir    ${PROJECT_CMAKE_SRC_DIR}/set_have_std_ctime_variants)
 
         set(enable_ctime_s -D__STDC_WANT_LIB_EXT1__=1)

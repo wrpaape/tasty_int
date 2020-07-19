@@ -11,3 +11,6 @@ cscope.*
 
 # ctags tagfile
 tags
+
+# build directories
+build

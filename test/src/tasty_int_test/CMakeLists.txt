@@ -34,6 +34,11 @@ target_link_libraries(
     INTERFACE
     GTest::GTest
 )
+target_include_directories(
+    tasty_int_test
+    INTERFACE
+    ${PROJECT_TEST_INCLUDE_DIR}
+)
 
 if(BUILD_TESTING)
     add_subdirectory(test)

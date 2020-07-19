@@ -31,10 +31,10 @@ find_package(GTest REQUIRED)
 if(NOT GTest_FOUND)
     message(
         FATAL_ERROR
-        "GTest should have been installed under ${PROJECT_TEST_DIR} at this "
-        "point. Check that ${PROJECT_TEST_DIR}/CMakeLists.txt has executed "
-        "successfully before the current CMakeLists.txt: "
-        "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt."
+        "GTest should have been installed under GTEST_ROOT (${GTEST_ROOT}) at "
+        "this point. Check that ${PROJECT_TEST_DIR}/CMakeLists.txt has "
+        "executed successfully before the current CMakeLists.txt: "
+        "${CMAKE_CURRENT_LIST_FILE}."
     )
 endif()
 

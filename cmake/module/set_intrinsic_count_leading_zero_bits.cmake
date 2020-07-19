@@ -39,7 +39,7 @@ the most-significant 1-bit.
 # External API
 # ------------------------------------------------------------------------------
 function(check_intrinsic_count_leading_zero_bits clz header type1 type2 type3)
-    set(binary_dir ${PROJECT_CMAKE_BINARY_DIR}/intrinsic_count_leading_zero_bits)
+    set(binary_dir ${CMAKE_CURRENT_BINARY_DIR}/intrinsic_count_leading_zero_bits)
     set(src_dir    ${PROJECT_CMAKE_SRC_DIR}/intrinsic_count_leading_zero_bits)
     if("${header}" STREQUAL "")
         unset(header_def)

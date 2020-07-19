@@ -25,7 +25,6 @@ This Module defines ``add_custom_executable``:
         [FRAMEWORK_COMPILE_OPTIONS     <opts>]
         [FRAMEWORK_LIBRARIES           <libs>]
         [FRAMEWORK_DEPENDENCIES        <deps>]
-        [RUNTIME_OUTPUT_DIRECTORY      <dir> ]
     )
 
 which adds an executable target called <name> built according to the specified
@@ -45,7 +44,6 @@ function(add_custom_executable)
     set(
         value_keywords    NAME
                           FRAMEWORK_NAME
-                          RUNTIME_OUTPUT_DIRECTORY
     )
     set(
         list_keywords     SOURCES
@@ -133,14 +131,6 @@ function(add_custom_executable)
     list(APPEND CUSTOM_EXECUTABLE_DEPENDENCIES ${CUSTOM_EXECUTABLE_FRAMEWORK_DEPENDENCIES})
     if(CUSTOM_EXECUTABLE_DEPENDENCIES)
         add_dependencies(${CUSTOM_EXECUTABLE_NAME} ${CUSTOM_EXECUTABLE_DEPENDENCIES})
-    endif()
-
-    if(CUSTOM_EXECUTABLE_RUNTIME_OUTPUT_DIRECTORY)
-        set_target_properties(
-            ${CUSTOM_EXECUTABLE_NAME}
-            PROPERTIES
-            RUNTIME_OUTPUT_DIRECTORY ${CUSTOM_EXECUTABLE_RUNTIME_OUTPUT_DIRECTORY}
-        )
     endif()
 
     set(CUSTOM_EXECUTABLE_NAME ${CUSTOM_EXECUTABLE_NAME} PARENT_SCOPE)

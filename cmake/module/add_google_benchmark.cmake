@@ -26,17 +26,14 @@ benchmark framework.
 # ------------------------------------------------------------------------------
 include(add_custom_benchmark)
 
-find_package(
-    benchmark REQUIRED
-    PATHS ${PROJECT_BENCHMARK_DIR}
-)
+find_package(benchmark REQUIRED)
 if(NOT benchmark_FOUND)
     message(
         FATAL_ERROR
-        "benchmark should have been installed under ${PROJECT_BENCHMARK_DIR} at
-        this point. Check that ${PROJECT_BENCHMARK_DIR}/CMakeLists.txt has
-        executed successfully before the current CMakeLists.txt: "
-        "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt."
+        "benchmark should have been installed under BENCHMARK_ROOT "
+        "(${BENCHMARK_ROOT}) at this point. Check that "
+        "${PROJECT_BENCHMARK_DIR}/CMakeLists.txt has executed successfully "
+        "before the current CMakeLists.txt: ${CMAKE_CURRENT_LIST_FILE}."
     )
 endif()
 

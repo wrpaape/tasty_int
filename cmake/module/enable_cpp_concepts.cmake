@@ -28,7 +28,7 @@ usage:
 #]=======================================================================]
 function(find_enable_cpp_concepts_compile_options enable_concepts_options)
     if(NOT FOUND_CPP_CONCEPTS_COMPILE_OPTIONS)
-        set(binary_dir ${PROJECT_CMAKE_BINARY_DIR}/enable_cpp_concepts)
+        set(binary_dir ${CMAKE_CURRENT_BINARY_DIR}/enable_cpp_concepts)
         set(src_dir    ${PROJECT_CMAKE_SRC_DIR}/enable_cpp_concepts)
         set(candidate_compile_options "" "-fconcepts" "-Xclang -fconcepts-ts")
 

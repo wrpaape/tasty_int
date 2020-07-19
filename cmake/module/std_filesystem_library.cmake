@@ -21,7 +21,7 @@ usage:
 
 #]=======================================================================]
 function(set_std_filesystem_library)
-    set(binary_dir ${PROJECT_CMAKE_BINARY_DIR}/std_filesystem_library)
+    set(binary_dir ${CMAKE_CURRENT_BINARY_DIR}/std_filesystem_library)
     set(src_dir    ${PROJECT_CMAKE_SRC_DIR}/std_filesystem_library)
     set(library_candidates "" "stdc++fs" "c++fs")
     foreach(library IN LISTS library_candidates)

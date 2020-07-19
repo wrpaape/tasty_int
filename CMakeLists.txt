@@ -52,7 +52,6 @@ cmake_dependent_option(
 )
 # @todo TODO: https://svn.boost.org/trac10/wiki/BestPracticeHandbook
 # @todo TODO: offer coverage as a build type and remove BUILD_COVERAGE
-# @todo TODO: remove in-source 'bin' and 'lib' directories
 
 # config defines
 set(TASTY_INT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR})
@@ -61,8 +60,6 @@ set(TASTY_INT_AUTHOR  "\"wrpaape\"")
 # global directories
 set(PROJECT_SRC_DIR          ${PROJECT_SOURCE_DIR}/src)
 set(PROJECT_INCLUDE_DIR      ${PROJECT_SOURCE_DIR}/include)
-set(PROJECT_BIN_DIR          ${PROJECT_SOURCE_DIR}/bin)
-set(PROJECT_LIB_DIR          ${PROJECT_SOURCE_DIR}/lib)
 set(PROJECT_TEST_DIR         ${PROJECT_SOURCE_DIR}/test)
 set(PROJECT_BENCHMARK_DIR    ${PROJECT_SOURCE_DIR}/benchmark)
 set(PROJECT_CMAKE_DIR        ${PROJECT_SOURCE_DIR}/cmake)

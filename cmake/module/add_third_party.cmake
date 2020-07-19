@@ -18,7 +18,7 @@ This Module defines add_third_party():
 which configures, builds, and installs third_party packages during project
 configuration time.  This expects to execute a CMakeLists.txt found at
 the root of the ``${CMAKE_CURRENT_SOURCE_DIR}/third_party`` directory.  Build
-artifacts may be found under ``INSTALL_PREFIX`` upon successful completion, 
+artifacts may be installed under ``INSTALL_PREFIX`` upon successful completion.
 #]=======================================================================]
 # External Dependencies
 # ------------------------------------------------------------------------------

@@ -151,11 +151,6 @@ function(setup_coverage_environ_for_clang)
         -DTASTY_INT_LLVM_COV_PATH=\"${LLVM_COV_PATH}\"
         -DTASTY_INT_EXECV_HEADER=${EXECV_HEADER}
     )
-    set_target_properties(
-        llvm-cov-gcov
-        PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY ${PROJECT_CMAKE_BIN_DIR}
-    )
 
     set(coverage_flags -fprofile-instr-generate -fcoverage-mapping)
     set(
