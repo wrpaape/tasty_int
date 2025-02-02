@@ -8,7 +8,7 @@ include(ExternalProject)
 ExternalProject_Add(
     benchmark
     GIT_REPOSITORY  https://github.com/google/benchmark.git
-    GIT_TAG         master
+    GIT_TAG         main
     SOURCE_DIR      ${CMAKE_CURRENT_LIST_DIR}/benchmark
     INSTALL_DIR     ${CMAKE_INSTALL_PREFIX}
     BUILD_COMMAND   ""
